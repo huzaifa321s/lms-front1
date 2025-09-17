@@ -1,0 +1,14 @@
+// import { createFileRoute } from '@tanstack/react-router'
+
+// export const Route = createFileRoute('/_authenticated/settings/invoices')({
+//   component: RouteComponent,
+// })
+
+// function RouteComponent() {
+//   return <div>Hello "/_authenticated/settings/invoices"!</div>
+// }
+
+
+import {createFileRoute} from '@tanstack/react-router';
+
+export const Route = createFileRoute('/_authenticated/settings/invoices')('/_authenticated/settings/invoices')
