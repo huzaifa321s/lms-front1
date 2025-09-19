@@ -29,6 +29,7 @@ export const paymentMethodsQueryOptions = () =>
         const paymentMethodsResponse = await axios.get(
           '/student/payment/get-payment-methods?details=true'
         );
+        console.log('paymentMethodsResposne ==>',paymentMethodsResponse)
         if (paymentMethodsResponse.data.success) {
           return {
             paymentMethods: paymentMethodsResponse.data.data,

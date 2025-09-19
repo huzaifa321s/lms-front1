@@ -227,7 +227,7 @@ function RouteComponent() {
         return navigate('/student/pay-invoice')
       }
       toast.error('You have no subscription, subscribe some plan to enroll the course!')
-      return navigate({ to: '/student/subscription-plans' })
+      return navigate({ to: '/student/resubscription-plans' })
     } else if (credentials && credentials.remainingEnrollmentCount === 0) {
       return toast.error('You have exceeded the limit of enrolling courses!')
     } else {

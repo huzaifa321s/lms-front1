@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query'
 import { BookOpen, Plus, Settings } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle ,CardFooter} from '@/components/ui/card'
@@ -15,9 +15,11 @@ import { TopCourseChart } from './-components/TopCourseChart.jsx'
 import { ChartBarDefault } from './-components/overview'
 import {Separator} from '@/components/ui/separator'
 import './index.css'
+import { useRef } from 'react'
 
 export default function Dashboard() {
-  const { data } = useSuspenseQuery(cardQueryOptions())
+  const isFirstRender = useRef(true);
+  const { data } = useQuery({...cardQueryOptions(),suspense:isFirstRender.current})
   const { navigate } = useAppUtils()
   const { card, dounutData, monthlyEnrollments } = data
  
@@ -69,7 +71,7 @@ export default function Dashboard() {
           </div>
 
           {/* Overview Tab */}
-          <TabsContent value="overview" className="space-y-6">
+          <TabsContent value="overview" className="space-y-6" forceMount={false}>
             <h1 className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-2xl font-extrabold tracking-tight text-transparent drop-shadow-lg md:text-3xl">
               Dashboard
             </h1>
@@ -360,7 +362,7 @@ export default function Dashboard() {
           </TabsContent>
 
           {/* Analytics Tab */}
-          <TabsContent value="analytics" className="space-y-6">
+          <TabsContent value="analytics" className="space-y-6" forceMount={false}>
             <h1 className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-2xl font-extrabold tracking-tight text-transparent drop-shadow-lg md:text-3xl">
               Analytics
             </h1>

@@ -8,30 +8,33 @@ const queryClient = new QueryClient()
 export const cardQueryOptions = () =>
   queryOptions({
     queryKey: ['cards', 'courses-by-students', 'monthly-enrolled-students'],
-    queryFn: async () => {
-      try {
-        let cardsResponse = await axios.get(`/teacher/dashboard/cards`)
-        cardsResponse = cardsResponse.data
-        let studentCoursesResponse = await axios.get(
-          `/teacher/dashboard/courses-by-students`
-        )
-        studentCoursesResponse = studentCoursesResponse.data
-        let monthlyEnrolledStudentsResponse = await axios.get(
-          `/teacher/dashboard/monthly-enrolled-students`
-        )
-        monthlyEnrolledStudentsResponse = monthlyEnrolledStudentsResponse.data;
-        return {
-          card:cardsResponse.success ? cardsResponse.data : null,dounutData:studentCoursesResponse.success ? studentCoursesResponse.data : {coursesLabels:[],studentsCount:[],borderColor:[],backgroundColor:[]},monthlyEnrollments:monthlyEnrolledStudentsResponse.data
-        }
+queryFn: async () => {
+  try {
+    const [cardsRes, coursesRes, monthlyRes] = await Promise.all([
+      axios.get('/teacher/dashboard/cards'),
+      axios.get('/teacher/dashboard/courses-by-students'),
+      axios.get('/teacher/dashboard/monthly-enrolled-students')
+    ])
 
-      } catch (error) {
-        return {card:null,dounutData:{coursesLabels:[],studentsCount:[],borderColor:[],backgroundColor:[]},monthlyEnrollments:[]}
-      }
-    },
+    return {
+      card: cardsRes.data.success ? cardsRes.data.data : null,
+      dounutData: coursesRes.data.success
+        ? coursesRes.data.data
+        : { coursesLabels: [], studentsCount: [], borderColor: [], backgroundColor: [] },
+      monthlyEnrollments: monthlyRes.data?.data || []
+    }
+  } catch {
+    return {
+      card: null,
+      dounutData: { coursesLabels: [], studentsCount: [], borderColor: [], backgroundColor: [] },
+      monthlyEnrollments: []
+    }
+  }
+}
+
   })
 
 export const Route = createFileRoute('/_authenticated/teacher/')({
-
   loader:() => queryClient.ensureQueryData(cardQueryOptions()),
   component: Dashboard,
 })

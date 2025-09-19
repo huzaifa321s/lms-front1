@@ -11,13 +11,8 @@ import { Footer } from "./student/Footer"
 
 
 function LandingPage() {
-  const isLoggedIn = useSelector((state) => state.studentAuth.token) ? true : false
-    const navigate = useNavigate()
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  
-    const toggleMobileMenu = () => {
-      setIsMobileMenuOpen(!isMobileMenuOpen)
-    }
+
+   
   
   return (
     <>
