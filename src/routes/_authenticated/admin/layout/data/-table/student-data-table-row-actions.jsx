@@ -1,0 +1,30 @@
+import { Button } from '@/components/ui/button'
+import { StudentSchema } from '../-schemas/coursesSchema'
+import { useAppUtils } from '../../../../../../hooks/useAppUtils'
+import { openModal } from '../../../../../../shared/config/reducers/admin/DialogSlice'
+
+export function StudentDataTableRowActions({ row }) {
+  const student = StudentSchema.parse(row.original)
+  const { dispatch } = useAppUtils()
+
+  return (
+    <>
+      <Button
+        size='xs'
+        variant='outline'
+        onClick={() =>
+          dispatch(
+            openModal({
+              type: 'view-student-details',
+              props: { studentID: student._id, courseIDs: student.courseIds },
+            })
+          )
+        }
+      >
+        View Details
+      </Button>
+    </>
+  )
+
+  
+}
