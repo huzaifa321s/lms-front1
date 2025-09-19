@@ -10,7 +10,14 @@ import SkipToMain from '@/components/skip-to-main'
 import DialogWrapper from '../../../-components/DialogWrapper'
 import { useSelector } from 'react-redux'
 import { AppSidebar } from './teacher-app-sidebar'
-
+import { Loader2 } from 'lucide-react'
+export function SmallLoader() {
+  return (
+       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+      <Loader2 className="h-12 w-12 animate-spin text-white" />
+    </div>
+  )
+}
 export function AuthenticatedLayout({ children }) {
   const defaultOpen = Cookies.get('sidebar_state') !== 'false'
   const selector = useSelector((state) => state.teacherDialogSlice);
@@ -38,7 +45,7 @@ export function AuthenticatedLayout({ children }) {
             modalData={selector.props}
             onClose={selector.onAction}
           />}
-          <Suspense fallback={<LoaderThree/>}>{children ? children : <Outlet />}</Suspense>
+          <Suspense fallback={ <SmallLoader/> }>{children ? children : <Outlet />}</Suspense>
         </div>
       </SidebarProvider>
     </SearchProvider>

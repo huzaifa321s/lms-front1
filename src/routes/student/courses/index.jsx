@@ -9,20 +9,15 @@ import {
 } from '@tanstack/react-query'
 import {
   createFileRoute,
-  Link,
-  useLoaderData,
   useSearch,
 } from '@tanstack/react-router'
 import { IconChalkboardTeacher } from '@tabler/icons-react'
-import { BookOpen, Users, Clock, Star, Brain } from 'lucide-react'
+import { BookOpen, Users, Star } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { toast } from 'sonner'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { LoaderThree } from '@/components/ui/loader'
-import { NavbarRouteComponent } from '../../-NavbarRouteComponent'
 import { useAppUtils } from '../../../hooks/useAppUtils'
 import { handleCourseEnrollment } from '../../../shared/config/reducers/student/studentAuthSlice'
 import { Show } from '../../../shared/utils/Show'
@@ -35,6 +30,7 @@ import {
   getRenderPaginationButtons,
   useSearchInput,
 } from '../../../utils/globalFunctions'
+import { SmallLoader } from '../../_authenticated/teacher/-layout/data/components/teacher-authenticated-layout'
 
 const coursesQueryOptions = (deps) =>
   queryOptions({
@@ -86,9 +82,8 @@ export const Route = createFileRoute('/student/courses/')({
   },
   loader: ({ deps }) =>
     queryClient.invalidateQueries(coursesQueryOptions(deps)),
-
   component: () => (
-    <Suspense fallback={<LoaderThree className='text-[#2563eb]' />}>
+    <Suspense fallback={<SmallLoader/>}>
       <RouteComponent />
     </Suspense>
   ),
@@ -120,7 +115,6 @@ const MiniStats = ({ students = 1250, rating = 4.8, instructor }) => {
 
 function RouteComponent() {
   const { navigate, dispatch, router } = useAppUtils()
-  console.log('router.sate ===>', router.state)
   const currentPage = useSearch({
     from: '/student/courses/',
     select: (search) => search.page,

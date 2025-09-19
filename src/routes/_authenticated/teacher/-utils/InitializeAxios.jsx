@@ -1,32 +1,11 @@
-import { Suspense, useState } from 'react'
-import axios from 'axios'
-import { QueryClient, useSuspenseQuery } from '@tanstack/react-query'
-import {
-  createFileRoute,
-  Outlet,
-  redirect,
-  useLocation,
-  useRouterState,
-  useSearch,
-} from '@tanstack/react-router'
-import { useSelector } from 'react-redux'
-import { LoaderThree } from '@/components/ui/loader'
-import { Show } from '../../shared/utils/Show'
-import { getCookie } from '../../shared/utils/helperFunction'
-import { paymentMethodsQueryOptions } from '../_authenticated/student/payment-methods'
-import Header from './-components/Header'
-import PaymentMethodsList from './-components/PaymentMethodList'
-import Plans from './-components/Plans'
-import { SmallLoader } from '../_authenticated/teacher/-layout/data/components/teacher-authenticated-layout'
+import { getCookie } from "../../../../shared/utils/helperFunction";
+import axios from "axios";
+import { Outlet, redirect } from "@tanstack/react-router";
 
-const queryClient = new QueryClient()
-
-export const Route = createFileRoute('/student/resubscription-plans')({
-  beforeLoad: () => {
-    const TOKEN = getCookie('studentToken')
-    const credentials = getCookie('studentCredentials')
-    const subscription = getCookie('studentSubscription')
- function showLoader() {
+export function initializeAxios() {
+        const TOKEN = getCookie('teacherToken')
+        const credentials = getCookie('teacherCredentials');
+     function showLoader() {
   // Check if loader already exists
   if (document.getElementById("custom-loader")) return;
 
@@ -206,124 +185,42 @@ export const Route = createFileRoute('/student/resubscription-plans')({
   // Add to body
   document.body.appendChild(loader);
 }
-    function hideLoader() {
-      const loader = document.getElementById('custom-loader')
-      if (loader) {
-        loader.remove()
-      }
-    }
 
-    axios.interceptors.request.use(
-      function (config) {
-        if (config.skipInterceptors) {
-          return config
+function hideLoader() {
+   const loader = document.getElementById('custom-loader');
+   if (loader) {
+       loader.remove();
+   }
+}
+        if (TOKEN && credentials) {
+        
+                axios.defaults.headers.common['Authorization'] = `Bearer ${TOKEN}`
+                axios.interceptors.request.use(
+                        function (config) {
+                                // document.body.classList.add('loading-indicator')
+                                // showLoader()
+                                return config
+                        },
+                        function (error) {
+                                return Promise.reject(error)
+                        }
+                )
+                axios.interceptors.response.use(
+                        function (response) {
+                                // document.body.classList.remove('loading-indicator')
+                                // hideLoader()
+                                return response
+                        },
+                        function (error) {
+                                // document.body.classList.remove('loading-indicator')
+                                // hideLoader()
+                                return Promise.reject(error)
+                        }
+                )
+
+                return <Outlet/>
+        }else{
+            throw redirect({to:'/teacher/login'})
         }
-        // showLoader()
-        return config
-      },
-      function (error) {
-        return Promise.reject(error)
-      }
-    )
-
-    axios.interceptors.response.use(
-      function (response) {
-        if (response.config.skipInterceptors) {
-          return response
-        }
-        // hideLoader()
-        return response
-      },
-      function (error) {
-        if (error.config.skipInterceptors) {
-          return Promise.reject(error)
-        }
-        // hideLoader()
-        return Promise.reject(error)
-      }
-    )
-    axios.defaults.headers.common['Authorization'] = `Bearer ${TOKEN}`
-//    if (!credentials) {
-//   throw redirect({ to: '/student/login', replace: true })
-// }
-
-console.log('subscription ===>', subscription)
-// ✅ Active subscription → go to dashboard
-if (subscription?.status === 'active' && subscription?.subscriptionId) {
-  throw redirect({ to: '/student', replace: true })
 }
-
-// ❌ Subscription canceled → stay on current route (show Outlet)
-if (subscription?.status === 'canceled') {
-  return <Outlet />
-}
-
-// ❌ Subscription exists but not active (and not canceled)
-// if (subscription?.subscriptionId && subscription.status !== 'active') {
-//   throw redirect({ to: '/student/failed-subscription', replace: true })
-// }
-
-// 🆕 No subscription + no customer → first time subscribe
-if (!subscription && !credentials?.customerId) {
-  throw redirect({ to: '/student/subscription-plans', replace: true })
-}
-
-// 🌀 Resubscribe / other scenarios
-return <Outlet />
-
-  },
-  validateSearch: (search) => {
-    return {
-      redirect: search.redirect || '',
-      courseTeachers: search.courseTeachers || [],
-    }
-  },
-  loaderDeps: ({ search }) => {
-    return {
-      redirect: search.redirect || '',
-      courseTeachers: search.courseTeachers || [],
-    }
-  },
-  component: () => (
-    <Suspense fallback={<SmallLoader />}>
-      <RouteComponent />
-    </Suspense>
-  ),
-  loader: () => queryClient.ensureQueryData(paymentMethodsQueryOptions()),
-})
-
-function RouteComponent() {
-  const [selectedPlan, setSelectedPlan] = useState('')
-  const [paymentMethodListFlag, paymentMethodsListFlag] = useState(false)
-  const { data, fetchStatus } = useSuspenseQuery(paymentMethodsQueryOptions())
-  const { paymentMethods, defaultPM } = data
-  const searchParams = useSearch({ from: '/student/resubscription-plans' })
-  console.log('searchParams ==+.', searchParams)
-  const setThings = (flag, subscriptionPlan) => {
-    paymentMethodsListFlag(flag)
-    setSelectedPlan(subscriptionPlan)
-  }
-
-  return (
-    <div className='bg-base-200 h-[100vh]'>
-      <Show>
-        <Show.When isTrue={paymentMethodListFlag}>
-          <PaymentMethodsList
-            plan={selectedPlan}
-            paymentMethodsListFlag={paymentMethodsListFlag}
-            defaultPM={defaultPM}
-            paymentMethods={paymentMethods}
-            queryOptions={paymentMethodsQueryOptions}
-            fetchStatus={fetchStatus}
-            redirect={searchParams?.redirect}
-            data={searchParams?.courseTeachers}
-          />
-        </Show.When>
-
-        <Show.Else>
-          <Plans mode={'resubscribe'} setThings={setThings} />
-        </Show.Else>
-      </Show>
-    </div>
-  )
-}
+  

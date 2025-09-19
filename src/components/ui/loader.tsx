@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 import React from "react";
 
@@ -65,6 +66,14 @@ export const LoaderTwo = () => {
     </LoaderWrapper>
   );
 };
+
+export function SmallLoader() {
+  return (
+    <div className="flex items-center justify-center p-4">
+      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+    </div>
+  )
+}
 
 export const LoaderThree = () => {
   return (

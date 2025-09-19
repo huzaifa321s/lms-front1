@@ -200,7 +200,7 @@ export function InitializeAxios() {
                 axios.interceptors.request.use(
                         function (config) {
                                 if(!isSuspenseLoading){
-                                        showLoader()
+                                        // showLoader()
                                 }
                                 return config
                         },
@@ -210,11 +210,11 @@ export function InitializeAxios() {
                 )
                 axios.interceptors.response.use(
                         function (response) {
-                                hideLoader()
+                                // hideLoader()
                                 return response
                         },
                         function (error) {
-                                hideLoader()
+                                // hideLoader()
                                 return Promise.reject(error)
                         }
                 )

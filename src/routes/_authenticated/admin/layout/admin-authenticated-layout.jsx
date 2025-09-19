@@ -10,6 +10,7 @@ import SkipToMain from '@/components/skip-to-main'
 import DialogWrapper from '../-components/DialogWrapper'
 
 import { AppSidebar } from './admin-app-sidebar'
+import { SmallLoader } from '../../teacher/-layout/data/components/teacher-authenticated-layout'
 
 export function AuthenticatedLayout({ children }) {
   const defaultOpen = Cookies.get('sidebar_state') !== 'false'
@@ -68,7 +69,7 @@ export function AuthenticatedLayout({ children }) {
             />
           )}
           <Suspense
-            fallback={<LoaderThree />}
+            fallback={<SmallLoader />}
           >
             {children ? children : <Outlet />}
 

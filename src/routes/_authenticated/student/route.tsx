@@ -207,7 +207,7 @@ function hideLoader() {
                   axios.interceptors.request.use(
                           function (config) {
                                    if (!document.body.classList.contains('react-query-fetching')) {
-    showLoader()
+    // showLoader()
   }
   return config;
                           },
@@ -217,11 +217,11 @@ function hideLoader() {
                   )
                   axios.interceptors.response.use(
                           function (response) {
-                                  hideLoader()
+                                  // hideLoader()
                                   return response
                           },
                           function (error) {
-                                  hideLoader()
+                                  // hideLoader()
                                   return Promise.reject(error)
                           }
                   )

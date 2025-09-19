@@ -12,26 +12,40 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useDispatch, useSelector } from 'react-redux'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { handleLogout } from '../../../shared/config/reducers/teacher/teacherAuthSlice'
 import { LogoutModal } from '../../../shared/components/LogoutModal'
 import { toast } from 'sonner'
 import { ChevronDown } from 'lucide-react' // Added for consistency with the second example
+import { getTeacherCreds } from '../../_authenticated/teacher/-utils/helperFunctions'
 
 export function ProfileDropdown() {
-  const credentials = useSelector((state) => state.teacherAuth?.credentials)
+ const [credentials, setCredentials] = useState(null)
   console.log('credentials ===>', credentials)
   const navigate = useNavigate()
   const [logoutModalCondition, setLogoutModalCondition] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  
   const logout = () => {
     setIsLoading(true)
     dispatch(handleLogout())
-    setIsLoading(false)
+    setIsLoading(false);
     toast.success('You have been logged out successfully.')
     navigate({ to: '/teacher/login' })
   }
+
+   useEffect(() => {
+      async function fetchCredentials() {
+        try {
+          const data = await getTeacherCreds()
+          setCredentials(data)
+        } catch (err) {
+          console.log('err', err)
+        }
+      }
+      fetchCredentials()
+    }, []) 
   return (
     <>
       <LogoutModal

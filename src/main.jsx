@@ -21,6 +21,7 @@ import { routeTree } from './routeTree.gen'
 import store from './shared/config/store/store'
 import { getCookie } from './shared/utils/helperFunction'
 import { LoaderThree } from '@/components/ui/loader'
+import { SmallLoader } from './routes/_authenticated/teacher/-layout/data/components/teacher-authenticated-layout'
 
 // ✅ Create QueryClient with defaults
 const queryClient = new QueryClient({
@@ -109,12 +110,13 @@ console.log('credentials 34 ==>',credentials)
   )
 }
 
+
 // ✅ Mount app
 const rootElement = document.getElementById('root')
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
-    <Suspense fallback={<LoaderThree />}>
+    <Suspense fallback={<SmallLoader/>}>
       <Provider store={store}>
         <StrictMode>
           <QueryClientProvider client={queryClient}>

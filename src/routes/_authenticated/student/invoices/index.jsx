@@ -17,6 +17,7 @@ import { useInView } from 'react-intersection-observer'
 import axios from 'axios'
 import { Button } from '@/components/ui/button'
 import { LoaderThree } from '@/components/ui/loader'
+import { SmallLoader } from '../../teacher/-layout/data/components/teacher-authenticated-layout'
 
 const queryClient = new QueryClient()
 
@@ -52,7 +53,7 @@ export const Route = createFileRoute('/_authenticated/student/invoices/')({
     return null
   },
   component: () => (
-    <Suspense fallback={<LoaderThree className="text-[#2563eb]" />}>
+    <Suspense fallback={<SmallLoader className="text-[#2563eb]" />}>
       <InvoiceRowCards />
     </Suspense>
   ),

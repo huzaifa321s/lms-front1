@@ -1,13 +1,13 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useLoaderData } from '@tanstack/react-router'
 import ProfileForm from './profile-form'
 import ContentSection from '../../../student/settings/-components/content-section'
+import { QueryClient, queryOptions } from '@tanstack/react-query';
+import axios from 'axios';
 
-export const Route = createFileRoute('/_authenticated/teacher/settings/profile/')({
-  component: SettingsProfile
-})
 
 export function SettingsProfile (){
+  const data = useLoaderData({from:"/_authenticated/teacher/settings/"})
   return <ContentSection title="Settings">
-   <ProfileForm/>
+   <ProfileForm teacherCreds={data}/>
   </ContentSection>
 }

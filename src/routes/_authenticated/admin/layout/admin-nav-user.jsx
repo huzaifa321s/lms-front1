@@ -27,18 +27,19 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { useDispatch, useSelector } from 'react-redux'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {LogoutModal} from '../../../../shared/components/LogoutModal'
 import { handleLogout } from '../../../../shared/config/reducers/admin/adminAuthSlice'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import { getAdminCreds } from '../-utils/helpeFuntions'
 
 export function NavUser({
   user,
 }) {
   const navigate = useNavigate();
   const { isMobile } = useSidebar()
-  const credentials = useSelector((state) => state.adminAuth.credentials);
+  const [credentials, setCredentials] = useState(null)
   const [logoutModalCondition,setLogoutModalCondition] = useState(false);
   const [isLoading,setIsLoading] = useState(false);
    const dispatch = useDispatch();
@@ -49,6 +50,19 @@ export function NavUser({
    toast.success('You have been logged out successfully.');
    navigate({to:"/admin/login"})
    }
+
+
+    useEffect(() => {
+           async function fetchCredentials() {
+             try {
+               const data = await getAdminCreds()
+               setCredentials(data)
+             } catch (err) {
+               console.log('err', err)
+             }
+           }
+           fetchCredentials()
+         }, []) 
    
   return (
     <>

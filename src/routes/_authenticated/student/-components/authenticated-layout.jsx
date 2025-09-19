@@ -9,6 +9,7 @@ import { BackgroundCircles } from '@/components/ui/shadcn-io/background-circles'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import SkipToMain from '@/components/skip-to-main'
 import { AppSidebar } from './app-sidebar'
+import { SmallLoader } from '../../teacher/-layout/data/components/teacher-authenticated-layout'
 
 export function AuthenticatedLayout({ children, role }) {
   const defaultOpen = Cookies.get('sidebar_state') !== 'false'
@@ -33,7 +34,7 @@ export function AuthenticatedLayout({ children, role }) {
               'has-[main.fixed-main]:group-data-[scroll-locked=1]/body:h-svh'
             )}
           >
-            <Suspense fallback={<LoaderThree />}>
+            <Suspense fallback={<SmallLoader />}>
 
               {children ? children : <Outlet />}
             </Suspense>

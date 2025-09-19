@@ -40,10 +40,10 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
       response = response.data
       if (response.success) {
         toast.success(response.message)
+        dispatch(closeModal())
         await queryClient.invalidateQueries(
           courseQueryOptions({page:modalData?.page,input:modalData?.query})
         )
-        dispatch(closeModal())
       }
     } catch (error) {
       toast.error(error.message)
@@ -79,8 +79,8 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
       response = response.data
       if (response.success) {
           toast.success('Game deleted successfully')
+          dispatch(closeModal())
         await queryClient.invalidateQueries(gameQueryOptions(modalData?.params));
-        dispatch(closeModal())
       }
     } catch (error) {
       console.log('Error: ', error);

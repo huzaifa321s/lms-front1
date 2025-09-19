@@ -64,7 +64,6 @@ import { Route as AuthenticatedStudentCourseTeachersTeacherIDRouteImport } from 
 import { Route as AuthenticatedAdminTeachersTeacherIDRouteImport } from './routes/_authenticated/admin/teachers/$teacherID'
 import { Route as AuthenticatedAdminCoursesCourseIDRouteImport } from './routes/_authenticated/admin/courses/$courseID'
 import { Route as AuthenticatedTeacherTrainingwheelgameCreateIndexRouteImport } from './routes/_authenticated/teacher/trainingwheelgame/create/index'
-import { Route as AuthenticatedTeacherSettingsProfileIndexRouteImport } from './routes/_authenticated/teacher/settings/profile/index'
 import { Route as AuthenticatedTeacherCoursesCreate_courseIndexRouteImport } from './routes/_authenticated/teacher/courses/create_course/index'
 import { Route as AuthenticatedStudentSettingsBillingIndexRouteImport } from './routes/_authenticated/student/settings/billing/index'
 import { Route as AuthenticatedStudentSubscribedTrainingwheelgameIndexRouteImport } from './routes/_authenticated/student/_subscribed/trainingwheelgame/index'
@@ -412,12 +411,6 @@ const AuthenticatedTeacherTrainingwheelgameCreateIndexRoute =
     path: '/trainingwheelgame/create/',
     getParentRoute: () => AuthenticatedTeacherRouteRoute,
   } as any)
-const AuthenticatedTeacherSettingsProfileIndexRoute =
-  AuthenticatedTeacherSettingsProfileIndexRouteImport.update({
-    id: '/profile/',
-    path: '/profile/',
-    getParentRoute: () => AuthenticatedTeacherSettingsRouteRoute,
-  } as any)
 const AuthenticatedTeacherCoursesCreate_courseIndexRoute =
   AuthenticatedTeacherCoursesCreate_courseIndexRouteImport.update({
     id: '/courses/create_course/',
@@ -666,7 +659,6 @@ export interface FileRoutesByFullPath {
   '/student/trainingwheelgame': typeof AuthenticatedStudentSubscribedTrainingwheelgameIndexRoute
   '/student/settings/billing': typeof AuthenticatedStudentSettingsBillingIndexRoute
   '/teacher/courses/create_course': typeof AuthenticatedTeacherCoursesCreate_courseIndexRoute
-  '/teacher/settings/profile': typeof AuthenticatedTeacherSettingsProfileIndexRoute
   '/teacher/trainingwheelgame/create': typeof AuthenticatedTeacherTrainingwheelgameCreateIndexRoute
   '/admin/sample-pages/auth/student copy/sign-up': typeof AuthenticatedAdminSamplePagesAuthStudentcopySignUpRoute
   '/admin/sample-pages/auth/student/sign-up': typeof AuthenticatedAdminSamplePagesAuthStudentSignUpRoute
@@ -744,7 +736,6 @@ export interface FileRoutesByTo {
   '/student/trainingwheelgame': typeof AuthenticatedStudentSubscribedTrainingwheelgameIndexRoute
   '/student/settings/billing': typeof AuthenticatedStudentSettingsBillingIndexRoute
   '/teacher/courses/create_course': typeof AuthenticatedTeacherCoursesCreate_courseIndexRoute
-  '/teacher/settings/profile': typeof AuthenticatedTeacherSettingsProfileIndexRoute
   '/teacher/trainingwheelgame/create': typeof AuthenticatedTeacherTrainingwheelgameCreateIndexRoute
   '/admin/sample-pages/auth/student copy/sign-up': typeof AuthenticatedAdminSamplePagesAuthStudentcopySignUpRoute
   '/admin/sample-pages/auth/student/sign-up': typeof AuthenticatedAdminSamplePagesAuthStudentSignUpRoute
@@ -831,7 +822,6 @@ export interface FileRoutesById {
   '/_authenticated/student/_subscribed/trainingwheelgame/': typeof AuthenticatedStudentSubscribedTrainingwheelgameIndexRoute
   '/_authenticated/student/settings/billing/': typeof AuthenticatedStudentSettingsBillingIndexRoute
   '/_authenticated/teacher/courses/create_course/': typeof AuthenticatedTeacherCoursesCreate_courseIndexRoute
-  '/_authenticated/teacher/settings/profile/': typeof AuthenticatedTeacherSettingsProfileIndexRoute
   '/_authenticated/teacher/trainingwheelgame/create/': typeof AuthenticatedTeacherTrainingwheelgameCreateIndexRoute
   '/_authenticated/admin/sample-pages/auth/student copy/sign-up': typeof AuthenticatedAdminSamplePagesAuthStudentcopySignUpRoute
   '/_authenticated/admin/sample-pages/auth/student/sign-up': typeof AuthenticatedAdminSamplePagesAuthStudentSignUpRoute
@@ -917,7 +907,6 @@ export interface FileRouteTypes {
     | '/student/trainingwheelgame'
     | '/student/settings/billing'
     | '/teacher/courses/create_course'
-    | '/teacher/settings/profile'
     | '/teacher/trainingwheelgame/create'
     | '/admin/sample-pages/auth/student copy/sign-up'
     | '/admin/sample-pages/auth/student/sign-up'
@@ -995,7 +984,6 @@ export interface FileRouteTypes {
     | '/student/trainingwheelgame'
     | '/student/settings/billing'
     | '/teacher/courses/create_course'
-    | '/teacher/settings/profile'
     | '/teacher/trainingwheelgame/create'
     | '/admin/sample-pages/auth/student copy/sign-up'
     | '/admin/sample-pages/auth/student/sign-up'
@@ -1081,7 +1069,6 @@ export interface FileRouteTypes {
     | '/_authenticated/student/_subscribed/trainingwheelgame/'
     | '/_authenticated/student/settings/billing/'
     | '/_authenticated/teacher/courses/create_course/'
-    | '/_authenticated/teacher/settings/profile/'
     | '/_authenticated/teacher/trainingwheelgame/create/'
     | '/_authenticated/admin/sample-pages/auth/student copy/sign-up'
     | '/_authenticated/admin/sample-pages/auth/student/sign-up'
@@ -1498,13 +1485,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTeacherTrainingwheelgameCreateIndexRouteImport
       parentRoute: typeof AuthenticatedTeacherRouteRoute
     }
-    '/_authenticated/teacher/settings/profile/': {
-      id: '/_authenticated/teacher/settings/profile/'
-      path: '/profile'
-      fullPath: '/teacher/settings/profile'
-      preLoaderRoute: typeof AuthenticatedTeacherSettingsProfileIndexRouteImport
-      parentRoute: typeof AuthenticatedTeacherSettingsRouteRoute
-    }
     '/_authenticated/teacher/courses/create_course/': {
       id: '/_authenticated/teacher/courses/create_course/'
       path: '/courses/create_course'
@@ -1914,15 +1894,12 @@ const AuthenticatedStudentRouteRouteWithChildren =
 
 interface AuthenticatedTeacherSettingsRouteRouteChildren {
   AuthenticatedTeacherSettingsIndexRoute: typeof AuthenticatedTeacherSettingsIndexRoute
-  AuthenticatedTeacherSettingsProfileIndexRoute: typeof AuthenticatedTeacherSettingsProfileIndexRoute
 }
 
 const AuthenticatedTeacherSettingsRouteRouteChildren: AuthenticatedTeacherSettingsRouteRouteChildren =
   {
     AuthenticatedTeacherSettingsIndexRoute:
       AuthenticatedTeacherSettingsIndexRoute,
-    AuthenticatedTeacherSettingsProfileIndexRoute:
-      AuthenticatedTeacherSettingsProfileIndexRoute,
   }
 
 const AuthenticatedTeacherSettingsRouteRouteWithChildren =

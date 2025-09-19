@@ -31,9 +31,8 @@ import { useMutation } from '@tanstack/react-query'
 import { PasswordInput } from '@/components/password-input'
 import { IconLock } from '@tabler/icons-react'
 
-export default function ProfileForm() {
+export default function ProfileForm({teacherCreds}) {
   const dispatch = useDispatch()
-  const credentials = useSelector((state) => state.teacherAuth.credentials)
   const [dp, setDp] = useState('')
   const [passBtnLoading, setPassBtnLoading] = useState(false)
   const [passwordObj, setPasswordObj] = useState({
@@ -70,14 +69,14 @@ export default function ProfileForm() {
     qualification: z.string().optional(),
     address: z.string().optional(),
   })
-console.log("crdes",credentials)
+
   const defaultValues = {
-    firstname: credentials?.firstName || '',
-    lastname: credentials?.lastName || '',
-    bio: credentials?.bio || '',
+    firstname: teacherCreds?.firstName || '',
+    lastname: teacherCreds?.lastName || '',
+    bio: teacherCreds?.bio || '',
     profile: '',
-    qualification: credentials?.qualification || '',
-    address: credentials?.address || '',
+    qualification: teacherCreds?.qualification || '',
+    address: teacherCreds?.address || '',
   }
 
   const form = useForm({
@@ -125,7 +124,7 @@ console.log("crdes",credentials)
   const saveChanges = useCallback(
     (data) => {
       const postObj = {
-        profile: credentials?.profile,
+        profile: teacherCreds?.profile,
         firstName: data.firstname,
         lastName: data.lastname,
         bio: data.bio,
@@ -134,7 +133,7 @@ console.log("crdes",credentials)
       }
       mutation.mutate(postObj)
     },
-    [ credentials, mutation]
+    [ teacherCreds, mutation]
   )
 
   return (
@@ -162,8 +161,8 @@ console.log("crdes",credentials)
                     <img
                       className="w-full h-full object-cover"
                       src={
-                        dp || credentials?.profile
-                          ? `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/teacher/profile/${credentials.profile}`
+                        dp || teacherCreds?.profile
+                          ? `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/teacher/profile/${teacherCreds.profile}`
                           : defaultProfile
                       }
                       alt="Profile"
@@ -175,18 +174,18 @@ console.log("crdes",credentials)
                 </div>
 
                 <h3 className="text-xl font-semibold text-[#1e293b] mb-1">
-                  {credentials?.firstName} {credentials?.lastName}
+                  {teacherCreds?.firstName} {teacherCreds?.lastName}
                 </h3>
-                <p className="text-[#64748b] mb-4">{credentials?.email}</p>
+                <p className="text-[#64748b] mb-4">{teacherCreds?.email}</p>
 
                 <div className="space-y-3 text-sm">
                   <div className="flex items-center justify-center text-[#64748b]">
                     <GraduationCap className="w-4 h-4 mr-2 text-[#2563eb]" />
-                    {credentials?.qualification || 'Not provided'}
+                    {teacherCreds?.qualification || 'Not provided'}
                   </div>
                   <div className="flex items-center justify-center text-[#64748b]">
                     <Home className="w-4 h-4 mr-2 text-[#2563eb]" />
-                    {credentials?.address || 'Not provided'}
+                    {teacherCreds?.address || 'Not provided'}
                   </div>
                 </div>
               </div>
@@ -225,8 +224,8 @@ console.log("crdes",credentials)
                           <img
                             className="h-16 w-16 rounded-full border-2 border-[#e2e8f0] shadow-lg"
                             src={
-                              dp || credentials?.profile
-                                ? `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/teacher/profile/${credentials.profile}`
+                              dp || teacherCreds?.profile
+                                ? `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/teacher/profile/${teacherCreds.profile}`
                                 : defaultProfile
                             }
                             alt="Current profile"

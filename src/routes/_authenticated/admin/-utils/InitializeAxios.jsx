@@ -200,7 +200,7 @@ function hideLoader() {
     // Axios request interceptor for showing loader
     axios.interceptors.request.use(
       function (config) {
-        showLoader();
+        // showLoader();
         return config;
       },
       function (error) {
@@ -211,11 +211,11 @@ function hideLoader() {
     // Axios response interceptor for hiding loader
     axios.interceptors.response.use(
       function (response) {
-        hideLoader();
+        // hideLoader();
         return response;
       },
       function (error) {
-        hideLoader();
+        // hideLoader();
         return Promise.reject(error);
       }
     );

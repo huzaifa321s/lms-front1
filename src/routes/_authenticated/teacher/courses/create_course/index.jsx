@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { QueryClient, queryOptions, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useAppUtils } from '../../../../../hooks/useAppUtils';
 import { objectToFormData } from '../../../../../shared/utils/helperFunction';
+import { getTeacherCreds } from '../../-utils/helperFunctions';
 
 const queryClient = new QueryClient();
 
@@ -17,12 +18,14 @@ const categoryQueryOptions = () =>
       try {
         let response = await axios.get('/teacher/course-category/getAll');
         response = response.data;
+        const creds = await getTeacherCreds()
+        console.log('creds t',creds)
         if (response.success) {
-          return { courseCategories: response.data };
+          return { courseCategories: response.data ,credentials:creds };
         }
       } catch (error) {
         console.log('error', error);
-        return { courseCategories: [] };
+        return { courseCategories: [],credentiasl:null};
       }
     },
   });
@@ -36,19 +39,17 @@ const defaultCover = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/default
 
 function RouteComponent() {
   const navigate = useNavigate();
-  const credentials = useSelector((state) => state.teacherAuth.credentials);
   const [cover, setCover] = useState(null);
   const { router } = useAppUtils();
-  const { data } = useSuspenseQuery(categoryQueryOptions());
+  const { data ,credentials} = useSuspenseQuery(categoryQueryOptions());
   const { courseCategories } = data;
   const queryClient = useQueryClient();
-
   const TEMPLATE_UPDATE_OBJ = {
     coverImage: null,
     name: '',
     description: '',
     category: '',
-    instructor: credentials._id,
+    instructor: credentials?._id,
     material: [{ title: '', description: '', media: '' }],
   };
 

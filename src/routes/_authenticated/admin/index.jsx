@@ -5,10 +5,16 @@ import {  queryOptions } from '@tanstack/react-query'
 
 
 const fetchTopCards = async () => {
-  // Simulating a fast API response for the cards
-  const res = await axios.get('/admin/dashboard/cards');
-  return res.data.success ? res.data.data : [];
-};
+  try{
+    // Simulating a fast API response for the cards
+    const res = await axios.get('/admin/dashboard/cards');
+    console.log('res ====>',res.data)
+    return res.data.success ? res.data.data : [];
+  }catch(error){
+    console.log('error',error);
+}
+
+}
 
 const fetchTopCourses = async () => {
   const res = await axios.get('/admin/dashboard/top-courses');
