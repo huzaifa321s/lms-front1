@@ -20,8 +20,14 @@ export function getSubscription() {
    return subsc 
   }
 
+  export function getCredentials() {
+   let subsc = getCookie('studentSubscription') 
+   return subsc 
+  }
+
 export function getSidebarData() {
   const subscription = getSubscription()
+  const credentials = getCredentials()
   const isSubscribed =
     subscription?.status === 'active' && subscription?.subscriptionId
       ? true
@@ -77,10 +83,10 @@ export function getSidebarData() {
           },
           !isSubscribed
             ? {
-                title: 'Locked – Subscribe to Unlock',
+                title: `Locked – ${subscription?.status === 'pending' ? "Activate Subscription" :  "Subscribe"}  to Unlock`,
                 url: '',
                 icon: IconLock,
-                className: 'bg-yellow-600 text-white',
+                className: 'bg-yellow-600 text-white ',
                 items: [
                   {
                     title: 'Enrolled Courses',

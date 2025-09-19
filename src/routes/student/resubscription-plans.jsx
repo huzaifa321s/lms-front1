@@ -74,7 +74,8 @@ export const Route = createFileRoute('/student/resubscription-plans')({
         align-items: center;
         justify-content: center;
         z-index: 1000;
-        background: transparent;
+        background: rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(4px);
       }
 
       .custom-loader-content {
@@ -245,20 +246,24 @@ export const Route = createFileRoute('/student/resubscription-plans')({
 //   throw redirect({ to: '/student/login', replace: true })
 // }
 
-console.log('credentials ===>', credentials)
-
+console.log('subscription ===>', subscription)
 // ✅ Active subscription → go to dashboard
 if (subscription?.status === 'active' && subscription?.subscriptionId) {
   throw redirect({ to: '/student', replace: true })
 }
 
-// ❌ Subscription exists but not active
-if (subscription?.subscriptionId && subscription.status !== 'active') {
-  throw redirect({ to: '/student/failed-subscription', replace: true })
+// ❌ Subscription canceled → stay on current route (show Outlet)
+if (subscription?.status === 'canceled') {
+  return <Outlet />
 }
 
+// ❌ Subscription exists but not active (and not canceled)
+// if (subscription?.subscriptionId && subscription.status !== 'active') {
+//   throw redirect({ to: '/student/failed-subscription', replace: true })
+// }
+
 // 🆕 No subscription + no customer → first time subscribe
-if (!subscription && !credentials.customerId) {
+if (!subscription && !credentials?.customerId) {
   throw redirect({ to: '/student/subscription-plans', replace: true })
 }
 

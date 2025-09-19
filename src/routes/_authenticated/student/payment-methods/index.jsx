@@ -107,7 +107,7 @@ function RouteComponent() {
 
         <div className="space-y-4">
           {paymentMethods.length > 0 ? (
-            paymentMethods.map((pm) => (
+            paymentMethods.map((pm,i) => (
               <Card
                 key={pm.paymentMethodId}
                 className={`relative p-4 rounded-[12px] bg-[#ffffff] border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)] hover:border-[#cbd5e1]

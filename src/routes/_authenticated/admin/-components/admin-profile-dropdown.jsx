@@ -30,7 +30,7 @@ export function ProfileDropdown() {
     dispatch(handleLogout())
     setIsLoading(false)
     toast.success('You have been logged out successfully.')
-    navigate({ to: '/teacher/login' })
+    navigate({ to: '/admin/login' })
   }
   return (
     <>

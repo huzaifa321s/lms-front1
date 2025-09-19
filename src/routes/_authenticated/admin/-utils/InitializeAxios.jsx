@@ -5,8 +5,8 @@ import { Outlet, redirect } from "@tanstack/react-router";
 export function initializeAxios() {
         const TOKEN = getCookie('adminToken')
         const credentials = getCookie('adminCredentials');
-        const suspenseLoading = getCookie('suspenseLoading');
-        console.log('suspenseLoading ===>',suspenseLoading)
+        console.log('admin token ==',TOKEN);
+        console.log('admin creds',credentials)
         function showLoader() {
   // Check if loader already exists
   if (document.getElementById("custom-loader")) return;
@@ -56,7 +56,8 @@ export function initializeAxios() {
         align-items: center;
         justify-content: center;
         z-index: 1000;
-        background: transparent;
+        background: rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(4px);
       }
 
       .custom-loader-content {
@@ -194,35 +195,36 @@ function hideLoader() {
    }
 }
                 if (TOKEN && credentials) {
-                      
-                              axios.defaults.headers.common['Authorization'] = `Bearer ${TOKEN}`
-                              axios.interceptors.request.use(
-                                      function (config) {
-                                        //       document.body.classList.add('loading-indicator')
-                                        showLoader()
-                                              return config
-                                      },
-                                      function (error) {
-                                              return Promise.reject(error)
-                                      }
-                              )
-                              axios.interceptors.response.use(
-                                      function (response) {
-                                        //       document.body.classList.remove('loading-indicator')
-                                        hideLoader()
-                                              return response
-                                      },
-                                      function (error) {
-                                        //       document.body.classList.remove('loading-indicator')
-                                        hideLoader()
-                                              return Promise.reject(error)
-                                      }
-                              )
-              
-                              return <Outlet/>
-                      }else{
-                          throw redirect({to:'/admin/login'})
-                      }
+    axios.defaults.headers.common['Authorization'] = `Bearer ${TOKEN}`;
+    
+    // Axios request interceptor for showing loader
+    axios.interceptors.request.use(
+      function (config) {
+        showLoader();
+        return config;
+      },
+      function (error) {
+        return Promise.reject(error);
+      }
+    );
+    
+    // Axios response interceptor for hiding loader
+    axios.interceptors.response.use(
+      function (response) {
+        hideLoader();
+        return response;
+      },
+      function (error) {
+        hideLoader();
+        return Promise.reject(error);
+      }
+    );
+    
+    return <Outlet />;
+  } else {
+    // TanStack Router ka redirect syntax theek hai
+    throw redirect({ to: '/admin/login' });
+  }
 }
   
 

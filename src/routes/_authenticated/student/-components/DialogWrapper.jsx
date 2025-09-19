@@ -130,20 +130,21 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
   
   const updatePlan = useCallback(async () => {
     try {
-      console.log('credentials ===>', credentials)
       let response = await axios.put(
         `/student/payment/update-subscription-plan`,
         { newPlan: modalData?.selectedPlan }
       )
+      console.log('credentials ===>', credentials)
       response = response.data
       if (response.success) {
         toast.success(response.message)
         const { subscription, remainingEnrollmentCount, user } = response.data
+        console.log('user ===>',user);
         dispatch(
           updateSubscription({
             subscription: {
               ...subscription,
-              subscriptionId: user.subscriptionId,
+              subscriptionId: user?.subscriptionId,
             },
             remainingEnrollmentCount,
           })
@@ -560,6 +561,45 @@ return (
         </div>
       </DialogContent>
     </Dialog>
+
+    <Dialog
+        open={isOpen && dialogType === 'activate-subscription-modal'}
+        onOpenChange={() => {dispatch(closeModal())
+}}
+      >
+        <DialogContent className='mx-auto max-w-md rounded-[8px] bg-white shadow-[0_4px_6px_rgba(0,0,0,0.05)]'>
+          <DialogHeader>
+            <DialogTitle className='bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-2xl font-bold text-transparent'>
+              Activate Subscription
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className='p-6'>
+            <p className='mb-6 text-lg text-[#64748b]'>
+              Your subscription is not active. Please activate your plan to
+              continue accessing premium features.
+            </p>
+
+            <div className='flex justify-end gap-4'>
+              <Button
+                variant='ghost'
+                onClick={() => dispatch(closeModal())}
+                className='rounded-[8px] text-[#64748b] transition-all duration-300 hover:bg-green-50 hover:text-green-600'
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  toast.info('This feature will be available in a future update.')
+                }}
+                className='rounded-[8px] bg-gradient-to-r from-green-600 to-emerald-600 font-medium text-white transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]'
+              >
+                Activate Now
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

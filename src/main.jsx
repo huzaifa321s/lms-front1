@@ -89,6 +89,7 @@ const App = () => {
 
   // ✅ Axios setup
   axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL
+  console.log('axios.defaults.baseURL --->',axios.defaults.baseURL)
   const TOKEN = getCookie('studentToken')
   const credentials = useSelector((state) => state.studentAuth.credentials)
 console.log('Token ====>',TOKEN);
@@ -100,7 +101,6 @@ console.log('credentials 34 ==>',credentials)
 
   console.log('authentication ===>', authentication)
 
-  // ✅ Pass BOTH queryClient + authentication
   return (
     <RouterProvider
       router={router}
@@ -118,13 +118,13 @@ if (!rootElement.innerHTML) {
       <Provider store={store}>
         <StrictMode>
           <QueryClientProvider client={queryClient}>
-            <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+           
               <FontProvider>
                 <Elements stripe={stripePromise}>
                   <App />
                 </Elements>
               </FontProvider>
-            </ThemeProvider>
+           
           </QueryClientProvider>
         </StrictMode>
       </Provider>

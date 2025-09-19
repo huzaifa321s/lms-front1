@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import axios from 'axios'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate,useSearch } from '@tanstack/react-router'
+import { Link, redirect, useNavigate,useSearch } from '@tanstack/react-router'
 import { useDispatch } from 'react-redux'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -44,22 +44,22 @@ export function LoginForm({ className, ...props }) {
                 dispatch(handleLogin({token, credentials}))
                 console.log('redirectTo ===>',redirectTo)
             if(redirectTo){
-              navigate({to:redirectTo})
+              navigate({to:redirectTo,replace: true})
             }else{
               console.log('condition true')
-              navigate({to:"/teacher"})
+               navigate({to:"/teacher",replace: true})
             }
             toast.success('Logged in successfully')
             reset()
           }
         } catch (error) {
           console.log('error', error)
-          toast.error(error.response.data.message)
+          toast.error(error.response?.data?.message || 'Something went wrong')
         } finally {
           setIsLoading(false);
         }
       },
-      [axios, toast, navigate,redirectTo]
+      [axios, toast,redirectTo,navigate]
     );
 
   return (

@@ -35,17 +35,7 @@ function PaymentMethodsList({
       let response = await axios.post('/student/payment/resubscribe', reqBody)
       response = response.data
       if (response.success) {
-        toast.success(response.message, {
-          description: (
-            <Button
-              onClick={() => navigate({ to: '/student/settings/billing' })}
-              variant="secondary"
-              size="xs"
-            >
-              Go To Billing Settings
-            </Button>
-          ),
-        })
+        toast.success(response.message)
         const { subscription, remainingEnrollmentCount } = response.data
         dispatch(updateSubscription({ subscription, remainingEnrollmentCount }))
         getSidebarData();
@@ -72,16 +62,17 @@ console.log('data ===>',data)
   })
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center p-6">
-      <Card className="w-full max-w-5xl shadow-xl border rounded-2xl">
-        <CardHeader className="flex flex-row items-center justify-between border-b pb-4">
-          <CardTitle className="text-xl font-semibold">
+      <div className="flex min-h-[80vh] items-center justify-center p-6 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      <Card className="w-full max-w-5xl shadow-2xl border-0 bg-white/90 rounded-2xl backdrop-blur-sm">
+        <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 pb-4">
+          <CardTitle className="text-xl font-semibold text-slate-800 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
             {plan?.name} Plan
           </CardTitle>
           <Button
             variant="ghost"
             size="icon"
             onClick={() => paymentMethodsListFlag(false)}
+            className="text-slate-600 hover:text-blue-600 hover:bg-blue-50"
           >
             ✕
           </Button>
@@ -90,10 +81,10 @@ console.log('data ===>',data)
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
           {/* Left Side: Plan Info */}
           <div>
-            <h2 className="text-4xl md:text-5xl font-bold text-indigo-600">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               {plan?.price}
             </h2>
-            <ul className="mt-6 space-y-4 text-gray-700">
+            <ul className="mt-6 space-y-4 text-slate-600 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
               {plan?.features.map((feature, i) => (
                 <li key={i} className="flex items-center gap-3">
                   <span className="text-green-600">
@@ -120,8 +111,10 @@ console.log('data ===>',data)
 
           {/* Right Side: Payment Methods */}
           <div>
-            <h2 className="text-xl font-semibold">Payment Methods</h2>
-            <p className="mb-4 text-sm text-gray-500">
+            <h2 className="text-xl font-semibold text-slate-800 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+              Payment Methods
+            </h2>
+            <p className="mb-4 text-sm text-slate-500 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
               We'll use your <span className="font-medium">Default card</span> for the payment.
             </p>
 
@@ -141,7 +134,7 @@ console.log('data ===>',data)
                 </div>
               </Show.When>
               <Show.Else>
-                <div className="rounded-lg border border-dashed p-6 text-center text-gray-500">
+                <div className="rounded-lg border border-dashed border-slate-200 p-6 text-center text-slate-500 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
                   No payment methods available.
                 </div>
               </Show.Else>
@@ -152,6 +145,7 @@ console.log('data ===>',data)
                 variant="outline"
                 size="sm"
                 onClick={() => dispatch(openModal({ type: 'add-payment-method' }))}
+                className="border-slate-200 text-slate-800 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]"
               >
                 + Add Payment Method
               </Button>
@@ -159,9 +153,9 @@ console.log('data ===>',data)
           </div>
         </CardContent>
 
-        <div className="border-t mt-6 pt-4 flex justify-end px-6">
+        <div className="border-t border-slate-100 mt-6 pt-4 flex justify-end px-6">
           <Button
-            className="px-6"
+            className="px-6 bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600 disabled:from-slate-300 disabled:to-slate-400 disabled:text-slate-600 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 disabled:scale-100 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]"
             disabled={
               paymentMethods.length < 1 || resubscribeMutation.status === 'pending'
             }

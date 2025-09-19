@@ -1,8 +1,18 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { LoginForm } from './-components/admin-login-form'
+import { getCookie } from '../../shared/utils/helperFunction'
 
 
 export const Route = createFileRoute('/admin/login')({
+   beforeLoad: () => {
+      const token = getCookie('adminToken')
+      const credentials = getCookie('adminCredentials')
+      if (token && credentials) {
+        throw redirect({ to: '/admin' })
+      } else {
+        return <Outlet />
+      }
+    },
   component: LoginPage,
 })
 

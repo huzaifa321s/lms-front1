@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import axios from 'axios'
-import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
+import { createFileRoute, Navigate, Outlet, redirect } from '@tanstack/react-router'
 import { Show } from '../../shared/utils/Show'
 import { getCookie } from '../../shared/utils/helperFunction'
 import CardForm from '../_authenticated/student/settings/-components/-card-form'
@@ -9,54 +9,55 @@ import Plans from './-components/Plans'
 export const Route = createFileRoute('/student/subscription-plans')({
   beforeLoad: () => {
     const TOKEN = getCookie('studentToken')
-    const credentials = JSON.parse(localStorage.getItem('studentCredentials'))
+    const credentials = getCookie('studentCredentials')
+    const subscription = getCookie('studentSubscription')
 
     if (TOKEN && credentials) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${TOKEN}`
 
-      axios.interceptors.request.use(
-        function (config) {
-          if (config.skipInterceptors) {
-            return config
-          }
-          document.body.classList.add('loading-indicator')
-          return config
-        },
-        function (error) {
-          return Promise.reject(error)
-        }
-      )
+      // axios.interceptors.request.use(
+      //   function (config) {
+      //     if (config.skipInterceptors) {
+      //       return config
+      //     }
+      //     document.body.classList.add('loading-indicator')
+      //     return config
+      //   },
+      //   function (error) {
+      //     return Promise.reject(error)
+      //   }
+      // )
 
-      axios.interceptors.response.use(
-        function (response) {
-          if (response.config.skipInterceptors) {
-            return response
-          }
-          document.body.classList.remove('loading-indicator')
-          return response
-        },
-        function (error) {
-          if (error.config.skipInterceptors) {
-            return Promise.reject(error)
-          }
-          document.body.classList.remove('loading-indicator')
-          return Promise.reject(error)
-        }
-      )
+      // axios.interceptors.response.use(
+      //   function (response) {
+      //     if (response.config.skipInterceptors) {
+      //       return response
+      //     }
+      //     document.body.classList.remove('loading-indicator')
+      //     return response
+      //   },
+      //   function (error) {
+      //     if (error.config.skipInterceptors) {
+      //       return Promise.reject(error)
+      //     }
+      //     document.body.classList.remove('loading-indicator')
+      //     return Promise.reject(error)
+      //   }
+      // )
 
       // Scenario 1: Subscribed
       console.log('credentials ===>', credentials)
-      if (credentials.subscription) {
-        const { status } = credentials.subscription
+      if (subscription) {
+        const { status } = subscription
 
         // // Scenario 2: Payment failed
         // if (status === 'past_due') {
-        //     return <Navigate to="/student/welcome" replace />
+        //     return <Navigate to="/student" replace />
         // }
 
         // // Scenario 3: Subscription activated
         // if (status === 'active') {
-        //   return <Navigate to="/student/welcome" replace />
+        //   return <Navigate to="/student" replace />
         // }
 
         throw redirect({ to: '/student', replace: true })

@@ -1,11 +1,16 @@
-import { createFileRoute} from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
+import { useEffect } from 'react'
 import { AuthenticatedLayout } from './layout/admin-authenticated-layout'
 import { initializeAxios } from './-utils/InitializeAxios'
 
-export const Route = createFileRoute('/_authenticated/admin')({
-  beforeLoad:() =>{
-    initializeAxios();
-  },
-  component:AuthenticatedLayout ,
-})
+function AdminRouteComponent() {
+  useEffect(() => {
+    initializeAxios()
+  }, [])
 
+  return <AuthenticatedLayout />
+}
+
+export const Route = createFileRoute('/_authenticated/admin')({
+  component: AdminRouteComponent,
+})

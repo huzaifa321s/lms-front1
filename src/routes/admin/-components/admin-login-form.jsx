@@ -119,14 +119,9 @@ export function LoginForm({ className, ...props }) {
                   disabled={isLoading}
                   loading={isLoading}
                 >
-                  {isLoading ? (
-                    <div className="flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Logging in...
-                    </div>
-                  ) : (
-                    'Login'
-                  )}
+                  
+                    {isLoading ? "Logging in..."  : "Login"}
+                  
                 </Button>
               </div>
             </div>

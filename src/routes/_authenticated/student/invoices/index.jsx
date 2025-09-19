@@ -138,7 +138,7 @@ function InvoiceRowCards() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] p-6">
+     <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] p-6">
       {/* Decorative background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-3xl"></div>
@@ -147,6 +147,18 @@ function InvoiceRowCards() {
       </div>
 
       <div className="relative mx-auto max-w-7xl">
+        {/* Coming Soon Heading */}
+        <div className="mb-12 w-full max-w-2xl mx-auto">
+          <div className="bg-[#ffffff] border border-[#e2e8f0] rounded-[8px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] p-6 text-center">
+            <h1 className="text-3xl font-bold text-[#1e293b] font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+              We are working on this page
+              <span className="ml-2 inline-block bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white px-3 py-1 rounded-full text-sm font-semibold">
+                <Clock className="w-4 h-4 inline mr-1" /> Stay Tuned!
+              </span>
+            </h1>
+          </div>
+        </div>
+
         {/* Header */}
         <div className="mb-12 text-center">
           <h1 className="mb-4 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-4xl font-bold text-transparent">

@@ -339,60 +339,64 @@ console.log('fitleredStudents ====>',filteredStudents)
                 Course Materials
               </CardTitle>
 
-              <div className='space-y-4'>
-                {courseObj?.material?.map((m, k) => (
-                  <Accordion
-                    type='single'
-                    collapsible
-                    className='rounded-[12px] border border-[#e2e8f0] bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] transition-all duration-300 hover:shadow-md'
-                    key={k}
-                  >
-                    <AccordionItem value='item-1' className='border-none'>
-                      <AccordionTrigger className='rounded-t-[12px] px-6 py-4 transition-all duration-200 hover:bg-gradient-to-r hover:from-[#f8fafc] hover:to-[#f1f5f9] hover:no-underline'>
-                        <div className='flex items-center gap-3'>
-                          <div className='rounded-lg bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] p-2'>
-                            <BookOpen className='h-5 w-5 text-white' />
-                          </div>
-                          <span className='font-semibold text-[#1e293b]'>
-                            {m.title}
-                          </span>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent className='px-6 pb-4'>
-                        <div className='space-y-3'>
-                          <div className='rounded-[12px] border border-[#e2e8f0] bg-white p-4'>
-                            <span className='mb-2 block font-semibold text-[#1e293b]'>
-                              Description:
-                            </span>
-                            <p className='text-[#64748b]'>{m.description}</p>
-                          </div>
+           <div className="space-y-4">
+      {courseObj?.material?.map((m, k) => (
+        <Accordion
+          type="single"
+          collapsible
+          className="rounded-2xl border border-slate-100 bg-white/95 backdrop-blur-sm shadow-xl transition-all duration-300 hover:shadow-[0_0_25px_5px_rgba(59,130,246,0.2)]"
+          key={m.id || k} // Prefer m.id if available
+        >
+          <AccordionItem value={`item-${k}`} className="border-none">
+            <AccordionTrigger className="rounded-t-2xl px-6 py-4 transition-all duration-200 hover:bg-white/80 hover:no-underline">
+              <div className="flex items-center gap-3">
+                <div className="rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 p-2">
+                  <BookOpen className="h-5 w-5 text-white" />
+                </div>
+                <span className="font-semibold text-slate-800 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                  {m.title}
+                </span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-4">
+              <div className="space-y-3">
+                <div className="rounded-2xl border border-slate-100 bg-white/95 p-4 backdrop-blur-sm">
+                  <span className="mb-2 block font-semibold text-slate-800 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                    Description:
+                  </span>
+                  <p className="text-slate-600 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                    {m.description}
+                  </p>
+                </div>
 
-                          {m.media && (
-                            <div className='flex items-center gap-3'>
-                              <Button
-                                variant='outline'
-                                size='sm'
-                                className='border-[#e2e8f0] text-[#2563eb] hover:bg-[#e2e8f0] rounded-[8px]'
-                                onClick={() => console.log('Download', m.media)}
-                              >
-                                <Download className='mr-2 h-4 w-4' />
-                                Download {m.media}
-                              </Button>
-                            </div>
-                          )}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                ))}
-
-                {(!courseObj?.material || courseObj.material.length === 0) && (
-                  <div className='py-8 text-center text-[#64748b]'>
-                    <FileText className='mx-auto mb-3 h-12 w-12 text-[#94a3b8]' />
-                    <p>No materials available for this course yet.</p>
+                {m.media && (
+                  <div className="flex items-center gap-3">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-slate-200 text-blue-600 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 rounded-xl font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]"
+                      onClick={() => console.log('Download', m.media)}
+                    >
+                      <Download className="mr-2 h-4 w-4" />
+                      Download {m.media}
+                    </Button>
                   </div>
                 )}
               </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      ))}
+
+      {(!courseObj?.material || courseObj?.material.length === 0) && (
+        <div className="py-8 px-6 text-center bg-white/95 rounded-2xl border border-slate-100 backdrop-blur-sm shadow-xl">
+          <FileText className="mx-auto mb-3 h-12 w-12 text-slate-400" />
+          <p className="text-slate-600 text-lg font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+            No materials available for this course yet.
+          </p>
+        </div>
+      )}
+    </div>
             </CardContent>
           </Card>
         )}

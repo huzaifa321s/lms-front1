@@ -187,7 +187,7 @@ function RouteComponent() {
       </Header>
       <Main>
         <DataTable
-          data={teachers}
+          data={teachers?.length ? teachers : []}
           columns={teachersSchemaStudentPanel}
           fetchStatus={fetchStatus}
           isFetching={isFetching}

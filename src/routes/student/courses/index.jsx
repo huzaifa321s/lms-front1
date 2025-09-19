@@ -361,7 +361,7 @@ function RouteComponent() {
                     {/* Enhanced Category Badge */}
                     <div className='absolute top-3 left-3 flex items-center space-x-1 rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] px-3 py-1.5 text-xs font-semibold text-white shadow-lg backdrop-blur-sm border border-white/20'>
                       <div className='h-1.5 w-1.5 rounded-full bg-white/90 animate-pulse'></div>
-                      <span>{course.category?.name || 'General'}</span>
+                      <span>{course.category?.name || 'N/A'}</span>
                     </div>
 
                     {/* Enhanced Enrollment Status */}

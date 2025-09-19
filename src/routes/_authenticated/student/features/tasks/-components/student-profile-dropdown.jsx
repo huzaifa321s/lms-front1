@@ -365,7 +365,6 @@ export function ProfileDropdown() {
             <Avatar className="h-8 w-8 rounded-full ring-2 ring-[#e2e8f0]">
               <AvatarImage src="/avatars/01.png" alt="profile" />
               <AvatarFallback className="rounded-full bg-[#f1f5f9] text-[#1e293b]">
-                {console.log('crdentials -->', credentials)}
                 {`${credentials?.firstName?.charAt(0).toUpperCase() ?? ''}${credentials?.lastName?.charAt(0).toUpperCase() ?? ''}`}
               </AvatarFallback>
             </Avatar>
@@ -404,14 +403,14 @@ export function ProfileDropdown() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild className="rounded-[8px] transition-all duration-200 hover:bg-[#2563eb]/10 hover:text-[#1d4ed8] focus:bg-[#2563eb]/10 focus:text-[#1d4ed8]">
-              <Link to="/student/setting/billing" className="flex items-center gap-2">
+              <Link to="/student/settings/billing" className="flex items-center gap-2">
                 <CreditCard size={16} className="text-[#2563eb]" />
                 Billing
                 <DropdownMenuShortcut className="text-[#64748b]">⌘B</DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild className="rounded-[8px] transition-all duration-200 hover:bg-[#2563eb]/10 hover:text-[#1d4ed8] focus:bg-[#2563eb]/10 focus:text-[#1d4ed8]">
-              <Link to="/student/setting/invoices" className="flex items-center gap-2">
+              <Link to="/student/invoices" className="flex items-center gap-2">
                 <Receipt size={16} className="text-[#2563eb]" />
                 Invoices
                 <DropdownMenuShortcut className="text-[#64748b]">⌘I</DropdownMenuShortcut>

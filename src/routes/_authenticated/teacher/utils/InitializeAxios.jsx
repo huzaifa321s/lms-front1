@@ -5,7 +5,7 @@ import { Outlet, redirect } from "@tanstack/react-router";
 export function initializeAxios() {
         const TOKEN = getCookie('teacherToken')
         const credentials = getCookie('teacherCredentials');
-        function showLoader() {
+     function showLoader() {
   // Check if loader already exists
   if (document.getElementById("custom-loader")) return;
 
@@ -54,7 +54,8 @@ export function initializeAxios() {
         align-items: center;
         justify-content: center;
         z-index: 1000;
-        background: transparent;
+        background: rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(4px);
       }
 
       .custom-loader-content {

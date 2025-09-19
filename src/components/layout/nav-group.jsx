@@ -93,7 +93,7 @@ const SidebarMenuCollapsible = ({
     >
       <SidebarMenuItem>
         <CollapsibleTrigger asChild >
-          <SidebarMenuButton className={`${item.className && item.className} h-14`} tooltip={item.title}>
+          <SidebarMenuButton className={`${item.className && item.className} h-fit`} tooltip={item.title}>
             {item.icon && <item.icon />}
             <span>{item.title}</span>
             {item.badge && <NavBadge>{item.badge}</NavBadge>}

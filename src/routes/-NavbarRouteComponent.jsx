@@ -101,7 +101,7 @@ export const NavbarRouteComponent = () => {
           {/* Secondary Login Button */}
           <Link
             to="/student/login"
-            className="flex items-center space-x-2 px-4 py-2 rounded-[8px] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] border border-[#e2e8f0] transition-all duration-200 group ml-4 font-medium"
+            className="flex items-center space-x-2 px-2 py-1 rounded-[8px] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] border border-[#e2e8f0] transition-all duration-200 group ml-4 font-medium"
           >
             <LogIn className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
             <span>Login</span>
@@ -110,7 +110,7 @@ export const NavbarRouteComponent = () => {
           {/* Primary Register Button */}
           <Link
             to="/student/register"
-            className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] hover:from-[#1d4ed8] hover:to-[#1e40af] text-white rounded-[8px] shadow-sm hover:shadow-[0_4px_12px_rgba(37,99,235,0.25)] transition-all duration-300 hover:-translate-y-0.5 font-medium"
+            className="flex items-center space-x-2 px-2 py-1 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] hover:from-[#1d4ed8] hover:to-[#1e40af] text-white rounded-[8px] shadow-sm hover:shadow-[0_4px_12px_rgba(37,99,235,0.25)] transition-all duration-300 hover:-translate-y-0.5 font-medium"
           >
             <UserPlus className="w-4 h-4" />
             <span>Register</span>

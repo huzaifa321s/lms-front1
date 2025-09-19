@@ -2,9 +2,8 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { CheckCircle, XCircle, Trophy, RotateCcw, Clock, Target, Award, Link, Brain } from "lucide-react"
+import { CheckCircle, XCircle, Trophy, RotateCcw, Clock, Target, Award, Brain } from "lucide-react"
 import dummyMcqs from "./dummyMcqs"
-
 
 export const Quiz = () => {
   const [index, setIndex] = useState(0)
@@ -12,7 +11,7 @@ export const Quiz = () => {
   const [score, setScore] = useState(0)
   const [game, setGame] = useState(true)
   const [lock, setLock] = useState(false)
-  const [selectedOption, setSelectedOption] = useState<string | null>(null)
+  const [selectedOption, setSelectedOption] = useState(null)
   const [showResult, setShowResult] = useState(false)
   const [questionAnimation, setQuestionAnimation] = useState(false)
   const [scoreAnimation, setScoreAnimation] = useState(false)
@@ -25,7 +24,7 @@ export const Quiz = () => {
   }, [index])
 
   // Validate answer
-  const checkAns = (selectedAnswer: string) => {
+  const checkAns = (selectedAnswer) => {
     if (!lock) {
       setSelectedOption(selectedAnswer)
       setLock(true)
@@ -68,7 +67,7 @@ export const Quiz = () => {
     setScoreAnimation(false)
   }
 
-  const getOptionStyle = (option: string) => {
+  const getOptionStyle = (option) => {
     const baseStyle = "p-5 rounded-xl border-2 flex items-center justify-between font-medium transition-all duration-300 transform"
     
     if (!showResult) {
@@ -84,7 +83,7 @@ export const Quiz = () => {
     }
   }
 
-  const getOptionIcon = (option: string) => {
+  const getOptionIcon = (option) => {
     if (!showResult) return null
 
     if (option === mcq.answer) {
@@ -96,7 +95,7 @@ export const Quiz = () => {
   }
 
   const progressPercentage = ((index + 1) / dummyMcqs.length) * 100
-  const getScoreEmoji = (percentage: number) => {
+  const getScoreEmoji = (percentage) => {
     if (percentage >= 80) return "🎉"
     if (percentage >= 60) return "👏"
     if (percentage >= 40) return "👍"
@@ -107,8 +106,19 @@ export const Quiz = () => {
     const scorePercentage = (score / dummyMcqs.length) * 100
 
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-        
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        {/* Dummy MCQs Heading */}
+        <div className="mb-6 w-full max-w-2xl">
+          <div className="bg-white/90 border-2 border-slate-200 rounded-xl shadow-lg p-6 text-center backdrop-blur-sm">
+            <h1 className="text-3xl font-bold text-slate-800 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+              Dummy MCQs Practice Quiz
+              <span className="ml-2 inline-block bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                <Brain className="w-4 h-4 inline mr-1" /> Test Your Knowledge
+              </span>
+            </h1>
+          </div>
+        </div>
+
         <Card className="w-full max-w-2xl shadow-2xl border-0 bg-white/90 backdrop-blur-sm animate-in fade-in duration-700">
           <CardContent className="p-12 text-center">
             <div className="mb-8 animate-in zoom-in duration-500">
@@ -162,7 +172,19 @@ export const Quiz = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      {/* Dummy MCQs Heading */}
+      <div className="mb-6 w-full max-w-4xl">
+        <div className="bg-white/90 border-2 border-slate-200 rounded-xl shadow-lg p-6 text-center backdrop-blur-sm">
+          <h1 className="text-3xl font-bold text-slate-800 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+            Dummy MCQs Practice Quiz
+            <span className="ml-2 inline-block bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+              <Brain className="w-4 h-4 inline mr-1" /> Test Your Knowledge
+            </span>
+          </h1>
+        </div>
+      </div>
+
       <Card className="w-full max-w-4xl shadow-2xl border-0 bg-white/95 backdrop-blur-sm">
         <CardHeader className="pb-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg">
           <div className="flex items-center justify-between mb-6">
@@ -237,5 +259,4 @@ export const Quiz = () => {
       </Card>
     </div>
   )
-
 }

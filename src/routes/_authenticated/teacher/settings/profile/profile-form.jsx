@@ -70,7 +70,7 @@ export default function ProfileForm() {
     qualification: z.string().optional(),
     address: z.string().optional(),
   })
-
+console.log("crdes",credentials)
   const defaultValues = {
     firstname: credentials?.firstName || '',
     lastname: credentials?.lastName || '',

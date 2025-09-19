@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { format } from 'date-fns'
@@ -43,7 +44,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { useAppUtils } from '../../../hooks/useAppUtils'
 import {
   checkSubscriptionStatus,
@@ -52,10 +53,11 @@ import {
 } from '../../../shared/utils/helperFunction'
 import store from '../../../shared/config/store/store'
 import { openModal } from '../../../shared/config/reducers/student/studentDialogSlice'
+import { handleCourseEnrollment } from '../../../shared/config/reducers/student/studentAuthSlice'
 
 const courseQueryOptions = (deps) =>
   queryOptions({
-    queryKey: ['getCourse', deps.courseID, deps.userID],
+    queryKey: ['getCourse', deps.courseID, deps?.userID],
     queryFn: async () => {
       console.log('deps ===>', deps)
       let queryStr = `courseID=${deps.courseID}`
@@ -64,19 +66,31 @@ const courseQueryOptions = (deps) =>
       }
 
       try {
-        let response = await axios.get(`/web/course/getCourse?${queryStr}`)
-        response = response.data
-        if (response.success) {
-          response = response.data
-          console.log('response ===>', response)
+
+  
+
+
+
+        const response = await axios.get(`/web/course/getCourse?${queryStr}`)
+        console.log('response ===>', response.data)
+   
+
+        if (response.data.success) {
           return {
-            course: response.course,
-            isEnrolled: response.isEnrolled,
-            enrolledStudents: response.enrolledStudents,
+            course: response.data.data.course || null,
+            isEnrolled: response.data.data.isEnrolled || false,
+            enrolledStudents: response.data.data.enrolledStudents || 0,
           }
+        } else {
+          throw new Error('API returned success: false')
         }
       } catch (error) {
-        console.log('error', error)
+        console.error('Error fetching course:', error.message, error.response?.data)
+        return {
+          course: null,
+          isEnrolled: false,
+          enrolledStudents: 0,
+        }
       }
     },
   })
@@ -87,7 +101,7 @@ export const Route = createFileRoute('/student/courses/$courseID')({
   beforeLoad: ({ params }) => {
     const token = getCookie('studentToken')
     const credentials = getCookie('studentCredentials')
-        const subscription = getCookie('studentSubscription')
+    const subscription = getCookie('studentSubscription')
 
     if (token && credentials) {
       if (credentials?.customerId && !subscription) {
@@ -108,24 +122,26 @@ export const Route = createFileRoute('/student/courses/$courseID')({
           replace: true,
           search: { redirect: `/student/courses/${params.courseID}` },
         })
-      } else {
-        return <Outlet />
-      }
-    } else {
+      } 
       
-      store.dispatch(openModal({type:'login-modal',props:{redirect: `/student/courses/${params.courseID}`}}))
-     
-    throw redirect({
-      to: '/student/courses', 
-      replace: true,
-    })
+    } else {
+      store.dispatch(
+        openModal({
+          type: 'login-modal',
+          props: { redirect: `/student/courses/${params.courseID}` },
+        })
+      )
+      throw redirect({
+        to: '/student/courses',
+        replace: true,
+      })
     }
   },
   validateSearch: (search) => {
-    return { courseID: search.courseID, userID: search.userID || '' }
+    return { courseID: search.courseID, userID: search.userID ?? null }
   },
   loaderDeps: ({ search }) => {
-    return { courseID: search.courseID, userID: search.userID }
+    return { courseID: search.courseID, userID: search.userID ?? null }
   },
   loader: ({ params }) =>
     queryClient.ensureQueryData(courseQueryOptions(params)),
@@ -135,7 +151,7 @@ export const Route = createFileRoute('/student/courses/$courseID')({
 function MiniProgressChart({ progress, color = '#2563eb' }) {
   return (
     <div className='flex items-center gap-2'>
-      <div className='h-2 w-16 overflow-hidden rounded-full bg-gray-200'>
+      <div className='h-2 w-16 overflow-hidden rounded-full bg-[#e2e8f0]'>
         <div
           className='h-full rounded-full transition-all duration-500'
           style={{
@@ -144,52 +160,46 @@ function MiniProgressChart({ progress, color = '#2563eb' }) {
           }}
         />
       </div>
-      <span className='text-xs font-medium text-gray-600'>{progress}%</span>
+      <span className='text-xs font-medium text-[#64748b]'>{progress}%</span>
     </div>
   )
 }
 
-// Mini Rating Chart Component
 function MiniRatingChart({ rating, reviews }) {
   const stars = Array.from({ length: 5 }, (_, i) => (
     <Star
       key={i}
-      className={`h-3 w-3 ${i < rating ? `fill-yellow-400 text-yellow-400` : `text-gray-300`}`}
+      className={`h-3 w-3 ${i < rating ? `fill-[#f59e0b] text-[#f59e0b]` : `text-[#e2e8f0]`}`}
     />
   ))
 
   return (
     <div className='flex items-center gap-1'>
       <div className='flex'>{stars}</div>
-      <span className='text-xs text-gray-600'>({reviews})</span>
+      <span className='text-xs text-[#64748b]'>({reviews})</span>
     </div>
   )
 }
+
 function RouteComponent() {
   const params = useParams({ from: '/student/courses/$courseID' })
-  const [loading, setLoading] = useState(true)
   const credentials = useSelector((state) => state.studentAuth.credentials)
   const subscription = useSelector((state) => state.studentAuth.subscription)
 
-  const { data } = useQuery(
+  const { data, isLoading, isError, error } = useQuery(
     courseQueryOptions({ courseID: params.courseID, userID: credentials?._id })
   )
+
   const course = data?.course
   const isEnrolled = data?.isEnrolled
-  const enrolledStudents = data?.enrolledStudents
+  const enrolledStudents = data?.enrolledStudents || 0
   const [activeTab, setActiveTab] = useState('overview')
 
-  useEffect(() => {
-    if (course) {
-      setLoading(false)
-    }
-  }, [course])
+  const { navigate, dispatch } = useAppUtils()
 
   const handleMediaAccess = (material) => {
     if (!isEnrolled) {
-      toast.warning(
-        'Please enroll in this course to access the material content.'
-      )
+      toast.warning('Please enroll in this course to access the material content.')
       return
     }
     if (material.media) {
@@ -210,35 +220,31 @@ function RouteComponent() {
     }
   }
 
-  const { navigate, dispatch } = useAppUtils()
-
-  // API Methods
   const enrollCourse = async () => {
     if (subscription && !isActiveSubscription(subscription)) {
       if (checkSubscriptionStatus(subscription) === 'past_due') {
         toast.error('Subscription expired!')
         return navigate('/student/pay-invoice')
       }
-      
-      toast.error(
-        'You have no subscription, subscribe some plan to enroll the course!'
-      )
+      toast.error('You have no subscription, subscribe some plan to enroll the course!')
       return navigate({ to: '/student/subscription-plans' })
     } else if (credentials && credentials.remainingEnrollmentCount === 0) {
-      return toast.error('You have exceed the limit of enrolling courses!')
+      return toast.error('You have exceeded the limit of enrolling courses!')
     } else {
       try {
-        let response = await axios.post('/student/course/enroll', {
+        const response = await axios.post('/student/course/enroll', {
           courseId: params.courseID,
         })
-        response = response.data
-        if (response.success) {
+        if (response.data.success) {
           toast.success('Course enrolled!')
-          const { remainingEnrollmentCount } = response.data
-          dispatch(handleCourseEnrollment({ id, remainingEnrollmentCount }))
+          const { remainingEnrollmentCount } = response.data.data
+          dispatch(handleCourseEnrollment({ id: params.courseID, remainingEnrollmentCount }))
+        } else {
+          throw new Error('Enrollment failed')
         }
       } catch (error) {
-        console.log('Registration Error -> ', error)
+        console.error('Enrollment Error -> ', error)
+        toast.error('Failed to enroll in the course. Please try again.')
       }
     }
   }
@@ -260,12 +266,9 @@ function RouteComponent() {
     enrollCourseMutation.mutate()
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <div 
-        className='min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] p-6'
-        style={{ fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' }}
-      >
+      <div className='min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] p-6'>
         <div className='mx-auto max-w-7xl'>
           <div className='animate-pulse space-y-6'>
             <div className='h-8 w-1/3 rounded-[12px] bg-[#e2e8f0]'></div>
@@ -283,23 +286,62 @@ function RouteComponent() {
     )
   }
 
+  if (isError || !course) {
+    return (
+      <div className='min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] p-6'>
+        <div className='mx-auto max-w-7xl text-center'>
+          <Card className='border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] rounded-[12px]'>
+            <CardContent className='p-8'>
+              <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#ef4444]/10'>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#ef4444"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m15 9-6 6" />
+                  <path d="m9 9 6 6" />
+                </svg>
+              </div>
+              <h3 className='text-lg font-semibold text-[#1e293b] mb-2'>
+                Failed to load course
+              </h3>
+              <p className='text-[#64748b] mb-6'>
+                {isError ? `Error: ${error.message}` : 'Course data not found.'}
+              </p>
+              <Button
+                variant="outline"
+                className='rounded-[8px] border-[#e2e8f0] text-[#2563eb] hover:bg-[#2563eb]/10 hover:text-[#1d4ed8] shadow-[0_4px_6px_rgba(0,0,0,0.05)]'
+                onClick={() => window.history.back()}
+              >
+                <ArrowLeft className='mr-2 h-4 w-4' />
+                Back to Courses
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
   const defaultCover = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/defaults/course-cover.png`
 
   return (
-    <div 
-      className='min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9]'
-      style={{ fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' }}
-    >
+    <div className='min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9]'>
       {/* Enhanced Hero Section */}
       <div className='relative bg-gradient-to-br from-[#2563eb] to-[#1d4ed8] text-white overflow-hidden'>
-        {/* Decorative Background Elements */}
         <div className='absolute inset-0 overflow-hidden'>
           <div className='absolute -top-40 -right-40 h-80 w-80 rounded-full bg-gradient-to-br from-white/10 to-white/5 blur-3xl'></div>
           <div className='absolute -bottom-20 -left-20 h-60 w-60 rounded-full bg-gradient-to-br from-[#f59e0b]/20 to-[#d97706]/10 blur-2xl'></div>
         </div>
 
         <div className='relative mx-auto max-w-7xl px-6 py-12'>
-          {/* Enhanced Back Button */}
           <Button
             size='sm'
             variant='outline'
@@ -312,7 +354,6 @@ function RouteComponent() {
 
           <div className='grid grid-cols-1 items-center gap-12 lg:grid-cols-2'>
             <div className='space-y-6'>
-              {/* Category Badge */}
               <div className='flex items-center gap-3'>
                 <div className='flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-semibold backdrop-blur-sm border border-white/20'>
                   <BookOpen className='h-4 w-4' />
@@ -325,18 +366,12 @@ function RouteComponent() {
                   </div>
                 )}
               </div>
-
-              {/* Course Title */}
               <h1 className='text-4xl font-bold leading-tight lg:text-5xl'>
                 {course.name}
               </h1>
-
-              {/* Description */}
               <p className='text-xl leading-relaxed text-white/90 line-clamp-3'>
                 {course.description}
               </p>
-
-              {/* Stats */}
               <div className='flex flex-wrap items-center gap-6 text-sm'>
                 <div className='flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm'>
                   <Users className='h-4 w-4' />
@@ -348,8 +383,6 @@ function RouteComponent() {
                 </div>
               </div>
             </div>
-
-            {/* Enhanced Course Image */}
             <div className='relative'>
               <div className='absolute inset-0 bg-gradient-to-br from-[#f59e0b]/20 to-transparent rounded-[12px]'></div>
               <img
@@ -368,36 +401,29 @@ function RouteComponent() {
 
       <div className='mx-auto max-w-7xl px-6 py-8'>
         <div className='grid grid-cols-1 gap-8 lg:grid-cols-3'>
-          {/* Main Content */}
           <div className='space-y-6 lg:col-span-2'>
-            {/* Enhanced Tabs */}
-            <Tabs
-              value={activeTab}
-              onValueChange={setActiveTab}
-              className='w-full'
-            >
+            <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
               <TabsList className='grid w-full grid-cols-3 bg-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] border border-[#e2e8f0] rounded-[12px] p-1'>
                 <TabsTrigger
                   value='overview'
-                  className='data-[state=active]:bg-[#f59e0b] data-[state=active]:text-white data-[state=active]:shadow-sm text-[#64748b] font-medium rounded-[8px] transition-all duration-200'
+                  className='data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#2563eb] data-[state=active]:to-[#1d4ed8] data-[state=active]:text-white data-[state=active]:shadow-sm text-[#64748b] font-medium rounded-[8px] transition-all duration-200'
                 >
                   Overview
                 </TabsTrigger>
                 <TabsTrigger
                   value='materials'
-                  className='data-[state=active]:bg-[#f59e0b] data-[state=active]:text-white data-[state=active]:shadow-sm text-[#64748b] font-medium rounded-[8px] transition-all duration-200'
+                  className='data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#2563eb] data-[state=active]:to-[#1d4ed8] data-[state=active]:text-white data-[state=active]:shadow-sm text-[#64748b] font-medium rounded-[8px] transition-all duration-200'
                 >
                   Materials
                 </TabsTrigger>
                 <TabsTrigger
                   value='instructor'
-                  className='data-[state=active]:bg-[#f59e0b] data-[state=active]:text-white data-[state=active]:shadow-sm text-[#64748b] font-medium rounded-[8px] transition-all duration-200'
+                  className='data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#2563eb] data-[state=active]:to-[#1d4ed8] data-[state=active]:text-white data-[state=active]:shadow-sm text-[#64748b] font-medium rounded-[8px] transition-all duration-200'
                 >
                   Instructor
                 </TabsTrigger>
               </TabsList>
 
-              {/* Overview Tab */}
               <TabsContent value='overview' className='space-y-6'>
                 <Card className='border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] rounded-[12px] transition-all duration-300 hover:shadow-[0_8px_25px_rgba(0,0,0,0.12)]'>
                   <CardHeader className='border-b border-[#f1f5f9]'>
@@ -412,7 +438,6 @@ function RouteComponent() {
                     <p className='mb-8 leading-relaxed text-[#64748b] text-lg'>
                       {course.description}
                     </p>
-
                     <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
                       <div className='rounded-[12px] bg-gradient-to-br from-[#10b981]/5 to-[#059669]/5 p-6 text-center border border-[#10b981]/10'>
                         <div className='mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[#10b981]'>
@@ -437,7 +462,6 @@ function RouteComponent() {
                 </Card>
               </TabsContent>
 
-              {/* Materials Tab */}
               <TabsContent value='materials' className='space-y-4'>
                 <Accordion type='single' collapsible className='space-y-4'>
                   {course.material?.map((material, index) => (
@@ -449,7 +473,7 @@ function RouteComponent() {
                       <AccordionTrigger className='px-6 py-4 hover:no-underline [&[data-state=open]>div]:text-[#2563eb]'>
                         <div className='flex w-full items-center justify-between'>
                           <div className='flex items-center gap-4'>
-                            <div className='flex h-10 w-10 items-center justify-center rounded-full bg-[#f59e0b] text-sm font-bold text-white'>
+                            <div className='flex h-10 w-10 items-center justify-center rounded-full bg-[#2563eb] text-sm font-bold text-white'>
                               {index + 1}
                             </div>
                             <div className='text-left'>
@@ -469,7 +493,6 @@ function RouteComponent() {
                           )}
                         </div>
                       </AccordionTrigger>
-
                       <AccordionContent className='px-6 pb-6'>
                         <div
                           className={`rounded-[12px] p-6 transition-all duration-300 ${
@@ -504,7 +527,6 @@ function RouteComponent() {
                                 </div>
                               </div>
                             </div>
-
                             <div className='flex items-center gap-3'>
                               {!isEnrolled ? (
                                 <div className='flex items-center gap-2 text-[#94a3b8]'>
@@ -515,7 +537,7 @@ function RouteComponent() {
                                 <Button
                                   size='sm'
                                   onClick={() => handleMediaAccess(material)}
-                                  className='flex items-center gap-2 bg-[#10b981] hover:bg-[#059669] text-white rounded-[8px] px-4 py-2'
+                                  className='flex items-center gap-2 bg-[#10b981] hover:bg-[#059669] text-white rounded-[8px] px-4 py-2 shadow-[0_4px_6px_rgba(0,0,0,0.05)]'
                                 >
                                   <Play className='h-3 w-3' />
                                   Access Material
@@ -523,7 +545,6 @@ function RouteComponent() {
                               )}
                             </div>
                           </div>
-
                           {!isEnrolled && (
                             <div className='mt-4 rounded-[8px] border border-[#ef4444]/20 bg-[#ef4444]/10 p-4'>
                               <p className='text-sm text-[#ef4444] font-medium'>
@@ -536,7 +557,6 @@ function RouteComponent() {
                       </AccordionContent>
                     </AccordionItem>
                   ))}
-
                   {course.material?.length === 0 && (
                     <div className='flex flex-col items-center justify-center rounded-[12px] border-2 border-dashed border-[#e2e8f0] bg-[#f8fafc] px-6 py-12'>
                       <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f1f5f9]'>
@@ -553,7 +573,6 @@ function RouteComponent() {
                 </Accordion>
               </TabsContent>
 
-              {/* Instructor Tab */}
               <TabsContent value='instructor'>
                 <Card className='border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] rounded-[12px] transition-all duration-300 hover:shadow-[0_8px_25px_rgba(0,0,0,0.12)]'>
                   <CardContent className='p-8'>
@@ -564,17 +583,15 @@ function RouteComponent() {
                           {course.instructor.firstName.charAt(0) + course.instructor.lastName.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
-
                       <div className='flex-1 space-y-6'>
                         <div>
                           <h3 className='text-3xl font-bold text-[#1e293b]'>
                             {course.instructor.firstName + ' ' + course.instructor.lastName}
                           </h3>
                           <p className='text-[#64748b] text-lg mt-2 leading-relaxed'>
-                            {course.instructor.bio}
+                            {course.instructor.bio || 'No bio available.'}
                           </p>
                         </div>
-
                         <div className='grid grid-cols-1 gap-6 md:grid-cols-3'>
                           <div className='text-center rounded-[12px] bg-[#2563eb]/5 p-4 border border-[#2563eb]/10'>
                             <div className='text-2xl font-bold text-[#2563eb]'>
@@ -609,9 +626,7 @@ function RouteComponent() {
             </Tabs>
           </div>
 
-          {/* Enhanced Sidebar */}
           <div className='space-y-6'>
-            {/* Enrollment Card */}
             <Card className='sticky top-6 border border-[#e2e8f0] shadow-[0_8px_25px_rgba(0,0,0,0.12)] rounded-[12px]'>
               <CardContent className='space-y-6 p-6'>
                 {isEnrolled ? (
@@ -627,17 +642,15 @@ function RouteComponent() {
                 ) : (
                   <Button
                     onClick={handleEnroll}
-                    loading={enrollCourseMutation.isPending}
                     disabled={enrollCourseMutation.isPending}
-                    className='w-full bg-gradient-to-r from-[#f59e0b] to-[#d97706] hover:from-[#d97706] hover:to-[#b45309] py-4 text-lg font-semibold rounded-[8px] shadow-sm hover:shadow-[0_4px_12px_rgba(245,158,11,0.25)] transition-all duration-300'
+                    className='w-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] hover:from-[#1d4ed8] hover:to-[#1e40af] py-4 text-lg font-semibold rounded-[8px] shadow-sm hover:shadow-[0_4px_12px_rgba(37,99,235,0.25)] transition-all duration-300'
                   >
-                    Enroll Now
+                    {enrollCourseMutation.isPending ? 'Enrolling...' : 'Enroll Now'}
                   </Button>
                 )}
               </CardContent>
             </Card>
 
-            {/* Course Info Card */}
             <Card className='border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] rounded-[12px]'>
               <CardHeader className='border-b border-[#f1f5f9]'>
                 <CardTitle className='text-lg font-semibold text-[#1e293b]'>Course Information</CardTitle>

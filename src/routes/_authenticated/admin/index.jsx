@@ -17,7 +17,6 @@ const fetchTopCourses = async () => {
 
 const fetchTopTeachers = async () => {
   // Simulating a medium API response for the chart data
-  await new Promise(resolve => setTimeout(resolve, 1500));
   const res = await axios.get('/admin/dashboard/top-teachers');
   return res.data.success ? res.data.data : [];
 };

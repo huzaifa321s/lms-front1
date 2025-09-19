@@ -31,12 +31,7 @@ export const cardQueryOptions = () =>
   })
 
 export const Route = createFileRoute('/_authenticated/teacher/')({
-  beforeLoad: async ({ context }) => {
-    const { isTeacherLoggedIn } = context.authentication
-    if (!isTeacherLoggedIn) {
-      throw redirect({ to: '/teacher/login' })
-    }
-  },
+
   loader:() => queryClient.ensureQueryData(cardQueryOptions()),
   component: Dashboard,
 })
