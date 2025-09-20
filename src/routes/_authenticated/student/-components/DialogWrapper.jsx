@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { redirect, useRouteContext } from '@tanstack/react-router'
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { AlertCircle, CreditCard, DollarSign } from 'lucide-react'
 import { useSelector } from 'react-redux'
@@ -20,11 +19,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAppUtils } from '../../../../hooks/useAppUtils'
 import {
-  handleLogin,
   updateSubscription,
 } from '../../../../shared/config/reducers/student/studentAuthSlice'
 import { closeModal } from '../../../../shared/config/reducers/student/studentDialogSlice'
-import { getCookie } from '../../../../shared/utils/helperFunction'
 import { paymentMethodsQueryOptions } from '../payment-methods'
 import { getSidebarData } from '../../../../components/layout/data/sidebar-data'
 
@@ -39,6 +36,7 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
   const stripe = useStripe()
   const elements = useElements()
   const credentials = useSelector((state) => state.studentAuth.credentials)
+  const subscription = useSelector((state) => state.studentAuth.subscripiton)
   // Reset modal inputs
   const resetModal = () => {
     const cardElement = elements.getElement(CardElement)
@@ -230,45 +228,51 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
     planCancel.mutate()
   }
 
-  const handleGoToSubscription = (e) => {
-    e.preventDefault()
-    console.log('credentials ===>', credentials)
-    console.log(`,sdf`, modalData)
-    if (!credentials?.customerId) {
-      console.log('customer id condition true')
-      navigate({
-        to: '/student/subscription-plans',
-        replace: true,
-        search: { redirect: modalData?.redirect },
-      })
-      dispatch(closeModal())
-    } else if (credentials?.customerId && !credentials.subscription) {
-      navigate({
-        to: '/student/resubscription-plans',
-        replace: true,
-        search: {
-          redirect: modalData?.redirect,
-          courseTeachers: modalData?.courseTeachers,
-        },
-      })
-      dispatch(closeModal())
-    } else if (!credentials.subscription && credentials?.subscriptionId) {
-      navigate({
-        to: '/student/subscription-plans',
-        replace: true,
-        search: { redirect: modalData?.redirect },
-      })
-      dispatch(closeModal())
-    } else if (credentials?.subscription?.status !== 'active') {
-      navigate({
-        to: '/student/failed-subscription',
-        replace: true,
-        search: { redirect: modalData?.redirect },
-      })
-      dispatch(closeModal())
-      return
-    }
+ const handleGoToSubscription = (e) => {
+  e.preventDefault()
+
+  // Case 1: Bilkul new user (no customerId)
+  if (!credentials?.customerId) {
+    console.log('credentials.customer ===>',credentials)
+    // navigate({
+    //   to: '/student/subscription-plans',
+    //   replace: true,
+    //   search: { redirect: modalData?.redirect },
+    // })
+    // dispatch(closeModal())
+    return
   }
+
+  // Case 2: Existing customer but subscription issue
+  if (
+    !subscription ||   // no subscription
+    subscription?.status === 'pending' ||      // subscription pending
+    !subscription?.subscriptionId              // missing subscriptionId
+  ) {
+    navigate({
+      to: '/student/resubscription-plans',
+      replace: true,
+      search: {
+        redirect: modalData?.redirect,
+        courseTeachers: modalData?.courseTeachers,
+      },
+    })
+    dispatch(closeModal())
+    return
+  }
+
+  // Case 3: Subscription exists but inactive
+  if (subscription?.status !== 'active') {
+    navigate({
+      to: '/student/failed-subscription',
+      replace: true,
+      search: { redirect: modalData?.redirect },
+    })
+    dispatch(closeModal())
+    return
+  }
+}
+
 
 
   const handleLoginRedirect = () =>{

@@ -162,6 +162,7 @@ export default function ProfileForm() {
                           : defaultProfile
                       }
                       alt="Profile"
+                      loading="lazy"
                     />
                   </div>
                   <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 cursor-pointer">

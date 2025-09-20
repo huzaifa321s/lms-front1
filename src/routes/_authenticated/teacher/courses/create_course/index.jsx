@@ -251,6 +251,7 @@ function RouteComponent() {
                       src={cover || defaultCover}
                       alt="Course Cover"
                       className="object-cover w-full h-full"
+                      loading="lazy"
                     />
                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-opacity duration-300">
                       <svg

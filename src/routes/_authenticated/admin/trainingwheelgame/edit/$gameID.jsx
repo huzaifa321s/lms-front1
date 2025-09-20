@@ -1,14 +1,29 @@
-import { useCallback, useState } from 'react'
-import axios from 'axios'
+import { useActionState, useCallback, useEffect, useRef, useState } from 'react';
+import { startTransition } from 'react';
+import axios from 'axios';
 import {
-  createFileRoute,
-  useNavigate,
-  useParams,
-} from '@tanstack/react-router'
-import { toast } from 'sonner'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+  QueryClient,
+  queryOptions,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+import { createFileRoute, useNavigate, useParams } from '@tanstack/react-router';
+import {
+  ArrowLeft,
+  GamepadIcon,
+  Target,
+  Tag,
+  CheckCircle,
+  AlertTriangle,
+  Save,
+  Layers,
+  MessageSquare,
+} from 'lucide-react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -16,209 +31,217 @@ import {
   SelectGroup,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { Header } from '@/components/layout/header'
-import { Card, CardContent, CardTitle } from '@/components/ui/card'
-import ErrorText from '../../../../../shared/components/typography/errorText'
-import { QueryClient, queryOptions, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
-import { createNewSentenceArray } from '../../../../../shared/utils/helperFunction'
-import { useAppUtils } from '../../../../../hooks/useAppUtils'
-import { 
-  ArrowLeft, 
-  GamepadIcon, 
-  PenTool, 
-  Target, 
-  Tag, 
-  CheckCircle,
-  AlertTriangle,
-  Save,
-  Layers,
-  MessageSquare
-} from 'lucide-react'
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Header } from '@/components/layout/header';
+import { useAppUtils } from '../../../../../hooks/useAppUtils';
+import ErrorText from '../../../../../shared/components/typography/errorText';
+import { createNewSentenceArray } from '../../../../../shared/utils/helperFunction';
 
 const queryClient = new QueryClient();
+
 const gameQueryOptions = (params) =>
   queryOptions({
-    queryKey:['training-wheel-game',params.gameID,'admin/game-category/getAll'],
-    queryFn:async () => {
-    try {
-      let gameDetailsResponse = await axios.get(
-        `/admin/game/training-wheel-game/get-game/${params.gameID}`
-      )
-      gameDetailsResponse = gameDetailsResponse.data
+    queryKey: ['training-wheel-game', params.gameID, 'admin/game-category/getAll'],
+    queryFn: async () => {
+      try {
+        const gameDetailsResponse = await axios.get(
+          `/admin/game/training-wheel-game/get-game/${params.gameID}`
+        );
+        const game = gameDetailsResponse.data.data;
+        const cArr = game.answer_in_chunks;
+        const formattedGame = {
+          question: game.question,
+          answer: game.answer,
+          chunk_1: cArr[0],
+          chunk_2: cArr[1],
+          chunk_3: cArr[2],
+          chunk_4: cArr[3],
+          chunk_5: cArr[4],
+          chunk_6: cArr[5],
+          category: game.category,
+          levels: game.difficulties,
+        };
 
-      let game = gameDetailsResponse.data
-
-      const cArr = game.answer_in_chunks
-      game = {
-        question: game.question,
-        answer: game.answer,
-        chunk_1: cArr[0],
-        chunk_2: cArr[1],
-        chunk_3: cArr[2],
-        chunk_4: cArr[3],
-        chunk_5: cArr[4],
-        chunk_6: cArr[5],
-        category: game.category,
-        levels: game.difficulties,
+        const gameCategoriesResponse = await axios.get('/admin/game-category/getAll');
+        return {
+          gameDetails: gameDetailsResponse.data.success ? formattedGame : null,
+          gameCategories: gameCategoriesResponse.data.success
+            ? gameCategoriesResponse.data.data
+            : [],
+        };
+      } catch (error) {
+        return { gameDetails: null, gameCategories: [] };
       }
-
-      let gameCategoriesResponse = await axios.get(
-        '/admin/game-category/getAll'
-      )
-      gameCategoriesResponse = gameCategoriesResponse.data
-      return {
-        gameDetails: gameDetailsResponse.success ? game : null,
-        gameCategories: gameCategoriesResponse.success
-          ? gameCategoriesResponse.data
-          : [],
-      }
-    } catch (error) {
-      console.log('error', error)
-      return { gameDetails: null, gameCategories: [] }
-    }
-  },
-  })
+    },
+  });
 
 export const Route = createFileRoute(
   '/_authenticated/admin/trainingwheelgame/edit/$gameID'
 )({
   component: RouteComponent,
-  loader:({params}) => queryClient.ensureQueryData(gameQueryOptions(params))
-})
+  loader: ({ params }) => queryClient.ensureQueryData(gameQueryOptions(params)),
+});
 
 function RouteComponent() {
-  const searchParams = useParams({from:'/_authenticated/admin/trainingwheelgame/edit/$gameID'});
-  console.log('searchParams ===>',searchParams)
-  const params = {gameID:searchParams.gameID};
-  const { data } = useSuspenseQuery(gameQueryOptions(params))
-  const {gameDetails,gameCategories} = data;
-  console.log('gameDetails ===>',gameDetails);
   const { gameID } = useParams({
     from: '/_authenticated/admin/trainingwheelgame/edit/$gameID',
-  })
+  });
   const queryClient = useQueryClient();
- const [isLoading,setIsLoading] = useState(false);
-  const navigate = useNavigate()
-  const [gameObj, setGameObj] = useState(gameDetails)
-  const [errorMessage, setErrorMessage] = useState('')
-  const {router} = useAppUtils()
-  
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setGameObj({ ...gameObj, [name]: value })
-    // Clear error message when user starts typing
-    if (errorMessage) setErrorMessage('')
-  }
-  
-  const handleCheckboxes = (e) => {
-    const { name, checked } = e.target
-    let levelArr = [...gameObj.levels]
-    if (!levelArr.includes(name) && checked) {
-      levelArr.push(name)
-    } else {
-      levelArr = levelArr.filter((l) => l !== name)
-    }
-    console.log('Level Array: ', levelArr)
-    setGameObj({ ...gameObj, levels: levelArr })
-    // Clear error message when user interacts with levels
-    if (errorMessage) setErrorMessage('')
-  }
+  const navigate = useNavigate();
+  const { router } = useAppUtils();
+  const isFirstRender = useRef(true);
 
-  const isSaveButtonDisabled = () => {
-    if (!gameObj.question || !gameObj.answer || gameObj.levels?.length == 0 || !gameObj.category) {
-      return true
-    } else {
-      return false
-    }
-  }
+  const { data } = useQuery({
+    ...gameQueryOptions({ gameID }),
+    suspense: isFirstRender.current,
+  });
 
-  const updateQuestion = useCallback(async () => {
-    const { question, answer, category, levels } = gameObj
-    setIsLoading(true)
-    setErrorMessage('') // Clear previous errors
-    
-    // Validate
-    if (question.trim() === '') {
-      setErrorMessage('Question is required!')
-      setIsLoading(false)
-      return
-    } else if (answer.trim() === '') {
-      setErrorMessage('Answer is required!')
-      setIsLoading(false)
-      return
-    } else if (answer.split(' ').length < 6) {
-      setErrorMessage(
-        "We'll break answer into 6 words, so sentence should have atleast 6 words"
-      )
-      setIsLoading(false)
-      return
-    } else if (category.trim() === '') {
-      setErrorMessage('Category is required!')
-      setIsLoading(false)
-      return
-    } else if (levels.length === 0) {
-      setErrorMessage('At least provide one level!')
-      setIsLoading(false)
-      return
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
     }
+  }, []);
 
-    let answerArr = answer.split(' ')
-    if (answerArr.length !== 6) {
-      answerArr = createNewSentenceArray(answerArr)
-    }
+  const { gameDetails, gameCategories } = data;
+  const [gameObj, setGameObj] = useState(gameDetails || {});
+  const [errorMessage, setErrorMessage] = useState('');
 
-    const reqBody = {
-      question,
-      answer,
-      answer_in_chunks: answerArr,
-      category,
-      levels,
-    }
+  const handleChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setGameObj((prev) => ({ ...prev, [name]: value }));
+    setErrorMessage('');
+  }, []);
 
-    try {
-      let response = await axios.put(
-        `/admin/game/training-wheel-game/update/${gameID}`,
-        reqBody
-      )
-      response = response.data
-      if (response.success) {
-        router.invalidate();
-        await queryClient.invalidateQueries(gameQueryOptions(params))
-        toast.success(response.message);
-        navigate({ to: '/admin/trainingwheelgame' });
+  const handleCheckboxes = useCallback((e) => {
+    const { name, checked } = e.target;
+    setGameObj((prev) => {
+      let levelArr = [...(prev.levels || [])];
+      if (checked && !levelArr.includes(name)) {
+        levelArr.push(name);
+      } else if (!checked) {
+        levelArr = levelArr.filter((l) => l !== name);
       }
-    } catch (error) {
-      console.log('error ===>', error)
-      const errorResponse = error.response.data
-      toast.error(errorResponse.message)
-      setErrorMessage(errorResponse.message || 'An error occurred while updating the question')
-    }finally{
-      router.invalidate();
-      setIsLoading(false);
-    }
-  }, [gameObj, axios, gameID, toast,router,queryClient,gameQueryOptions,params])
+      return { ...prev, levels: levelArr };
+    });
+    setErrorMessage('');
+  }, []);
 
-  console.log('gameObj ===>', gameObj)
-  
+  const isSaveButtonDisabled = useCallback(() => {
+    return (
+      !gameObj.question ||
+      !gameObj.answer ||
+      !gameObj.levels?.length ||
+      !gameObj.category
+    );
+  }, [gameObj]);
+
+  const updateQuestion = useCallback(
+    async () => {
+      const { question, answer, category, levels } = gameObj;
+      setErrorMessage('');
+
+      // Validation
+      if (!question?.trim()) {
+        setErrorMessage('Question is required!');
+        return { success: false };
+      }
+      if (!answer?.trim()) {
+        setErrorMessage('Answer is required!');
+        return { success: false };
+      }
+      if (answer.split(' ').length < 6) {
+        setErrorMessage(
+          "We'll break answer into 6 words, so sentence should have at least 6 words"
+        );
+        return { success: false };
+      }
+      if (!category?.trim()) {
+        setErrorMessage('Category is required!');
+        return { success: false };
+      }
+      if (!levels?.length) {
+        setErrorMessage('At least provide one level!');
+        return { success: false };
+      }
+
+      let answerArr = answer.split(' ');
+      if (answerArr.length !== 6) {
+        answerArr = createNewSentenceArray(answerArr);
+      }
+
+      const reqBody = {
+        question,
+        answer,
+        answer_in_chunks: answerArr,
+        category,
+        levels,
+      };
+
+      try {
+        const response = await axios.put(
+          `/admin/game/training-wheel-game/update/${gameID}`,
+          reqBody
+        );
+        if (response.data.success) {
+          router.invalidate();
+          await queryClient.invalidateQueries({
+            queryKey: ['training-wheel-game', gameID],
+          });
+          toast.success(response.data.message);
+          return { success: true };
+        }
+        throw new Error(response.data.message || 'Update failed');
+      } catch (error) {
+        const errorMessage =
+          error.response?.data?.message || 'An error occurred while updating the question';
+        toast.error(errorMessage);
+        setErrorMessage(errorMessage);
+        return { success: false };
+      }
+    },
+    [gameID, gameObj, router, queryClient]
+  );
+
+  const submitAction = useCallback(
+    async () => {
+      let result;
+      startTransition(() => {
+        result = updateQuestion();
+      });
+      return result;
+    },
+    [updateQuestion]
+  );
+
+  const [state, formAction, isPending] = useActionState(submitAction, {
+    success: null,
+    error: null,
+  });
+
+  useEffect(() => {
+    if (state?.success) {
+      navigate({ to: '/admin/trainingwheelgame' });
+    }
+  }, [state?.success, navigate]);
+
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       {/* Background glow effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-[#2563eb]/20 to-[#1d4ed8]/20 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-[#10b981]/20 to-[#059669]/20 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-[#2563eb]/10 to-[#1d4ed8]/10 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-500"></div>
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#2563eb]/20 to-[#1d4ed8]/20 opacity-20 mix-blend-multiply blur-xl filter"></div>
+        <div className="absolute -bottom-40 -left-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#10b981]/20 to-[#059669]/20 opacity-20 mix-blend-multiply blur-xl filter delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 transform animate-pulse rounded-full bg-gradient-to-r from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-10 mix-blend-multiply blur-xl filter delay-500"></div>
       </div>
 
-      <Header className="bg-white border-b border-[#e2e8f0] shadow-[0_2px_10px_rgba(0,0,0,0.1)]">
+      <Header className="border-b border-[#e2e8f0] bg-white shadow-[0_2px_10px_rgba(0,0,0,0.1)]">
         <div className="relative z-10 my-4 flex w-full items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="text-3xl font-bold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
+            <div className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-3xl font-bold text-transparent">
               Update Game Question
             </div>
-            <div className="hidden sm:block w-px h-8 bg-gradient-to-b from-[#2563eb]/20 to-[#1d4ed8]/20"></div>
-            <div className="hidden sm:flex items-center gap-2 text-[#2563eb]">
+            <div className="hidden h-8 w-px bg-gradient-to-b from-[#2563eb]/20 to-[#1d4ed8]/20 sm:block"></div>
+            <div className="hidden items-center gap-2 text-[#2563eb] sm:flex">
               <GamepadIcon size={20} />
               <span className="text-sm font-medium">Training Wheel Game</span>
             </div>
@@ -226,40 +249,41 @@ function RouteComponent() {
           <Button
             size="lg"
             variant="outline"
-            className="rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
-            onClick={() => window.history.back()}
+            className="rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] shadow-sm transition-all duration-300 hover:border-[#cbd5e1] hover:bg-[#e2e8f0] hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2"
+            onClick={() => navigate({ to: '/admin/trainingwheelgame' })}
           >
-            <ArrowLeft className="w-5 h-5 text-[#2563eb] group-hover:transform group-hover:-translate-x-1 transition-transform duration-200" />
+            <ArrowLeft className="h-5 w-5 text-[#2563eb] transition-transform duration-200 group-hover:-translate-x-1 group-hover:transform" />
             <span className="ml-2 hidden sm:inline">Back</span>
           </Button>
         </div>
       </Header>
 
-      <div className="relative z-10 mx-4 mb-8 max-w-4xl mx-auto">
-        <Card className="group relative overflow-hidden border border-[#e2e8f0] bg-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          
-          <CardContent className="relative z-10 p-8 space-y-8">
+      <div className="relative z-10 mx-4 mx-auto mb-8 max-w-4xl">
+        <Card className="group relative overflow-hidden border border-[#e2e8f0] bg-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:shadow-lg hover:shadow-[#cbd5e1]/20">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+
+          <CardContent className="relative z-10 space-y-8 p-8">
             {/* Question Section */}
             <div className="space-y-4">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-gradient-to-r from-[#2563eb]/10 to-[#1d4ed8]/10 rounded-lg">
-                  <MessageSquare className="w-6 h-6 text-[#2563eb]" />
+              <div className="mb-4 flex items-center gap-3">
+                <div className="rounded-lg bg-gradient-to-r from-[#2563eb]/10 to-[#1d4ed8]/10 p-2">
+                  <MessageSquare className="h-6 w-6 text-[#2563eb]" />
                 </div>
-                <Label className="text-xl font-semibold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
+                <Label className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-xl font-semibold text-transparent">
                   Question
                 </Label>
               </div>
-              <div className="relative group">
+              <div className="group relative">
                 <Textarea
                   name="question"
                   value={gameObj?.question || ''}
                   onChange={handleChange}
                   placeholder="Enter your training wheel game question here..."
-                  className="min-h-[120px] rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300 resize-none shadow-sm hover:shadow-md"
+                  className="min-h-[120px] resize-none rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] shadow-sm transition-all duration-300 placeholder:text-[#94a3b8] hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2"
+                  aria-label="Game Question"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5 rounded-[8px] -z-10 group-hover:from-[#2563eb]/10 group-hover:to-[#1d4ed8]/10 transition-all duration-300"></div>
-                <div className="absolute bottom-3 right-3 text-xs text-[#64748b]">
+                <div className="absolute inset-0 -z-10 rounded-[8px] bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5 transition-all duration-300 group-hover:from-[#2563eb]/10 group-hover:to-[#1d4ed8]/10"></div>
+                <div className="absolute right-3 bottom-3 text-xs text-[#64748b]">
                   {gameObj?.question?.length || 0} characters
                 </div>
               </div>
@@ -267,95 +291,120 @@ function RouteComponent() {
 
             {/* Answer Section */}
             <div className="space-y-4">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-gradient-to-r from-[#2563eb]/10 to-[#1d4ed8]/10 rounded-lg">
-                  <Target className="w-6 h-6 text-[#2563eb]" />
+              <div className="mb-4 flex items-center gap-3">
+                <div className="rounded-lg bg-gradient-to-r from-[#2563eb]/10 to-[#1d4ed8]/10 p-2">
+                  <Target className="h-6 w-6 text-[#2563eb]" />
                 </div>
                 <div className="flex-1">
-                  <Label className="text-xl font-semibold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
+                  <Label className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-xl font-semibold text-transparent">
                     Answer
                   </Label>
-                  <p className="text-sm text-[#64748b] mt-1 flex items-center gap-2">
+                  <p className="mt-1 flex items-center gap-2 text-sm text-[#64748b]">
                     <AlertTriangle size={14} className="text-[#f59e0b]" />
                     Answer will be broken into 6 words, so provide at least 6 words
                   </p>
                 </div>
               </div>
-              <div className="relative group">
+              <div className="group relative">
                 <Textarea
                   name="answer"
                   value={gameObj?.answer || ''}
                   onChange={handleChange}
                   placeholder="Enter the complete answer (minimum 6 words)..."
-                  className="min-h-[120px] rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300 resize-none shadow-sm hover:shadow-md"
+                  className="min-h-[120px] resize-none rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] shadow-sm transition-all duration-300 placeholder:text-[#94a3b8] hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2"
+                  aria-label="Game Answer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5 rounded-[8px] -z-10 group-hover:from-[#2563eb]/10 group-hover:to-[#1d4ed8]/10 transition-all duration-300"></div>
-                <div className="absolute bottom-3 right-3 text-xs text-[#64748b]">
+                <div className="absolute inset-0 -z-10 rounded-[8px] bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5 transition-all duration-300 group-hover:from-[#2563eb]/10 group-hover:to-[#1d4ed8]/10"></div>
+                <div className="absolute right-3 bottom-3 text-xs text-[#64748b]">
                   {gameObj?.answer?.split(' ').length || 0} words
                 </div>
               </div>
             </div>
 
             {/* Settings Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
               {/* Category Section */}
               <div className="space-y-4">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 bg-gradient-to-r from-[#2563eb]/10 to-[#1d4ed8]/10 rounded-lg">
-                    <Tag className="w-6 h-6 text-[#2563eb]" />
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="rounded-lg bg-gradient-to-r from-[#2563eb]/10 to-[#1d4ed8]/10 p-2">
+                    <Tag className="h-6 w-6 text-[#2563eb]" />
                   </div>
-                  <Label className="text-lg font-semibold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
+                  <Label className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-lg font-semibold text-transparent">
                     Category
                   </Label>
                 </div>
-                <div className="relative group">
+                <div className="group relative">
                   <Select
                     value={gameObj?.category || ''}
                     onValueChange={(value) => {
-                      setGameObj((prevState) => ({
-                        ...prevState,
-                        category: value,
-                      }));
-                      if (errorMessage) setErrorMessage('');
+                      setGameObj((prev) => ({ ...prev, category: value }));
+                      setErrorMessage('');
                     }}
                   >
-                    <SelectTrigger className="h-12 rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300 shadow-sm hover:shadow-md">
+                    <SelectTrigger
+                      className="h-12 rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] shadow-sm transition-all duration-300 hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2"
+                      aria-label="Select Category"
+                    >
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
-                    <SelectContent className="bg-white border-[#e2e8f0] shadow-sm rounded-[8px]">
+                    <SelectContent className="rounded-[8px] border-[#e2e8f0] bg-white shadow-sm">
                       <SelectGroup>
                         {gameCategories?.length > 0 &&
                           gameCategories.map((category) => (
-                            <SelectItem value={category._id} key={category._id} className="text-[#1e293b] hover:bg-[#f8fafc] rounded-lg">
+                            <SelectItem
+                              value={category._id}
+                              key={category._id}
+                              className="rounded-lg text-[#1e293b] hover:bg-[#f8fafc]"
+                            >
                               {category.name}
                             </SelectItem>
                           ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5 rounded-[8px] -z-10 group-hover:from-[#2563eb]/10 group-hover:to-[#1d4ed8]/10 transition-all duration-300"></div>
+                  <div className="absolute inset-0 -z-10 rounded-[8px] bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5 transition-all duration-300 group-hover:from-[#2563eb]/10 group-hover:to-[#1d4ed8]/10"></div>
                 </div>
               </div>
 
               {/* Difficulty Levels Section */}
               <div className="space-y-4">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 bg-gradient-to-r from-[#2563eb]/10 to-[#1d4ed8]/10 rounded-lg">
-                    <Layers className="w-6 h-6 text-[#2563eb]" />
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="rounded-lg bg-gradient-to-r from-[#2563eb]/10 to-[#1d4ed8]/10 p-2">
+                    <Layers className="h-6 w-6 text-[#2563eb]" />
                   </div>
-                  <Label className="text-lg font-semibold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
+                  <Label className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-lg font-semibold text-transparent">
                     Difficulty Levels
                   </Label>
                 </div>
-                <p className="text-sm text-[#64748b] mb-4">Select the difficulty levels where this question should appear:</p>
-                
+                <p className="mb-4 text-sm text-[#64748b]">
+                  Select the difficulty levels where this question should appear:
+                </p>
+
                 <div className="space-y-3">
                   {[
-                    { name: 'beginner', label: 'Beginner', color: 'from-[#10b981]/10 to-[#059669]/10 border-[#10b981]/20', textColor: 'text-[#10b981]' },
-                    { name: 'intermediate', label: 'Intermediate', color: 'from-[#f59e0b]/10 to-[#d97706]/10 border-[#f59e0b]/20', textColor: 'text-[#f59e0b]' },
-                    { name: 'expert', label: 'Expert', color: 'from-[#ef4444]/10 to-[#dc2626]/10 border-[#ef4444]/20', textColor: 'text-[#ef4444]' }
+                    {
+                      name: 'beginner',
+                      label: 'Beginner',
+                      color: 'from-[#10b981]/10 to-[#059669]/10 border-[#10b981]/20',
+                      textColor: 'text-[#10b981]',
+                    },
+                    {
+                      name: 'intermediate',
+                      label: 'Intermediate',
+                      color: 'from-[#f59e0b]/10 to-[#d97706]/10 border-[#f59e0b]/20',
+                      textColor: 'text-[#f59e0b]',
+                    },
+                    {
+                      name: 'expert',
+                      label: 'Expert',
+                      color: 'from-[#ef4444]/10 to-[#dc2626]/10 border-[#ef4444]/20',
+                      textColor: 'text-[#ef4444]',
+                    },
                   ].map((level) => (
-                    <div key={level.name} className={`flex items-center gap-3 p-3 rounded-[8px] bg-gradient-to-r ${level.color} border hover:shadow-sm transition-all duration-300`}>
+                    <div
+                      key={level.name}
+                      className={`flex items-center gap-3 rounded-[8px] bg-gradient-to-r p-3 ${level.color} border transition-all duration-300 hover:shadow-sm`}
+                    >
                       <Input
                         type="checkbox"
                         id={level.name}
@@ -363,12 +412,16 @@ function RouteComponent() {
                         className="h-5 w-5 rounded focus:ring-2 focus:ring-[#2563eb]"
                         checked={gameObj?.levels?.includes(level.name) || false}
                         onChange={handleCheckboxes}
+                        aria-label={`Select ${level.label} difficulty`}
                       />
-                      <Label htmlFor={level.name} className={`font-medium cursor-pointer ${level.textColor} flex-1`}>
+                      <Label
+                        htmlFor={level.name}
+                        className={`cursor-pointer font-medium ${level.textColor} flex-1`}
+                      >
                         {level.label}
                       </Label>
                       {gameObj?.levels?.includes(level.name) && (
-                        <CheckCircle className="w-5 h-5 text-[#10b981]" />
+                        <CheckCircle className="h-5 w-5 text-[#10b981]" />
                       )}
                     </div>
                   ))}
@@ -378,31 +431,32 @@ function RouteComponent() {
 
             {/* Error Message */}
             {errorMessage && (
-              <div className="bg-[#fef2f2] border border-[#ef4444]/20 rounded-[8px] p-4 flex items-center gap-3">
-                <AlertTriangle className="w-5 h-5 text-[#ef4444] flex-shrink-0" />
-                <ErrorText className="text-[#ef4444] m-0">{errorMessage}</ErrorText>
+              <div className="flex items-center gap-3 rounded-[8px] border border-[#ef4444]/20 bg-[#fef2f2] p-4">
+                <AlertTriangle className="h-5 w-5 flex-shrink-0 text-[#ef4444]" />
+                <ErrorText className="m-0 text-[#ef4444]">{errorMessage}</ErrorText>
               </div>
             )}
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 border-t border-[#e2e8f0]">
+            <div className="flex flex-col justify-between gap-4 border-t border-[#e2e8f0] pt-6 sm:flex-row sm:items-center">
               <div className="text-sm text-[#64748b]">
                 Make sure to fill all required fields before saving
               </div>
               <Button
                 size="lg"
-                onClick={updateQuestion}
-                disabled={isSaveButtonDisabled() || isLoading}
-                className="rounded-[8px] bg-[#2563eb] text-white hover:bg-[#1d4ed8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={() => startTransition(() => formAction())}
+                disabled={isSaveButtonDisabled() || isPending}
+                className="rounded-[8px] bg-[#2563eb] text-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:bg-[#1d4ed8] hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                aria-label="Save Changes"
               >
-                {isLoading ? (
+                {isPending ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2" />
+                    <div className="mr-2 h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-white" />
                     Saving Changes...
                   </>
                 ) : (
                   <>
-                    <Save className="w-5 h-5 mr-2" />
+                    <Save className="mr-2 h-5 w-5" />
                     Save Changes
                   </>
                 )}
@@ -412,5 +466,5 @@ function RouteComponent() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

@@ -3,7 +3,6 @@ import { LoginForm } from './-components/student-login-form'
 
 
 export const Route = createFileRoute('/student/login')({
-  
   component: LoginPage,
 })
 

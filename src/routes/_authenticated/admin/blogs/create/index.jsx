@@ -445,6 +445,7 @@ function RouteComponent() {
                     src={cover || defaultCover}
                     alt="Blog featured image preview"
                     className="w-full h-80 object-cover rounded-[8px] border border-[#e2e8f0] shadow-sm transition-all duration-300 group-hover:shadow-md"
+                    loading="lazy"
                   />
 
                   {/* Image Overlay */}

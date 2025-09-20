@@ -299,6 +299,7 @@ const Game = ({ handleScoreCard, selectedLevel }) => {
                   src="/question-animation.gif"
                   className="h-[200px] w-[200px] md:h-[300px] md:w-[300px] rounded-[12px] shadow-lg mx-auto mb-8"
                   alt="Loading animation"
+                  loading="lazy"
                 />
                 <h3 className="text-3xl font-bold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent mb-4">
                   Loading Your Challenge

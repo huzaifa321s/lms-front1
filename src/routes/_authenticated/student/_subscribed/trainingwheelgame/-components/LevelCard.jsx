@@ -53,6 +53,7 @@ export default function LevelCard({ level, setStep, selectedLevel }) {
             src={`/images/${level.title}-level-game.png`}
             alt={`${level.title} Level`}
             className="rounded-[12px] object-cover w-full h-32 sm:h-40"
+            loading="lazy"
           />
         </figure>
       </CardHeader>

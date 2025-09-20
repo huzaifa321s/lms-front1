@@ -388,6 +388,7 @@ function App() {
                       src={cover || defaultCover}
                       alt='Course Cover'
                       className='h-full w-full object-cover transition-transform duration-300 group-hover/image:scale-105'
+                      loading="lazy"
                     />
                     <div className='absolute inset-0 flex items-center justify-center bg-[#2563eb]/40 opacity-0 transition-opacity duration-300 group-hover/image:opacity-100'>
                       <svg

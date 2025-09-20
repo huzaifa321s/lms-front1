@@ -18,7 +18,7 @@ export const teachersSchema = [
 }),
   columnHelper.accessor('profile', {
     header:() => <p>Profile</p>,
-    cell: (info) => <img className="rounded-full shadow-md w-10 h-10" src={`${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/teacher/profile/${info.getValue()}`}/>,
+    cell: (info) => <img className="rounded-full shadow-md w-10 h-10" loading="lazy" src={`${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/teacher/profile/${info.getValue()}`}/>,
   }),
   columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
     id: 'Name',

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useActionState, useCallback, useState } from 'react'
 import axios from 'axios'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate,useSearch } from '@tanstack/react-router'
@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/password-input'
 import { handleLogin } from '../../../shared/config/reducers/student/studentAuthSlice'
+import image from '../../../../public/images/main-logo.jpg'
 
 export function LoginForm({ className, ...props }) {
   const {
@@ -28,37 +29,39 @@ export function LoginForm({ className, ...props }) {
   } = useForm()
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [isLoading,setIsLoading] = useState(false);
   const redirectTo = useSearch({from:'/student/login',select:(search) => search.redirect});
-    const handleAdminLogin = useCallback(
-      async (data) => {
-        setIsLoading(true)
-        try {
-          let response = await axios.post('/student/login', data)
-          response = response.data
-          if (response.success) {
-            const { token, credentials } = response.data
-              console.log('creds students ===>',credentials)
-            dispatch(handleLogin({ token, credentials ,subscription:credentials.subscription}));
-            console.log('redirectTo ===>',redirectTo)
-            if(redirectTo){
-              navigate({to:redirectTo})
-            }else{
-              console.log('condition true')
-              navigate({to:"/"})
-            }
-            toast.success('Logged in successfully')
-            reset()
-          }
-        } catch (error) {
-          console.log('error', error)
-          toast.error(error.response.data.message)
-        } finally {
-          setIsLoading(false);
+     const [state, submitAction, isPending] = useActionState(
+    async (_, formData) => {
+      try {
+        const response = await axios.post('/student/login', {
+          email: formData.get('email'),
+          password: formData.get('password'),
+        });
+
+        if (response.data.success) {
+          const { token, credentials } = response.data.data;
+          dispatch(handleLogin({ token, credentials, subscription: credentials.subscription }));
+          toast.success('Logged in successfully');
+          return { success: true, redirectTo };
         }
-      },
-      [axios, toast, navigate,redirectTo]
-    );
+        throw new Error(response.data.message || 'Login failed');
+      } catch (error) {
+        const errorMessage = error.response?.data?.message || 'Failed to log in. Please try again.';
+        toast.error(errorMessage);
+        return { success: false, error: errorMessage };
+      }
+    },
+    { success: null, error: null, redirectTo: null }
+  );
+
+  // Handle redirection after successful login
+  if (state.success && state.redirectTo) {
+    navigate({ to: state.redirectTo });
+    reset();
+  } else if (state.success) {
+    navigate({ to: '/' });
+    reset();
+  }
 
   return (
  <div className={cn('flex flex-col gap-6', className)} {...props} style={{ fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' }}>
@@ -68,16 +71,11 @@ export function LoginForm({ className, ...props }) {
       {/* Logo Section */}
       <div className='mx-auto mb-4 w-fit'>
         <div className='relative'>
-          <div className='w-16 h-16 bg-gradient-to-br from-[#2563eb] to-[#1d4ed8] rounded-xl flex items-center justify-center shadow-lg border-2 border-[#2563eb]'>
-            <svg className='w-8 h-8 text-white' fill='currentColor' viewBox='0 0 24 24'>
-              <path d='M12 14l9-5-9-5-9 5 9 5z'/>
-              <path d='M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z'/>
-            </svg>
-          </div>
-          {/* Success Green Dot Indicator */}
-          <div className='absolute -top-1 -right-1 w-4 h-4 bg-[#10b981] rounded-full border-2 border-white animate-pulse'></div>
+           <img src={image} loading='lazy' width={50} height={50} />
         </div>
       </div>
+
+    
 
       <CardTitle className='text-2xl font-bold text-[#1e293b] mb-2'>
         Welcome Back
@@ -88,7 +86,7 @@ export function LoginForm({ className, ...props }) {
     </CardHeader>
 
     <CardContent className='p-8'>
-      <form onSubmit={handleSubmit(handleAdminLogin)}>
+      <form action={submitAction}>
         <div className='space-y-6'>
           {/* Email Field */}
           <div className='space-y-3'>
@@ -184,11 +182,11 @@ export function LoginForm({ className, ...props }) {
           {/* Enhanced Submit Button - Student Theme */}
           <Button
             type='submit'
-            disabled={isLoading}
-            loading={isLoading}
+            disabled={isPending}
+            loading={isPending}
             className='w-full bg-gradient-to-r from-[#f59e0b] to-[#d97706] hover:from-[#d97706] hover:to-[#b45309] text-white font-semibold py-3 px-6 rounded-[8px] shadow-sm transition-all duration-300 hover:shadow-[0_4px_12px_rgba(245,158,11,0.25)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0'
           >
-            {isLoading ? (
+            {isPending ? (
               <div className='flex items-center gap-2'>
            
                 Signing In...

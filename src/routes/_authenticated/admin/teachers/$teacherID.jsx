@@ -203,6 +203,7 @@ console.log('teacher 1 ====>',teacher)
                           ? `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/teacher/profile/${teacher.profile}`
                           : defaultProfile
                       }
+                      loading="lazy"
                       alt="Teacher Profile"
                       className="w-full h-full object-cover group-hover/avatar:scale-105 transition-transform duration-300"
                     />

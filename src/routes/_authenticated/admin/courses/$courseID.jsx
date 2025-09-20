@@ -156,6 +156,7 @@ function RouteComponent() {
               src={cover || defaultCover}
               alt={courseObj?.name}
               className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
             <div className="absolute top-4 right-4">

@@ -393,6 +393,7 @@ function RouteComponent() {
                 }
                 alt={course.name}
                 className='w-full rounded-[12px] shadow-2xl border border-white/20'
+                loading="lazy"
               />
             </div>
           </div>

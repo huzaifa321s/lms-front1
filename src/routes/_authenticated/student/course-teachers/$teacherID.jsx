@@ -213,6 +213,7 @@ function RouteComponent() {
                   }
                   alt="Instructor"
                   className="h-full w-full object-cover"
+                  loading="lazy"
                 />
               </div>
               <div className="absolute -right-2 -bottom-2 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] ring-4 ring-white">

@@ -119,6 +119,7 @@ const {navigate,dispatch} = useAppUtils();
                 alt={blogDetails?.title || "Blog Cover Image"}
                 className="w-full h-full object-cover"
                 onError={() => setCover(defaultCover)}
+                loading="lazy"
               />
 
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>

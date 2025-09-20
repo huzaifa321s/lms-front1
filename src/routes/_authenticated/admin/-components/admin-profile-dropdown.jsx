@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { ChevronDown } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -15,9 +15,9 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { getAdminCreds } from '../-utils/helpeFuntions'
 import { LogoutModal } from '../../../../shared/components/LogoutModal'
 import { handleLogout } from '../../../../shared/config/reducers/admin/adminAuthSlice'
-import { getAdminCreds } from '../-utils/helpeFuntions'
 
 export function ProfileDropdown() {
   const [credentials, setCredentials] = useState(null)
@@ -27,34 +27,41 @@ export function ProfileDropdown() {
   const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch()
 
-  
-  const logout = () => {
-    setIsLoading(true)
+  const [state, submitAction, isPending] = useActionState(() => {
     dispatch(handleLogout())
-    setIsLoading(false)
     toast.success('You have been logged out successfully.')
+    return { success: true }
+  })
+
+  if (state?.success) {
     navigate({ to: '/admin/login' })
   }
 
+  // const logout = () => {
+  //   setIsLoading(true)
+  //   dispatch(handleLogout())
+  //   setIsLoading(false)
+  //   navigate({ to: '/admin/login' })
+  // }
 
-    useEffect(() => {
-        async function fetchCredentials() {
-          try {
-            const data = await getAdminCreds()
-            setCredentials(data)
-          } catch (err) {
-            console.log('err', err)
-          }
-        }
-        fetchCredentials()
-      }, []) 
+  useEffect(() => {
+    async function fetchCredentials() {
+      try {
+        const data = await getAdminCreds()
+        setCredentials(data)
+      } catch (err) {
+        console.log('err', err)
+      }
+    }
+    fetchCredentials()
+  }, [])
   return (
     <>
       <LogoutModal
         modalCondition={logoutModalCondition}
-        logout={logout}
+        logout={submitAction}
         handleModalClose={setLogoutModalCondition}
-        isLoading={isLoading}
+        isLoading={isPending}
       />
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
