@@ -1,41 +1,42 @@
-import { createFileRoute } from '@tanstack/react-router'
-import Dashboard from './features/dashboard/index'
-import { QueryClient, queryOptions } from '@tanstack/react-query'
 import axios from 'axios'
+import { QueryClient, queryOptions } from '@tanstack/react-query'
+import { createFileRoute } from '@tanstack/react-router'
 import { getCookie } from '../../../shared/utils/helperFunction'
-const queryClient = new QueryClient();
-const token = getCookie('studentToken');
-export const dashboardQueryOption = () => 
+import Dashboard from './features/dashboard/index'
+
+const queryClient = new QueryClient()
+const token = getCookie('studentToken')
+export const dashboardQueryOption = () =>
   queryOptions({
-    queryKey:['enrolled-courses-get','get-invoices-paid','course-teachers'],
-    queryFn:async() =>{
-      try{
-       let dashboardOverviewResponse = await axios.get(`/student/dashboard/overview?token=${token}`);
-       dashboardOverviewResponse = dashboardOverviewResponse.data
-       let data = {};
-      if(dashboardOverviewResponse.success){
-        data.enrolledCourses = dashboardOverviewResponse.data.courses
-        data.paymentMethods = dashboardOverviewResponse.data.paymentMethods
-        data.totalCharges = dashboardOverviewResponse.data.totalCharges
-        data.courseTeachers = dashboardOverviewResponse.data.courseTeachers
-        data.spendingByYear = dashboardOverviewResponse.data.spendingByYear
-      }
-         
+    queryKey: ['enrolled-courses-get', 'get-invoices-paid', 'course-teachers'],
+    queryFn: async () => {
+      try {
+        const [overviewRes, teachersRes] = await Promise.all([
+          axios.get(`/student/dashboard/overview?token=${token}`),
+        ])
 
-      return data
-      
-      }catch(error){
-        console.log('error',error);
-        return {enrolledCourses:0,totalCharges:0,paymentMethods:[],courseTeachers:0}
-
+        const overview = overviewRes.data
+        console.log('overView ==>',overview)
+        return {
+          enrolledCourses: overview?.data?.courses ?? [],
+          paymentMethods: overview?.data?.paymentMethods ?? [],
+          totalCharges: overview?.data?.totalCharges ?? 0,
+          spendingByYear: overview?.data?.spendingByYear ?? [],
+          courseTeachers: overview?.data?.courseTeachers ?? 0,
+        }
+      } catch (error) {
+        console.error('error', error)
+        return {
+          enrolledCourses: [],
+          totalCharges: 0,
+          paymentMethods: [],
+          courseTeachers: 0,
+        }
       }
     },
-    staleTime:30 * 60 * 1000
-  }
-
-)
+  })
 
 export const Route = createFileRoute('/_authenticated/student/')({
-  loader:({}) => queryClient.ensureQueryData(dashboardQueryOption()),
+  loader: ({}) => queryClient.ensureQueryData(dashboardQueryOption()),
   component: Dashboard,
 })

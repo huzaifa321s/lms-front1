@@ -621,7 +621,7 @@ export default function Dashboard() {
                   <CardTitle className="text-gray-800">Spending Analysis</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ChartBarLabelCustom spendingByYear={spendingByYear} />
+                 {spendingByYear && <ChartBarLabelCustom spendingByYear={spendingByYear} />} 
                 </CardContent>
               </Card>
             ) : (

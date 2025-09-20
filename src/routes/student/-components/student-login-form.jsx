@@ -38,7 +38,7 @@ export function LoginForm({ className, ...props }) {
           response = response.data
           if (response.success) {
             const { token, credentials } = response.data
-              
+              console.log('creds students ===>',credentials)
             dispatch(handleLogin({ token, credentials ,subscription:credentials.subscription}));
             console.log('redirectTo ===>',redirectTo)
             if(redirectTo){

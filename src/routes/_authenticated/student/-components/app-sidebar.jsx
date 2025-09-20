@@ -22,16 +22,23 @@ export function AppSidebar({ ...props }) {
     <Sidebar collapsible='icon' variant='floating' {...props}>
       {/* HEADER */}
       <SidebarHeader className='flex items-center gap-2 px-3 py-4'>
-        <img
-          src='/images/main-logo.jpg'
-          alt='Bruce LMS'
-          width='40'
-          height='40'
-          className='rounded-full shadow-md'
-        />
-        <h1 className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-lg font-extrabold tracking-tight text-transparent drop-shadow-md'>
-          Bruce LMS
-        </h1>
+        <div 
+  onClick={() => navigate({ to: "/" })} 
+  className="flex items-center flex-col justify-center cursor-pointer"
+>
+  <img
+    src="/images/main-logo.jpg"
+    alt="Bruce LMS"
+    width="40"
+    height="40"
+    className="rounded-full shadow-md"
+    loading="lazy"
+  />
+  <h1 className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-lg font-extrabold tracking-tight text-transparent drop-shadow-md">
+    Bruce LMS
+  </h1>
+</div>
+
       </SidebarHeader>
 
       {/* STUDENT INFO */}

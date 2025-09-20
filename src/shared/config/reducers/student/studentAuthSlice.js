@@ -15,7 +15,8 @@ export const studentAuthSlice = createSlice({
         token: getCookie("studentToken") || null,
         credentials: getCookie('studentCredentials') || null,
         subscription: getCookie("studentSubscription") || null,
-        courses: getCookie("studentCourses") || null,
+        courses: JSON.parse(localStorage.getItem('studentCourses')) ?? [],
+
     },
     reducers: {
         // Login / Logout
@@ -25,14 +26,33 @@ export const studentAuthSlice = createSlice({
             state.token = token;
             state.credentials = credentials
             state.subscription = subscription
-            document.cookie = `studentToken=${token}; path=/`;
-            delete credentials.subscription;
+            state.courses = credentials.enrolledCourses;
             const enrolledCourses = credentials.enrolledCourses;
-            delete credentials.enrolledCourses
+            const updatedCreds = {
+                _id: credentials._id,
+                email: credentials.email,
+                profile: credentials.profile,
+                bio: credentials.bio,
+                firstName: credentials.firstName,
+                lastName: credentials.lastName,
+                dateOfBirth: credentials.dateOfBirth,
+                phone: credentials.phone,
+                remainingEnrollmentCount: credentials.remainingEnrollmentCount,
+                status: credentials.status,
+                notifications: [],
+                customerId: credentials.customerId,
+                createdAt: credentials.createdAt,
+                updatedAt: credentials.updatedAt
+
+            }
             console.log('credentials logged ===>', credentials)
-            document.cookie = `studentCredentials=${JSON.stringify(credentials)}; path=/`;
+            document.cookie = `studentToken=${token}; path=/`;
+            document.cookie = `studentCredentials=${JSON.stringify(updatedCreds)}; path=/`;
             document.cookie = `studentSubscription=${JSON.stringify(subscription)}; path=/`;
-            document.cookie = `studentCourses=${JSON.stringify(enrolledCourses)}; path=/`;
+            if (enrolledCourses && enrolledCourses.length > 0) {
+                localStorage.setItem('studentCourses', JSON.stringify(enrolledCourses));
+            }
+
 
         },
         handleLogout: (state) => {
@@ -69,16 +89,25 @@ export const studentAuthSlice = createSlice({
             document.cookie = `studentSubscription=${JSON.stringify(subscription)}; path=/`;
         },
         handleCourseEnrollment: (state, action) => {
-            let enrolledCourses = state.credentials.enrolledCourses;
             const { id, remainingEnrollmentCount } = action.payload;
-            const updatedCredentials = {
+
+
+            state.credentials = {
                 ...state.credentials,
                 remainingEnrollmentCount,
-                enrolledCourses: [...enrolledCourses, id]
             };
-            state.credentials = updatedCredentials;
-            document.cookie = `studentCredentials=${JSON.stringify(updatedCredentials)}; path=/`;
-        }
+
+
+            const updatedEnrolledCourses = [...state.courses, id];
+            state.courses = updatedEnrolledCourses;
+
+            if (updatedEnrolledCourses.length > 0) {
+                localStorage.setItem("studentCourses", JSON.stringify(updatedEnrolledCourses));
+            } else {
+                localStorage.removeItem("studentCourses"); // optional: clear if empty
+            }
+        },
+
     },
 
     extraReducers: (builder) => {

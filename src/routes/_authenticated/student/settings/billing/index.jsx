@@ -36,9 +36,12 @@ export const Route = createFileRoute(
     </>
   ),
   loader: () => {
-    queryClient.ensureQueryData(paymentMethodsQueryOptions())
-    queryClient.ensureQueryData(invoicesQueryOption(5))
-  },
+  return Promise.all([
+    queryClient.ensureQueryData(paymentMethodsQueryOptions()),
+    queryClient.ensureQueryData(invoicesQueryOption(5)),
+  ])
+}
+
 })
 
 const plans = ['daily', 'bronze', 'silver', 'gold']
@@ -47,10 +50,8 @@ function Billing() {
   const { dispatch, router, navigate } = useAppUtils()
   const { data, fetchStatus } = useSuspenseQuery(paymentMethodsQueryOptions())
   const [fetchInvoices, setFetchInvoices] = useState(false)
-  const { data: invoicesData } = useSuspenseQuery({
-    ...invoicesQueryOption(5),
-    enabled: fetchInvoices,
-  })
+const { data: invoicesData } = useSuspenseQuery(invoicesQueryOption(5))
+
   console.log('invoicesData ==>', invoicesData)
   const invoices = invoicesData?.invoices
   const { paymentMethods, defaultPM } = data

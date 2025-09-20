@@ -72,7 +72,7 @@ if (endPage < pages) {
       )
     }
     buttons.push(
-        <Button onChange={() => handlePageChange(pages)} size='sm'>
+        <Button onClick={() => handlePageChange(pages)} size='sm'>
         {pages}
       </Button>
     )

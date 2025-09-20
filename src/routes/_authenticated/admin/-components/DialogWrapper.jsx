@@ -69,6 +69,35 @@ useEffect(() => {
     },
     enabled: isOpen && dialogType === 'game-view',
   })
+
+
+  const getCategoryIcon = () => {
+    if (dialogType.includes('blog')) {
+      return (
+        <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+        </svg>
+      );
+    } else if (dialogType.includes('course')) {
+      return (
+        <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      );
+    }
+    return (
+      <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+      </svg>
+    );
+  };
+
+  // Title and description based on dialog type
+  const getCategoryTitle = () => {
+    if (dialogType.includes('blog')) return 'Blog Category Overview';
+    if (dialogType.includes('course')) return 'Course Category Overview';
+    return 'Game Category Overview';
+  };
   const {
     data: blogCategoryData,
     isFetching: blogCategoryIsFetching,
@@ -1047,246 +1076,171 @@ const deleteBlogMutation = useMutation({
 </Dialog>
 
 <Dialog
-  open={
-    isOpen &&
-    (dialogType === "blog-category-view-modal" ||
-      dialogType === "course-category-view-modal" ||
-      dialogType === "view-game-category-modal")
-  }
-  onOpenChange={() => dispatch(closeModal())}
-  modal
->
-  <DialogContent className="sm:max-w-3xl w-full mx-4 rounded-[12px] overflow-hidden shadow-[0_4px_6px_rgba(0,0,0,0.05)] border-0 bg-[#ffffff]">
-    <DialogHeader className="relative pt-8 pb-6 px-8">
-      <DialogTitle className="flex items-start gap-4 mb-4">
-        <div className="p-4 bg-gradient-to-br from-[#2563eb] to-[#1d4ed8] rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.05)]">
-          {dialogType.includes("blog") ? (
-            <svg className="h-8 w-8 text-[#ffffff]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-            </svg>
-          ) : dialogType.includes("course") ? (
-            <svg className="h-8 w-8 text-[#ffffff]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
-          ) : (
-            <svg className="h-8 w-8 text-[#ffffff]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-            </svg>
+      open={isOpen && ['blog-category-view-modal', 'course-category-view-modal', 'view-game-category-modal'].includes(dialogType)}
+      onOpenChange={() => dispatch(closeModal())}
+      modal
+    >
+      <DialogContent className="sm:max-w-lg w-full mx-2 rounded-lg overflow-hidden shadow-sm border-0 bg-white">
+        <DialogHeader className="pt-6 pb-4 px-6">
+          <DialogTitle className="flex items-start gap-3 mb-3">
+            <div className="p-3 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg shadow-sm">
+              {getCategoryIcon()}
+            </div>
+            <div className="flex-1">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent font-sans">
+                {blogCategoryData?.name || 'Category Details'}
+              </h2>
+              <p className="text-slate-600 text-base font-sans">{getCategoryTitle()}</p>
+            </div>
+            {blogCategoryData && (
+              <span
+                className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full shadow-sm border transition-all duration-200 ${
+                  blogCategoryData?.active
+                    ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white border-emerald-500'
+                    : 'bg-gradient-to-r from-red-500 to-red-600 text-white border-red-500'
+                }`}
+              >
+                <div className={`w-1.5 h-1.5 rounded-full ${blogCategoryData?.active ? 'bg-emerald-400' : 'bg-red-400'}`}></div>
+                {blogCategoryData?.active ? 'Active' : 'Inactive'}
+              </span>
+            )}
+          </DialogTitle>
+          <DialogDescription className="text-slate-600 font-sans">
+            <div className="bg-gradient-to-r from-slate-50 to-slate-100 rounded-lg p-3 border border-slate-200">
+              <div className="flex items-start gap-2">
+                <svg className="h-4 w-4 text-blue-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-sm text-slate-800 font-medium font-sans">View details and stats for this category</p>
+              </div>
+            </div>
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="px-6 pb-6">
+          {blogCategoryIsError && (
+            <div className="mb-4 p-3 rounded-lg bg-gradient-to-r from-red-500 to-red-600 border border-slate-200">
+              <div className="flex items-start gap-2">
+                <svg className="h-4 w-4 text-white mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <p className="font-semibold text-white font-sans">Error Loading Category</p>
+                  <p className="text-white text-sm mt-1 font-sans">{blogCategoryError.message}</p>
+                </div>
+              </div>
+            </div>
           )}
-        </div>
-        
-        <div className="flex-1">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-[#1e293b] to-[#64748b] bg-clip-text text-transparent mb-2 font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]">
-            {blogCategoryData?.name || "Category Details"}
-          </h2>
-          <p className="text-[#64748b] text-lg font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]">
-            {dialogType.includes("blog") ? "Blog Category Overview" : 
-             dialogType.includes("course") ? "Course Category Overview" : 
-             "Game Category Overview"}
-          </p>
-        </div>
-        {console.log('blogCategoryData ===>',blogCategoryData)}
-        {/* Status Badge */}
-        {blogCategoryData && (
-          <div className="self-start">
-            <span
-              className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-full shadow-[0_4px_6px_rgba(0,0,0,0.05)] border-2 transition-all duration-200 ${
-                blogCategoryData?.active
-                  ? "bg-gradient-to-r from-[#10b981] to-[#059669] text-[#ffffff] border-[#10b981] shadow-[#10b981]/20"
-                  : "bg-gradient-to-r from-[#ef4444] to-[#dc2626] text-[#ffffff] border-[#ef4444] shadow-[#ef4444]/20"
-              }`}
-            >
-              <div className={`w-2 h-2 rounded-full ${
-                blogCategoryData?.active ? "bg-[#10b981]" : "bg-[#ef4444]"
-              }`}></div>
-              {blogCategoryData?.active ? "Active" : "Inactive"}
-            </span>
-          </div>
-        )}
-      </DialogTitle>
 
-      <DialogDescription className="text-[#64748b] leading-relaxed font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]">
-        <div className="bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] rounded-[12px] p-4 border border-[#e2e8f0]">
-          <div className="flex items-start gap-3">
-            <svg className="h-5 w-5 text-[#2563eb] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <p className="text-[#1e293b] font-medium font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]">
-              View comprehensive details and statistics for this category
-            </p>
-          </div>
-        </div>
-      </DialogDescription>
-    </DialogHeader>
-
-    <div className="px-8 pb-8">
-      {/* Error State */}
-      {blogCategoryIsError && (
-        <div className="mb-6 p-4 rounded-[12px] bg-gradient-to-r from-[#ef4444] to-[#dc2626] border border-[#e2e8f0]">
-          <div className="flex items-start gap-3">
-            <svg className="h-5 w-5 text-[#ffffff] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <div>
-              <p className="font-semibold text-[#ffffff] font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]">
-                Error Loading Category
-              </p>
-              <p className="text-[#ffffff] text-sm mt-1 font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]">
-                {blogCategoryError.message}
-              </p>
+          {blogCategoryFetchStatus === 'paused' && (
+            <div className="mb-4 p-3 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 border border-slate-200">
+              <div className="flex items-start gap-2">
+                <svg className="h-4 w-4 text-white mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+                <div>
+                  <p className="font-semibold text-white font-sans">Connection Issue</p>
+                  <p className="text-white text-sm mt-1 font-sans">No internet connection available</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          )}
 
-      {/* No Internet */}
-      {blogCategoryFetchStatus === "paused" && (
-        <div className="mb-6 p-4 rounded-[12px] bg-gradient-to-r from-[#f59e0b] to-[#d97706] border border-[#e2e8f0]">
-          <div className="flex items-start gap-3">
-            <svg className="h-5 w-5 text-[#ffffff] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z" />
-            </svg>
-            <div>
-              <p className="font-semibold text-[#ffffff] font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]">
-                Connection Issue
-              </p>
-              <p className="text-[#ffffff] text-sm mt-1 font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]">
-                No internet connection available
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Loading State */}
-      {(blogCategoryFetchStatus === "fetching" ||
-        blogCategoryIsFetching ||
-        (!blogCategoryData && blogCategoryFetchStatus !== "paused")) &&
-      !blogCategoryIsError ? (
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {(blogCategoryFetchStatus === 'fetching' || blogCategoryIsFetching || (!blogCategoryData && blogCategoryFetchStatus !== 'paused')) && !blogCategoryIsError ? (
             <div className="space-y-4">
-              <Skeleton className="h-6 w-32 rounded-[12px] bg-gradient-to-r from-[#f1f5f9] to-[#e2e8f0] animate-pulse" />
-              <Skeleton className="h-24 w-full rounded-[12px] bg-gradient-to-r from-[#f1f5f9] to-[#e2e8f0] animate-pulse" />
+              <div className="grid grid-cols-1 gap-4">
+                <Skeleton className="h-5 w-24 rounded-lg bg-gradient-to-r from-slate-100 to-slate-200 animate-pulse" />
+                <Skeleton className="h-20 w-full rounded-lg bg-gradient-to-r from-slate-100 to-slate-200 animate-pulse" />
+              </div>
             </div>
-            <div className="space-y-4">
-              <Skeleton className="h-6 w-40 rounded-[12px] bg-gradient-to-r from-[#f1f5f9] to-[#e2e8f0] animate-pulse" />
-              <Skeleton className="h-24 w-full rounded-[12px] bg-gradient-to-r from-[#f1f5f9] to-[#e2e8f0] animate-pulse" />
-            </div>
-          </div>
-        </div>
-      ) : (
-        blogCategoryData && (
-          <div className="space-y-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Date Information Card */}
-              <div className="group p-6 rounded-[12px] border-2 border-[#e2e8f0] bg-gradient-to-br from-[#ffffff] to-[#f1f5f9] shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-[0_6px_8px_rgba(0,0,0,0.1)] transition-all duration-300 hover:border-[#cbd5e1] hover:-translate-y-1">
-                <div className="flex items-start gap-4">
-                  <div className="p-3 bg-gradient-to-br from-[#10b981] to-[#059669] rounded-[12px] group-hover:from-[#059669] group-hover:to-[#047857] transition-all duration-300">
-                    <svg className="h-6 w-6 text-[#ffffff]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  
-                  <div className="flex-1 space-y-3">
-                    <h3 className="text-lg font-semibold text-[#1e293b] group-hover:text-[#10b981] transition-colors duration-300 font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]">
-                      Timeline Information
-                    </h3>
-                    
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-[#10b981] rounded-full"></div>
-                        <p className="text-sm text-[#64748b] font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]">
-                          <span className="font-medium text-[#1e293b]">Created:</span>{" "}
-                          {format(blogCategoryData.createdAt, "PPP HH:mm:ss")}
-                        </p>
+          ) : (
+            blogCategoryData && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 gap-4">
+                  {/* Date Information Card */}
+                  <div className="group p-4 rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-300">
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg group-hover:from-green-600 group-hover:to-green-700 transition-all duration-300">
+                        <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
                       </div>
-                      
-                      {blogCategoryData?.updatedAt && (
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 bg-[#2563eb] rounded-full"></div>
-                          <p className="text-sm text-[#64748b] font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]">
-                            <span className="font-medium text-[#1e293b]">Updated:</span>{" "}
-                            {format(blogCategoryData?.updatedAt, "PPP HH:mm:ss")}
+                      <div className="flex-1 space-y-2">
+                        <h3 className="text-base font-semibold text-slate-800 group-hover:text-emerald-600 transition-colors duration-300 font-sans">
+                          Timeline Information
+                        </h3>
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-1.5">
+                            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                            <p className="text-sm text-slate-600 font-sans">
+                              <span className="font-medium text-slate-800">Created:</span>{' '}
+                              {format(new Date(blogCategoryData.createdAt), 'PPP HH:mm:ss')}
+                            </p>
+                          </div>
+                          {blogCategoryData?.updatedAt && (
+                            <div className="flex items-center gap-1.5">
+                              <div className="w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
+                              <p className="text-sm text-slate-600 font-sans">
+                                <span className="font-medium text-slate-800">Updated:</span>{' '}
+                                {format(new Date(blogCategoryData.updatedAt), 'PPP HH:mm:ss')}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Content Statistics Card */}
+                  <div className="group p-4 rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-300">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-start gap-3">
+                        <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300">
+                          {getCategoryIcon()}
+                        </div>
+                        <div>
+                          <h3 className="text-base font-semibold text-slate-800 group-hover:text-blue-600 transition-colors duration-300 font-sans">
+                            Content Statistics
+                          </h3>
+                          <p className="text-sm text-slate-600 font-sans">
+                            <span className="font-medium text-slate-800">
+                              Total {dialogType.includes('game') ? 'Games' : dialogType.includes('course') ? 'Courses' : 'Blogs'} in Category
+                            </span>
                           </p>
                         </div>
-                      )}
+                      </div>
+                      <div className="text-right">
+                        <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent font-sans">
+                          {blogCategoryData?.total || 0}
+                        </div>
+                        <div className="text-sm text-slate-600 font-sans">Items</div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+            )
+          )}
+        </div>
 
-              {/* Content Statistics Card */}
-              <div className="group p-6 rounded-[12px] border-2 border-[#e2e8f0] bg-gradient-to-br from-[#ffffff] to-[#f1f5f9] shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-[0_6px_8px_rgba(0,0,0,0.1)] transition-all duration-300 hover:border-[#cbd5e1] hover:-translate-y-1">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-gradient-to-br from-[#2563eb] to-[#1d4ed8] rounded-[12px] group-hover:from-[#1d4ed8] group-hover:to-[#1e40af] transition-all duration-300">
-                      {dialogType.includes("game") ? (
-                        <svg className="h-6 w-6 text-[#ffffff]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                        </svg>
-                      ) : dialogType.includes("course") ? (
-                        <svg className="h-6 w-6 text-[#ffffff]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                        </svg>
-                      ) : (
-                        <svg className="h-6 w-6 text-[#ffffff]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                        </svg>
-                      )}
-                    </div>
-                    
-                    <div>
-                      <h3 className="text-lg font-semibold text-[#1e293b] group-hover:text-[#2563eb] transition-colors duration-300 font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]">
-                        Content Statistics
-                      </h3>
-                      <p className="text-sm text-[#64748b] font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]">
-                        <span className="font-medium text-[#1e293b]">
-                          Total{" "}
-                          {dialogType.includes("game")
-                            ? "Games"
-                            : dialogType.includes("course")
-                            ? "Courses"
-                            : "Blogs"}{" "}
-                          in Category
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="text-right">
-                    <div className="text-4xl font-bold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]">
-                      {blogCategoryData?.total || 0}
-                    </div>
-                    <div className="text-sm text-[#64748b] mt-1 font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]">
-                      Items
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )
-      )}
-    </div>
-
-    <DialogFooter className="px-8 py-6 bg-gradient-to-r from-[#f1f5f9] to-[#e2e8f0] border-t border-[#e2e8f0]">
-      <DialogClose asChild>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => dispatch(closeModal())}
-          className="px-8 py-3 border-2 border-[#e2e8f0] hover:border-[#cbd5e1] hover:bg-[#e2e8f0] transition-all duration-200 rounded-[8px] font-semibold text-[#475569] shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-[0_6px_8px_rgba(0,0,0,0.1)] font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]"
-        >
-          <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          Close
-        </Button>
-      </DialogClose>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
+        <DialogFooter className="px-6 py-4 bg-gradient-to-r from-slate-50 to-slate-100 border-t border-slate-200">
+          <DialogClose asChild>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => dispatch(closeModal())}
+              className="px-6 py-2 border border-slate-200 hover:border-slate-300 hover:bg-slate-100 text-slate-600 rounded-lg font-semibold shadow-sm hover:shadow-md transition-all duration-300 font-sans"
+              aria-label="Close modal"
+            >
+              <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Close
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
 
 
 <Dialog
