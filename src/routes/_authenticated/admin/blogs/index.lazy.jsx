@@ -68,7 +68,7 @@ function RouteComponent() {
     '/_authenticated/admin/blogs/'
   )
     let currentPage = useSearch({
-      from: '/_authenticated/admin/blogs/',
+      from: '/_authenticated/admin/blogs/stu',
       select: (search) => search.page,
     })
   const debouncedSearch = getDebounceInput(searchInput,800);

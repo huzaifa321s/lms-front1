@@ -1,4 +1,4 @@
-import { useActionState, useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import axios from 'axios'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate,useSearch } from '@tanstack/react-router'
@@ -29,39 +29,37 @@ export function LoginForm({ className, ...props }) {
   } = useForm()
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isLoading,setIsLoading] = useState(false);
   const redirectTo = useSearch({from:'/student/login',select:(search) => search.redirect});
-     const [state, submitAction, isPending] = useActionState(
-    async (_, formData) => {
-      try {
-        const response = await axios.post('/student/login', {
-          email: formData.get('email'),
-          password: formData.get('password'),
-        });
-
-        if (response.data.success) {
-          const { token, credentials } = response.data.data;
-          dispatch(handleLogin({ token, credentials, subscription: credentials.subscription }));
-          toast.success('Logged in successfully');
-          return { success: true, redirectTo };
+    const handleAdminLogin = useCallback(
+      async (data) => {
+        setIsLoading(true)
+        try {
+          let response = await axios.post('/student/login', data)
+          response = response.data
+          if (response.success) {
+            const { token, credentials } = response.data
+              console.log('creds students ===>',credentials)
+            dispatch(handleLogin({ token, credentials ,subscription:credentials.subscription}));
+            console.log('redirectTo ===>',redirectTo)
+            if(redirectTo){
+              navigate({to:redirectTo})
+            }else{
+              console.log('condition true')
+              navigate({to:"/"})
+            }
+            toast.success('Logged in successfully')
+            reset()
+          }
+        } catch (error) {
+          console.log('error', error)
+          toast.error(error.response.data.message)
+        } finally {
+          setIsLoading(false);
         }
-        throw new Error(response.data.message || 'Login failed');
-      } catch (error) {
-        const errorMessage = error.response?.data?.message || 'Failed to log in. Please try again.';
-        toast.error(errorMessage);
-        return { success: false, error: errorMessage };
-      }
-    },
-    { success: null, error: null, redirectTo: null }
-  );
-
-  // Handle redirection after successful login
-  if (state.success && state.redirectTo) {
-    navigate({ to: state.redirectTo });
-    reset();
-  } else if (state.success) {
-    navigate({ to: '/' });
-    reset();
-  }
+      },
+      [axios, toast, navigate,redirectTo]
+    );
 
   return (
  <div className={cn('flex flex-col gap-6', className)} {...props} style={{ fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' }}>
@@ -75,8 +73,6 @@ export function LoginForm({ className, ...props }) {
         </div>
       </div>
 
-    
-
       <CardTitle className='text-2xl font-bold text-[#1e293b] mb-2'>
         Welcome Back
       </CardTitle>
@@ -86,7 +82,7 @@ export function LoginForm({ className, ...props }) {
     </CardHeader>
 
     <CardContent className='p-8'>
-      <form action={submitAction}>
+      <form onSubmit={handleSubmit(handleAdminLogin)}>
         <div className='space-y-6'>
           {/* Email Field */}
           <div className='space-y-3'>
@@ -182,11 +178,11 @@ export function LoginForm({ className, ...props }) {
           {/* Enhanced Submit Button - Student Theme */}
           <Button
             type='submit'
-            disabled={isPending}
-            loading={isPending}
+            disabled={isLoading}
+            loading={isLoading}
             className='w-full bg-gradient-to-r from-[#f59e0b] to-[#d97706] hover:from-[#d97706] hover:to-[#b45309] text-white font-semibold py-3 px-6 rounded-[8px] shadow-sm transition-all duration-300 hover:shadow-[0_4px_12px_rgba(245,158,11,0.25)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0'
           >
-            {isPending ? (
+            {isLoading ? (
               <div className='flex items-center gap-2'>
            
                 Signing In...
