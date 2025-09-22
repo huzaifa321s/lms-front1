@@ -185,7 +185,7 @@ console.log('teacher 1 ====>',teacher)
         </div>
       </Header>
 
-      <div className="relative z-10 mb-8  max-w-7xl mx-auto">
+      <div className="relative z-10 mb-8 max-w-7xl mx-auto">
         {/* Left sidebar - Profile & Skills */}
         <div className="flex items-center  space-y-6">
           {/* Profile Card */}
@@ -234,7 +234,7 @@ console.log('teacher 1 ====>',teacher)
                     <Award className="w-6 h-6 text-[#2563eb]" />
                   </div>
                   <CardTitle className="text-xl font-bold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
-                    Skills & Expertise
+                    Qualification
                   </CardTitle>
                 </div>
               </div>
