@@ -76,7 +76,7 @@ export function TopCourseChart() {
       <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 rounded-full opacity-20 blur-xl"></div>
 
       <h2 className="text-xl font-bold text-center mb-4 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent drop-shadow-md">
-        Top Performing Course (Dummy) 📘
+        Top Performing Course (Demo Feature) 📘
       </h2>
       <div className="flex justify-center">
         <Doughnut data={data} options={options} />

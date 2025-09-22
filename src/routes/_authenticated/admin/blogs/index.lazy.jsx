@@ -68,7 +68,7 @@ function RouteComponent() {
     '/_authenticated/admin/blogs/'
   )
     let currentPage = useSearch({
-      from: '/_authenticated/admin/blogs/stu',
+      from: '/_authenticated/admin/blogs/',
       select: (search) => search.page,
     })
   const debouncedSearch = getDebounceInput(searchInput,800);
@@ -148,7 +148,7 @@ function RouteComponent() {
                                <Input
                                  size='sm'
                                  type='text'
-                                 placeholder='Search Courses'
+                                 placeholder='Search Blogs'
                                  value={searchInput}
                                  onChange={(e) => setSearchInput(e.target.value)}
                                />

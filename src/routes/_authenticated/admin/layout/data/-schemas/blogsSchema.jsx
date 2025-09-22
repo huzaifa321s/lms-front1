@@ -38,11 +38,14 @@ export const blogsSchema = [
 
 
 export const BlogsSchema = z.object({
-  category: z.object({
-    _id: z.string(),
-    name: z.string(),
-  }),
   content: z.string(),
   title: z.string(),
   _id: z.string(),
+  category: z
+    .object({
+      _id: z.string(),
+      name: z.string(),
+    })
+    .nullable() // allow null
+    .optional(), // allow undefined
 })

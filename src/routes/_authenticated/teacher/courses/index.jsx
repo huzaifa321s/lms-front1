@@ -175,6 +175,7 @@ console.log('courses.length ===>',courses.length)
                 fetchStatus={fetchStatus}
                 isFetching={isFetching}
                 dateUpdated={i.updatedAt}
+                image={i.coverImage}
               />
             ))}
           </Show.When>

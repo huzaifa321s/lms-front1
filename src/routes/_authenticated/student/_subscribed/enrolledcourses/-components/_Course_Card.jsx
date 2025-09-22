@@ -5,15 +5,16 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from '@/components/ui/card';
-import courseImg from '../../../../../../../public/images/shadcn-admin.png';
 import { Badge } from '@/components/ui/badge';
 import { memo } from 'react';
-const DEFAULT_COURSE_IMAGE = "https://images.unsplash.com/photo-1516321310762-90b0e7f8b4b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=320&h=160&q=80";export const CardDemo = memo(({ courseId, title, desc, category, image = DEFAULT_COURSE_IMAGE }) => {
+
+const DEFAULT_COURSE_IMAGE =
+  "https://images.unsplash.com/photo-1516321310762-90b0e7f8b4b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=320&h=160&q=80";
+
+export const CardDemo = memo(({ courseId, title, desc, category, image = DEFAULT_COURSE_IMAGE }) => {
   const navigate = useNavigate();
 
-  // Define gradient style as a constant to avoid recreation on each render
   const gradientTextStyle = {
     background: "linear-gradient(45deg, #2563eb, #1d4ed8)",
     WebkitBackgroundClip: "text",
@@ -22,63 +23,60 @@ const DEFAULT_COURSE_IMAGE = "https://images.unsplash.com/photo-1516321310762-90
 
   return (
     <Card
-      className="flex flex-col h-[28rem] w-full md:w-80 relative p-0 
-                 bg-white rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] 
-                 border border-slate-200 
-                 transition-transform duration-300 ease-in-out 
-                 hover:scale-[1.02] hover:border-slate-300 hover:shadow-lg 
-                 overflow-hidden"
+      className="flex flex-col h-[22rem] w-full md:w-72 relative 
+                 bg-white rounded-xl shadow-sm border border-slate-200 
+                 transition-all duration-500 hover:shadow-xl hover:-translate-y-1 overflow-hidden"
     >
-      <div className="relative flex-shrink-0">
+      {/* Image */}
+      <div className="relative h-32 overflow-hidden">
         <img
           src={image}
           alt={`${title} thumbnail`}
-          className="w-full h-40 object-cover rounded-t-[12px]"
-          loading="lazy" // Lazy load images for performance
+          className="w-full h-full object-cover rounded-t-xl transition-transform duration-700 group-hover:scale-110"
+          loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
-        {/* Category badge */}
+        {/* Category Badge */}
         {category && (
           <Badge
-            className="absolute top-2 right-2 bg-gradient-to-r from-blue-600 to-blue-700 
-                       text-white shadow-md rounded-[8px] border-0"
+            className="absolute top-2 left-2 rounded-full px-2.5 py-0.5 text-[11px] font-medium 
+                       bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md border-0"
           >
             {category}
           </Badge>
         )}
       </div>
 
-      <CardHeader className="p-4">
+      {/* Title */}
+      <CardHeader className="p-3 pb-1">
         <h2
-          className="mb-2 text-xl font-bold line-clamp-2 font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif] 
-                     text-slate-900"
+          className="text-base font-bold line-clamp-2 font-sans transition-colors duration-300"
           style={gradientTextStyle}
         >
           {title}
         </h2>
       </CardHeader>
 
-      <CardContent
-        className="p-4 pt-0 text-sm text-slate-600 
-                   font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif] flex-grow line-clamp-4"
-      >
+      {/* Description */}
+      <CardContent className="p-3 pt-0 text-xs sm:text-sm text-slate-600 flex-grow line-clamp-3">
         {desc}
       </CardContent>
 
-      <CardFooter className="p-4 pt-0">
+      {/* Footer Button */}
+      <CardFooter className="p-3 pt-0">
         <Button
           size="sm"
-          className="group relative inline-flex h-9 items-center justify-center 
-                     overflow-hidden rounded-[8px] 
-                     bg-gradient-to-r from-blue-600 to-blue-700 
-                     px-4 py-2 font-medium text-white shadow-md 
-                     transition duration-300 ease-out hover:scale-105 hover:shadow-lg w-full 
-                     font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]"
+          className="relative w-full rounded-lg overflow-hidden 
+                     bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium py-2 
+                     shadow-md transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
           onClick={() => navigate({ to: `/student/enrolledcourses/${courseId}` })}
           aria-label={`View details for ${title} course`}
         >
           <span className="relative z-10">View Course</span>
+          {/* Shine Effect */}
+          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent 
+                           translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
         </Button>
       </CardFooter>
     </Card>

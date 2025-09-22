@@ -1,5 +1,5 @@
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query'
-import { BookOpen, Plus, Settings } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { BookOpen, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle ,CardFooter} from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -234,7 +234,7 @@ export default function Dashboard() {
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-lg font-bold text-[#1e293b]">
-                        Earnings Overview <span className="text-sm text-[#64748b]">(Dummy)</span>
+                        Earnings Overview <span className="text-sm text-[#64748b]">(Demo Feature)</span>
                       </h3>
                       <div className="h-1 w-12 rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8]"></div>
                     </div>

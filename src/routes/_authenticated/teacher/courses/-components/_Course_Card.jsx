@@ -1,6 +1,6 @@
 import { useSearch } from '@tanstack/react-router';
 import { IconDetails } from '@tabler/icons-react';
-import { DeleteIcon, EditIcon, User } from 'lucide-react';
+import { ArrowRight, Delete, DeleteIcon, EditIcon, Eye, Glasses, Trash, Trash2, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,7 +19,7 @@ import { openModal } from '../../../../../shared/config/reducers/teacher/teacher
 import { useAppUtils } from '../../../../../hooks/useAppUtils';
 import { format } from 'date-fns';
 
-const courseImg = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/courses/cover-images/1713203716041-Finance.jpg`;
+const courseImg = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses/cover-images/`;
 
 export function CardDemo({
   courseId,
@@ -32,10 +32,11 @@ export function CardDemo({
   fetchStatus,
   isFetching,
   dateUpdated,
+  image
 }) {
   const { navigate, dispatch } = useAppUtils();
   const searchParams = useSearch({ from: '/_authenticated/teacher/courses/' });
-
+console.log("courseImg ===>",courseImg)
   return (
       <div className="relative group w-full max-w-sm mx-auto">
       {/* Main Card */}
@@ -52,8 +53,8 @@ export function CardDemo({
         {/* Course Image */}
         <div className="relative overflow-hidden rounded-t-[8px]">
           <img
-            src={courseImg}
             alt={name}
+            src={`${courseImg}${image}`}
             className="w-full h-40 sm:h-48 object-cover transition-transform duration-300 group-hover:scale-105"
             loading="lazy"
           />
@@ -90,8 +91,8 @@ export function CardDemo({
               }}
               className="flex-1 min-w-[70px] justify-center rounded-[8px] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white font-medium shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)] hover:scale-[1.02]"
             >
-              <span className="hidden xs:inline mr-1">View</span>
-              <IconDetails size={14} />
+              <span className="inline mr-1">View</span>
+              <Eye size={14} />
             </Button>
             <Button
               size="sm"
@@ -102,7 +103,7 @@ export function CardDemo({
               }}
               className="flex-1 min-w-[70px] justify-center rounded-[8px] border-[#e2e8f0] text-[#2563eb] hover:bg-[#2563eb]/10 hover:text-[#1d4ed8] transition-all duration-300"
             >
-              <span className="hidden xs:inline mr-1">Edit</span>
+              <span className="inline mr-1">Edit</span>
               <EditIcon size={14} />
             </Button>
             <Button
@@ -123,8 +124,8 @@ export function CardDemo({
               }}
               className="flex-1 min-w-[70px] justify-center rounded-[8px] bg-gradient-to-r from-[#ef4444] to-[#dc2626] text-white font-medium shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)] hover:scale-[1.02]"
             >
-              <span className="hidden xs:inline mr-1">Delete</span>
-              <DeleteIcon size={14} />
+              <span className="inline mr-1">Delete</span>
+              <Trash2 size={14} />
             </Button>
           </div>
 
@@ -146,8 +147,9 @@ export function CardDemo({
                     variant="outline"
                     size="sm"
                   >
-                    <User size={16} />
-                    <span className="mx-2 font-medium">Students</span>
+                    <span className="mx-2 font-medium">Students Enrolled</span>
+                      <ArrowRight size={14} className="ml-1" />
+                     <Button size="xs" variant="secondary">View</Button>
                     <Badge
                       variant="default"
                       className="ml-auto bg-[#2563eb]/20 text-[#2563eb] hover:bg-[#2563eb]/30"
@@ -158,6 +160,7 @@ export function CardDemo({
                 </TooltipTrigger>
                 <TooltipContent className="bg-white/95 backdrop-blur-sm text-[#1e293b] border-[#e2e8f0] rounded-[8px] shadow-[0_4px_6px_rgba(0,0,0,0.05)]">
                   <p>Students Enrolled</p>
+                   <p className="text-xs text-gray-500">Click to view details</p>
                 </TooltipContent>
               </div>
             </Tooltip>

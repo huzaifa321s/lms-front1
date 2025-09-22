@@ -185,11 +185,11 @@ console.log('teacher 1 ====>',teacher)
         </div>
       </Header>
 
-      <div className="relative z-10 mx-4 mb-8 grid gap-6 lg:gap-8 grid-cols-1 xl:grid-cols-12 max-w-7xl mx-auto">
+      <div className="relative z-10 mb-8  max-w-7xl mx-auto">
         {/* Left sidebar - Profile & Skills */}
-        <div className="xl:col-span-4 space-y-6">
+        <div className="flex items-center  space-y-6">
           {/* Profile Card */}
-          <Card className="group relative overflow-hidden border border-[#e2e8f0] bg-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300">
+          <Card className="group relative overflow-hidden border border-[#e2e8f0] bg-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300 w-1/2">
             <div className="absolute inset-0 bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             <div className="relative z-10 p-8">
               {/* Profile Image */}
@@ -200,7 +200,7 @@ console.log('teacher 1 ====>',teacher)
                     <img
                       src={
                         teacher?.profile
-                          ? `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/teacher/profile/${teacher.profile}`
+                          ? `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/teacher/profile/${teacher.profile}`
                           : defaultProfile
                       }
                       loading="lazy"
@@ -225,7 +225,7 @@ console.log('teacher 1 ====>',teacher)
           </Card>
 
           {/* Skills & Expertise Card */}
-          <Card className="group relative overflow-hidden border border-[#e2e8f0] bg-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300">
+          <Card className="group relative overflow-hidden border border-[#e2e8f0] bg-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300 w-1/2">
             <div className="absolute inset-0 bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             <CardContent className="relative z-10 p-6">
               <div className="flex items-center justify-center mb-6">
@@ -253,7 +253,7 @@ console.log('teacher 1 ====>',teacher)
         </div>
 
         {/* Right side - Basic Info & Courses */}
-        <div className="xl:col-span-8 space-y-6">
+        <div className="xl:col-span-12 space-y-6">
           {/* Basic Info Card */}
           <Card className="group relative overflow-hidden border border-[#e2e8f0] bg-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300">
             <div className="absolute inset-0 bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

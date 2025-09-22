@@ -20,7 +20,7 @@ import { closeModal } from '../../../../shared/config/reducers/teacher/teacherDi
 import { courseQueryOptions } from '../courses'
 import {Label} from '@/components/ui/label'
 import {Input} from '@/components/ui/input'
-import { gameQueryOptions } from '../trainingwheelgame'
+import { gameQueryOptions } from '../trainingwheelgame/index.lazy'
 import { useAppUtils } from '../../../../hooks/useAppUtils'
 import { MessageSquare, Layers, Target, Puzzle, AlertTriangle, Wifi, X, CheckCircle2 } from 'lucide-react';
 

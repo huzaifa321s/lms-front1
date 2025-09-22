@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import SignUp from '@/features/auth/sign-up'
+import { Header } from '@/components/layout/header'
 
 export const Route = createFileRoute(
   '/_authenticated/admin/sample-pages/auth/student/sign-up',
@@ -9,6 +10,11 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   return (
+    <>
+       <Header>
+        Register
+       </Header>
     <SignUp disabled={true}/>
+    </>
   )
 }

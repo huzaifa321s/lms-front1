@@ -1,13 +1,20 @@
 import {
   IconBarrierBlock,
+  IconBrowserCheck,
   IconBug,
+  IconCreditCard,
   IconError404,
   IconGoGame,
+  IconHelp,
   IconLayoutDashboard,
   IconLock,
   IconLockAccess,
+  IconNotification,
+  IconPalette,
   IconServerOff,
   IconSettings,
+  IconTool,
+  IconUserCog,
   IconUserOff,
 } from '@tabler/icons-react'
 import {  BookUser, Edit2, Edit3, EditIcon, List, Users2Icon, UsersIcon } from 'lucide-react'
@@ -98,6 +105,7 @@ export const adminSideBarData = {
               title: 'Sign In',
               url: '/admin/sample-pages/auth/sign-in',
             },
+            
      
             {
               title: 'Sign Up (Student)',
@@ -149,6 +157,14 @@ export const adminSideBarData = {
             },
           ],
         },
+         {
+      title: 'Subscriptions',
+      icon: IconCreditCard,
+      items: [
+        { title: 'Plans', url: '/admin/sample-pages/subscriptions/plans' },
+        
+      ],
+    },
       ],
     },
     // {

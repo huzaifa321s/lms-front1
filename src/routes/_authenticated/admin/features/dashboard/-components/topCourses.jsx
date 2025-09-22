@@ -92,6 +92,7 @@ export function TopCourses({ data }) {
       <Button
         size="xs"
         variant="outline"
+        disabled={true}
         className="rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] font-semibold focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
       >
         View All Courses

@@ -17,7 +17,7 @@ import { openModal } from '../../../../../../shared/config/reducers/admin/Dialog
 export function BlogDataTableRowActions({ row }) {
   const blog = BlogsSchema.parse(row.original)
   const { dispatch, navigate } = useAppUtils()
-
+  
   return (
     <>
       <Button
@@ -26,7 +26,7 @@ export function BlogDataTableRowActions({ row }) {
         onClick={() =>
           navigate({
             to: `/admin/blogs/blog-details/${blog._id}`,
-            search: { category: blog.category._id },
+            search: { category: blog?.category?._id },
           })
         }
       >

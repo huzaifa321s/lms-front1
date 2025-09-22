@@ -334,7 +334,7 @@ export const teachersSchemaStudentPanel = [
 }),
   columnHelper.accessor('profile', {
     header:() => <p>Profile</p>,
-    cell: (info) => <img className="rounded-full shadow-md w-10 h-10" src={`${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/teacher/profile/${info.getValue()}`} laoding="lazy"/>,
+    cell: (info) => <img className="rounded-full shadow-md w-10 h-10" src={`${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/teacher/profile/${info.getValue()}`} laoding="lazy"/>,
   }),
   columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
     id: 'Name',
