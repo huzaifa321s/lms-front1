@@ -522,7 +522,7 @@ useEffect(() => {
                           onClick={() =>
                             navigate({
                               to: `/student/courses/${course._id}`,
-                              search: { userID: credentials._id },
+                              search: { userID: credentials?._id },
                             })
                           }
                           className='w-full rounded-lg border-slate-200 text-slate-700 transition-all duration-300 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600'

@@ -62,10 +62,15 @@ const courseQueryOptions = (deps) =>
     queryKey: ['getCourse', deps.courseID, deps?.userID],
     queryFn: async () => {
       console.log('deps ===>', deps)
+      const creds = getCookie('studentCredentials');
       let queryStr = `courseID=${deps.courseID}`
       if (deps?.userID) {
         queryStr += `&userID=${deps.userID}`
+      }else if(creds?._id){
+         queryStr += `&userID=${creds._id}`
       }
+         
+      
 
       try {
         let response = await axios.get(`/web/course/getCourse?${queryStr}`)
