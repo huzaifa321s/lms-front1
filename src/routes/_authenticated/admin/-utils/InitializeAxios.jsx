@@ -188,7 +188,7 @@ export function initializeAxios() {
   document.body.appendChild(loader);
 }
 
-function hideLoader() {
+ function hideLoader() {
    const loader = document.getElementById('custom-loader');
    if (loader) {
        loader.remove();

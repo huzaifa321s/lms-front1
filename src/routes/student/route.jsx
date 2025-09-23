@@ -1,6 +1,5 @@
-import { useEffect } from 'react'
 import axios from 'axios'
-import { createFileRoute, Link, Outlet } from '@tanstack/react-router'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { NavbarRouteComponent } from '../-NavbarRouteComponent'
 import { Footer } from './Footer'
 
@@ -59,30 +58,7 @@ function hideLoader() {
 }
 
 export const Route = createFileRoute('/student')({
-  beforeLoad: () => {
-    axios.interceptors.request.use(
-      function (config) {
-        //       document.body.classList.add('loading-indicator')
-        showLoader()
-        return config
-      },
-      function (error) {
-        return Promise.reject(error)
-      }
-    )
-    axios.interceptors.response.use(
-      function (response) {
-        //       document.body.classList.remove('loading-indicator')
-        hideLoader()
-        return response
-      },
-      function (error) {
-        //       document.body.classList.remove('loading-indicator')
-        hideLoader()
-        return Promise.reject(error)
-      }
-    )
-  },
+
   component: RouteComponent,
 })
 

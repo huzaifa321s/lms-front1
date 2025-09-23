@@ -1,7 +1,7 @@
 import axios from "axios"
 import { format } from "date-fns"
 import { QueryClient, queryOptions, useSuspenseQuery } from "@tanstack/react-query"
-import { createFileRoute, useParams } from "@tanstack/react-router"
+import { useParams, createFileRoute, useLoaderData } from "@tanstack/react-router"
 import { Status, StatusIndicator, StatusLabel } from "@/components/ui/shadcn-io/status"
 import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -18,12 +18,12 @@ const invoiceQueryOption = (invoiceID) =>
         const response = await axios.get(`/student/payment/get-invoices/${invoiceID}`)
         if (response.data.success) {
           console.log('response.data.data ====>',response.data)
-          return { invoiceDetails: response.data.data }
+          return response.data.data 
         }
-        return { invoiceDetails: null }
+        return { }
       } catch (error) {
         console.error("Error fetching invoice details:", error)
-        return { invoiceDetails: null }
+        return {}
       }
     },
   })
@@ -37,8 +37,8 @@ function InvoiceDetails() {
   const { invoiceID } = useParams({
     from: "/student/setting/invoices/invoice-details/$invoiceID",
   })
-  const { data } = useSuspenseQuery(invoiceQueryOption(invoiceID))
-  const { invoiceDetails } = data
+  const  data  = useLoaderData({from:"/student/setting/invoices/invoice-details/$invoiceID"})
+  const invoiceDetails  = data
 
   const PRICE_MAP = {
     price_1P6ep6EdtHnRsYCMarT5ATUq: "Bronze Plan",

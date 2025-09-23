@@ -12,16 +12,16 @@ import { loadStripe } from '@stripe/stripe-js'
 import { Provider, useSelector } from 'react-redux'
 import { toast } from 'sonner'
 import { handleServerError } from '@/utils/handle-server-error'
+import { LoaderThree } from '@/components/ui/loader'
 import { FontProvider } from './context/font-context'
 import { ThemeProvider } from './context/theme-context'
 import UseAuth from './hooks/use-auth'
 import './index.css'
 // Generated Routes
 import { routeTree } from './routeTree.gen'
+import { SmallLoader } from './routes/_authenticated/teacher/-layout/data/components/teacher-authenticated-layout'
 import store from './shared/config/store/store'
 import { getCookie } from './shared/utils/helperFunction'
-import { LoaderThree } from '@/components/ui/loader'
-import { SmallLoader } from './routes/_authenticated/teacher/-layout/data/components/teacher-authenticated-layout'
 
 // ✅ Create QueryClient with defaults
 const queryClient = new QueryClient({
@@ -58,7 +58,7 @@ const queryClient = new QueryClient({
         if (error.response?.status === 401) {
           toast.error('Session expired!')
           const redirect = `${router.history.location.href}`
-          router.navigate({ to: `${redirect}/login`,  })
+          router.navigate({ to: `${redirect}/login` })
         }
         if (error.response?.status === 500) {
           toast.error('Internal Server Error!')
@@ -75,9 +75,10 @@ const queryClient = new QueryClient({
 // ✅ Create router (empty context type, we’ll provide later)
 const router = createRouter({
   routeTree,
-  context: { queryClient,authentication:'' },
+  context: { queryClient, authentication: '' },
   defaultPreload: 'intent',
   defaultPreloadStaleTime: 0,
+  defaultStructuralSharing: true,
 })
 
 // Stripe
@@ -90,11 +91,11 @@ const App = () => {
 
   // ✅ Axios setup
   axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL
-  console.log('axios.defaults.baseURL --->',axios.defaults.baseURL)
+  console.log('axios.defaults.baseURL --->', axios.defaults.baseURL)
   const TOKEN = getCookie('studentToken')
   const credentials = useSelector((state) => state.studentAuth.credentials)
-console.log('Token ====>',TOKEN);
-console.log('credentials 34 ==>',credentials)
+  console.log('Token ====>', TOKEN)
+  console.log('credentials 34 ==>', credentials)
 
   if (TOKEN && credentials) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${TOKEN}`
@@ -103,30 +104,24 @@ console.log('credentials 34 ==>',credentials)
   console.log('authentication ===>', authentication)
 
   return (
-    <RouterProvider
-      router={router}
-      context={{ queryClient, authentication }}
-    />
+    <RouterProvider router={router} context={{ queryClient, authentication }} />
   )
 }
-
 
 // ✅ Mount app
 const rootElement = document.getElementById('root')
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
-    <Suspense fallback={<SmallLoader/>}>
+    <Suspense fallback={<SmallLoader />}>
       <Provider store={store}>
         <StrictMode>
           <QueryClientProvider client={queryClient}>
-           
-              <FontProvider>
-                <Elements stripe={stripePromise}>
-                  <App />
-                </Elements>
-              </FontProvider>
-           
+            <FontProvider>
+              <Elements stripe={stripePromise}>
+                <App />
+              </Elements>
+            </FontProvider>
           </QueryClientProvider>
         </StrictMode>
       </Provider>

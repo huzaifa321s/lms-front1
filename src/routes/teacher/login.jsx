@@ -60,7 +60,7 @@ export const Route = createFileRoute('/teacher/login')({
     axios.interceptors.request.use(
       function (config) {
         //       document.body.classList.add('loading-indicator')
-        showLoader()
+        // showLoader()
         return config
       },
       function (error) {
@@ -70,12 +70,12 @@ export const Route = createFileRoute('/teacher/login')({
     axios.interceptors.response.use(
       function (response) {
         //       document.body.classList.remove('loading-indicator')
-        hideLoader()
+        // hideLoader()
         return response
       },
       function (error) {
         //       document.body.classList.remove('loading-indicator')
-        hideLoader()
+        // hideLoader()
         return Promise.reject(error)
       }
     )

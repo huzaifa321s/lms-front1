@@ -3,6 +3,8 @@ import { Outlet, useNavigate, useLocation } from '@tanstack/react-router';
 import { useSelector, useDispatch } from 'react-redux';
 import { createFileRoute } from '@tanstack/react-router';
 import { openModal } from '../../../../shared/config/reducers/student/studentDialogSlice';
+import axios from 'axios';
+import { showLoader } from '../../../student/route';
 
 // Subscription routes that don't require checks
 const SUBSCRIPTION_ROUTES = [
@@ -16,11 +18,48 @@ export const Route = createFileRoute('/_authenticated/student/_subscribed')({
   component: RouteComponent,
 });
 
+ function hideLoader() {
+   const loader = document.getElementById('custom-loader');
+   if (loader) {
+       loader.remove();
+   }
+}
+
 function RouteComponent() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const subscription = useSelector((state) => state.studentAuth.subscription);
+
+useEffect(() => {
+  const requestInterceptor = axios.interceptors.request.use(
+    function (config) {
+      showLoader()
+      return config
+    },
+    function (error) {
+      return Promise.reject(error)
+    }
+  )
+
+  const responseInterceptor = axios.interceptors.response.use(
+    function (response) {
+      hideLoader()
+      return response
+    },
+    function (error) {
+      hideLoader()
+      return Promise.reject(error)
+    }
+  )
+
+  // Cleanup interceptors when component unmounts
+  return () => {
+    axios.interceptors.request.eject(requestInterceptor)
+    axios.interceptors.response.eject(responseInterceptor)
+  }
+}, [])
+
 
   useEffect(() => {
     // Skip checks for subscription routes

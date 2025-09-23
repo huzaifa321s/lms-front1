@@ -43,6 +43,7 @@ import { Route as StudentCoursesIndexRouteImport } from './routes/student/course
 import { Route as AuthenticatedTeacherIndexRouteImport } from './routes/_authenticated/teacher/index'
 import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student/index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
+import { Route as StudentCoursesCourseIDRouteImport } from './routes/student/courses/$courseID'
 import { Route as AuthenticatedTeacherSettingsRouteRouteImport } from './routes/_authenticated/teacher/settings/route'
 import { Route as AuthenticatedStudentSettingsRouteRouteImport } from './routes/_authenticated/student/settings/route'
 import { Route as AuthenticatedStudentSubscribedRouteRouteImport } from './routes/_authenticated/student/_subscribed/route'
@@ -54,10 +55,13 @@ import { Route as AuthenticatedStudentSettingsIndexRouteImport } from './routes/
 import { Route as AuthenticatedStudentPaymentMethodsIndexRouteImport } from './routes/_authenticated/student/payment-methods/index'
 import { Route as AuthenticatedAdminTrainingwheelgameIndexRouteImport } from './routes/_authenticated/admin/trainingwheelgame/index'
 import { Route as AuthenticatedAdminSettingsIndexRouteImport } from './routes/_authenticated/admin/settings/index'
+import { Route as AuthenticatedStudentCourseTeachersTeacherIDRouteImport } from './routes/_authenticated/student/course-teachers/$teacherID'
 import { Route as AuthenticatedAdminTeachersTeacherIDRouteImport } from './routes/_authenticated/admin/teachers/$teacherID'
 import { Route as AuthenticatedAdminSettingsProfileIndexRouteImport } from './routes/_authenticated/admin/settings/profile/index'
 import { Route as AuthenticatedAdminSettingsGameCategoryIndexRouteImport } from './routes/_authenticated/admin/settings/game-category/index'
 import { Route as AuthenticatedAdminSettingsCourseCategoryIndexRouteImport } from './routes/_authenticated/admin/settings/course-category/index'
+import { Route as StudentSettingInvoicesInvoiceDetailsInvoiceIDRouteImport } from './routes/student/setting/invoices/invoice-details/$invoiceID'
+import { Route as AuthenticatedStudentSubscribedEnrolledcoursesCourseIdRouteImport } from './routes/_authenticated/student/_subscribed/enrolledcourses/$courseId'
 import { Route as AuthenticatedAdminSamplePagesErrorsUnauthorizedRouteImport } from './routes/_authenticated/admin/sample-pages/errors/unauthorized'
 import { Route as AuthenticatedAdminSamplePagesErrorsServerErrorRouteImport } from './routes/_authenticated/admin/sample-pages/errors/server-error'
 import { Route as AuthenticatedAdminSamplePagesErrorsNotFoundRouteImport } from './routes/_authenticated/admin/sample-pages/errors/not-found'
@@ -69,9 +73,6 @@ import { Route as AuthenticatedAdminSamplePagesAuthForgotPasswordRouteImport } f
 import { Route as AuthenticatedAdminSamplePagesAuthStudentSignUpRouteImport } from './routes/_authenticated/admin/sample-pages/auth/student/sign-up'
 import { Route as AuthenticatedAdminSamplePagesAuthStudentcopySignUpRouteImport } from './routes/_authenticated/admin/sample-pages/auth/student copy/sign-up'
 
-const StudentCoursesCourseIDLazyRouteImport = createFileRoute(
-  '/student/courses/$courseID',
-)()
 const AuthenticatedTeacherTrainingwheelgameIndexLazyRouteImport =
   createFileRoute('/_authenticated/teacher/trainingwheelgame/')()
 const AuthenticatedStudentInvoicesIndexLazyRouteImport = createFileRoute(
@@ -92,8 +93,6 @@ const AuthenticatedAdminCoursesIndexLazyRouteImport = createFileRoute(
 const AuthenticatedAdminBlogsIndexLazyRouteImport = createFileRoute(
   '/_authenticated/admin/blogs/',
 )()
-const AuthenticatedStudentCourseTeachersTeacherIDLazyRouteImport =
-  createFileRoute('/_authenticated/student/course-teachers/$teacherID')()
 const AuthenticatedAdminCoursesCourseIDLazyRouteImport = createFileRoute(
   '/_authenticated/admin/courses/$courseID',
 )()
@@ -113,8 +112,6 @@ const AuthenticatedAdminTrainingwheelgameCreateIndexLazyRouteImport =
 const AuthenticatedAdminBlogsCreateIndexLazyRouteImport = createFileRoute(
   '/_authenticated/admin/blogs/create/',
 )()
-const StudentSettingInvoicesInvoiceDetailsInvoiceIDLazyRouteImport =
-  createFileRoute('/student/setting/invoices/invoice-details/$invoiceID')()
 const AuthenticatedTeacherTrainingwheelgameEditGameIDLazyRouteImport =
   createFileRoute('/_authenticated/teacher/trainingwheelgame/edit/$gameID')()
 const AuthenticatedTeacherCoursesEdit_courseCourseIdLazyRouteImport =
@@ -123,10 +120,6 @@ const AuthenticatedTeacherCoursesCourse_studentsCourseIdLazyRouteImport =
   createFileRoute('/_authenticated/teacher/courses/course_students/$courseId')()
 const AuthenticatedTeacherCoursesCourse_detailsCourseIDLazyRouteImport =
   createFileRoute('/_authenticated/teacher/courses/course_details/$courseID')()
-const AuthenticatedStudentSubscribedEnrolledcoursesCourseIdLazyRouteImport =
-  createFileRoute(
-    '/_authenticated/student/_subscribed/enrolledcourses/$courseId',
-  )()
 const AuthenticatedAdminTrainingwheelgameEditGameIDLazyRouteImport =
   createFileRoute('/_authenticated/admin/trainingwheelgame/edit/$gameID')()
 const AuthenticatedAdminBlogsEditBlogIDLazyRouteImport = createFileRoute(
@@ -303,14 +296,11 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
-const StudentCoursesCourseIDLazyRoute =
-  StudentCoursesCourseIDLazyRouteImport.update({
-    id: '/courses/$courseID',
-    path: '/courses/$courseID',
-    getParentRoute: () => StudentRouteRoute,
-  } as any).lazy(() =>
-    import('./routes/student/courses/$courseID.lazy').then((d) => d.Route),
-  )
+const StudentCoursesCourseIDRoute = StudentCoursesCourseIDRouteImport.update({
+  id: '/courses/$courseID',
+  path: '/courses/$courseID',
+  getParentRoute: () => StudentRouteRoute,
+} as any)
 const AuthenticatedTeacherSettingsRouteRoute =
   AuthenticatedTeacherSettingsRouteRouteImport.update({
     id: '/settings',
@@ -446,16 +436,6 @@ const AuthenticatedAdminSettingsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedAdminSettingsRouteRoute,
   } as any)
-const AuthenticatedStudentCourseTeachersTeacherIDLazyRoute =
-  AuthenticatedStudentCourseTeachersTeacherIDLazyRouteImport.update({
-    id: '/course-teachers/$teacherID',
-    path: '/course-teachers/$teacherID',
-    getParentRoute: () => AuthenticatedStudentRouteRoute,
-  } as any).lazy(() =>
-    import(
-      './routes/_authenticated/student/course-teachers/$teacherID.lazy'
-    ).then((d) => d.Route),
-  )
 const AuthenticatedAdminCoursesCourseIDLazyRoute =
   AuthenticatedAdminCoursesCourseIDLazyRouteImport.update({
     id: '/courses/$courseID',
@@ -466,6 +446,12 @@ const AuthenticatedAdminCoursesCourseIDLazyRoute =
       (d) => d.Route,
     ),
   )
+const AuthenticatedStudentCourseTeachersTeacherIDRoute =
+  AuthenticatedStudentCourseTeachersTeacherIDRouteImport.update({
+    id: '/course-teachers/$teacherID',
+    path: '/course-teachers/$teacherID',
+    getParentRoute: () => AuthenticatedStudentRouteRoute,
+  } as any)
 const AuthenticatedAdminTeachersTeacherIDRoute =
   AuthenticatedAdminTeachersTeacherIDRouteImport.update({
     id: '/teachers/$teacherID',
@@ -560,16 +546,6 @@ const AuthenticatedAdminSettingsCourseCategoryIndexRoute =
     path: '/course-category/',
     getParentRoute: () => AuthenticatedAdminSettingsRouteRoute,
   } as any)
-const StudentSettingInvoicesInvoiceDetailsInvoiceIDLazyRoute =
-  StudentSettingInvoicesInvoiceDetailsInvoiceIDLazyRouteImport.update({
-    id: '/setting/invoices/invoice-details/$invoiceID',
-    path: '/setting/invoices/invoice-details/$invoiceID',
-    getParentRoute: () => StudentRouteRoute,
-  } as any).lazy(() =>
-    import(
-      './routes/student/setting/invoices/invoice-details/$invoiceID.lazy'
-    ).then((d) => d.Route),
-  )
 const AuthenticatedTeacherTrainingwheelgameEditGameIDLazyRoute =
   AuthenticatedTeacherTrainingwheelgameEditGameIDLazyRouteImport.update({
     id: '/trainingwheelgame/edit/$gameID',
@@ -610,16 +586,6 @@ const AuthenticatedTeacherCoursesCourse_detailsCourseIDLazyRoute =
       './routes/_authenticated/teacher/courses/course_details/$courseID.lazy'
     ).then((d) => d.Route),
   )
-const AuthenticatedStudentSubscribedEnrolledcoursesCourseIdLazyRoute =
-  AuthenticatedStudentSubscribedEnrolledcoursesCourseIdLazyRouteImport.update({
-    id: '/enrolledcourses/$courseId',
-    path: '/enrolledcourses/$courseId',
-    getParentRoute: () => AuthenticatedStudentSubscribedRouteRoute,
-  } as any).lazy(() =>
-    import(
-      './routes/_authenticated/student/_subscribed/enrolledcourses/$courseId.lazy'
-    ).then((d) => d.Route),
-  )
 const AuthenticatedAdminTrainingwheelgameEditGameIDLazyRoute =
   AuthenticatedAdminTrainingwheelgameEditGameIDLazyRouteImport.update({
     id: '/trainingwheelgame/edit/$gameID',
@@ -650,6 +616,18 @@ const AuthenticatedAdminBlogsBlogDetailsBlogIDLazyRoute =
       './routes/_authenticated/admin/blogs/blog-details/$blogID.lazy'
     ).then((d) => d.Route),
   )
+const StudentSettingInvoicesInvoiceDetailsInvoiceIDRoute =
+  StudentSettingInvoicesInvoiceDetailsInvoiceIDRouteImport.update({
+    id: '/setting/invoices/invoice-details/$invoiceID',
+    path: '/setting/invoices/invoice-details/$invoiceID',
+    getParentRoute: () => StudentRouteRoute,
+  } as any)
+const AuthenticatedStudentSubscribedEnrolledcoursesCourseIdRoute =
+  AuthenticatedStudentSubscribedEnrolledcoursesCourseIdRouteImport.update({
+    id: '/enrolledcourses/$courseId',
+    path: '/enrolledcourses/$courseId',
+    getParentRoute: () => AuthenticatedStudentSubscribedRouteRoute,
+  } as any)
 const AuthenticatedAdminSamplePagesErrorsUnauthorizedRoute =
   AuthenticatedAdminSamplePagesErrorsUnauthorizedRouteImport.update({
     id: '/sample-pages/errors/unauthorized',
@@ -741,15 +719,15 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AuthenticatedAdminSettingsRouteRouteWithChildren
   '/student/settings': typeof AuthenticatedStudentSettingsRouteRouteWithChildren
   '/teacher/settings': typeof AuthenticatedTeacherSettingsRouteRouteWithChildren
-  '/student/courses/$courseID': typeof StudentCoursesCourseIDLazyRoute
+  '/student/courses/$courseID': typeof StudentCoursesCourseIDRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/student/': typeof AuthenticatedStudentIndexRoute
   '/teacher/': typeof AuthenticatedTeacherIndexRoute
   '/student/courses': typeof StudentCoursesIndexRoute
   '/student/quiz': typeof StudentQuizIndexRoute
   '/admin/teachers/$teacherID': typeof AuthenticatedAdminTeachersTeacherIDRoute
+  '/student/course-teachers/$teacherID': typeof AuthenticatedStudentCourseTeachersTeacherIDRoute
   '/admin/courses/$courseID': typeof AuthenticatedAdminCoursesCourseIDLazyRoute
-  '/student/course-teachers/$teacherID': typeof AuthenticatedStudentCourseTeachersTeacherIDLazyRoute
   '/admin/settings/': typeof AuthenticatedAdminSettingsIndexRoute
   '/admin/trainingwheelgame': typeof AuthenticatedAdminTrainingwheelgameIndexRoute
   '/student/payment-methods': typeof AuthenticatedStudentPaymentMethodsIndexRoute
@@ -772,15 +750,15 @@ export interface FileRoutesByFullPath {
   '/admin/sample-pages/errors/not-found': typeof AuthenticatedAdminSamplePagesErrorsNotFoundRoute
   '/admin/sample-pages/errors/server-error': typeof AuthenticatedAdminSamplePagesErrorsServerErrorRoute
   '/admin/sample-pages/errors/unauthorized': typeof AuthenticatedAdminSamplePagesErrorsUnauthorizedRoute
+  '/student/enrolledcourses/$courseId': typeof AuthenticatedStudentSubscribedEnrolledcoursesCourseIdRoute
+  '/student/setting/invoices/invoice-details/$invoiceID': typeof StudentSettingInvoicesInvoiceDetailsInvoiceIDRoute
   '/admin/blogs/blog-details/$blogID': typeof AuthenticatedAdminBlogsBlogDetailsBlogIDLazyRoute
   '/admin/blogs/edit/$blogID': typeof AuthenticatedAdminBlogsEditBlogIDLazyRoute
   '/admin/trainingwheelgame/edit/$gameID': typeof AuthenticatedAdminTrainingwheelgameEditGameIDLazyRoute
-  '/student/enrolledcourses/$courseId': typeof AuthenticatedStudentSubscribedEnrolledcoursesCourseIdLazyRoute
   '/teacher/courses/course_details/$courseID': typeof AuthenticatedTeacherCoursesCourse_detailsCourseIDLazyRoute
   '/teacher/courses/course_students/$courseId': typeof AuthenticatedTeacherCoursesCourse_studentsCourseIdLazyRoute
   '/teacher/courses/edit_course/$courseId': typeof AuthenticatedTeacherCoursesEdit_courseCourseIdLazyRoute
   '/teacher/trainingwheelgame/edit/$gameID': typeof AuthenticatedTeacherTrainingwheelgameEditGameIDLazyRoute
-  '/student/setting/invoices/invoice-details/$invoiceID': typeof StudentSettingInvoicesInvoiceDetailsInvoiceIDLazyRoute
   '/admin/settings/course-category': typeof AuthenticatedAdminSettingsCourseCategoryIndexRoute
   '/admin/settings/game-category': typeof AuthenticatedAdminSettingsGameCategoryIndexRoute
   '/admin/settings/profile': typeof AuthenticatedAdminSettingsProfileIndexRoute
@@ -819,14 +797,14 @@ export interface FileRoutesByTo {
   '/teacher/forgot-password': typeof TeacherForgotPasswordRoute
   '/teacher/login': typeof TeacherLoginRoute
   '/teacher/register': typeof TeacherRegisterRoute
-  '/student/courses/$courseID': typeof StudentCoursesCourseIDLazyRoute
+  '/student/courses/$courseID': typeof StudentCoursesCourseIDRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/teacher': typeof AuthenticatedTeacherIndexRoute
   '/student/courses': typeof StudentCoursesIndexRoute
   '/student/quiz': typeof StudentQuizIndexRoute
   '/admin/teachers/$teacherID': typeof AuthenticatedAdminTeachersTeacherIDRoute
+  '/student/course-teachers/$teacherID': typeof AuthenticatedStudentCourseTeachersTeacherIDRoute
   '/admin/courses/$courseID': typeof AuthenticatedAdminCoursesCourseIDLazyRoute
-  '/student/course-teachers/$teacherID': typeof AuthenticatedStudentCourseTeachersTeacherIDLazyRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsIndexRoute
   '/admin/trainingwheelgame': typeof AuthenticatedAdminTrainingwheelgameIndexRoute
   '/student/payment-methods': typeof AuthenticatedStudentPaymentMethodsIndexRoute
@@ -849,15 +827,15 @@ export interface FileRoutesByTo {
   '/admin/sample-pages/errors/not-found': typeof AuthenticatedAdminSamplePagesErrorsNotFoundRoute
   '/admin/sample-pages/errors/server-error': typeof AuthenticatedAdminSamplePagesErrorsServerErrorRoute
   '/admin/sample-pages/errors/unauthorized': typeof AuthenticatedAdminSamplePagesErrorsUnauthorizedRoute
+  '/student/enrolledcourses/$courseId': typeof AuthenticatedStudentSubscribedEnrolledcoursesCourseIdRoute
+  '/student/setting/invoices/invoice-details/$invoiceID': typeof StudentSettingInvoicesInvoiceDetailsInvoiceIDRoute
   '/admin/blogs/blog-details/$blogID': typeof AuthenticatedAdminBlogsBlogDetailsBlogIDLazyRoute
   '/admin/blogs/edit/$blogID': typeof AuthenticatedAdminBlogsEditBlogIDLazyRoute
   '/admin/trainingwheelgame/edit/$gameID': typeof AuthenticatedAdminTrainingwheelgameEditGameIDLazyRoute
-  '/student/enrolledcourses/$courseId': typeof AuthenticatedStudentSubscribedEnrolledcoursesCourseIdLazyRoute
   '/teacher/courses/course_details/$courseID': typeof AuthenticatedTeacherCoursesCourse_detailsCourseIDLazyRoute
   '/teacher/courses/course_students/$courseId': typeof AuthenticatedTeacherCoursesCourse_studentsCourseIdLazyRoute
   '/teacher/courses/edit_course/$courseId': typeof AuthenticatedTeacherCoursesEdit_courseCourseIdLazyRoute
   '/teacher/trainingwheelgame/edit/$gameID': typeof AuthenticatedTeacherTrainingwheelgameEditGameIDLazyRoute
-  '/student/setting/invoices/invoice-details/$invoiceID': typeof StudentSettingInvoicesInvoiceDetailsInvoiceIDLazyRoute
   '/admin/settings/course-category': typeof AuthenticatedAdminSettingsCourseCategoryIndexRoute
   '/admin/settings/game-category': typeof AuthenticatedAdminSettingsGameCategoryIndexRoute
   '/admin/settings/profile': typeof AuthenticatedAdminSettingsProfileIndexRoute
@@ -904,15 +882,15 @@ export interface FileRoutesById {
   '/_authenticated/student/_subscribed': typeof AuthenticatedStudentSubscribedRouteRouteWithChildren
   '/_authenticated/student/settings': typeof AuthenticatedStudentSettingsRouteRouteWithChildren
   '/_authenticated/teacher/settings': typeof AuthenticatedTeacherSettingsRouteRouteWithChildren
-  '/student/courses/$courseID': typeof StudentCoursesCourseIDLazyRoute
+  '/student/courses/$courseID': typeof StudentCoursesCourseIDRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
   '/_authenticated/teacher/': typeof AuthenticatedTeacherIndexRoute
   '/student/courses/': typeof StudentCoursesIndexRoute
   '/student/quiz/': typeof StudentQuizIndexRoute
   '/_authenticated/admin/teachers/$teacherID': typeof AuthenticatedAdminTeachersTeacherIDRoute
+  '/_authenticated/student/course-teachers/$teacherID': typeof AuthenticatedStudentCourseTeachersTeacherIDRoute
   '/_authenticated/admin/courses/$courseID': typeof AuthenticatedAdminCoursesCourseIDLazyRoute
-  '/_authenticated/student/course-teachers/$teacherID': typeof AuthenticatedStudentCourseTeachersTeacherIDLazyRoute
   '/_authenticated/admin/settings/': typeof AuthenticatedAdminSettingsIndexRoute
   '/_authenticated/admin/trainingwheelgame/': typeof AuthenticatedAdminTrainingwheelgameIndexRoute
   '/_authenticated/student/payment-methods/': typeof AuthenticatedStudentPaymentMethodsIndexRoute
@@ -935,15 +913,15 @@ export interface FileRoutesById {
   '/_authenticated/admin/sample-pages/errors/not-found': typeof AuthenticatedAdminSamplePagesErrorsNotFoundRoute
   '/_authenticated/admin/sample-pages/errors/server-error': typeof AuthenticatedAdminSamplePagesErrorsServerErrorRoute
   '/_authenticated/admin/sample-pages/errors/unauthorized': typeof AuthenticatedAdminSamplePagesErrorsUnauthorizedRoute
+  '/_authenticated/student/_subscribed/enrolledcourses/$courseId': typeof AuthenticatedStudentSubscribedEnrolledcoursesCourseIdRoute
+  '/student/setting/invoices/invoice-details/$invoiceID': typeof StudentSettingInvoicesInvoiceDetailsInvoiceIDRoute
   '/_authenticated/admin/blogs/blog-details/$blogID': typeof AuthenticatedAdminBlogsBlogDetailsBlogIDLazyRoute
   '/_authenticated/admin/blogs/edit/$blogID': typeof AuthenticatedAdminBlogsEditBlogIDLazyRoute
   '/_authenticated/admin/trainingwheelgame/edit/$gameID': typeof AuthenticatedAdminTrainingwheelgameEditGameIDLazyRoute
-  '/_authenticated/student/_subscribed/enrolledcourses/$courseId': typeof AuthenticatedStudentSubscribedEnrolledcoursesCourseIdLazyRoute
   '/_authenticated/teacher/courses/course_details/$courseID': typeof AuthenticatedTeacherCoursesCourse_detailsCourseIDLazyRoute
   '/_authenticated/teacher/courses/course_students/$courseId': typeof AuthenticatedTeacherCoursesCourse_studentsCourseIdLazyRoute
   '/_authenticated/teacher/courses/edit_course/$courseId': typeof AuthenticatedTeacherCoursesEdit_courseCourseIdLazyRoute
   '/_authenticated/teacher/trainingwheelgame/edit/$gameID': typeof AuthenticatedTeacherTrainingwheelgameEditGameIDLazyRoute
-  '/student/setting/invoices/invoice-details/$invoiceID': typeof StudentSettingInvoicesInvoiceDetailsInvoiceIDLazyRoute
   '/_authenticated/admin/settings/course-category/': typeof AuthenticatedAdminSettingsCourseCategoryIndexRoute
   '/_authenticated/admin/settings/game-category/': typeof AuthenticatedAdminSettingsGameCategoryIndexRoute
   '/_authenticated/admin/settings/profile/': typeof AuthenticatedAdminSettingsProfileIndexRoute
@@ -996,8 +974,8 @@ export interface FileRouteTypes {
     | '/student/courses'
     | '/student/quiz'
     | '/admin/teachers/$teacherID'
-    | '/admin/courses/$courseID'
     | '/student/course-teachers/$teacherID'
+    | '/admin/courses/$courseID'
     | '/admin/settings/'
     | '/admin/trainingwheelgame'
     | '/student/payment-methods'
@@ -1020,15 +998,15 @@ export interface FileRouteTypes {
     | '/admin/sample-pages/errors/not-found'
     | '/admin/sample-pages/errors/server-error'
     | '/admin/sample-pages/errors/unauthorized'
+    | '/student/enrolledcourses/$courseId'
+    | '/student/setting/invoices/invoice-details/$invoiceID'
     | '/admin/blogs/blog-details/$blogID'
     | '/admin/blogs/edit/$blogID'
     | '/admin/trainingwheelgame/edit/$gameID'
-    | '/student/enrolledcourses/$courseId'
     | '/teacher/courses/course_details/$courseID'
     | '/teacher/courses/course_students/$courseId'
     | '/teacher/courses/edit_course/$courseId'
     | '/teacher/trainingwheelgame/edit/$gameID'
-    | '/student/setting/invoices/invoice-details/$invoiceID'
     | '/admin/settings/course-category'
     | '/admin/settings/game-category'
     | '/admin/settings/profile'
@@ -1073,8 +1051,8 @@ export interface FileRouteTypes {
     | '/student/courses'
     | '/student/quiz'
     | '/admin/teachers/$teacherID'
-    | '/admin/courses/$courseID'
     | '/student/course-teachers/$teacherID'
+    | '/admin/courses/$courseID'
     | '/admin/settings'
     | '/admin/trainingwheelgame'
     | '/student/payment-methods'
@@ -1097,15 +1075,15 @@ export interface FileRouteTypes {
     | '/admin/sample-pages/errors/not-found'
     | '/admin/sample-pages/errors/server-error'
     | '/admin/sample-pages/errors/unauthorized'
+    | '/student/enrolledcourses/$courseId'
+    | '/student/setting/invoices/invoice-details/$invoiceID'
     | '/admin/blogs/blog-details/$blogID'
     | '/admin/blogs/edit/$blogID'
     | '/admin/trainingwheelgame/edit/$gameID'
-    | '/student/enrolledcourses/$courseId'
     | '/teacher/courses/course_details/$courseID'
     | '/teacher/courses/course_students/$courseId'
     | '/teacher/courses/edit_course/$courseId'
     | '/teacher/trainingwheelgame/edit/$gameID'
-    | '/student/setting/invoices/invoice-details/$invoiceID'
     | '/admin/settings/course-category'
     | '/admin/settings/game-category'
     | '/admin/settings/profile'
@@ -1158,8 +1136,8 @@ export interface FileRouteTypes {
     | '/student/courses/'
     | '/student/quiz/'
     | '/_authenticated/admin/teachers/$teacherID'
-    | '/_authenticated/admin/courses/$courseID'
     | '/_authenticated/student/course-teachers/$teacherID'
+    | '/_authenticated/admin/courses/$courseID'
     | '/_authenticated/admin/settings/'
     | '/_authenticated/admin/trainingwheelgame/'
     | '/_authenticated/student/payment-methods/'
@@ -1182,15 +1160,15 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/sample-pages/errors/not-found'
     | '/_authenticated/admin/sample-pages/errors/server-error'
     | '/_authenticated/admin/sample-pages/errors/unauthorized'
+    | '/_authenticated/student/_subscribed/enrolledcourses/$courseId'
+    | '/student/setting/invoices/invoice-details/$invoiceID'
     | '/_authenticated/admin/blogs/blog-details/$blogID'
     | '/_authenticated/admin/blogs/edit/$blogID'
     | '/_authenticated/admin/trainingwheelgame/edit/$gameID'
-    | '/_authenticated/student/_subscribed/enrolledcourses/$courseId'
     | '/_authenticated/teacher/courses/course_details/$courseID'
     | '/_authenticated/teacher/courses/course_students/$courseId'
     | '/_authenticated/teacher/courses/edit_course/$courseId'
     | '/_authenticated/teacher/trainingwheelgame/edit/$gameID'
-    | '/student/setting/invoices/invoice-details/$invoiceID'
     | '/_authenticated/admin/settings/course-category/'
     | '/_authenticated/admin/settings/game-category/'
     | '/_authenticated/admin/settings/profile/'
@@ -1459,7 +1437,7 @@ declare module '@tanstack/react-router' {
       id: '/student/courses/$courseID'
       path: '/courses/$courseID'
       fullPath: '/student/courses/$courseID'
-      preLoaderRoute: typeof StudentCoursesCourseIDLazyRouteImport
+      preLoaderRoute: typeof StudentCoursesCourseIDRouteImport
       parentRoute: typeof StudentRouteRoute
     }
     '/_authenticated/teacher/settings': {
@@ -1588,19 +1566,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedAdminSettingsRouteRoute
     }
-    '/_authenticated/student/course-teachers/$teacherID': {
-      id: '/_authenticated/student/course-teachers/$teacherID'
-      path: '/course-teachers/$teacherID'
-      fullPath: '/student/course-teachers/$teacherID'
-      preLoaderRoute: typeof AuthenticatedStudentCourseTeachersTeacherIDLazyRouteImport
-      parentRoute: typeof AuthenticatedStudentRouteRoute
-    }
     '/_authenticated/admin/courses/$courseID': {
       id: '/_authenticated/admin/courses/$courseID'
       path: '/courses/$courseID'
       fullPath: '/admin/courses/$courseID'
       preLoaderRoute: typeof AuthenticatedAdminCoursesCourseIDLazyRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/student/course-teachers/$teacherID': {
+      id: '/_authenticated/student/course-teachers/$teacherID'
+      path: '/course-teachers/$teacherID'
+      fullPath: '/student/course-teachers/$teacherID'
+      preLoaderRoute: typeof AuthenticatedStudentCourseTeachersTeacherIDRouteImport
+      parentRoute: typeof AuthenticatedStudentRouteRoute
     }
     '/_authenticated/admin/teachers/$teacherID': {
       id: '/_authenticated/admin/teachers/$teacherID'
@@ -1679,13 +1657,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSettingsCourseCategoryIndexRouteImport
       parentRoute: typeof AuthenticatedAdminSettingsRouteRoute
     }
-    '/student/setting/invoices/invoice-details/$invoiceID': {
-      id: '/student/setting/invoices/invoice-details/$invoiceID'
-      path: '/setting/invoices/invoice-details/$invoiceID'
-      fullPath: '/student/setting/invoices/invoice-details/$invoiceID'
-      preLoaderRoute: typeof StudentSettingInvoicesInvoiceDetailsInvoiceIDLazyRouteImport
-      parentRoute: typeof StudentRouteRoute
-    }
     '/_authenticated/teacher/trainingwheelgame/edit/$gameID': {
       id: '/_authenticated/teacher/trainingwheelgame/edit/$gameID'
       path: '/trainingwheelgame/edit/$gameID'
@@ -1714,13 +1685,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTeacherCoursesCourse_detailsCourseIDLazyRouteImport
       parentRoute: typeof AuthenticatedTeacherRouteRoute
     }
-    '/_authenticated/student/_subscribed/enrolledcourses/$courseId': {
-      id: '/_authenticated/student/_subscribed/enrolledcourses/$courseId'
-      path: '/enrolledcourses/$courseId'
-      fullPath: '/student/enrolledcourses/$courseId'
-      preLoaderRoute: typeof AuthenticatedStudentSubscribedEnrolledcoursesCourseIdLazyRouteImport
-      parentRoute: typeof AuthenticatedStudentSubscribedRouteRoute
-    }
     '/_authenticated/admin/trainingwheelgame/edit/$gameID': {
       id: '/_authenticated/admin/trainingwheelgame/edit/$gameID'
       path: '/trainingwheelgame/edit/$gameID'
@@ -1741,6 +1705,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/blogs/blog-details/$blogID'
       preLoaderRoute: typeof AuthenticatedAdminBlogsBlogDetailsBlogIDLazyRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/student/setting/invoices/invoice-details/$invoiceID': {
+      id: '/student/setting/invoices/invoice-details/$invoiceID'
+      path: '/setting/invoices/invoice-details/$invoiceID'
+      fullPath: '/student/setting/invoices/invoice-details/$invoiceID'
+      preLoaderRoute: typeof StudentSettingInvoicesInvoiceDetailsInvoiceIDRouteImport
+      parentRoute: typeof StudentRouteRoute
+    }
+    '/_authenticated/student/_subscribed/enrolledcourses/$courseId': {
+      id: '/_authenticated/student/_subscribed/enrolledcourses/$courseId'
+      path: '/enrolledcourses/$courseId'
+      fullPath: '/student/enrolledcourses/$courseId'
+      preLoaderRoute: typeof AuthenticatedStudentSubscribedEnrolledcoursesCourseIdRouteImport
+      parentRoute: typeof AuthenticatedStudentSubscribedRouteRoute
     }
     '/_authenticated/admin/sample-pages/errors/unauthorized': {
       id: '/_authenticated/admin/sample-pages/errors/unauthorized'
@@ -1822,11 +1800,11 @@ interface StudentRouteRouteChildren {
   StudentRegisterRoute: typeof StudentRegisterRoute
   StudentResubscriptionPlansRoute: typeof StudentResubscriptionPlansRoute
   StudentSubscriptionPlansRoute: typeof StudentSubscriptionPlansRoute
-  StudentCoursesCourseIDLazyRoute: typeof StudentCoursesCourseIDLazyRoute
+  StudentCoursesCourseIDRoute: typeof StudentCoursesCourseIDRoute
   StudentCoursesIndexRoute: typeof StudentCoursesIndexRoute
   StudentQuizIndexRoute: typeof StudentQuizIndexRoute
   StudentSettingInvoicesIndexRoute: typeof StudentSettingInvoicesIndexRoute
-  StudentSettingInvoicesInvoiceDetailsInvoiceIDLazyRoute: typeof StudentSettingInvoicesInvoiceDetailsInvoiceIDLazyRoute
+  StudentSettingInvoicesInvoiceDetailsInvoiceIDRoute: typeof StudentSettingInvoicesInvoiceDetailsInvoiceIDRoute
 }
 
 const StudentRouteRouteChildren: StudentRouteRouteChildren = {
@@ -1836,12 +1814,12 @@ const StudentRouteRouteChildren: StudentRouteRouteChildren = {
   StudentRegisterRoute: StudentRegisterRoute,
   StudentResubscriptionPlansRoute: StudentResubscriptionPlansRoute,
   StudentSubscriptionPlansRoute: StudentSubscriptionPlansRoute,
-  StudentCoursesCourseIDLazyRoute: StudentCoursesCourseIDLazyRoute,
+  StudentCoursesCourseIDRoute: StudentCoursesCourseIDRoute,
   StudentCoursesIndexRoute: StudentCoursesIndexRoute,
   StudentQuizIndexRoute: StudentQuizIndexRoute,
   StudentSettingInvoicesIndexRoute: StudentSettingInvoicesIndexRoute,
-  StudentSettingInvoicesInvoiceDetailsInvoiceIDLazyRoute:
-    StudentSettingInvoicesInvoiceDetailsInvoiceIDLazyRoute,
+  StudentSettingInvoicesInvoiceDetailsInvoiceIDRoute:
+    StudentSettingInvoicesInvoiceDetailsInvoiceIDRoute,
 }
 
 const StudentRouteRouteWithChildren = StudentRouteRoute._addFileChildren(
@@ -1955,15 +1933,15 @@ const AuthenticatedAdminRouteRouteWithChildren =
   )
 
 interface AuthenticatedStudentSubscribedRouteRouteChildren {
-  AuthenticatedStudentSubscribedEnrolledcoursesCourseIdLazyRoute: typeof AuthenticatedStudentSubscribedEnrolledcoursesCourseIdLazyRoute
+  AuthenticatedStudentSubscribedEnrolledcoursesCourseIdRoute: typeof AuthenticatedStudentSubscribedEnrolledcoursesCourseIdRoute
   AuthenticatedStudentSubscribedEnrolledcoursesIndexLazyRoute: typeof AuthenticatedStudentSubscribedEnrolledcoursesIndexLazyRoute
   AuthenticatedStudentSubscribedTrainingwheelgameIndexLazyRoute: typeof AuthenticatedStudentSubscribedTrainingwheelgameIndexLazyRoute
 }
 
 const AuthenticatedStudentSubscribedRouteRouteChildren: AuthenticatedStudentSubscribedRouteRouteChildren =
   {
-    AuthenticatedStudentSubscribedEnrolledcoursesCourseIdLazyRoute:
-      AuthenticatedStudentSubscribedEnrolledcoursesCourseIdLazyRoute,
+    AuthenticatedStudentSubscribedEnrolledcoursesCourseIdRoute:
+      AuthenticatedStudentSubscribedEnrolledcoursesCourseIdRoute,
     AuthenticatedStudentSubscribedEnrolledcoursesIndexLazyRoute:
       AuthenticatedStudentSubscribedEnrolledcoursesIndexLazyRoute,
     AuthenticatedStudentSubscribedTrainingwheelgameIndexLazyRoute:
@@ -1997,7 +1975,7 @@ interface AuthenticatedStudentRouteRouteChildren {
   AuthenticatedStudentSubscribedRouteRoute: typeof AuthenticatedStudentSubscribedRouteRouteWithChildren
   AuthenticatedStudentSettingsRouteRoute: typeof AuthenticatedStudentSettingsRouteRouteWithChildren
   AuthenticatedStudentIndexRoute: typeof AuthenticatedStudentIndexRoute
-  AuthenticatedStudentCourseTeachersTeacherIDLazyRoute: typeof AuthenticatedStudentCourseTeachersTeacherIDLazyRoute
+  AuthenticatedStudentCourseTeachersTeacherIDRoute: typeof AuthenticatedStudentCourseTeachersTeacherIDRoute
   AuthenticatedStudentPaymentMethodsIndexRoute: typeof AuthenticatedStudentPaymentMethodsIndexRoute
   AuthenticatedStudentCourseTeachersIndexLazyRoute: typeof AuthenticatedStudentCourseTeachersIndexLazyRoute
   AuthenticatedStudentInvoicesIndexLazyRoute: typeof AuthenticatedStudentInvoicesIndexLazyRoute
@@ -2010,8 +1988,8 @@ const AuthenticatedStudentRouteRouteChildren: AuthenticatedStudentRouteRouteChil
     AuthenticatedStudentSettingsRouteRoute:
       AuthenticatedStudentSettingsRouteRouteWithChildren,
     AuthenticatedStudentIndexRoute: AuthenticatedStudentIndexRoute,
-    AuthenticatedStudentCourseTeachersTeacherIDLazyRoute:
-      AuthenticatedStudentCourseTeachersTeacherIDLazyRoute,
+    AuthenticatedStudentCourseTeachersTeacherIDRoute:
+      AuthenticatedStudentCourseTeachersTeacherIDRoute,
     AuthenticatedStudentPaymentMethodsIndexRoute:
       AuthenticatedStudentPaymentMethodsIndexRoute,
     AuthenticatedStudentCourseTeachersIndexLazyRoute:

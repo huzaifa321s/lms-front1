@@ -98,11 +98,13 @@ export const setCardAsDefault = async ({paymentMethodId,queryClient}) => {
 
 
 export function useSearchInput(from, key = 'q') {
-  const value = useSearch({ from, select: s => s[key] }) || ''
+  const value = useSearch({ from, select: s => s[key] ,structuralSharing:true}) || ''
   return useState(value)
 }
 
 
+        // const response = await axios.get(`/web/course/getCourse?${queryStr}`)
+        // console.log('response ===>', response.data)
 export function exportToCSV(students) {
   if (!students || students.length === 0) return;
 

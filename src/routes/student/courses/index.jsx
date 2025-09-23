@@ -1,4 +1,4 @@
-import { Suspense, useCallback, useMemo, useState } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
 import {
   QueryClient,
@@ -7,7 +7,13 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  useLoaderData,
+  useNavigate,
+  useRouter,
+  useSearch,
+} from '@tanstack/react-router'
 import { IconChalkboardTeacher } from '@tabler/icons-react'
 import { BookOpen, Users, Star } from 'lucide-react'
 import { useSelector, useDispatch } from 'react-redux'
@@ -19,6 +25,7 @@ import { handleCourseEnrollment } from '../../../shared/config/reducers/student/
 import { Show } from '../../../shared/utils/Show'
 import {
   checkSubscriptionStatus,
+  getCookie,
   isActiveSubscription,
 } from '../../../shared/utils/helperFunction'
 import {
@@ -45,9 +52,9 @@ const MESSAGES = {
 }
 
 // Query options for fetching courses
-const coursesQueryOptions = ({ q, page, userID }) =>
+export const coursesQueryOptions = ({ q, page, userID }) =>
   queryOptions({
-    queryKey: ['courses', q, page],
+    queryKey: ['courses', q, page, userID],
     queryFn: async () => {
       let queryStr = `page=${page}`
       if (q) queryStr += `&q=${q}`
@@ -60,27 +67,73 @@ const coursesQueryOptions = ({ q, page, userID }) =>
       throw new Error(response.data.message || 'Failed to fetch courses')
     },
     placeholderData: (prev) => prev,
-    staleTime: 5 * 60 * 1000, // 5 minutes
   })
 
+// Route definition WITHOUT loader
 export const Route = createFileRoute('/student/courses/')({
   validateSearch: (search) => ({
     q: search.q || '',
     page: Number(search.page ?? 1),
-    userID: search.userID || '',
   }),
-  loaderDeps: ({ search }) => ({
-    q: search.q,
-    page: search.page,
-    userID: search.userID,
-  }),
-  loader: ({ deps }) => queryClient.prefetchQuery(coursesQueryOptions(deps)),
   component: () => (
     <Suspense fallback={<CourseListSkeleton />}>
       <RouteComponent />
     </Suspense>
   ),
 })
+
+export function showLoader() {
+  // agar already loader exist hai to dobara na banao
+  if (document.getElementById('custom-loader')) return
+
+  const loader = document.createElement('div')
+  loader.id = 'custom-loader'
+  loader.innerHTML = `
+    <style>
+      .custom-loader-container {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        background: transparent; /* no blur, clean bg */
+      }
+      .custom-spinner {
+        display: inline-block;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+
+    <div class="custom-loader-container">
+      <div class="custom-spinner">
+        <!-- Lucide Spinner Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             width="64" height="64" 
+             viewBox="0 0 24 24" 
+             fill="none" stroke="currentColor" 
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+             class="lucide lucide-loader-2">
+          <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+        </svg>
+      </div>
+    </div>
+  `
+
+  document.body.appendChild(loader)
+}
+
+function hideLoader() {
+  const loader = document.getElementById('custom-loader')
+  if (loader) {
+    loader.remove()
+  }
+}
+
 
 const CourseListSkeleton = () => (
   <div className='min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 p-6'>
@@ -128,21 +181,19 @@ const MiniStats = ({ students = 1250, rating = 4.8, instructor }) => (
 )
 
 function RouteComponent() {
-  const dispatch = useDispatch()
+    const dispatch = useDispatch()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const {
-    q,
-    page: currentPage,
-    userID,
-  } = useSearch({ from: '/student/courses/' })
+  const { q, page: currentPage } = useSearch({ from: '/student/courses/' })
   const [searchInput, setSearchInput] = useSearchInput('/student/courses/')
-  const credentials = useSelector((state) => state.studentAuth.credentials)
-  const subscription = useSelector((state) => state.studentAuth.subscription)
-  const isLoggedIn = useSelector((state) => !!state.studentAuth.token)
+  const credentials = useSelector((s) => s.studentAuth.credentials)
+  const subscription = useSelector((s) => s.studentAuth.subscription)
+  const isLoggedIn = useSelector((s) => !!s.studentAuth.token)
   const [selectedEnrolledCourseID, setSelectedEnrolledCourseID] = useState('')
 
   const debouncedSearch = getDebounceInput(searchInput, 800)
+
+  // Query
   const { data, isLoading } = useQuery(
     coursesQueryOptions({
       q: debouncedSearch,
@@ -150,10 +201,53 @@ function RouteComponent() {
       userID: credentials?._id,
     })
   )
-  console.log('isLoading ===>', isLoading)
+
+useEffect(() => {
+  const requestInterceptor = axios.interceptors.request.use(
+    function (config) {
+      showLoader()
+      return config
+    },
+    function (error) {
+      return Promise.reject(error)
+    }
+  )
+
+  const responseInterceptor = axios.interceptors.response.use(
+    function (response) {
+      hideLoader()
+      return response
+    },
+    function (error) {
+      hideLoader()
+      return Promise.reject(error)
+    }
+  )
+
+  // Cleanup interceptors when component unmounts
+  return () => {
+    axios.interceptors.request.eject(requestInterceptor)
+    axios.interceptors.response.eject(responseInterceptor)
+  }
+}, [])
+
+  
+  // Prefetch next page for faster navigation
+  useEffect(() => {
+    if (currentPage < (data?.totalPages || 1)) {
+      queryClient.prefetchQuery(
+        coursesQueryOptions({
+          q: debouncedSearch,
+          page: currentPage + 1,
+          userID: credentials?._id,
+        })
+      )
+    }
+  }, [currentPage, debouncedSearch, credentials?._id, data?.totalPages])
+
   const { courses = [], totalPages = 1, enrolledCourses = [] } = data || {}
 
-  // Unified navigation handler
+  // Navigation
   const handleNavigation = useCallback(
     ({ page = currentPage, query = searchInput } = {}) => {
       navigate({
@@ -163,6 +257,8 @@ function RouteComponent() {
     },
     [navigate, currentPage, searchInput]
   )
+
+  const router = useRouter()
 
   // Enrollment mutation
   const { mutate, isPending } = useMutation({
@@ -194,7 +290,7 @@ function RouteComponent() {
       }
       throw new Error(response.data.message || 'Enrollment failed')
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries(
         coursesQueryOptions({
           q: debouncedSearch,
@@ -202,16 +298,8 @@ function RouteComponent() {
           userID: credentials?._id,
         })
       )
+      await router.invalidate({ routeId: '/student/courses/' })
       setSelectedEnrolledCourseID('')
-    },
-    onError: (error) => {
-      if (
-        !error.message.includes('expired') &&
-        !error.message.includes('subscription')
-      ) {
-        console.log('error', error)
-        toast.error(error.message || 'Failed to enroll in course')
-      }
     },
   })
 
@@ -222,7 +310,6 @@ function RouteComponent() {
     },
     [mutate]
   )
-
   return (
     <div className='min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 p-6 font-sans'>
       <div className='relative mx-auto max-w-7xl'>
@@ -433,7 +520,10 @@ function RouteComponent() {
                             isPending && selectedEnrolledCourseID === course._id
                           }
                           onClick={() =>
-                            navigate({ to: `/student/courses/${course._id}` })
+                            navigate({
+                              to: `/student/courses/${course._id}`,
+                              search: { userID: credentials._id },
+                            })
                           }
                           className='w-full rounded-lg border-slate-200 text-slate-700 transition-all duration-300 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600'
                           aria-label={`View details of ${course.name}`}
