@@ -107,15 +107,8 @@ console.log('courses.length ===>',courses.length)
   }
 
   return (
-   <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] relative">
-      {/* Decorative Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-3xl"></div>
-      </div>
-
-      {/* Header */}
-      <Header className="bg-white/95 backdrop-blur-sm shadow-[0_4px_6px_rgba(0,0,0,0.05)]">
+    <>
+        <Header >
         <TopNav links={topNav} />
         <div className="my-2 flex w-full justify-between items-center px-6">
           <div className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-2xl font-bold text-transparent">
@@ -158,6 +151,16 @@ console.log('courses.length ===>',courses.length)
         </div>
       </Header>
 
+
+   <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] relative">
+      {/* Decorative Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-3xl"></div>
+      </div>
+
+      {/* Header */}
+  
       {/* Courses Grid */}
       <div className="mx-auto max-w-7xl p-6 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
         <Show>
@@ -219,6 +222,7 @@ console.log('courses.length ===>',courses.length)
         </div>
       </div>
     </div>
+        </>
   )
 }
 

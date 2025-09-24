@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import axios from "axios"
 import { QueryClient, queryOptions, useSuspenseQuery } from "@tanstack/react-query"
 import { useSearch, createLazyFileRoute } from "@tanstack/react-router"
@@ -7,6 +7,7 @@ import { Header } from "@/components/layout/header"
 import Game from "./-components/Game"
 import ScoreCard from "./-components/ScoreCard"
 import StartGame from "./-components/StartGame"
+import { SmallLoader } from "../../../teacher/-layout/data/components/teacher-authenticated-layout"
 
 const queryClient = new QueryClient()
 const gameQueryOptions = (selectedLevel) =>
@@ -38,7 +39,11 @@ export const Route = createLazyFileRoute(
   loaderDeps: ({ search }) => {
     return { selectedLevel: search.selectedLevel }
   },
-  component: RouteComponent,
+   component: () => (
+    <Suspense fallback={<SmallLoader />}>
+      <RouteComponent />
+    </Suspense>
+  ),
   loader: ({ params }) =>
     queryClient.ensureQueryData(gameQueryOptions(params.selectedLevel)),
 })

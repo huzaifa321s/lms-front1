@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { IconLock } from '@tabler/icons-react';
 import {
   BookOpen,
@@ -120,10 +120,12 @@ MiniDonutChart.displayName = 'MiniDonutChart';
 
 export default function Dashboard() {
   const { dispatch, navigate } = useAppUtils();
-  const { data } = useSuspenseQuery({
+  const { data } = useQuery({
     ...dashboardQueryOption(),
-    staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
+    staleTime: 5 * 60 * 1000,
+    suspense:true
   });
+  
   const {
     enrolledCourses,
     totalCharges,

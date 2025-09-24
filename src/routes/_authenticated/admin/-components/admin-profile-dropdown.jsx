@@ -72,7 +72,7 @@ export function ProfileDropdown() {
           >
             <Avatar className='h-8 w-8'>
               <AvatarImage src='/avatars/01.png' alt='profile' />
-              <AvatarFallback className='bg-gradient-to-r from-[#2563eb]/20 to-[#1d4ed8]/20 font-semibold text-[#1e293b]'>
+              <AvatarFallback className='bg-white/95 font-semibold text-[#1e293b]'>
                 {credentials?.firstName?.charAt(0)?.toUpperCase()}
                 {credentials?.lastName?.charAt(0)?.toUpperCase()}
               </AvatarFallback>

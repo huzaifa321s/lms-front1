@@ -116,7 +116,7 @@ function RouteComponent() {
   console.log('data ===>', data)
   return (
    <div className="min-h-screen bg-[#f8fafc]">
-      <Header className="bg-white border-b border-[#e2e8f0] shadow-[0_2px_10px_rgba(0,0,0,0.1)]">
+      <Header >
         <div className="my-2 flex w-full items-center justify-between">
           <div className="text-2xl font-semibold text-[#1e293b] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
             Training Wheel Game

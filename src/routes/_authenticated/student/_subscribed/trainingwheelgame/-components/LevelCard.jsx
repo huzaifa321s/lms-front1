@@ -40,7 +40,7 @@ export default function LevelCard({ level, setStep, selectedLevel }) {
       }
       className={`relative flex flex-col items-center justify-center rounded-[12px] 
         mx-auto bg-[#ffffff] border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] 
-        transition-all duration-300 cursor-pointer overflow-hidden font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]
+        transition-all duration-300 cursor-pointer overflow-hidden 
         ${
           selectedLevel === level.title
             ? `scale-[1.03] shadow-lg ring-2 ${themeColors.ring} bg-[#ffffff]/90`
@@ -91,7 +91,7 @@ export default function LevelCard({ level, setStep, selectedLevel }) {
             }}
             disabled={selectedLevel !== level.title}
             className={`relative inline-flex h-11 items-center justify-center rounded-[8px] 
-              font-medium text-white transition-all duration-300 w-full font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]
+              font-medium text-white transition-all duration-300 w-full 
               ${
                 selectedLevel === level.title
                   ? `bg-gradient-to-r ${themeColors.gradient} hover:scale-[1.03] hover:shadow-lg border-0`

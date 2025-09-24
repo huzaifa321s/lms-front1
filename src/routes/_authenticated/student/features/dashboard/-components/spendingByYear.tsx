@@ -104,13 +104,13 @@ const years = useMemo(() => {
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header Section */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-3 flex items-center justify-center gap-3 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-3 flex items-center justify-center gap-3 ">
             <div className="p-3 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl shadow-lg">
               <BarChart3 className="w-8 h-8 text-white" />
             </div>
             Spending Analytics Dashboard
           </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto ">
             Track and analyze your spending patterns with detailed insights
           </p>
           
@@ -124,10 +124,10 @@ const years = useMemo(() => {
           <div className="backdrop-blur-sm bg-white/95 rounded-2xl shadow-2xl border-0 p-6 hover:shadow-[0_0_25px_5px_rgba(59,130,246,0.2)] transition-all duration-300 group">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-600 font-medium mb-1 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                <p className="text-slate-600 font-medium mb-1 ">
                   Total Spending
                 </p>
-                <p className="text-3xl font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                <p className="text-3xl font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent ">
                   ${totalSpending.toLocaleString()}
                 </p>
               </div>
@@ -141,10 +141,10 @@ const years = useMemo(() => {
           <div className="backdrop-blur-sm bg-white/95 rounded-2xl shadow-2xl border-0 p-6 hover:shadow-[0_0_25px_5px_rgba(59,130,246,0.2)] transition-all duration-300 group">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-600 font-medium mb-1 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                <p className="text-slate-600 font-medium mb-1 ">
                   Monthly Average
                 </p>
-                <p className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                <p className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent ">
                   ${averageSpending.toLocaleString()}
                 </p>
               </div>
@@ -158,10 +158,10 @@ const years = useMemo(() => {
           <div className="backdrop-blur-sm bg-white/95 rounded-2xl shadow-2xl border-0 p-6 hover:shadow-[0_0_25px_5px_rgba(59,130,246,0.2)] transition-all duration-300 group">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-600 font-medium mb-1 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                <p className="text-slate-600 font-medium mb-1 ">
                   Highest Month
                 </p>
-                <p className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                <p className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent ">
                   {highestMonth ? `${highestMonth.month.slice(0, 3)} - $${highestMonth.spending}` : 'N/A'}
                 </p>
               </div>
@@ -181,10 +181,10 @@ const years = useMemo(() => {
                   <DollarSign className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <CardTitle className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                  <CardTitle className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent ">
                     Monthly Spending Analysis
                   </CardTitle>
-                  <CardDescription className="text-slate-600 mt-2 text-lg font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                  <CardDescription className="text-slate-600 mt-2 text-lg ">
                     {chartData.length > 0
                       ? `Detailed breakdown for ${currentYear}`
                       : "Select a year to view spending data"}
@@ -204,14 +204,14 @@ const years = useMemo(() => {
                   </SelectTrigger>
                   <SelectContent className="rounded-2xl shadow-2xl backdrop-blur-sm bg-white/95 border-slate-100">
                     <SelectGroup>
-                      <SelectLabel className="font-semibold text-slate-600 px-4 py-2 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                      <SelectLabel className="font-semibold text-slate-600 px-4 py-2 ">
                         Select Year
                       </SelectLabel>
                       {years.map((year) => (
                         <SelectItem
                           key={year}
                           value={year}
-                          className="rounded-xl mx-2 my-1 hover:bg-gradient-to-r hover:from-blue-500 hover:to-indigo-500 hover:text-white transition-all duration-300 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]"
+                          className="rounded-xl mx-2 my-1 hover:bg-gradient-to-r hover:from-blue-500 hover:to-indigo-500 hover:text-white transition-all duration-300 "
                         >
                           {year}
                         </SelectItem>
@@ -249,7 +249,7 @@ const years = useMemo(() => {
                     tickMargin={15}
                     axisLine={false}
                     tickFormatter={(value) => value.slice(0, 3)}
-                    className="text-sm font-medium text-slate-600 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]"
+                    className="text-sm font-medium text-slate-600 "
                   />
                   <XAxis
                     dataKey="spending"
@@ -257,7 +257,7 @@ const years = useMemo(() => {
                     domain={[0, maxSpending]}
                     tickLine={false}
                     axisLine={false}
-                    className="text-sm text-slate-600 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]"
+                    className="text-sm text-slate-600 "
                   />
                   <ChartTooltip
                     cursor={{ fill: 'rgba(59, 130, 246, 0.1)', radius: 8 }} 
@@ -265,10 +265,10 @@ const years = useMemo(() => {
                       if (active && payload && payload.length) {
                         return (
                           <div className="backdrop-blur-sm bg-white/95 rounded-2xl shadow-2xl border-slate-100 p-4">
-                            <p className="font-semibold text-slate-800 mb-2 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                            <p className="font-semibold text-slate-800 mb-2 ">
                               {label}
                             </p>
-                            <p className="text-blue-600 font-bold text-lg font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                            <p className="text-blue-600 font-bold text-lg ">
                               ${payload[0].value.toLocaleString()}
                             </p>
                           </div>
@@ -287,7 +287,7 @@ const years = useMemo(() => {
                     <LabelList
                       dataKey="spending"
                       position="right"
-                      className="text-sm font-semibold font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]"
+                      className="text-sm font-semibold "
                       formatter={(value) => `$${value.toLocaleString()}`}
                       fill="#3b82f6" 
                     />
@@ -304,10 +304,10 @@ const years = useMemo(() => {
                   <TrendingUp className="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <p className="font-semibold text-slate-800 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                  <p className="font-semibold text-slate-800 ">
                     Trending up by 5.2% this month
                   </p>
-                  <p className="text-slate-600 text-sm font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                  <p className="text-slate-600 text-sm ">
                     Showing total spending patterns for {currentYear}
                   </p>
                 </div>
@@ -315,26 +315,26 @@ const years = useMemo(() => {
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
                 <div className="text-center">
-                  <p className="text-sm text-slate-600 mb-1 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                  <p className="text-sm text-slate-600 mb-1 ">
                     Peak Spending
                   </p>
-                  <p className="font-bold text-lg bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                  <p className="font-bold text-lg bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent ">
                     ${Math.max(...chartData.map(d => d.spending), 0).toLocaleString()}
                   </p>
                 </div>
                 <div className="text-center">
-                  <p className="text-sm text-slate-600 mb-1 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                  <p className="text-sm text-slate-600 mb-1 ">
                     Data Points
                   </p>
-                  <p className="font-bold text-lg bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                  <p className="font-bold text-lg bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent ">
                     {chartData.length} Months
                   </p>
                 </div>
                 <div className="text-center">
-                  <p className="text-sm text-slate-600 mb-1 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                  <p className="text-sm text-slate-600 mb-1 ">
                     Year Selected
                   </p>
-                  <p className="font-bold text-lg bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                  <p className="font-bold text-lg bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent ">
                     {currentYear}
                   </p>
                 </div>

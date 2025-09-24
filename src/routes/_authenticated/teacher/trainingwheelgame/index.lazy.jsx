@@ -122,8 +122,8 @@ function RouteComponent() {
 
   return (
     <>
-      <Header className="bg-white border-b border-[#e2e8f0] shadow-[0_2px_10px_rgba(0,0,0,0.1)]">
-         <TopNav links={topNav} className="bg-white text-[#1e293b]" />
+      <Header>
+         <TopNav links={topNav} />
         <div className='my-2 flex w-full items-center justify-between max-w-7xl mx-auto px-4'>
           <div className='text-2xl font-semibold text-[#1e293b]'>Training Wheel Game</div>
           <div className='flex items-center gap-4'>

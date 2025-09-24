@@ -118,7 +118,7 @@ function RouteComponent() {
 
   return (
     <>
-      <Header fixed>
+      <Header >
         <div className='my-2 flex w-full justify-between'>
           <div className='text-2xl font-semibold'>Blogs</div>
           <div className='flex items-center gap-4'>

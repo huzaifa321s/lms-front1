@@ -102,10 +102,10 @@ export default function Dashboard() {
   return (
   <>
       {/* ===== Top Header ===== */}
-      <Header className="bg-white border-b border-[#e2e8f0] shadow-[0_2px_10px_rgba(0,0,0,0.1)]">
+      <Header >
         <TopNav links={topNav} />
         <div className="ml-auto flex items-center space-x-4">
-          <Search className="text-[#1e293b]" />
+          {/* <Search className="text-[#1e293b]"  /> */}
           <ProfileDropdown />
         </div>
       </Header>

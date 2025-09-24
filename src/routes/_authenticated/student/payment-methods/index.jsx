@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { format } from 'date-fns';
 import {
@@ -18,9 +18,48 @@ import { Card } from '@/components/ui/card';
 import { addTitle } from '../../../../shared/config/reducers/animateBgSlice';
 import { openModal } from '../../../../shared/config/reducers/student/studentDialogSlice';
 import { useAppUtils } from '../../../../hooks/useAppUtils';
+import { Skeleton } from "@/components/ui/skeleton"
 
 const queryClient = new QueryClient();
 
+export function PaymentMethodsSkeleton() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] p-6">
+      <Card className="max-w-4xl mx-auto p-6 space-y-8 bg-white rounded-[12px] border border-[#e2e8f0] shadow-sm">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <Skeleton className="h-10 w-56" />
+          <Skeleton className="h-12 w-40 rounded-md" />
+        </div>
+
+        {/* Payment method cards */}
+        <div className="space-y-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Card
+              key={i}
+              className="relative p-4 rounded-[12px] border border-[#e2e8f0] shadow-sm"
+            >
+              <div className="flex justify-between items-center">
+                <div className="flex flex-col gap-2">
+                  <Skeleton className="h-5 w-24" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-7 w-20 rounded-md" />
+                  <Skeleton className="h-8 w-8 rounded-md" />
+                </div>
+              </div>
+              <div className="mt-2 flex justify-between">
+                <Skeleton className="h-4 w-28" />
+                <Skeleton className="h-4 w-32" />
+              </div>
+            </Card>
+          ))}
+        </div>
+      </Card>
+    </div>
+  )
+}
 export const paymentMethodsQueryOptions = () =>
   queryOptions({
     queryKey: ['get-payment-methods-student'],
@@ -44,7 +83,11 @@ export const paymentMethodsQueryOptions = () =>
   });
 
 export const Route = createFileRoute('/_authenticated/student/payment-methods/')({
-  component: RouteComponent,
+  component: () => (
+    <Suspense fallback={<PaymentMethodsSkeleton />}>
+      <RouteComponent />
+    </Suspense>
+  ),
   loader: () => queryClient.ensureQueryData(paymentMethodsQueryOptions()),
 });
 

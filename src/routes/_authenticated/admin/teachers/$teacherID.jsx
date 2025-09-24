@@ -161,7 +161,7 @@ console.log('teacher 1 ====>',teacher)
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-[#2563eb]/10 to-[#1d4ed8]/10 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-500"></div>
       </div>
 
-      <Header className="bg-white border-b border-[#e2e8f0] shadow-[0_2px_10px_rgba(0,0,0,0.1)]">
+      <Header >
         <div className="relative z-10 my-4 flex w-full items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="text-3xl font-bold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">

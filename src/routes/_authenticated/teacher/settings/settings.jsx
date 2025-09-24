@@ -22,7 +22,7 @@ export default function Settings() {
                 fill='none'
                 viewBox='0 0 24 24'
                 strokeWidth={1.5}
-                stroke='currentColor'
+                stroke='black'
                 className='h-6 w-6'
               >
                 <path

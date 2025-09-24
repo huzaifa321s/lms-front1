@@ -112,7 +112,7 @@ function BlogEditPage() {
       <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#2563eb]/10 via-transparent to-transparent"></div>
       <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-[#10b981]/10 via-transparent to-transparent"></div>
 
-      <Header className="relative z-10 mb-8 md:mb-12 bg-white border-b border-[#e2e8f0] shadow-[0_2px_10px_rgba(0,0,0,0.1)]">
+      <Header >
         <div className="my-2 flex w-full items-center justify-between">
           <div className="text-2xl font-bold text-[#1e293b] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
             Edit Blog

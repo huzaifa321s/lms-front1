@@ -370,7 +370,7 @@ export function ProfileDropdown() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className="mt-2 w-56 rounded-[8px] border border-[#e2e8f0] bg-[#ffffff] p-2 font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif] shadow-[0_4px_6px_rgba(0,0,0,0.05)]"
+          className="mt-2 w-56 rounded-[8px] border border-[#e2e8f0] bg-[#ffffff] p-2  shadow-[0_4px_6px_rgba(0,0,0,0.05)]"
           align='end'
           forceMount
         >

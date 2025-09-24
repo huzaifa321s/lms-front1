@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useSelector } from 'react-redux'
@@ -21,18 +21,21 @@ import { invoicesQueryOption } from '../../../../student/setting/invoices'
 import { invoicesSchema } from '../../features/tasks/-components/columns'
 import { DataTable } from '../../features/tasks/-components/data-table'
 import { paymentMethodsQueryOptions } from '../../payment-methods'
+import { SmallLoader } from '../../../teacher/-layout/data/components/teacher-authenticated-layout'
 
 export const Route = createLazyFileRoute(
   '/_authenticated/student/settings/billing/'
 )({
   component: () => (
     <>
+        <Suspense fallback={<SmallLoader />}>
       <ContentSection
-        title='Billing'
-        desc='Manage your subscription plans, payment methods, and view invoices in one place.'
+        title="Billing"
+        desc="Manage your subscription plans, payment methods, and view invoices in one place."
       >
         <Billing />
       </ContentSection>
+    </Suspense>
     </>
   ),
   loader: () => {

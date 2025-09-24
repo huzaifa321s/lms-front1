@@ -141,7 +141,7 @@ function RouteComponent() {
 
   return (
    <>
-      <Header className="fixed bg-white border-b border-[#e2e8f0] ">
+      <Header >
         <TopNav links={topNav} />
       </Header>
       <Main className="max-w-7xl mx-auto px-4 py-8 pt-20">

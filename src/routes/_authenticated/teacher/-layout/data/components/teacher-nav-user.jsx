@@ -15,6 +15,12 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from '@/components/ui/sidebar'
 import { getTeacherCreds } from '../../../-utils/helperFunctions'
 import LogoutModal from '../../../../../../shared/components/LogoutModal'
 // Updated to match NavUser's chevron style
@@ -56,113 +62,109 @@ export function NavUser() {
         handleModalClose={setLogoutModalCondition}
         isLoading={isLoading}
       />
-      <DropdownMenu modal={false}>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant='ghost'
-            className='flex w-full items-center rounded-[12px] border border-[#e2e8f0] bg-gradient-to-r from-[#2563eb]/10 to-[#1d4ed8]/10 px-4 py-3 shadow-md transition-all duration-300 hover:scale-105 hover:from-[#2563eb]/20 hover:to-[#1d4ed8]/20'
-            size='lg'
-          >
-            <Avatar className='h-9 w-9 rounded-full'>
-              <AvatarImage src='/avatars/01.png' alt='profile' />
-              <AvatarFallback className='rounded-full bg-gradient-to-r from-[#2563eb]/20 to-[#1d4ed8]/20 font-semibold text-[#1e293b]'>
+   <SidebarMenu>
+  <SidebarMenuItem>
+    <DropdownMenu modal={false}>
+      <DropdownMenuTrigger asChild>
+        <SidebarMenuButton
+          size="lg"
+          className="w-full px-4 py-3 rounded-[8px] bg-[#ffffff] border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:bg-[#f1f5f9] hover:border-[#cbd5e1] hover:scale-[1.02] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)] flex items-center"
+        >
+          <Avatar className="h-9 w-9 rounded-full ring-2 ring-[#e2e8f0]">
+            {/* <AvatarImage
+              src={user?.avatar}
+              alt={credentials?.firstName + " " + credentials?.lastName}
+            /> */}
+            <AvatarFallback className="rounded-full bg-[#f1f5f9] text-[#1e293b] font-semibold">
+              {credentials?.firstName?.charAt(0)?.toUpperCase()}
+              {credentials?.lastName?.charAt(0)?.toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <div className="grid flex-1 text-left text-sm leading-tight ml-3 text-[#1e293b]">
+            <span className="truncate font-semibold">
+              {credentials?.firstName} {credentials?.lastName}
+            </span>
+            <span className="truncate text-xs text-[#64748b]">
+              {credentials?.email}
+            </span>
+          </div>
+          <ChevronsUpDown className="ml-auto size-4 text-[#64748b]" />
+        </SidebarMenuButton>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent
+        className="min-w-56 rounded-[8px] p-2 mt-2 bg-[#ffffff] border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)]"
+        align="end"
+        forceMount
+      >
+        <DropdownMenuLabel className="p-0 font-normal">
+          <div className="flex items-center gap-2 px-3 py-2 text-left">
+            <Avatar className="h-9 w-9 rounded-full ring-2 ring-[#e2e8f0]">
+              {/* <AvatarImage
+                src={user?.avatar}
+                alt={credentials?.firstName}
+              /> */}
+              <AvatarFallback className="rounded-full bg-[#f1f5f9] text-[#1e293b] font-semibold">
                 {credentials?.firstName?.charAt(0)?.toUpperCase()}
                 {credentials?.lastName?.charAt(0)?.toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <div className='ml-3 grid flex-1 text-left text-sm leading-tight text-[#1e293b]'>
-              <span className='truncate font-semibold'>
-                {credentials?.firstName} {credentials?.lastName}
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-bold text-[#1e293b]">
+                {credentials?.firstName}
               </span>
-              <span className='truncate text-xs text-[#64748b]'>
-                {credentials?.email}
+              <span className="truncate text-xs text-[#64748b]">
+                {credentials?.lastName}
               </span>
             </div>
-            <ChevronsUpDown className='ml-auto size-4 text-[#475569] transition-transform duration-200 group-hover:rotate-180' />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          className='mt-2 min-w-56 rounded-[12px] border border-[#e2e8f0] bg-white/95 p-2 shadow-[0_4px_12px_rgba(0,0,0,0.1)]'
-          align='end'
-          forceMount
-        >
-          <DropdownMenuLabel className='p-0 font-normal'>
-            <div className='flex items-center gap-2 px-3 py-2 text-left'>
-              <Avatar className='h-9 w-9 rounded-full'>
-                <AvatarImage src='/avatars/01.png' alt='profile' />
-                <AvatarFallback className='rounded-full bg-gradient-to-r from-[#2563eb]/20 to-[#1d4ed8]/20 font-semibold text-[#1e293b]'>
-                  {credentials?.firstName?.charAt(0)?.toUpperCase()}
-                  {credentials?.lastName?.charAt(0)?.toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div className='grid flex-1 text-left text-sm leading-tight'>
-                <span className='truncate font-semibold text-[#1e293b]'>
-                  {credentials?.firstName}
-                </span>
-                <span className='truncate text-xs text-[#64748b]'>
-                  {credentials?.lastName}
-                </span>
-              </div>
-            </div>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator className='my-1 bg-[#e2e8f0]' />
-          <DropdownMenuGroup>
-            <DropdownMenuItem
-              asChild
-              className='rounded-[8px] font-medium text-[#1e293b] transition-all duration-200 hover:bg-[#2563eb]/10 hover:text-[#2563eb] focus:bg-[#2563eb]/10 focus:text-[#2563eb]'
-            >
-              <Link
-                to='/teacher/settings'
-                className='flex items-center gap-2 px-3 py-2'
-              >
-                Profile
-                <DropdownMenuShortcut className='text-xs text-[#64748b]'>
-                  ⇧⌘T
-                </DropdownMenuShortcut>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              asChild
-              className='rounded-[8px] font-medium text-[#1e293b] transition-all duration-200 hover:bg-[#2563eb]/10 hover:text-[#2563eb] focus:bg-[#2563eb]/10 focus:text-[#2563eb]'
-            >
-              <Link
-                to='/teacher/courses'
-                className='flex items-center gap-2 px-3 py-2'
-              >
-                Courses
-                <DropdownMenuShortcut className='text-xs text-[#64748b]'>
-                  ⌘C
-                </DropdownMenuShortcut>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              asChild
-              className='rounded-[8px] font-medium text-[#1e293b] transition-all duration-200 hover:bg-[#2563eb]/10 hover:text-[#2563eb] focus:bg-[#2563eb]/10 focus:text-[#2563eb]'
-            >
-              <Link
-                to='/teacher/settings'
-                className='flex items-center gap-2 px-3 py-2'
-              >
-                Settings
-                <DropdownMenuShortcut className='text-xs text-[#64748b]'>
-                  ⌘S
-                </DropdownMenuShortcut>
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator className='my-1 bg-[#e2e8f0]' />
+          </div>
+        </DropdownMenuLabel>
+
+        <DropdownMenuSeparator className="bg-[#e2e8f0] my-2" />
+
+        <DropdownMenuGroup>
           <DropdownMenuItem
-            onClick={() => setLogoutModalCondition(true)}
-            className='rounded-[8px] font-medium text-[#1e293b] transition-all duration-200 hover:bg-[#ef4444]/10 hover:text-[#ef4444] focus:bg-[#ef4444]/10 focus:text-[#ef4444]'
+            asChild
+            className="rounded-[8px] font-medium text-[#1e293b] transition-all duration-200 hover:bg-[#2563eb]/10 hover:text-[#2563eb]"
           >
-            <LogOut size={16} className='mr-2 text-[#ef4444]' />
-            Log out
-            <DropdownMenuShortcut className='text-xs text-[#64748b]'>
-              ⇧⌘Q
-            </DropdownMenuShortcut>
+            <Link to="/teacher/settings" className="flex items-center gap-2 px-3 py-2">
+              Profile
+            </Link>
           </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+
+          <DropdownMenuItem
+            asChild
+            className="rounded-[8px] font-medium text-[#1e293b] transition-all duration-200 hover:bg-[#2563eb]/10 hover:text-[#2563eb]"
+          >
+            <Link to="/teacher/courses" className="flex items-center gap-2 px-3 py-2">
+              Courses
+            </Link>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            asChild
+            className="rounded-[8px] font-medium text-[#1e293b] transition-all duration-200 hover:bg-[#2563eb]/10 hover:text-[#2563eb]"
+          >
+            <Link to="/teacher/settings" className="flex items-center gap-2 px-3 py-2">
+              Settings
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+
+        <DropdownMenuSeparator className="bg-[#e2e8f0] my-2" />
+
+        <DropdownMenuItem
+          onClick={() => setLogoutModalCondition(true)}
+          className="rounded-[8px] font-medium text-[#1e293b] transition-all duration-200 hover:bg-[#ef4444]/10 hover:text-[#ef4444]"
+        >
+          <LogOut size={16} className="mr-2 text-[#ef4444]" />
+          Log out
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  </SidebarMenuItem>
+</SidebarMenu>
+
     </>
   )
 }

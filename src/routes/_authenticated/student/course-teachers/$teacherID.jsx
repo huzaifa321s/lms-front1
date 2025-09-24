@@ -251,7 +251,7 @@ function RouteComponent() {
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
-              stroke="currentColor"
+              stroke="white"
               className="mr-2 h-4 w-4"
             >
               <path

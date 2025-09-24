@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import {
   QueryClient,
@@ -31,6 +31,7 @@ import {
 } from '../../../../utils/globalFunctions'
 import { teachersSchemaStudentPanel } from '../features/tasks/-components/columns'
 import { DataTable } from '../features/tasks/-components/student-data-table'
+import { SmallLoader } from '../../teacher/-layout/data/components/teacher-authenticated-layout'
 
 const queryClient = new QueryClient()
 
@@ -85,7 +86,11 @@ export const Route = createLazyFileRoute(
     }
   },
   loader: ({ deps }) => queryClient.ensureQueryData(teachersQueryOptions(deps)),
-  component: RouteComponent,
+    component: () => (
+    <Suspense fallback={<SmallLoader />}>
+      <RouteComponent />
+    </Suspense>
+  ),
 })
 
 function RouteComponent() {
@@ -172,6 +177,7 @@ function RouteComponent() {
                     size='sm'
                     onClick={searchTeachers}
                     disabled={isFetching}
+                    className="text-black"
                   >
                     {isFetching ? (
                       <IconLoader className='animate animate-spin' />

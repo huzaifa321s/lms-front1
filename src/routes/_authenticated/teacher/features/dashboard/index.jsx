@@ -17,6 +17,7 @@ import {Separator} from '@/components/ui/separator'
 import './index.css'
 import { useRef } from 'react'
 
+
 export default function Dashboard() {
   const isFirstRender = useRef(true);
   const { data } = useQuery({...cardQueryOptions(),suspense:isFirstRender.current})
@@ -28,10 +29,10 @@ export default function Dashboard() {
     
 
       {/* ===== Top Heading ===== */}
-      <Header className="bg-white/95 backdrop-blur-sm shadow-[0_4px_6px_rgba(0,0,0,0.05)]">
+      <Header >
         <TopNav links={topNav} />
         <div className="ml-auto flex items-center space-x-4">
-          <Search className="rounded-[8px] border-[#e2e8f0] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20" />
+          {/* <Search className="rounded-[8px] border-[#e2e8f0] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20" /> */}
           <ProfileDropdown className="text-[#64748b] hover:text-[#2563eb] transition-all duration-300" />
         </div>
       </Header>

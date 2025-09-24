@@ -36,6 +36,68 @@ import {
 import { SmallLoader } from '../../_authenticated/teacher/-layout/data/components/teacher-authenticated-layout'
 
 const queryClient = new QueryClient()
+const CoursesPageSkeleton = () => {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 p-6 font-sans">
+      <div className="relative mx-auto max-w-7xl">
+        {/* Header Skeleton */}
+        <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+          <div className="space-y-3 animate-pulse">
+            <div className="h-4 w-24 rounded bg-slate-200"></div>
+            <div className="h-10 w-64 rounded bg-slate-200"></div>
+            <div className="h-5 w-80 rounded bg-slate-200"></div>
+          </div>
+          <div className="flex items-center gap-3 animate-pulse">
+            <div className="h-10 w-64 rounded-lg bg-slate-200"></div>
+            <div className="h-10 w-20 rounded-lg bg-slate-200"></div>
+          </div>
+        </div>
+
+        {/* Courses Grid Skeleton */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={i}
+              className="animate-pulse rounded-2xl border border-slate-200 bg-white shadow-md p-4"
+            >
+              {/* Image */}
+              <div className="h-44 w-full rounded-xl bg-slate-200"></div>
+
+              {/* Body */}
+              <div className="mt-4 space-y-3">
+                <div className="h-6 w-3/4 rounded bg-slate-200"></div>
+                <div className="h-4 w-full rounded bg-slate-200"></div>
+                <div className="h-4 w-1/2 rounded bg-slate-200"></div>
+
+                {/* Mini Stats */}
+                <div className="mt-2 flex justify-between pt-2 border-t border-slate-100">
+                  <div className="h-3 w-10 rounded bg-slate-200"></div>
+                  <div className="h-3 w-10 rounded bg-slate-200"></div>
+                  <div className="h-3 w-16 rounded bg-slate-200"></div>
+                </div>
+
+                {/* Buttons */}
+                <div className="space-y-2 pt-2">
+                  <div className="h-10 w-full rounded-lg bg-slate-200"></div>
+                  <div className="h-10 w-full rounded-lg bg-slate-200"></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Pagination Skeleton */}
+        <div className="mt-12 flex justify-center">
+          <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white p-2 shadow-md animate-pulse">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-10 w-10 rounded-lg bg-slate-200"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 // Constants
 const DEFAULT_COVER_IMAGE =
@@ -76,7 +138,7 @@ export const Route = createFileRoute('/student/courses/')({
     page: Number(search.page ?? 1),
   }),
   component: () => (
-    <Suspense fallback={<CourseListSkeleton />}>
+       <Suspense fallback={<CoursesPageSkeleton />}>
       <RouteComponent />
     </Suspense>
   ),
@@ -161,16 +223,13 @@ const CourseListSkeleton = () => (
   </div>
 )
 
-const MiniStats = ({ students = 1250, rating = 4.8, instructor }) => (
+const MiniStats = ({ students = 1250, instructor }) => (
   <div className='mt-2 flex justify-between text-xs text-slate-600'>
     <div className='flex items-center gap-1'>
       <Users className='h-3 w-3' />
       <span>{students}</span>
     </div>
-    <div className='flex items-center gap-1'>
-      <Star className='h-3 w-3 fill-yellow-400 text-yellow-400' />
-      <span>{rating}</span>
-    </div>
+  
     <div className='flex items-center gap-1'>
       <IconChalkboardTeacher className='h-3 w-3' />
       <span>
@@ -195,11 +254,11 @@ function RouteComponent() {
 
   // Query
   const { data, isLoading } = useQuery(
-    coursesQueryOptions({
+    {...coursesQueryOptions({
       q: debouncedSearch,
       page: currentPage,
       userID: credentials?._id,
-    })
+    }),suspense:true}
   )
 
 useEffect(() => {
@@ -538,10 +597,9 @@ useEffect(() => {
               })}
             </div>
           </Show.When>
-          <Show.Else>
-            {isLoading ? (
-              <SmallLoader />
-            ) : (
+          <Show.When isTrue={!isLoading && courses.length === 0}>
+         
+         
               <div className='py-16 text-center'>
                 <div className='mx-auto w-fit rounded-full bg-slate-100 p-6 shadow-inner'>
                   <BookOpen className='h-16 w-16 text-slate-300' />
@@ -553,8 +611,8 @@ useEffect(() => {
                   {MESSAGES.noCoursesDesc}
                 </p>
               </div>
-            )}
-          </Show.Else>
+          
+          </Show.When>
         </Show>
 
         {/* Pagination */}

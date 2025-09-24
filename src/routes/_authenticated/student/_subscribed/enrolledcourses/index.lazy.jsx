@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import axios from 'axios'
 import {
   QueryClient,
@@ -21,6 +21,7 @@ import {
   useSearchInput,
 } from '../../../../../utils/globalFunctions'
 import { CardDemo } from './-components/_Course_Card'
+import { SmallLoader } from '../../../teacher/-layout/data/components/teacher-authenticated-layout'
 
 const queryClient = new QueryClient()
 const coursesQueryOptions = (deps) =>
@@ -43,15 +44,17 @@ const coursesQueryOptions = (deps) =>
       }
     },
     placeholderData: (prev) => prev,
-    staleTime: 1000 * 60 * 2, // 2 min
-    gcTime: 1000 * 60 * 10, // 10 min
-    retry: 1,
+
   })
 
 export const Route = createLazyFileRoute(
   '/_authenticated/student/_subscribed/enrolledcourses/'
 )({
-  component: RouteComponent,
+  component: () => (
+    <Suspense fallback={<SmallLoader/>}>
+      <RouteComponent/>
+    </Suspense>
+  ),
   validateSearch: (search) => {
     return { input: search.input || '', page: Number(search.page ?? 1) }
   },

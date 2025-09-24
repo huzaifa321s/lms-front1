@@ -88,7 +88,7 @@ const CardForm = ({ plan, setCardDetailsFlag }) => {
         <div className="flex justify-between items-center mb-6">
           <div className="w-full">
             <div className="flex justify-between items-center">
-              <h1 className="text-[20px] font-semibold text-slate-800 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+              <h1 className="text-[20px] font-semibold text-slate-800 ">
                 {plan?.name} Plan
               </h1>
               <Button
@@ -113,10 +113,10 @@ const CardForm = ({ plan, setCardDetailsFlag }) => {
               </Button>
             </div>
             <div className="h-5/6">
-              <h2 className="text-5xl font-bold mt-2 mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+              <h2 className="text-5xl font-bold mt-2 mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 ">
                 {plan?.price}
               </h2>
-              <ul className="text-slate-600 text-left flex flex-col gap-4 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+              <ul className="text-slate-600 text-left flex flex-col gap-4 ">
                 {plan?.features.map((feature, index) => (
                   <li key={index} className="flex items-center gap-2">
                     <span className="text-green-600">
@@ -142,7 +142,7 @@ const CardForm = ({ plan, setCardDetailsFlag }) => {
             </div>
           </div>
         </div>
-        <div className="mb-6 text-slate-600 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+        <div className="mb-6 text-slate-600 ">
           Insert the card details to buy subscription.
         </div>
         <form onSubmit={(e) => submitDetails(e)}>
@@ -150,7 +150,7 @@ const CardForm = ({ plan, setCardDetailsFlag }) => {
           <div className="mt-6 text-right">
             <Button
               type="submit"
-              className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600 disabled:from-slate-300 disabled:to-slate-400 disabled:text-slate-600 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 disabled:scale-100 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]"
+              className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600 disabled:from-slate-300 disabled:to-slate-400 disabled:text-slate-600 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 disabled:scale-100 "
               disabled={!stripe || loading || !cardComplete || mutation.status === 'pending'}
               loading={mutation.status === 'pending'}
             >

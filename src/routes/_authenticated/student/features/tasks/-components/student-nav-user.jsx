@@ -359,7 +359,7 @@ export function NavUser({ user }) {
         isLoading={isLoading}
         logout={logout}
       />
-      <SidebarMenu className="font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]">
+      <SidebarMenu className="">
         <SidebarMenuItem>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

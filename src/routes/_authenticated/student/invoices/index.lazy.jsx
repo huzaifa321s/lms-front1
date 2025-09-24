@@ -151,7 +151,7 @@ function InvoiceRowCards() {
         {/* Coming Soon Heading */}
         <div className="mb-12 w-full max-w-2xl mx-auto">
           <div className="bg-[#ffffff] border border-[#e2e8f0] rounded-[8px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] p-6 text-center">
-            <h1 className="text-3xl font-bold text-[#1e293b] font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+            <h1 className="text-3xl font-bold text-[#1e293b] ">
               We are working on this page
               <span className="ml-2 inline-block bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white px-3 py-1 rounded-full text-sm font-semibold">
                 <Clock className="w-4 h-4 inline mr-1" /> Stay Tuned!

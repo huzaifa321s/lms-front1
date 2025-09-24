@@ -34,7 +34,7 @@ function RouteComponent() {
 useEffect(() => {
   const requestInterceptor = axios.interceptors.request.use(
     function (config) {
-      showLoader()
+      // showLoader()
       return config
     },
     function (error) {

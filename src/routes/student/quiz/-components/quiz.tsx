@@ -110,7 +110,7 @@ export const Quiz = () => {
         {/* Dummy MCQs Heading */}
         <div className="mb-6 w-full max-w-2xl">
           <div className="bg-white/90 border-2 border-slate-200 rounded-xl shadow-lg p-6 text-center backdrop-blur-sm">
-            <h1 className="text-3xl font-bold text-slate-800 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+            <h1 className="text-3xl font-bold text-slate-800 ">
               Dummy MCQs Practice Quiz
               <span className="ml-2 inline-block bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
                 <Brain className="w-4 h-4 inline mr-1" /> Test Your Knowledge
@@ -176,7 +176,7 @@ export const Quiz = () => {
       {/* Dummy MCQs Heading */}
       <div className="mb-6 w-full max-w-4xl">
         <div className="bg-white/90 border-2 border-slate-200 rounded-xl shadow-lg p-6 text-center backdrop-blur-sm">
-          <h1 className="text-3xl font-bold text-slate-800 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+          <h1 className="text-3xl font-bold text-slate-800 ">
             Dummy MCQs Practice Quiz
             <span className="ml-2 inline-block bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
               <Brain className="w-4 h-4 inline mr-1" /> Test Your Knowledge

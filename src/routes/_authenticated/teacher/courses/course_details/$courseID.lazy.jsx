@@ -403,7 +403,7 @@ console.log('fitleredStudents ====>',filteredStudents)
                 <div className="rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 p-2">
                   <BookOpen className="h-5 w-5 text-white" />
                 </div>
-                <span className="font-semibold text-slate-800 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                <span className="font-semibold text-slate-800 ">
                   {m.title}
                 </span>
               </div>
@@ -412,10 +412,10 @@ console.log('fitleredStudents ====>',filteredStudents)
             <AccordionContent className="px-6 pb-4">
               <div className="space-y-3">
                 <div className="rounded-2xl border border-slate-100 bg-white/95 p-4 backdrop-blur-sm">
-                  <span className="mb-2 block font-semibold text-slate-800 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                  <span className="mb-2 block font-semibold text-slate-800 ">
                     Description:
                   </span>
-                  <p className="text-slate-600 font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+                  <p className="text-slate-600 ">
                     {m.description}
                   </p>
                 </div>
@@ -426,7 +426,7 @@ console.log('fitleredStudents ====>',filteredStudents)
                       <Button
                         variant="outline"
                         size="sm"
-                        className="border-slate-200 text-blue-600 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 rounded-xl font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]"
+                        className="border-slate-200 text-blue-600 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 rounded-xl "
                         onClick={() => console.log("Download", m.media)}
                       >
                         <Download className="mr-2 h-4 w-4" />
@@ -447,7 +447,7 @@ console.log('fitleredStudents ====>',filteredStudents)
       {(!courseObj?.material || courseObj?.material.length === 0) && (
         <div className="py-8 px-6 text-center bg-white/95 rounded-2xl border border-slate-100 backdrop-blur-sm shadow-xl">
           <FileText className="mx-auto mb-3 h-12 w-12 text-slate-400" />
-          <p className="text-slate-600 text-lg font-[Segoe UI, Tahoma, Geneva, Verdana, sans-serif]">
+          <p className="text-slate-600 text-lg ">
             No materials available for this course yet.
           </p>
         </div>

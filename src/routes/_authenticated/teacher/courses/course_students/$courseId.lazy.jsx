@@ -129,9 +129,9 @@ function RouteComponent() {
   }
   return (
     <>
-      <Header className="bg-white border-b border-[#e2e8f0] shadow-[0_2px_10px_rgba(0,0,0,0.1)]">
+      <Header >
         <div className='my-2 flex w-full items-center justify-between max-w-7xl mx-auto px-4'>
-          <div className='text-2xl font-semibold text-[#1e293b]'>Enrolled Students</div>
+          <div className='text-2xl font-semibold text-white'>Enrolled Students</div>
           <div className='flex items-center gap-4'>
             <Label className="flex items-center gap-2">
               <Input

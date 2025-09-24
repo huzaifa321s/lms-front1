@@ -1,4 +1,3 @@
-
 import { Link } from '@tanstack/react-router'
 import { IconMenu } from '@tabler/icons-react'
 import { cn } from '@/lib/utils'
@@ -28,7 +27,7 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
             <Button
               size='icon'
               variant='outline'
-              className="rounded-[8px] border-[#e2e8f0] bg-[#ffffff] text-[#64748b] shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:bg-[#f1f5f9] hover:border-[#cbd5e1] hover:scale-[1.02] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]"
+              className="rounded-[8px] border-[#475569] bg-[#0f172a] text-[#e2e8f0] transition-all duration-300 hover:bg-[#2563eb]/20 hover:text-[#bfdbfe] hover:border-[#2563eb] hover:scale-[1.02] shadow-none"
             >
               <IconMenu />
             </Button>
@@ -36,7 +35,7 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
           <DropdownMenuContent
             side='bottom'
             align='start'
-            className="w-56 rounded-[8px] bg-[#ffffff] border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] p-2 font-['Segoe_UI',_Tahoma,_Geneva,_Verdana,_sans-serif]"
+            className="w-56 rounded-[8px] bg-[#0f172a] border border-[#475569] p-2 shadow-none"
           >
             {links.map(({ title, href, isActive, disabled }) => (
               <DropdownMenuItem
@@ -45,8 +44,8 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
                 className={cn(
                   'rounded-[8px] transition-all duration-200',
                   isActive
-                    ? 'text-[#1d4ed8] bg-[#2563eb]/10'
-                    : 'text-[#64748b] hover:bg-[#2563eb]/10 hover:text-[#1d4ed8]',
+                    ? 'text-[#bfdbfe] bg-[#2563eb]/20'
+                    : 'text-[#e2e8f0] hover:bg-[#2563eb]/20 hover:text-[#bfdbfe]',
                   disabled && 'opacity-50 cursor-not-allowed'
                 )}
               >
@@ -74,8 +73,8 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
             className={cn(
               'text-sm font-medium transition-all duration-200 rounded-[8px] px-3 py-2',
               isActive
-                ? 'text-[#1d4ed8] bg-[#2563eb]/10'
-                : 'text-[#64748b] hover:bg-[#2563eb]/10 hover:text-[#1d4ed8]',
+                ? 'text-[#bfdbfe] bg-[#2563eb]/20'
+                : 'text-[#e2e8f0] hover:bg-[#2563eb]/20 hover:text-[#bfdbfe]',
               disabled && 'opacity-50 cursor-not-allowed'
             )}
           >

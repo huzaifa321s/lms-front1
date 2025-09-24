@@ -139,7 +139,7 @@ const handlePagination = (newPageIndex) => {
 
   return (
     <>
-      <Header className="fixed bg-white border-b border-[#e2e8f0] ">
+      <Header >
         <div className="my-2 flex w-full justify-between">
           <div className="text-2xl font-semibold text-[#1e293b] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
             Courses

@@ -34,10 +34,10 @@ export function AuthenticatedLayout({ children, role }) {
               'has-[main.fixed-main]:group-data-[scroll-locked=1]/body:h-svh'
             )}
           >
-            <Suspense fallback={<SmallLoader />}>
+         
 
               {children ? children : <Outlet />}
-            </Suspense>
+         
           </div>
         </SidebarProvider>
       </SearchProvider>

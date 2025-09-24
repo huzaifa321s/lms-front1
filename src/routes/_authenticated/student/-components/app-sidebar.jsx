@@ -42,7 +42,7 @@ export function AppSidebar({ ...props }) {
       </SidebarHeader>
 
       {/* STUDENT INFO */}
-      <div className='px-3 pb-2 text-sm font-semibold text-gray-700 dark:text-gray-200'>
+      <div className='px-3 pb-2 text-sm font-semibold text-white dark:text-gray-200'>
         {credentials?.firstName && credentials?.lastName ? (
           <p className='truncate'>
             {credentials.firstName} {credentials.lastName}
