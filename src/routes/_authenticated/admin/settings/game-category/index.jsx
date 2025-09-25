@@ -63,7 +63,7 @@ export const Route = createFileRoute(
   component: RouteComponent,
 })
 
-export function RouteComponent() {
+function RouteComponent() {
   const [searchInput, setSearchInput] = useSearchInput(
     '/_authenticated/admin/settings/game-category/'
   )

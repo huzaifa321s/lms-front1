@@ -5,7 +5,12 @@ import { Show } from '../../shared/utils/Show'
 import { getCookie } from '../../shared/utils/helperFunction'
 import CardForm from '../_authenticated/student/settings/-components/-card-form'
 import Plans from './-components/Plans'
+import { Elements } from '@stripe/react-stripe-js'
+import { loadStripe } from '@stripe/stripe-js'
 
+const stripePromise = loadStripe(
+  'pk_test_51P5zAtEdtHnRsYCMJUdZJ5Q6m6KA1LQfPxXsnKweKFvWiSsYMpEG4yRmG5jmzaBo0VBUeQSS5DTSBDDfnzLsiWGu00U3zAzcBU'
+)
 export const Route = createFileRoute('/student/subscription-plans')({
   beforeLoad: () => {
     const TOKEN = getCookie('studentToken')
@@ -88,7 +93,9 @@ function RouteComponent() {
   return (
     <Show>
       <Show.When isTrue={cardDetailsFlag}>
+        <Elements stripe={stripePromise}>
         <CardForm plan={selectedPlan} setCardDetailsFlag={setCardDetailsFlag} />
+        </Elements>
       </Show.When>
 
       <Show.Else>

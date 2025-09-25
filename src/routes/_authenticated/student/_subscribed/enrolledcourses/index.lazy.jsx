@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef } from 'react'
+import { Suspense, useEffect, useMemo, useRef } from 'react'
 import axios from 'axios'
 import {
   QueryClient,
@@ -97,11 +97,36 @@ function RouteComponent() {
       replace: true, // history clean
     })
   }, [debouncedSearch])
+
+
+  
+ 
   const queryClient = useQueryClient()
 
+  const handlePageChange = async (page) => {
+    if (searchInput !== '') {
+      navigate({
+        to: `/student/enrolledcourses`,
+        search: { page: page, input: `` },
+      })
+    } else {
+      navigate({
+        to: `/student/enrolledcourses`,
+        search: { page: page, input: `` },
+      })
+    }
+    await queryClient.invalidateQueries(
+      coursesQueryOptions({ input: searchInput, page })
+    )
+  }
   const queryPage = useSearch({
     select: (search) => search.page,
   })
+     const paginationButtons = useMemo(
+      () => getRenderPaginationButtons(queryPage, pages, handlePageChange),
+      [queryPage, pages]
+    )
+  
   console.log('queryPage ===>', queryPage)
 
   const searchEnrolledCourses = async () => {
@@ -122,22 +147,6 @@ function RouteComponent() {
     })
   }
 
-  const handlePageChange = async (page) => {
-    if (searchInput !== '') {
-      navigate({
-        to: `/student/enrolledcourses`,
-        search: { page: page, input: `` },
-      })
-    } else {
-      navigate({
-        to: `/student/enrolledcourses`,
-        search: { page: page, input: `` },
-      })
-    }
-    await queryClient.invalidateQueries(
-      coursesQueryOptions({ input: searchInput, page })
-    )
-  }
       const baseUrl = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses`;
 
   return (
@@ -219,7 +228,7 @@ function RouteComponent() {
               «
             </Button>
           )}
-          {getRenderPaginationButtons(queryPage, pages, handlePageChange)}
+          {paginationButtons}
           {queryPage < pages && (
             <Button
               size='sm'

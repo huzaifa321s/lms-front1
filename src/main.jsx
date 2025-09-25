@@ -7,8 +7,6 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
-import { Elements } from '@stripe/react-stripe-js'
-import { loadStripe } from '@stripe/stripe-js'
 import { Provider, useSelector } from 'react-redux'
 import { toast } from 'sonner'
 import { handleServerError } from '@/utils/handle-server-error'
@@ -81,11 +79,6 @@ const router = createRouter({
   defaultStructuralSharing: true,
 })
 
-// Stripe
-const stripePromise = loadStripe(
-  'pk_test_51P5zAtEdtHnRsYCMJUdZJ5Q6m6KA1LQfPxXsnKweKFvWiSsYMpEG4yRmG5jmzaBo0VBUeQSS5DTSBDDfnzLsiWGu00U3zAzcBU'
-)
-
 const App = () => {
   const authentication = UseAuth()
 
@@ -118,9 +111,7 @@ if (!rootElement.innerHTML) {
         <StrictMode>
           <QueryClientProvider client={queryClient}>
             <FontProvider>
-              <Elements stripe={stripePromise}>
-                <App />
-              </Elements>
+              <App />
             </FontProvider>
           </QueryClientProvider>
         </StrictMode>

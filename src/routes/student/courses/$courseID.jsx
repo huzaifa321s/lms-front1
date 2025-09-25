@@ -1,18 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import axios from 'axios'
 import { format } from 'date-fns'
 import {
   QueryClient,
   queryOptions,
   useMutation,
-  useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
 import {
-  Outlet,
   redirect,
   useParams,
-  useSearch,
   useLoaderData,
   createFileRoute,
   useRouter,
@@ -45,6 +42,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { coursesQueryOptions } from '.'
 import { useAppUtils } from '../../../hooks/useAppUtils'
 import { handleCourseEnrollment } from '../../../shared/config/reducers/student/studentAuthSlice'
 import { openModal } from '../../../shared/config/reducers/student/studentDialogSlice'
@@ -54,22 +52,19 @@ import {
   getCookie,
   isActiveSubscription,
 } from '../../../shared/utils/helperFunction'
-import { coursesQueryOptions } from '.'
 
 const courseQueryOptions = (deps) =>
   queryOptions({
     queryKey: ['getCourse', deps.courseID, deps?.userID],
     queryFn: async () => {
       console.log('deps ===>', deps)
-      const creds = getCookie('studentCredentials');
+      const creds = getCookie('studentCredentials')
       let queryStr = `courseID=${deps.courseID}`
       if (deps?.userID) {
         queryStr += `&userID=${deps.userID}`
-      }else if(creds?._id){
-         queryStr += `&userID=${creds._id}`
+      } else if (creds?._id) {
+        queryStr += `&userID=${creds._id}`
       }
-         
-      
 
       try {
         let response = await axios.get(`/web/course/getCourse?${queryStr}`)
@@ -147,39 +142,6 @@ export const Route = createFileRoute('/student/courses/$courseID')({
   component: RouteComponent,
 })
 
-function MiniProgressChart({ progress, color = '#2563eb' }) {
-  return (
-    <div className='flex items-center gap-2'>
-      <div className='h-2 w-16 overflow-hidden rounded-full bg-[#e2e8f0]'>
-        <div
-          className='h-full rounded-full transition-all duration-500'
-          style={{
-            width: `${progress}%`,
-            background: `linear-gradient(90deg, ${color}, ${color}dd)`,
-          }}
-        />
-      </div>
-      <span className='text-xs font-medium text-[#64748b]'>{progress}%</span>
-    </div>
-  )
-}
-
-function MiniRatingChart({ rating, reviews }) {
-  const stars = Array.from({ length: 5 }, (_, i) => (
-    <Star
-      key={i}
-      className={`h-3 w-3 ${i < rating ? `fill-[#f59e0b] text-[#f59e0b]` : `text-[#e2e8f0]`}`}
-    />
-  ))
-
-  return (
-    <div className='flex items-center gap-1'>
-      <div className='flex'>{stars}</div>
-      <span className='text-xs text-[#64748b]'>({reviews})</span>
-    </div>
-  )
-}
-
 function RouteComponent() {
   const params = useParams({ from: '/student/courses/$courseID' })
   const credentials = useSelector((state) => state.studentAuth.credentials)
@@ -194,18 +156,6 @@ function RouteComponent() {
   const [activeTab, setActiveTab] = useState('overview')
 
   const { navigate, dispatch } = useAppUtils()
-
-  const handleMediaAccess = (material) => {
-    if (!isEnrolled) {
-      toast.warning(
-        'Please enroll in this course to access the material content.'
-      )
-      return
-    }
-    if (material.media) {
-      window.open(material.media, '_blank')
-    }
-  }
 
   const getMediaIcon = (type) => {
     switch (type) {
@@ -266,7 +216,9 @@ function RouteComponent() {
       queryClient.invalidateQueries({
         queryKey: ['getCourse', params.courseID, credentials?._id],
       })
-      queryClient.invalidateQueries(coursesQueryOptions({q:"",page:1,userID:credentials?._id}))
+      queryClient.invalidateQueries(
+        coursesQueryOptions({ q: '', page: 1, userID: credentials?._id })
+      )
       // 2) Invalidate Router loader
       await router.invalidate({
         routeId: '/student/courses/$courseID',
@@ -279,70 +231,6 @@ function RouteComponent() {
   const handleEnroll = async () => {
     enrollCourseMutation.mutate()
   }
-
-  // if (isLoading) {
-  //   return (
-  //     <div className='min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] p-6'>
-  //       <div className='mx-auto max-w-7xl'>
-  //         <div className='animate-pulse space-y-6'>
-  //           <div className='h-8 w-1/3 rounded-[12px] bg-[#e2e8f0]'></div>
-  //           <div className='h-64 rounded-[12px] bg-[#e2e8f0]'></div>
-  //           <div className='grid grid-cols-1 gap-6 lg:grid-cols-3'>
-  //             <div className='space-y-4 lg:col-span-2'>
-  //               <div className='h-32 rounded-[12px] bg-[#e2e8f0]'></div>
-  //               <div className='h-48 rounded-[12px] bg-[#e2e8f0]'></div>
-  //             </div>
-  //             <div className='h-96 rounded-[12px] bg-[#e2e8f0]'></div>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   )
-  // }
-
-  // if (isError || !course) {
-  //   return (
-  //     <div className='min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] p-6'>
-  //       <div className='mx-auto max-w-7xl text-center'>
-  //         <Card className='border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] rounded-[12px]'>
-  //           <CardContent className='p-8'>
-  //             <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#ef4444]/10'>
-  //               <svg
-  //                 xmlns="http://www.w3.org/2000/svg"
-  //                 width="32"
-  //                 height="32"
-  //                 viewBox="0 0 24 24"
-  //                 fill="none"
-  //                 stroke="#ef4444"
-  //                 strokeWidth="2"
-  //                 strokeLinecap="round"
-  //                 strokeLinejoin="round"
-  //               >
-  //                 <circle cx="12" cy="12" r="10" />
-  //                 <path d="m15 9-6 6" />
-  //                 <path d="m9 9 6 6" />
-  //               </svg>
-  //             </div>
-  //             <h3 className='text-lg font-semibold text-[#1e293b] mb-2'>
-  //               Failed to load course
-  //             </h3>
-  //             <p className='text-[#64748b] mb-6'>
-  //               {isError ? `Error: ${error.message}` : 'Course data not found.'}
-  //             </p>
-  //             <Button
-  //               variant="outline"
-  //               className='rounded-[8px] border-[#e2e8f0] text-[#2563eb] hover:bg-[#2563eb]/10 hover:text-[#1d4ed8] shadow-[0_4px_6px_rgba(0,0,0,0.05)]'
-  //               onClick={() => window.history.back()}
-  //             >
-  //               <ArrowLeft className='mr-2 h-4 w-4' />
-  //               Back to Courses
-  //             </Button>
-  //           </CardContent>
-  //         </Card>
-  //       </div>
-  //     </div>
-  //   )
-  // }
 
   const defaultCover = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/defaults/course-cover.png`
   const baseMaterialUrl = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses/material/`

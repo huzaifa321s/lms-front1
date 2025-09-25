@@ -22,7 +22,6 @@ import { Route as StudentRegisterRouteImport } from './routes/student/register'
 import { Route as StudentLoginRouteImport } from './routes/student/login'
 import { Route as StudentForgotPasswordRouteImport } from './routes/student/forgot-password'
 import { Route as StudentFailedSubscriptionRouteImport } from './routes/student/failed-subscription'
-import { Route as AdminNewRouteImport } from './routes/admin/new'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminForgotPasswordRouteImport } from './routes/admin/forgot-password'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
@@ -187,11 +186,6 @@ const StudentFailedSubscriptionRoute =
     path: '/failed-subscription',
     getParentRoute: () => StudentRouteRoute,
   } as any)
-const AdminNewRoute = AdminNewRouteImport.update({
-  id: '/admin/new',
-  path: '/admin/new',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/admin/login',
   path: '/admin/login',
@@ -706,7 +700,6 @@ export interface FileRoutesByFullPath {
   '/503': typeof errors503Route
   '/admin/forgot-password': typeof AdminForgotPasswordRoute
   '/admin/login': typeof AdminLoginRoute
-  '/admin/new': typeof AdminNewRoute
   '/student/failed-subscription': typeof StudentFailedSubscriptionRoute
   '/student/forgot-password': typeof StudentForgotPasswordRoute
   '/student/login': typeof StudentLoginRoute
@@ -787,7 +780,6 @@ export interface FileRoutesByTo {
   '/503': typeof errors503Route
   '/admin/forgot-password': typeof AdminForgotPasswordRoute
   '/admin/login': typeof AdminLoginRoute
-  '/admin/new': typeof AdminNewRoute
   '/student/failed-subscription': typeof StudentFailedSubscriptionRoute
   '/student/forgot-password': typeof StudentForgotPasswordRoute
   '/student/login': typeof StudentLoginRoute
@@ -868,7 +860,6 @@ export interface FileRoutesById {
   '/(errors)/503': typeof errors503Route
   '/admin/forgot-password': typeof AdminForgotPasswordRoute
   '/admin/login': typeof AdminLoginRoute
-  '/admin/new': typeof AdminNewRoute
   '/student/failed-subscription': typeof StudentFailedSubscriptionRoute
   '/student/forgot-password': typeof StudentForgotPasswordRoute
   '/student/login': typeof StudentLoginRoute
@@ -954,7 +945,6 @@ export interface FileRouteTypes {
     | '/503'
     | '/admin/forgot-password'
     | '/admin/login'
-    | '/admin/new'
     | '/student/failed-subscription'
     | '/student/forgot-password'
     | '/student/login'
@@ -1035,7 +1025,6 @@ export interface FileRouteTypes {
     | '/503'
     | '/admin/forgot-password'
     | '/admin/login'
-    | '/admin/new'
     | '/student/failed-subscription'
     | '/student/forgot-password'
     | '/student/login'
@@ -1115,7 +1104,6 @@ export interface FileRouteTypes {
     | '/(errors)/503'
     | '/admin/forgot-password'
     | '/admin/login'
-    | '/admin/new'
     | '/student/failed-subscription'
     | '/student/forgot-password'
     | '/student/login'
@@ -1201,7 +1189,6 @@ export interface RootRouteChildren {
   errors503Route: typeof errors503Route
   AdminForgotPasswordRoute: typeof AdminForgotPasswordRoute
   AdminLoginRoute: typeof AdminLoginRoute
-  AdminNewRoute: typeof AdminNewRoute
   TeacherForgotPasswordRoute: typeof TeacherForgotPasswordRoute
   TeacherLoginRoute: typeof TeacherLoginRoute
   TeacherRegisterRoute: typeof TeacherRegisterRoute
@@ -1285,13 +1272,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/student/failed-subscription'
       preLoaderRoute: typeof StudentFailedSubscriptionRouteImport
       parentRoute: typeof StudentRouteRoute
-    }
-    '/admin/new': {
-      id: '/admin/new'
-      path: '/admin/new'
-      fullPath: '/admin/new'
-      preLoaderRoute: typeof AdminNewRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/admin/login': {
       id: '/admin/login'
@@ -2077,7 +2057,6 @@ const rootRouteChildren: RootRouteChildren = {
   errors503Route: errors503Route,
   AdminForgotPasswordRoute: AdminForgotPasswordRoute,
   AdminLoginRoute: AdminLoginRoute,
-  AdminNewRoute: AdminNewRoute,
   TeacherForgotPasswordRoute: TeacherForgotPasswordRoute,
   TeacherLoginRoute: TeacherLoginRoute,
   TeacherRegisterRoute: TeacherRegisterRoute,

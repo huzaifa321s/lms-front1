@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { SettingsProfile } from './profile'
 import { QueryClient, queryOptions } from '@tanstack/react-query'
-import axios from 'axios'
 import { getTeacherCreds } from '../-utils/helperFunctions'
 
 

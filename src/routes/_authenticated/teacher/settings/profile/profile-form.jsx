@@ -33,7 +33,7 @@ import { IconLock } from '@tabler/icons-react'
 
 export default function ProfileForm({teacherCreds}) {
   const dispatch = useDispatch()
-  const [dp, setDp] = useState('')
+  const [dp] = useState('')
   const [passBtnLoading, setPassBtnLoading] = useState(false)
   const [passwordObj, setPasswordObj] = useState({
     password: '',

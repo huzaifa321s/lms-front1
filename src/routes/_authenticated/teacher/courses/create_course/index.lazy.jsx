@@ -10,7 +10,7 @@ import { objectToFormData } from '../../../../../shared/utils/helperFunction';
 import { getTeacherCreds } from '../../-utils/helperFunctions';
 import { Header } from '@/components/layout/header';
 import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Book, Image, NotebookText, Plus, PlusCircleIcon } from 'lucide-react';
 
 const queryClient = new QueryClient();
 
@@ -31,6 +31,8 @@ const categoryQueryOptions = () =>
         return { courseCategories: [],credentiasl:null};
       }
     },
+    retry:1,
+    refetchOnWindowsFocus:false
   });
 
 export const Route = createLazyFileRoute('/_authenticated/teacher/courses/create_course/')({
@@ -166,20 +168,8 @@ function RouteComponent() {
               </div>
               <div className="hidden sm:block w-px h-8 bg-gradient-to-b from-[#e2e8f0] to-[#cbd5e1]"></div>
               <div className="hidden sm:flex items-center gap-2 ">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                </svg>
+               <Plus/>
+                
                 <span className="text-sm font-medium">Add New Course</span>
               </div>
             </div>
@@ -207,27 +197,13 @@ function RouteComponent() {
     
 
       {/* Main Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-8 space-y-8">
+      <div className="relative z-10  px-4 py-8 space-y-8">
         {/* Course Details Card */}
         <div className="relative overflow-hidden rounded-[12px] border border-[#e2e8f0] bg-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-500 group">
           <div className="absolute inset-0 bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           <div className="relative z-10 p-6">
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="28"
-                height="28"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-[#2563eb]"
-              >
-                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-              </svg>
+           <Book/>
               Course Details
             </h2>
             <form className="space-y-6">
@@ -245,22 +221,7 @@ function RouteComponent() {
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-opacity duration-300">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="32"
-                        height="32"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-white"
-                      >
-                        <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-                        <circle cx="9" cy="9" r="2" />
-                        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-                      </svg>
+                     <Image/>
                     </div>
                     <input
                       id="coverImage"
@@ -340,20 +301,7 @@ function RouteComponent() {
           <div className="relative z-10 p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold flex items-center gap-3 bg-gradient-to-r from-[#f59e0b] to-[#d97706] bg-clip-text text-transparent">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="28"
-                  height="28"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-[#f59e0b]"
-                >
-                  <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
-                </svg>
+               <NotebookText/>
                 Course Materials ({courseObj.material.length})
               </h2>
               <div className="flex items-center gap-2">
@@ -369,21 +317,7 @@ function RouteComponent() {
                   className="inline-flex items-center justify-center whitespace-nowrap rounded-[8px] text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-[#e2e8f0] bg-[#f1f5f9] hover:bg-[#e2e8f0] hover:text-[#475569] h-9 px-3 py-2"
                   onClick={addMaterial}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="mr-2"
-                  >
-                    <path d="M5 12h14" />
-                    <path d="M12 5v14" />
-                  </svg>
+                  <PlusCircleIcon/>
                   Add
                 </button>
               </div>

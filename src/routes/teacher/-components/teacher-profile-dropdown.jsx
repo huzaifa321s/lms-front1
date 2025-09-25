@@ -18,34 +18,32 @@ import { LogoutModal } from '../../../shared/components/LogoutModal'
 import { toast } from 'sonner'
 import { Book, ChevronDown, LogOut, Settings, User } from 'lucide-react' // Added for consistency with the second example
 import { getTeacherCreds } from '../../_authenticated/teacher/-utils/helperFunctions'
+import { useQuery } from '@tanstack/react-query'
 
 export function ProfileDropdown() {
- const [credentials, setCredentials] = useState(null)
-  console.log('credentials ===>', credentials)
   const navigate = useNavigate()
   const [logoutModalCondition, setLogoutModalCondition] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch();
   
   const logout = () => {
-    setIsLoading(true)
     dispatch(handleLogout())
-    setIsLoading(false);
     toast.success('You have been logged out successfully.')
     navigate({ to: '/teacher/login' })
   }
 
-   useEffect(() => {
-      async function fetchCredentials() {
-        try {
-          const data = await getTeacherCreds()
-          setCredentials(data)
-        } catch (err) {
-          console.log('err', err)
-        }
-      }
-      fetchCredentials()
-    }, []) 
+   
+  const {
+    data: credentials,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['teacher-creds'],
+    queryFn: getTeacherCreds,
+    staleTime: 1000 * 60 * 5, 
+    cacheTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    retry: 1, 
+  })
   return (
     <>
       <LogoutModal

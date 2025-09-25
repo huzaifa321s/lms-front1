@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
 import axios from 'axios'
 import {
   QueryClient,
@@ -21,6 +21,7 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { objectToFormData } from '../../../../../shared/utils/helperFunction'
 import { Header } from '@/components/layout/header';
+import { ArrowLeft, Notebook } from 'lucide-react'
 
 // Recreating components from shadcn/ui and icons from lucide-react with Tailwind CSS and inline SVGs.
 
@@ -80,38 +81,7 @@ export const Route = createLazyFileRoute(
     queryClient.ensureQueryData(editCourseQueryOptions(params)),
 })
 
-const mockCourseDetails = {
-  _id: '123',
-  name: 'Advanced React Development',
-  description:
-    'Master modern React development with hooks, context, and advanced patterns. Learn to build scalable applications with best practices.',
-  category: '1',
-  coverImage:
-    'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop',
-  material: [
-    {
-      _id: 'mat1',
-      title: 'Introduction to React Hooks',
-      description:
-        'Learn the fundamentals of React Hooks including useState, useEffect, and custom hooks.',
-      media: { name: 'react-hooks-guide.pdf' },
-    },
-    {
-      _id: 'mat2',
-      title: 'State Management with Context',
-      description:
-        'Deep dive into React Context API and state management patterns.',
-      media: { name: 'context-api-tutorial.pdf' },
-    },
-    {
-      _id: 'mat3',
-      title: 'Advanced Component Patterns',
-      description:
-        'Explore render props, higher-order components, and compound components.',
-      media: { name: 'advanced-patterns.pdf' },
-    },
-  ],
-}
+
 
 const defaultCover =
   'https://placehold.co/800x600/E5E7EB/9CA3AF?text=Course+Cover'
@@ -121,7 +91,7 @@ function App() {
   const params = useParams({
     from: '/_authenticated/teacher/courses/edit_course/$courseId',
   })
-  const { data } = useSuspenseQuery(editCourseQueryOptions(params))
+  const { data } = useSuspenseQuery({...editCourseQueryOptions(params),retry:1,refetchOnWindowFocus:false})
   const { courseCategories } = data
 
   console.log('data ==>', data)
@@ -140,11 +110,7 @@ function App() {
   const [removedMaterial, setRemovedMaterial] = useState([])
 
   // Simulating a navigation back function
-  const router = {
-    history: {
-      back: () => console.log("Simulating 'back' navigation..."),
-    },
-  }
+
 
   // Handle Changes for top-level course object
   const handleChange = useCallback((e) => {
@@ -247,7 +213,6 @@ function App() {
     axios,
     toast,
     params,
-    router,
     queryClient,
     editCourseQueryOptions,
   ])
@@ -268,20 +233,7 @@ function App() {
               </div>
               <div className='hidden h-8 w-px bg-gradient-to-b from-[#2563eb]/20 to-[#1d4ed8]/20 sm:block'></div>
               <div className='hidden items-center gap-2 sm:flex'>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  width='20'
-                  height='20'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth='2'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                >
-                  <path d='M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z' />
-                  <path d='M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z' />
-                </svg>
+                <Notebook/>
                 <span className='text-sm font-medium'>
                   Modify Course Details
                 </span>
@@ -293,21 +245,7 @@ function App() {
                 className='rounded-[8px] border-[#e2e8f0] px-4 py-2 font-medium text-[#2563eb] shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-[1.02] hover:bg-[#2563eb]/10 hover:text-[#1d4ed8]'
                 onClick={() => window.history.back()}
               >
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  width='16'
-                  height='16'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth='2'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  className='mr-2'
-                >
-                  <path d='m12 19-7-7 7-7' />
-                  <path d='M19 12H5' />
-                </svg>
+                <ArrowLeft/>
                 Back
               </Button>
               <Button
@@ -446,7 +384,7 @@ function App() {
                       value={courseObj.name}
                       onChange={handleChange}
                       placeholder='e.g., Advanced React Patterns'
-                      className='mt-1 h-10 w-full max-w-md rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#64748b] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'
+                      className='mt-1 h-10 w-full  rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#64748b] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'
                     />
                   </div>
                   <div>
@@ -462,7 +400,7 @@ function App() {
                       value={courseObj.description}
                       onChange={handleChange}
                       placeholder='e.g., Master modern React development with...'
-                      className='mt-1 min-h-[120px] w-full max-w-md resize-y rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#64748b] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'
+                      className='mt-1 min-h-[120px] w-full  resize-y rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#64748b] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'
                     />
                   </div>
                   <div>

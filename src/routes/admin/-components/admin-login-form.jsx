@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/password-input'
 import { handleLogin } from '../../../shared/config/reducers/admin/adminAuthSlice'
+import { useAppUtils } from '../../../hooks/useAppUtils'
 
 export function LoginForm({ className, ...props }) {
   const {
@@ -26,8 +27,7 @@ export function LoginForm({ className, ...props }) {
     reset,
     formState: { errors },
   } = useForm()
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const {navigate,dispatch} = useAppUtils();
   const [isLoading,setIsLoading] = useState(false);
   const handleAdminLogin = useCallback(
     async (data) => {

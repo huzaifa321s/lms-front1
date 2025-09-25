@@ -63,7 +63,7 @@ export function Plans({ mode, setThings}) {
       <div className="w-full max-w-6xl mx-auto">
         <div className="text-center mb-12 sm:mb-16">
           <Show.When isTrue={mode === 'resubscribe'}>
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-800 mb-3 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 ">
+            <h1 className="text-4xl sm:text-5xl font-extrabold mb-3 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 ">
               Welcome Back! Select Your Ideal Plan
             </h1>
             <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto ">
@@ -71,7 +71,7 @@ export function Plans({ mode, setThings}) {
             </p>
           </Show.When>
           <Show.Else>
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-800 mb-3 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 ">
+            <h1 className="text-4xl sm:text-5xl font-extrabold mb-3 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 ">
               Choose Your Plan
             </h1>
             <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto ">
