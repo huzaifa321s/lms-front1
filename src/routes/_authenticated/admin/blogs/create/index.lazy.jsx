@@ -214,7 +214,7 @@ function RouteComponent() {
        <div className="min-h-screen bg-[#f8fafc]">
       <Header >
         <div className="my-2 flex w-full items-center justify-between">
-          <div className="text-2xl font-bold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
+          <div className="text-2xl font-bold bg-clip-text ">
             Create New Blog
           </div>
           <div className="flex items-center gap-3">
@@ -244,7 +244,7 @@ function RouteComponent() {
         </div>
       </Header>
 
-      <div className="max-w-5xl mx-auto p-6">
+      <div className=" p-6">
         {/* Main Card */}
         <div className="bg-white rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] border border-[#e2e8f0] p-8 transition-all duration-300 hover:shadow-lg hover:shadow-[#cbd5e1]/20">
           {/* Decorative Header */}

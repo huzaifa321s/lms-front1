@@ -130,7 +130,7 @@ function RouteComponent() {
   return (
     <>
       <Header >
-        <div className='my-2 flex w-full items-center justify-between max-w-7xl mx-auto px-4'>
+        <div className='my-2 flex w-full items-center justify-between px-4'>
           <div className='text-2xl font-semibold text-white'>Enrolled Students</div>
           <div className='flex items-center gap-4'>
             <Label className="flex items-center gap-2">
@@ -181,7 +181,7 @@ function RouteComponent() {
           </div>
         </div>
       </Header>
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="px-4 py-8">
         <DataTable
           data={students}
           columns={enrolledCoursesSchema}

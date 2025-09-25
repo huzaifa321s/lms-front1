@@ -44,7 +44,7 @@ queryFn: async () => {
  export function DashboardSkeleton() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] relative">
-      <div className="mx-auto max-w-7xl p-6 space-y-8">
+      <div className="p-6 space-y-8">
         {/* Page Heading */}
         <Skeleton className="h-8 w-40" />
 

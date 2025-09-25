@@ -143,7 +143,7 @@ function RouteComponent() {
   return (
     <div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50'>
       <Header>
-        <h1 className='my-2 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 bg-clip-text text-2xl font-extrabold tracking-tight text-transparent drop-shadow-lg md:text-3xl'>
+        <h1 className='my-2 bg-clip-text text-2xl font-extrabold tracking-tight  drop-shadow-lg md:text-3xl'>
           Enrolled Courses
         </h1>
         <TopNav links={topNav} />

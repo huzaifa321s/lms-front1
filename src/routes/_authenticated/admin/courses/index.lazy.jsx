@@ -141,12 +141,12 @@ const handlePagination = (newPageIndex) => {
     <>
       <Header >
         <div className="my-2 flex w-full justify-between">
-          <div className="text-2xl font-semibold text-[#1e293b] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
+          <div className="text-2xl font-semibold  bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-white">
             Courses
           </div>
         </div>
       </Header>
-      <Main className="max-w-7xl mx-auto px-4 py-8 pt-20">
+      <Main className=" px-4 py-8 ">
         <CoursesSummary 
           fetchStatus={statusFetchStatus} 
           total={coursesStatus?.total} 

@@ -8,6 +8,9 @@ import { QueryClient, queryOptions, useQueryClient, useSuspenseQuery } from '@ta
 import { useAppUtils } from '../../../../../hooks/useAppUtils';
 import { objectToFormData } from '../../../../../shared/utils/helperFunction';
 import { getTeacherCreds } from '../../-utils/helperFunctions';
+import { Header } from '@/components/layout/header';
+import { Button } from '@/components/ui/button'
+import { ArrowLeft } from 'lucide-react';
 
 const queryClient = new QueryClient();
 
@@ -155,23 +158,14 @@ function RouteComponent() {
 
   return (
     <div className="min-h-screen font-sans bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#f1f5f9]">
-      {/* Background glow effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-[#f59e0b] to-[#d97706] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-[#10b981] to-[#059669] rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-500"></div>
-      </div>
-
-      {/* Header */}
-      <div className="relative z-10 bg-white border-b border-[#e2e8f0] shadow-[0_2px_10px_rgba(0,0,0,0.1)]">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+        <Header >
           <div className="flex w-full items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="text-3xl font-bold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
+              <div className="text-3xl font-bold  bg-clip-text ">
                 Create Course
               </div>
               <div className="hidden sm:block w-px h-8 bg-gradient-to-b from-[#e2e8f0] to-[#cbd5e1]"></div>
-              <div className="hidden sm:flex items-center gap-2 text-[#2563eb]">
+              <div className="hidden sm:flex items-center gap-2 ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -190,31 +184,27 @@ function RouteComponent() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <button
-                className="inline-flex items-center justify-center whitespace-nowrap rounded-[8px] text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-[#e2e8f0] bg-[#f1f5f9] hover:bg-[#e2e8f0] hover:text-[#475569] h-9 px-3 py-2"
+                <Button
+                size='sm'
+                variant='outline'
+                className='border-[#e2e8f0] text-[#475569] hover:bg-[#e2e8f0] rounded-[8px] transition-all duration-300'
                 onClick={() => window.history.back()}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="mr-2"
-                >
-                  <path d="m12 19-7-7 7-7" />
-                  <path d="M19 12H5" />
-                </svg>
+                <ArrowLeft className='mr-2 h-4 w-4' />
                 Back
-              </button>
+              </Button>
             </div>
           </div>
-        </div>
+      </Header>
+      {/* Background glow effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-[#f59e0b] to-[#d97706] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-[#10b981] to-[#059669] rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-500"></div>
       </div>
+
+      {/* Header */}
+    
 
       {/* Main Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-8 space-y-8">

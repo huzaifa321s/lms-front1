@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { columns } from "./topCoursesColumns"
+import { useNavigate } from "@tanstack/react-router"
 
 export function TopCourses({ data }) {
   const [state, setState] = useState({
@@ -21,6 +22,8 @@ export function TopCourses({ data }) {
     sorting: [],
   })
 
+
+  const navigate = useNavigate(({to:"/admin/courses"}))
   const table = useReactTable({
     data,
     columns,
@@ -39,11 +42,39 @@ export function TopCourses({ data }) {
   })
 
   return (
-   <div className="space-y-4">
-      <div className="relative rounded-[12px] bg-white border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300">
+  <div className="space-y-6 p-4 bg-gradient-to-b from-[#1e293b] to-[#0f172a] rounded-[12px] shadow-[0_6px_16px_rgba(0,0,0,0.3)]">
+      {/* Working On It Message */}
+      <div className="flex items-center justify-center py-3 px-4 bg-[#2563eb]/20 border border-[#2563eb]/50 rounded-[8px] text-[#bfdbfe] text-sm font-medium shadow-sm">
+        <span className="flex items-center gap-2">
+          <svg
+            className="w-5 h-5 animate-spin"
+            fill="none"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="#bfdbfe"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="#bfdbfe"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            />
+          </svg>
+          We are working on it!
+        </span>
+      </div>
+
+      {/* Table */}
+      <div className="relative rounded-[12px] bg-white/95 backdrop-blur-sm border border-[#475569] shadow-[0_6px_16px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] transition-all duration-300 overflow-hidden">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
+        {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="border-b border-[#e2e8f0]">
                 {headerGroup.headers.map((header) => (
                   <TableHead 
@@ -59,7 +90,7 @@ export function TopCourses({ data }) {
           </TableHeader>
 
           <TableBody>
-            {table.getRowModel().rows.length ? (
+          {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow 
                   key={row.id} 
@@ -89,11 +120,12 @@ export function TopCourses({ data }) {
         </Table>
       </div>
 
+      {/* Button */}
       <Button
-        size="xs"
+        size="sm"
         variant="outline"
-        disabled={true}
-        className="rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] font-semibold focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
+        onClick={() => navigate({to:"/admin/courses"})}
+        className="rounded-[8px] border-[#2563eb] bg-[#2563eb]/10 text-[#bfdbfe] hover:bg-[#2563eb]/20 hover:border-[#1d4ed8] hover:text-[#e2e8f0] font-semibold focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
       >
         View All Courses
       </Button>

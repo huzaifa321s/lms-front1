@@ -144,7 +144,7 @@ function RouteComponent() {
       <Header >
         <TopNav links={topNav} />
       </Header>
-      <Main className="max-w-7xl mx-auto px-4 py-8 pt-20">
+      <Main className="px-4 py-8 ">
         <h1 className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-2xl font-extrabold tracking-tight text-transparent md:text-3xl">
           Teachers Management
         </h1>

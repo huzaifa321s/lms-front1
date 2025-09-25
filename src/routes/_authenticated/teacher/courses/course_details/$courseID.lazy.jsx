@@ -37,6 +37,8 @@ import { Input } from '@/components/ui/input'
 import { useAppUtils } from '../../../../../hooks/useAppUtils'
 import { openModal } from '../../../../../shared/config/reducers/teacher/teacherDialogSlice'
 import { format } from 'date-fns'
+import { Header } from '@/components/layout/header';
+
 
 const queryClient = new QueryClient()
 
@@ -173,24 +175,16 @@ console.log('fitleredStudents ====>',filteredStudents)
   }
 
   return (
- <div className='min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#f1f5f9]'>
-      {/* Background glow effects */}
-      <div className='pointer-events-none absolute inset-0 overflow-hidden'>
-        <div className='absolute -top-40 -right-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] opacity-20 mix-blend-multiply blur-xl filter'></div>
-        <div className='absolute -bottom-40 -left-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#f59e0b] to-[#d97706] opacity-20 mix-blend-multiply blur-xl filter delay-1000'></div>
-        <div className='absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 transform animate-pulse rounded-full bg-gradient-to-r from-[#10b981] to-[#059669] opacity-10 mix-blend-multiply blur-xl filter delay-500'></div>
-      </div>
+ <div className='h-fit bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#f1f5f9]'>
+     <Header >
 
-      {/* Header */}
-      <div className='relative z-10 border-b border-[#e2e8f0] bg-white shadow-[0_2px_10px_rgba(0,0,0,0.1)]'>
-        <div className='mx-auto max-w-7xl px-4 py-4'>
           <div className='flex w-full items-center justify-between'>
             <div className='flex items-center gap-4'>
-              <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-3xl font-bold text-transparent'>
+              <div className=' bg-clip-text text-3xl font-bold'>
                 Course Details
               </div>
               <div className='hidden h-8 w-px bg-gradient-to-b from-[#e2e8f0] to-[#cbd5e1] sm:block'></div>
-              <div className='hidden items-center gap-2 text-[#2563eb] sm:flex'>
+              <div className='hidden items-center gap-2  sm:flex'>
                 <BookOpen size={20} />
                 <span className='text-sm font-medium'>
                   Comprehensive Overview
@@ -227,10 +221,19 @@ console.log('fitleredStudents ====>',filteredStudents)
               </Button>
             </div>
           </div>
-        </div>
+   
+      </Header>
+      {/* Background glow effects */}
+      <div className='pointer-events-none absolute inset-0 overflow-hidden'>
+        <div className='absolute -top-40 -right-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] opacity-20 mix-blend-multiply blur-xl filter'></div>
+        <div className='absolute -bottom-40 -left-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#f59e0b] to-[#d97706] opacity-20 mix-blend-multiply blur-xl filter delay-1000'></div>
+        <div className='absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 transform animate-pulse rounded-full bg-gradient-to-r from-[#10b981] to-[#059669] opacity-10 mix-blend-multiply blur-xl filter delay-500'></div>
       </div>
 
-      <div className='relative z-10 mx-auto max-w-7xl space-y-8 px-4 py-8'>
+      {/* Header */}
+   
+
+      <div className='relative z-10  space-y-8 px-4 py-8'>
         {/* Course Hero Card */}
         <Card className='group relative overflow-hidden border border-[#e2e8f0] bg-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] rounded-[12px] transition-all duration-500 hover:shadow-lg hover:shadow-[#cbd5e1]/20'>
           <div className='absolute inset-0 bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100'></div>

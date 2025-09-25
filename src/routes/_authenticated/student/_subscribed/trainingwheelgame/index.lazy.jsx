@@ -69,9 +69,9 @@ function RouteComponent() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       {/* Header */}
       <Header>
-        <h1 className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 
-                       bg-clip-text text-3xl font-bold tracking-tight text-transparent 
-                       drop-shadow-sm md:text-4xl">
+        <h1 className=" 
+                       bg-clip-text text-2xl font-bold tracking-tight  
+                       drop-shadow-sm ">
           Training Wheel Game
         </h1>
       </Header>

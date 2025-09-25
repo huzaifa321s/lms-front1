@@ -125,7 +125,7 @@ function RouteComponent() {
       <Header>
          <TopNav links={topNav} />
         <div className='my-2 flex w-full items-center justify-between max-w-7xl mx-auto px-4'>
-          <div className='text-2xl font-semibold text-[#1e293b]'>Training Wheel Game</div>
+          <div className='text-2xl font-semibold '>Training Wheel Game</div>
           <div className='flex items-center gap-4'>
             <Button
               size='sm'
@@ -180,7 +180,7 @@ function RouteComponent() {
           </div>
         </div>
       </Header>
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className=" px-4 py-8">
         <DataTable
           data={games}
           columns={trainingWheelGamesSchema}

@@ -38,7 +38,7 @@ export default function Dashboard() {
       </Header>
 
       {/* ===== Main ===== */}
-      <Main className="mx-auto max-w-7xl p-6">
+      <Main className=" p-6">
         <Tabs orientation="vertical" defaultValue="overview" className="space-y-4">
           <div className="w-full overflow-x-auto pb-2">
             <TabsList className="flex gap-2 bg-transparent">

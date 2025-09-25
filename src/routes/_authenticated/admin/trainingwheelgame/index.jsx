@@ -118,7 +118,7 @@ function RouteComponent() {
    <div className="min-h-screen bg-[#f8fafc]">
       <Header >
         <div className="my-2 flex w-full items-center justify-between">
-          <div className="text-2xl font-semibold text-[#1e293b] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
+          <div className="text-2xl font-semibold text-white bg-clip-text text-transparent">
             Training Wheel Game
           </div>
           <div className="flex items-center gap-4">
@@ -173,7 +173,7 @@ function RouteComponent() {
           </div>
         </div>
       </Header>
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className=" px-4 py-8">
         <DataTable
           data={games}
           columns={trainingWheelGamesSchemaAdmin}

@@ -73,8 +73,8 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
             className={cn(
               'text-sm font-medium transition-all duration-200 rounded-[8px] px-3 py-2',
               isActive
-                ? 'text-[#bfdbfe] bg-[#2563eb]/20'
-                : 'text-[#e2e8f0] hover:bg-[#2563eb]/20 hover:text-[#bfdbfe]',
+                ? 'text-white bg-blue-500'
+                : 'text-[#e2e8f0] hover:bg-blue-400 hover:text-[#bfdbfe]',
               disabled && 'opacity-50 cursor-not-allowed'
             )}
           >

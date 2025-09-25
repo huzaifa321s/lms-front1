@@ -187,20 +187,12 @@ function RouteComponent() {
 
   return (
     <div className='relative min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#f1f5f9] font-sans'>
-      {/* Background Glow */}
-      <div className='pointer-events-none absolute inset-0 overflow-hidden'>
-        <div className='absolute -top-40 -right-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] opacity-20 mix-blend-multiply blur-xl filter'></div>
-        <div className='absolute -bottom-40 -left-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#f59e0b] to-[#d97706] opacity-20 mix-blend-multiply blur-xl filter delay-1000'></div>
-        <div className='absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 transform animate-pulse rounded-full bg-gradient-to-r from-[#10b981] to-[#059669] opacity-10 mix-blend-multiply blur-xl filter delay-500'></div>
-      </div>
-
-      <Header >
-        <div className='relative z-10 mx-auto my-4 flex w-full max-w-7xl items-center justify-between px-4'>
-          <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-2xl font-bold text-transparent'>
+        <Header >
+        <div className='relative z-10  my-4 flex w-full  items-center justify-between px-4'>
+          <div className='bg-clip-text text-2xl font-bold '>
             Add Game Question
           </div>
           <Button
-            size='lg'
             variant='outline'
             className='rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] shadow-lg transition-all duration-300 hover:bg-[#e2e8f0] hover:text-[#475569] hover:shadow-[#cbd5e1]/50 focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
             onClick={() => window.history.back()}
@@ -210,8 +202,16 @@ function RouteComponent() {
           </Button>
         </div>
       </Header>
+      {/* Background Glow */}
+      <div className='pointer-events-none absolute inset-0 overflow-hidden'>
+        <div className='absolute -top-40 -right-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] opacity-20 mix-blend-multiply blur-xl filter'></div>
+        <div className='absolute -bottom-40 -left-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#f59e0b] to-[#d97706] opacity-20 mix-blend-multiply blur-xl filter delay-1000'></div>
+        <div className='absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 transform animate-pulse rounded-full bg-gradient-to-r from-[#10b981] to-[#059669] opacity-10 mix-blend-multiply blur-xl filter delay-500'></div>
+      </div>
 
-      <Main className='mx-auto max-w-4xl px-4 py-8'>
+    
+
+      <Main className='px-4 py-8'>
         <Card className='relative overflow-hidden rounded-[12px] border border-[#e2e8f0] bg-white p-6 shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-500 hover:shadow-lg hover:shadow-[#cbd5e1]/20'>
           <CardContent className='relative z-10 space-y-6'>
             {/* Question */}

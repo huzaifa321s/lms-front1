@@ -111,7 +111,7 @@ export default function Dashboard() {
       </Header>
 
       {/* ===== Main ===== */}
-      <Main className="max-w-7xl mx-auto px-4 py-8">
+      <Main className="px-4 py-8">
         <h1 className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent drop-shadow-lg mb-4">
           Dashboard
         </h1>
@@ -195,19 +195,19 @@ export default function Dashboard() {
           </TabsContent>
 
           {/* ===== Analytics Tab ===== */}
-          <TabsContent value="analytics" className="space-y-6">
-            <EarningsCard
-              totalEarnings={earningsCardData?.total}
-              thisMonthTotal={earningsCardData?.thisMonthTotalEarnings}
-              earnings={earningsCardData?.earnings}
-              months={earningsCardData?.months}
-            />
-            <div className="flex flex-wrap gap-4">
-              {topTeachers?.length > 0 && <TopTeachersCard topTeachers={topTeachers} />}
-              <CategoriesPopularityChart />
-            </div>
-            <ActiveInactiveStudents />
-          </TabsContent>
+        <TabsContent value="analytics" className="space-y-6">
+  <EarningsCard
+    totalEarnings={earningsCardData?.total}
+    thisMonthTotal={earningsCardData?.thisMonthTotalEarnings}
+    earnings={earningsCardData?.earnings}
+    months={earningsCardData?.months}
+  />
+  <div className="flex flex-wrap gap-4 w-full">
+    {topTeachers?.length > 0 && <TopTeachersCard topTeachers={topTeachers} />}
+    <CategoriesPopularityChart />
+  </div>
+  <ActiveInactiveStudents />
+</TabsContent>
         </Tabs>
       </Main>
     </>

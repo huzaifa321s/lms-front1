@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { objectToFormData } from '../../../../../shared/utils/helperFunction'
+import { Header } from '@/components/layout/header';
 
 // Recreating components from shadcn/ui and icons from lucide-react with Tailwind CSS and inline SVGs.
 
@@ -257,23 +258,16 @@ function App() {
   }
 
   return (
-    <div className='relative min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] font-sans'>
-      {/* Background decorative effects */}
-      <div className='pointer-events-none absolute inset-0 overflow-hidden'>
-        <div className='absolute -top-40 -right-40 h-80 w-80 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-3xl'></div>
-        <div className='absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-3xl'></div>
-      </div>
-
-      {/* Header */}
-      <Card className='relative z-10 rounded-none border-b border-[#e2e8f0] bg-white/95 shadow-[0_4px_6px_rgba(0,0,0,0.05)] backdrop-blur-sm'>
-        <CardContent className='mx-auto max-w-1/2 px-4 py-4 sm:px-6'>
+    <div className='h-fit   bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] font-sans'>
+        <Header >
+        
           <div className='flex w-full items-center justify-between gap-2'>
             <div className='flex items-center gap-6'>
-              <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-2xl font-bold text-transparent'>
+              <div className=' bg-clip-text text-2xl font-bold'>
                 Edit Course
               </div>
               <div className='hidden h-8 w-px bg-gradient-to-b from-[#2563eb]/20 to-[#1d4ed8]/20 sm:block'></div>
-              <div className='hidden items-center gap-2 text-[#2563eb] sm:flex'>
+              <div className='hidden items-center gap-2 sm:flex'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   width='20'
@@ -347,11 +341,18 @@ function App() {
               </Button>
             </div>
           </div>
-        </CardContent>
-      </Card>
+      </Header>
+      {/* Background decorative effects */}
+      <div className='pointer-events-none absolute inset-0 overflow-hidden'>
+        <div className='absolute -top-40 -right-40 h-80 w-80 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-3xl'></div>
+        <div className='absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-3xl'></div>
+      </div>
+
+      {/* Header */}
+    
 
       {/* Main Content */}
-      <div className='relative z-10 mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6'>
+      <div className='relative z-10 space-y-8 px-4 py-8 sm:px-6'>
         {/* Course Details Card */}
         <Card className='relative overflow-hidden rounded-[8px] border border-[#e2e8f0] bg-white/95 shadow-[0_4px_6px_rgba(0,0,0,0.05)] backdrop-blur-sm transition-all duration-300 hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]'>
           <CardHeader>

@@ -103,7 +103,6 @@ function RouteComponent() {
     enrolledStudentsQueryOption(courseID)
   )
   const navigate = useNavigate()
-
   const [courseObj, setCourseObj] = useState(data)
   const defaultCover = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/defaults/course-cover.png`
   const [cover, setCover] = useState(
@@ -114,7 +113,33 @@ function RouteComponent() {
   const baseMaterialUrl = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses/material`
 
   return (
+    <>
+      <Header >
+        <div className="relative z-10 my-4 flex w-full items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-3xl font-bold text-white">
+              Course Overview
+            </div>
+            <div className="hidden h-8 w-px bg-gradient-to-b from-[#e2e8f0] to-[#cbd5e1] sm:block"></div>
+            <div className="hidden items-center gap-2 text-white sm:flex">
+              <BookOpen size={20} />
+              <span className="text-sm font-medium">Detailed Information</span>
+            </div>
+          </div>
+          <Button
+            
+            variant="outline"
+            className="group rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300"
+            onClick={() => window.history.back()}
+          >
+            <ArrowLeft className="h-5 w-5 text-[#2563eb] transition-transform duration-200 group-hover:-translate-x-1 group-hover:transform" />
+            <span className="ml-2 hidden sm:inline">Back</span>
+          </Button>
+        </div>
+      </Header>
+  
    <div className="min-h-screen bg-[#f8fafc]">
+    
       {/* Background glow effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] opacity-20 mix-blend-multiply blur-xl filter"></div>
@@ -122,31 +147,9 @@ function RouteComponent() {
         <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 transform animate-pulse rounded-full bg-gradient-to-r from-[#2563eb] to-[#10b981] opacity-10 mix-blend-multiply blur-xl filter delay-500"></div>
       </div>
 
-      <Header >
-        <div className="relative z-10 my-4 flex w-full items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-3xl font-bold text-transparent">
-              Course Overview
-            </div>
-            <div className="hidden h-8 w-px bg-gradient-to-b from-[#e2e8f0] to-[#cbd5e1] sm:block"></div>
-            <div className="hidden items-center gap-2 text-[#2563eb] sm:flex">
-              <BookOpen size={20} />
-              <span className="text-sm font-medium">Detailed Information</span>
-            </div>
-          </div>
-          <Button
-            size="lg"
-            variant="outline"
-            className="group rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300"
-            onClick={() => navigate(-1)}
-          >
-            <ArrowLeft className="h-5 w-5 text-[#2563eb] transition-transform duration-200 group-hover:-translate-x-1 group-hover:transform" />
-            <span className="ml-2 hidden sm:inline">Back</span>
-          </Button>
-        </div>
-      </Header>
+    
 
-      <div className="relative z-10 mx-4 mb-8 space-y-6 max-w-7xl mx-auto px-4 py-8">
+      <div className="relative z-10 mb-8 space-y-6  px-4 py-8">
         {/* Course Hero Card */}
         <Card className="group relative overflow-hidden border border-[#e2e8f0] bg-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300">
           <div className="absolute inset-0 bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
@@ -429,5 +432,6 @@ function RouteComponent() {
         }
       `}</style>
     </div>
+      </>
   )
 }

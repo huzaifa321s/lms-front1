@@ -16,6 +16,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   useSidebar,
+  SidebarSeparator
 } from '@/components/ui/sidebar'
 
 import {
@@ -118,10 +119,13 @@ const SidebarMenuLink = ({ item, href }) => {
             {item.icon && (
               <item.icon className="h-4 w-4 transition-all duration-200 group-hover:scale-110 group-hover:text-chart-1" />
             )}
+            
             <span className="font-medium transition-all duration-200 group-hover:translate-x-0.5">{item.title}</span>
             {item.badge && <NavBadge>{item.badge}</NavBadge>}
           </div>
+          
         </Link>
+        
       </SidebarMenuButton>
     </SidebarMenuItem>
   )
@@ -133,6 +137,9 @@ const SidebarMenuCollapsible = ({ item, href }) => {
   const dispatch = useDispatch()
 
   return (
+    <>
+       <SidebarSeparator/>
+  
     <Collapsible asChild defaultOpen={checkIsActive(href, item, true)} className="group/collapsible">
       <SidebarMenuItem>
         <CollapsibleTrigger asChild>
@@ -177,6 +184,7 @@ const SidebarMenuCollapsible = ({ item, href }) => {
         </CollapsibleContent>
       </SidebarMenuItem>
     </Collapsible>
+      </>
   )
 }
 
@@ -185,6 +193,7 @@ const SidebarMenuCollapsedDropdown = ({ item, href }) => {
   return (
     <SidebarMenuItem>
       <DropdownMenu>
+   
         <DropdownMenuTrigger asChild>
           <SidebarMenuButton
             tooltip={item.title}

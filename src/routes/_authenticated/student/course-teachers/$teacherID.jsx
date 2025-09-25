@@ -236,7 +236,7 @@ function RouteComponent() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] via-white to-[#f1f5f9]">
       <Header>
-        <h1 className="w-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-xl font-extrabold tracking-tight text-transparent drop-shadow-lg md:text-2xl">
+        <h1 className="w-full bg-clip-text text-xl font-extrabold tracking-tight  drop-shadow-lg md:text-2xl">
           Teacher Details
         </h1>
         <div className="my-3 flex w-full items-center justify-between">
@@ -244,7 +244,7 @@ function RouteComponent() {
             size="sm"
             variant="outline"
             onClick={() => window.history.back()}
-            className="ml-auto transform border-0 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+            className="ml-auto transform border-0  text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

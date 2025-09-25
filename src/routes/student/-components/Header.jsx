@@ -10,9 +10,7 @@ function Header() {
 
     const dispatch = useDispatch()
     const navigate = useNavigate();
-    const defaultProfile = "https://img.freepik.com/premium-vector/people-profile-graphic_24911-21373.jpg?w=826"
-    const credentials = useSelector((state) => state.studentAuth.credentials);
-    const { noOfNotifications, pageTitle } = useSelector(state => state.header)
+
 
 
     function logoutUser() {

@@ -156,7 +156,7 @@ function RouteComponent() {
   return (
     <>
       <Header>
-    <h1 className='bg-gradient-to-r w-full from-[#2563eb] via-[#1e40af] to-[#1d4ed8] bg-clip-text text-xl font-extrabold tracking-tight text-transparent drop-shadow-lg md:text-2xl'>
+    <h1 className=' w-full  bg-clip-text text-xl font-extrabold tracking-tight  drop-shadow-lg md:text-2xl'>
   My Teachers
 </h1>
         <div className='my-2 flex w-full justify-between'>

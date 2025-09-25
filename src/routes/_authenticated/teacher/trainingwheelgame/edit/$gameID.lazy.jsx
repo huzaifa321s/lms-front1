@@ -185,27 +185,19 @@ function RouteComponent() {
 
   return (
     <div className="min-h-screen font-sans bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#f1f5f9]">
-      {/* Background glow effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-[#f59e0b] to-[#d97706] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-[#10b981] to-[#059669] rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-500"></div>
-      </div>
-
-      <Header >
-        <div className="relative z-10 my-4 flex w-full items-center justify-between max-w-7xl mx-auto px-4">
+          <Header >
+        <div className="relative z-10 my-4 flex w-full items-center justify-between  px-4">
           <div className="flex items-center gap-4">
-            <div className="text-3xl font-bold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
+            <div className="text-3xl font-bold bg-gradient-to-r  bg-clip-text">
               Update Game Question
             </div>
             <div className="hidden sm:block w-px h-8 bg-gradient-to-b from-[#e2e8f0] to-[#cbd5e1]"></div>
-            <div className="hidden sm:flex items-center gap-2 text-[#2563eb]">
+            <div className="hidden sm:flex items-center gap-2 ">
               <GamepadIcon size={20} />
               <span className="text-sm font-medium">Training Wheel Game</span>
             </div>
           </div>
           <Button
-            size="lg"
             variant="outline"
             className="rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:text-[#475569] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-lg hover:shadow-[#cbd5e1]/50 transition-all duration-300"
             onClick={() => window.history.back()}
@@ -215,8 +207,16 @@ function RouteComponent() {
           </Button>
         </div>
       </Header>
+      {/* Background glow effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-[#f59e0b] to-[#d97706] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-[#10b981] to-[#059669] rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-500"></div>
+      </div>
 
-      <div className="relative z-10 mx-4 mb-8 max-w-4xl mx-auto">
+  
+
+      <div className="relative z-10  mb-8">
         <Card className="group relative overflow-hidden rounded-[12px] border border-[#e2e8f0] bg-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-500">
           <div className="absolute inset-0 bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           <CardContent className="relative z-10 p-8 space-y-8">

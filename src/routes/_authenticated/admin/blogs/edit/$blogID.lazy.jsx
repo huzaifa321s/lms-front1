@@ -107,14 +107,10 @@ function BlogEditPage() {
   }, [blogObj, blogID, router, queryClient]);
 
   return (
-      <div className="relative min-h-screen bg-[#f8fafc]">
-      {/* Background decoration */}
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#2563eb]/10 via-transparent to-transparent"></div>
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-[#10b981]/10 via-transparent to-transparent"></div>
-
+    <>
       <Header >
         <div className="my-2 flex w-full items-center justify-between">
-          <div className="text-2xl font-bold text-[#1e293b] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
+          <div className="text-2xl font-bold   bg-clip-text">
             Edit Blog
           </div>
           <div className="flex gap-4 items-center">
@@ -130,8 +126,16 @@ function BlogEditPage() {
           </div>
         </div>
       </Header>
+   
+      <div className="relative min-h-screen bg-[#f8fafc]">
+        
+      {/* Background decoration */}
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#2563eb]/10 via-transparent to-transparent"></div>
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-[#10b981]/10 via-transparent to-transparent"></div>
 
-      <main className="relative z-10 max-w-7xl mx-auto p-6 md:p-10 rounded-[12px] bg-white border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300">
+    
+
+      <main className="relative z-10  p-6 md:p-10 rounded-[12px] bg-white border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Main content area */}
           <div className="flex-1 space-y-6">
@@ -267,6 +271,7 @@ function BlogEditPage() {
         </div>
       </main>
     </div>
+     </>
   );
 }
 
