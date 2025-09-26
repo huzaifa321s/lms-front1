@@ -186,7 +186,8 @@ function RouteComponent() {
   )
 
   return (
-    <div className='relative min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#f1f5f9] font-sans'>
+   <>
+   
         <Header >
         <div className='relative z-10  my-4 flex w-full  items-center justify-between px-4'>
           <div className='bg-clip-text text-2xl font-bold '>
@@ -202,6 +203,7 @@ function RouteComponent() {
           </Button>
         </div>
       </Header>
+       <div className='relative min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#f1f5f9] font-sans'>
       {/* Background Glow */}
       <div className='pointer-events-none absolute inset-0 overflow-hidden'>
         <div className='absolute -top-40 -right-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] opacity-20 mix-blend-multiply blur-xl filter'></div>
@@ -369,5 +371,6 @@ function RouteComponent() {
         </Card>
       </Main>
     </div>
+    </>
   )
 }

@@ -31,7 +31,7 @@ export const Header = ({
   return (
     <header
       className={cn(
-        'bg-[#0f172a] flex h-16 items-center gap-3 p-4 sm:gap-4 text-[#e2e8f0] w-full',
+        'bg-[#0f172a] flex h-13 items-center gap-3 p-4 sm:gap-4 text-[#e2e8f0] w-full',
         fixed && 'header-fixed peer/header fixed z-50 rounded-md',
         'shadow-none transition-none',
         className
@@ -40,9 +40,9 @@ export const Header = ({
     >
       <SidebarTrigger
         variant='outline'
-        className='scale-125 sm:scale-100 text-[#bfdbfe] border-[#475569] bg-[#2563eb]/20'
+        className='scale-125 sm:scale-100 text-white border-blue-500 bg-blue-500'
       />
-      <Separator orientation='vertical' className='h-6 bg-[#475569]' />
+      <Separator orientation='vertical' className='h-6 bg-white' />
       {children}
     </header>
   )

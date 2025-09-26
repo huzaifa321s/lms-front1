@@ -115,7 +115,8 @@ function RouteComponent() {
 
   console.log('data ===>', data)
   return (
-   <div className="min-h-screen bg-[#f8fafc]">
+    <>
+    
       <Header >
         <div className="my-2 flex w-full items-center justify-between">
           <div className="text-2xl font-semibold text-white bg-clip-text text-transparent">
@@ -173,6 +174,8 @@ function RouteComponent() {
           </div>
         </div>
       </Header>
+         <div className="min-h-screen bg-[#f8fafc]">
+
       <div className=" px-4 py-8">
         <DataTable
           data={games}
@@ -187,5 +190,6 @@ function RouteComponent() {
         />
       </div>
     </div>
+    </>
   )
 }

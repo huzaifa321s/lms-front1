@@ -100,7 +100,8 @@ function RouteComponent() {
   
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50'>
+    <>
+    
       {/* Header */}
       <Header>
         <h1
@@ -134,6 +135,7 @@ function RouteComponent() {
           </Button>
         </div>
       </Header>
+      <div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50'>
       {/* Course Card */}
       <div className='mx-4 mt-4'>
         <div className='group relative overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:shadow-lg'>
@@ -337,6 +339,7 @@ function RouteComponent() {
         </div>
       </div>
     </div>
+    </>
   )
 }
 

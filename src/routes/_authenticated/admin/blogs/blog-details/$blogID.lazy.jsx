@@ -69,8 +69,9 @@ const {navigate,dispatch} = useAppUtils();
   console.log('blogDetails ==>',blogDetails)
 
    return (
-    <div className="min-h-screen bg-[#f8fafc]">
-         <Header >
+    <>
+    
+      <Header >
 
           
         
@@ -117,6 +118,7 @@ const {navigate,dispatch} = useAppUtils();
           </div>
         
 </Header>
+ <div className="min-h-screen bg-[#f8fafc]">
       <div className="p-6 ">
        
         <main className="">
@@ -181,5 +183,6 @@ const {navigate,dispatch} = useAppUtils();
         </main>
       </div>
     </div>
+    </>
   )
 }

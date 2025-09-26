@@ -24,7 +24,7 @@ export function AppSidebar({ role, ...props }) {
     alt="Bruce LMS"
     width="40"
     height="40"
-    className="rounded-full shadow-md"
+    className="rounded-full shadow-md border-[2px] border-blue-500"
     loading="lazy"
   />
   <h1 className="bg-clip-text text-lg font-extrabold tracking-tight drop-shadow-md">

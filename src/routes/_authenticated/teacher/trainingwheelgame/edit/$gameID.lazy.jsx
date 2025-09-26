@@ -183,7 +183,8 @@ function RouteComponent() {
   console.log('gameObj ===>', gameObj);
 
   return (
-    <div className="min-h-screen font-sans bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#f1f5f9]">
+  <>
+  
           <Header >
         <div className="relative z-10 my-4 flex w-full items-center justify-between  px-4">
           <div className="flex items-center gap-4">
@@ -206,6 +207,7 @@ function RouteComponent() {
           </Button>
         </div>
       </Header>
+        <div className="min-h-screen font-sans bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#f1f5f9]">
       {/* Background glow effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
@@ -385,5 +387,6 @@ function RouteComponent() {
         </Card>
       </div>
     </div>
+    </>
   );
 }

@@ -150,7 +150,8 @@ function RouteComponent() {
       const baseUrl = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses`;
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50'>
+    <>
+    
       <Header>
         <h1 className='my-2 bg-clip-text text-2xl font-extrabold tracking-tight  drop-shadow-lg md:text-3xl'>
           Enrolled Courses
@@ -183,7 +184,7 @@ function RouteComponent() {
           </Show>
         </div>
       </Header>
-
+<div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50'>
       <div className='p-6'>
         <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
           <Show>
@@ -241,6 +242,7 @@ function RouteComponent() {
         </div>
       </div>
     </div>
+    </>
   )
 }
 

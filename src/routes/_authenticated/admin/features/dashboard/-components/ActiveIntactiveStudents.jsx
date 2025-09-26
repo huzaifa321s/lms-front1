@@ -6,8 +6,8 @@ export default function ActiveInactiveStudents() {
   const data = [
     { name: "Active Students", value: 120 },
     { name: "Inactive Students", value: 45 },
-  ] 
- 
+  ]
+
   const COLORS = ["#2563eb", "#ef4444"] // Primary Blue, Danger Red
 
   return (

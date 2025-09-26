@@ -138,7 +138,7 @@ const SidebarMenuCollapsible = ({ item, href }) => {
 
   return (
     <>
-       <SidebarSeparator/>
+       <SidebarSeparator className="bg-blue-500"/>
   
     <Collapsible asChild defaultOpen={checkIsActive(href, item, true)} className="group/collapsible">
       <SidebarMenuItem>

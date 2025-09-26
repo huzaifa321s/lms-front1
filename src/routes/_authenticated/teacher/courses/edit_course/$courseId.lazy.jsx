@@ -223,7 +223,7 @@ function App() {
   }
 
   return (
-    <div className='h-fit   bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] font-sans'>
+    <>
         <Header >
         
           <div className='flex w-full items-center justify-between gap-2'>
@@ -280,6 +280,7 @@ function App() {
             </div>
           </div>
       </Header>
+      <div className='h-fit   bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] font-sans'>
       {/* Background decorative effects */}
       <div className='pointer-events-none absolute inset-0 overflow-hidden'>
         <div className='absolute -top-40 -right-40 h-80 w-80 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-3xl'></div>
@@ -593,5 +594,6 @@ function App() {
         </Card>
       </div>
     </div>
+    </>
   )
 }

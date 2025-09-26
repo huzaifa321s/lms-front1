@@ -71,7 +71,7 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
             to={href}
             disabled={disabled}
             className={cn(
-              'text-sm font-medium transition-all duration-200 rounded-[8px] px-3 py-2',
+              'text-sm font-medium transition-all duration-200 rounded-[8px] px-2 py-1',
               isActive
                 ? 'text-white bg-blue-500'
                 : 'text-[#e2e8f0] hover:bg-blue-400 hover:text-[#bfdbfe]',

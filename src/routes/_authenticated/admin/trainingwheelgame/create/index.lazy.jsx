@@ -105,7 +105,8 @@ function RouteComponent() {
   )
 
   return (
-       <div className="min-h-screen bg-[#f8fafc]">
+      <>
+      
 
            <Header >
         <div className="relative z-10 my-4 flex w-full items-center justify-between">
@@ -123,7 +124,7 @@ function RouteComponent() {
         </div>
       </Header>
       {/* Background glow effects */}
-
+ <div className="min-h-screen bg-[#f8fafc]">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-[#2563eb]/20 to-[#1d4ed8]/20 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-[#10b981]/20 to-[#059669]/20 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
@@ -276,5 +277,6 @@ function RouteComponent() {
         </Card>
       </Main>
     </div>
+    </>
   )
 }
