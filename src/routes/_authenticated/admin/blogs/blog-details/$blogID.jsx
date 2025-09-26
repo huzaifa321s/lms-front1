@@ -5,7 +5,7 @@ import { useParams, createFileRoute, useSearch, useNavigate } from "@tanstack/re
 import { ChevronLeft, Layers, Calendar, Edit3, Trash2, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { QueryClient } from "@tanstack/react-query"
-import { openModal } from "../../../../../shared/config/reducers/admin/DialogSlice"
+import { openModalAdmin } from "../../../../../shared/config/reducers/admin/DialogSlice"
 import { useAppUtils } from "../../../../../hooks/useAppUtils"
 
 const queryClient = new QueryClient({
@@ -98,11 +98,11 @@ const {navigate,dispatch} = useAppUtils();
                 <Edit3 className="h-4 w-4 mr-2 text-[#2563eb]" />
                 Edit
               </Button>
-
+ 
               <Button
                 variant="destructive"
                 className="rounded-[8px] bg-[#ef4444] text-white hover:bg-[#dc2626] focus-visible:ring-2 focus-visible:ring-[#ef4444] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
-                onClick={() => dispatch(openModal({ type: 'delete-blog', props: { blogID: blogDetails?._id, redirect: '/admin/blogs' } }))}
+                onClick={() => dispatch(openModalAdmin({ type: 'delete-blog', props: { blogID: blogDetails?._id, redirect: '/admin/blogs' } }))}
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Delete
