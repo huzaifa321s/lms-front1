@@ -19,7 +19,7 @@ export default function ActiveInactiveStudents() {
       </CardHeader>
       <CardContent className="h-72">
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart> 
+          <PieChart>
             <Pie
               data={data}
               cx="50%"
