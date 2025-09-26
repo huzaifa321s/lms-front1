@@ -2,13 +2,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { clearCookie, getCookie } from '../../../utils/helperFunction';
 
-
-
-// export const getLeadsContent = createAsyncThunk('/teacher/auth', async () => {
-// 	const response = await axios.get('/api/users?page=2', {})
-// 	return response.data;
-// })
-
 export const teacherAuthSlice = createSlice({
     name: "teacherAuth",
     initialState: {
@@ -21,7 +14,7 @@ export const teacherAuthSlice = createSlice({
             state.token = token;
             state.credentials = credentials
         },
-        handleLogout: (state) => {
+        handleLogoutTeacher: (state) => {
             state.token = null;
             state.credentials = null;
             clearCookie("teacherToken")
@@ -37,22 +30,9 @@ export const teacherAuthSlice = createSlice({
         }
     },
 
-    extraReducers: (builder) => {
-        // builder
-        // // Register
-        // .addCase(getLeadsContent.pending, (state) => {
-        //   state.isLoading = true;
-        // })
-        // .addCase(getLeadsContent.fulfilled, (state, action) => {
-        //   state.leads = action.payload.data;
-        //   state.isLoading = false;
-        // })
-        // .addCase(getLeadsContent.rejected, (state, action) => {
-        //   state.isLoading = false;
-        // });
-    },
+ 
 });
 
-export const { handleLogin, handleLogout, handleUpdateProfile } = teacherAuthSlice.actions;
+export const { handleLogin, handleLogoutTeacher, handleUpdateProfile } = teacherAuthSlice.actions;
 
 export default teacherAuthSlice.reducer;

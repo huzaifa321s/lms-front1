@@ -4,7 +4,6 @@ import {  useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { useDispatch } from 'react-redux'
 import { toast } from 'sonner'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -15,14 +14,13 @@ import {
   DialogClose,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Skeleton } from '@/components/ui/skeleton'
-import { closeModal } from '../../../../shared/config/reducers/teacher/teacherDialogSlice'
+import {  closeModalTeacher } from '../../../../shared/config/reducers/teacher/teacherDialogSlice'
 import { courseQueryOptions } from '../courses'
 import {Label} from '@/components/ui/label'
 import {Input} from '@/components/ui/input'
 import { gameQueryOptions } from '../trainingwheelgame/index.lazy'
 import { useAppUtils } from '../../../../hooks/useAppUtils'
-import { MessageSquare, Layers, Target, Puzzle, AlertTriangle, Wifi, X, CheckCircle2 } from 'lucide-react';
+import {  CheckCircle2 } from 'lucide-react';
 
 const DialogWrapper = ({ isOpen, modalType, modalData }) => {
   const [dialogType, setDialogType] = useState(modalType)
@@ -40,7 +38,7 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
       response = response.data
       if (response.success) {
         toast.success(response.message)
-        dispatch(closeModal())
+        dispatch(closeModalTeacher())
         await queryClient.invalidateQueries(
           courseQueryOptions({page:modalData?.page,input:modalData?.query})
         )
@@ -79,14 +77,14 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
       response = response.data
       if (response.success) {
           toast.success('Game deleted successfully')
-          dispatch(closeModal())
+          dispatch(closeModalTeacher())
         await queryClient.invalidateQueries(gameQueryOptions(modalData?.params));
       }
     } catch (error) {
       console.log('Error: ', error);
       toast.error("Internal server error");
     }
-  }, [axios, modalData?.gameID, router, toast,queryClient,gameQueryOptions,modalData?.params,dispatch,closeModal]);
+  }, [axios, modalData?.gameID, router, toast,queryClient,gameQueryOptions,modalData?.params,dispatch,closeModalTeacher]);
 
   // setting dialog type
   useEffect(() => {
@@ -129,182 +127,9 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
   }
 return (
 <>
-<Dialog open={isOpen && dialogType === 'game-view'} onOpenChange={() => {
-  console.log('Dialog onOpenChange triggered');
-  dispatch(closeModal());
-}}>
-  <DialogContent className="w-[90vw] max-w-[90vw] sm:max-w-lg md:max-w-xl p-0 rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] bg-white border border-[#e2e8f0] overflow-hidden">
-    {/* Header */}
-    <DialogHeader className="m-3 sm:m-4 md:m-5">
-      <div className="flex items-start gap-2 sm:gap-3">
-        <div className="p-1.5 sm:p-2 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] rounded-[8px]">
-          <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <DialogTitle className="text-base sm:text-lg md:text-xl font-bold text-[#1e293b] leading-tight line-clamp-2">
-            {gameData?.question || (
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-[#e2e8f0] border-t-[#64748b] rounded-full animate-spin"></div>
-                Loading Question...
-              </div>
-            )}
-          </DialogTitle>
-          <p className="text-[#64748b] text-xs sm:text-sm mt-1 sm:mt-2">Training Wheel Game Question</p>
-        </div>
-      </div>
-    </DialogHeader>
-
-    {/* Content area */}
-    <div className="relative p-4 sm:p-5 md:p-6 space-y-4 sm:space-y-5 md:space-y-6">
-      {/* Background decoration */}
-      <div className="absolute top-0 right-0 w-24 sm:w-28 md:w-32 h-24 sm:h-28 md:h-32 bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 rounded-full -translate-y-12 sm:-translate-y-14 md:-translate-y-16 translate-x-12 sm:translate-x-14 md:translate-x-16 blur-2xl"></div>
-      <div className="absolute bottom-0 left-0 w-20 sm:w-22 md:w-24 h-20 sm:h-22 md:h-24 bg-gradient-to-tr from-white to-[#2563eb]/10 rounded-full translate-y-10 sm:translate-y-11 md:translate-y-12 -translate-x-10 sm:-translate-x-11 md:-translate-x-12 blur-2xl"></div>
-
-      <form className="relative space-y-4 sm:space-y-5 md:space-y-6">
-        {/* Error states */}
-        {gameIsError && (
-          <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-gradient-to-r from-[#ef4444]/10 to-[#dc2626]/10 border border-[#ef4444] rounded-[8px]">
-            <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-[#ef4444] flex-shrink-0" />
-            <p className="text-[#ef4444] text-xs sm:text-sm font-medium">{gameFetchingError?.message || 'An error occurred'}</p>
-          </div>
-        )}
-
-        {gameFetchStatus === 'paused' && (
-          <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-gradient-to-r from-[#f59e0b]/10 to-[#d97706]/10 border border-[#f59e0b] rounded-[8px]">
-            <Wifi className="w-4 h-4 sm:w-5 sm:h-5 text-[#f59e0b] flex-shrink-0" />
-            <p className="text-[#f59e0b] text-xs sm:text-sm font-medium">No Internet connection</p>
-          </div>
-        )}
-
-        {/* Loading skeletons */}
-        {(gameFetchStatus === 'fetching' || gameIsFetching || (!gameData && gameFetchStatus !== 'paused')) && !gameIsError ? (
-          <div className="space-y-4 sm:space-y-5 md:space-y-6">
-            {/* Skeleton for difficulties badges */}
-            <div className="space-y-2 sm:space-y-3">
-              <Skeleton className="h-4 sm:h-5 w-20 sm:w-24 rounded-[8px] bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9]" />
-              <div className="flex flex-wrap gap-1 sm:gap-2">
-                <Skeleton className="h-6 sm:h-7 w-16 sm:w-20 rounded-full bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9]" />
-                <Skeleton className="h-6 sm:h-7 w-20 sm:w-24 rounded-full bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9]" />
-                <Skeleton className="h-6 sm:h-7 w-14 sm:w-18 rounded-full bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9]" />
-              </div>
-            </div>
-            {/* Skeleton for answer box */}
-            <Skeleton className="h-24 sm:h-28 md:h-32 w-full rounded-[8px] bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9]" />
-            {/* Skeleton for answer chunks */}
-            <div className="space-y-2 sm:space-y-3">
-              <Skeleton className="h-4 sm:h-5 w-24 sm:w-32 rounded-[8px] bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9]" />
-              <div className="space-y-1 sm:space-y-2">
-                {[...Array(6)].map((_, i) => (
-                  <Skeleton
-                    key={i}
-                    className="h-3 sm:h-4 rounded-[8px] bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9]"
-                    style={{ width: `${75 + (i % 3) * 10}%` }}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        ) : (
-          /* Actual content */
-          gameData && (
-            <div className="space-y-4 sm:space-y-5 md:space-y-6">
-              {/* Difficulties section */}
-              {gameData?.difficulties?.length > 0 && (
-                <div className="space-y-2 sm:space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Layers className="w-4 h-4 sm:w-5 sm:h-5 text-[#2563eb]" />
-                    <span className="font-semibold text-[#1e293b] text-sm sm:text-base">Difficulty Levels</span>
-                  </div>
-                  <div className="flex flex-wrap gap-1 sm:gap-2">
-                    {gameData.difficulties.map((item, i) => {
-                      const difficultyStyles = {
-                        beginner: 'bg-[#10b981]/10 text-[#10b981] border-[#10b981]',
-                        intermediate: 'bg-[#f59e0b]/10 text-[#f59e0b] border-[#f59e0b]',
-                        expert: 'bg-[#ef4444]/10 text-[#ef4444] border-[#ef4444]',
-                      };
-                      return (
-                        <Badge
-                          key={i}
-                          className={`${difficultyStyles[item] || difficultyStyles.intermediate} border font-medium px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm rounded-[8px] shadow-sm hover:shadow-md transition-all duration-200`}
-                        >
-                          {item.charAt(0).toUpperCase() + item.slice(1)}
-                        </Badge>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {/* Answer section */}
-              <div className="space-y-2 sm:space-y-3">
-                <div className="flex items-center gap-2">
-                  <Target className="w-4 h-4 sm:w-5 sm:h-5 text-[#f59e0b]" />
-                  <span className="font-semibold text-[#1e293b] text-sm sm:text-base">Complete Answer</span>
-                </div>
-                <div className="relative p-4 sm:p-5 md:p-6 bg-white rounded-[8px] border border-[#e2e8f0] shadow-sm">
-                  <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] rounded-t-[8px]"></div>
-                  <p className="text-[#1e293b] text-sm sm:text-base md:text-lg font-medium leading-relaxed line-clamp-3">
-                    "{gameData.answer}"
-                  </p>
-                </div>
-              </div>
-
-              {/* Answer chunks section */}
-              {gameData?.answer_in_chunks?.length > 0 && (
-                <div className="space-y-3 sm:space-y-4">
-                  <div className="flex items-center gap-2">
-                    <Puzzle className="w-4 h-4 sm:w-5 sm:h-5 text-[#2563eb]" />
-                    <span className="font-semibold text-[#1e293b] text-sm sm:text-base">Answer Breakdown</span>
-                    <span className="text-xs sm:text-sm text-[#64748b]">({gameData.answer_in_chunks.length} parts)</span>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                    {gameData.answer_in_chunks.map((chunk, i) => (
-                      <div
-                        key={i}
-                        className="flex items-center gap-2 sm:gap-3 p-3 bg-white rounded-[8px] border border-[#e2e8f0] hover:shadow-sm transition-all duration-200 group"
-                      >
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-semibold group-hover:scale-105 transition-transform duration-200">
-                          {i + 1}
-                        </div>
-                        <span className="text-[#1e293b] font-medium text-xs sm:text-sm line-clamp-2">{chunk}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )
-        )}
-
-        {/* Footer */}
-        <DialogFooter className="relative pt-4 sm:pt-5 md:pt-6 border-t border-[#e2e8f0] px-4 sm:px-5 md:px-6">
-          <DialogClose asChild>
-            <Button
-              size="sm"
-              variant="outline"
-              className="group border-[#e2e8f0] bg-[#f1f5f9] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] text-[#475569] w-full sm:w-auto rounded-[8px] shadow-sm hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300"
-              onClick={() => {
-                console.log('Close button clicked');
-                if (typeof dispatch === 'function') {
-                  dispatch(closeModal());
-                } else {
-                  console.error('dispatch is undefined');
-                }
-              }}
-            >
-              <X className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 group-hover:rotate-90 transition-transform duration-200" />
-              Close
-            </Button>
-          </DialogClose>
-        </DialogFooter>
-      </form>
-    </div>
-  </DialogContent>
-</Dialog>
-
 <Dialog open={isOpen && dialogType === 'delete-course-modal'} onOpenChange={() => {
   console.log('Dialog onOpenChange triggered');
-  dispatch(closeModal());
+  dispatch(closeModalTeacher());
 }}>
   <form onSubmit={(e) => {
     e.preventDefault();
@@ -421,7 +246,7 @@ return (
               onClick={() => {
                 console.log('Cancel button clicked');
                 if (typeof dispatch === 'function') {
-                  dispatch(closeModal());
+                  dispatch(closeModalTeacher());
                 } else {
                   console.error('dispatch is undefined');
                 }
@@ -471,7 +296,7 @@ return (
 </Dialog>
 
 <Dialog open={isOpen && dialogType === 'delete-game-modal'} onOpenChange={() => {
-  dispatch(closeModal());
+  dispatch(closeModalTeacher());
 }}>
   <form onSubmit={(e) => {
     e.preventDefault();
@@ -580,7 +405,7 @@ return (
               onClick={() => {
                 console.log('Cancel button clicked');
                 if (typeof dispatch === 'function') {
-                  dispatch(closeModal());
+                  dispatch(closeModalTeacher());
                 } else {
                   console.error('dispatch is undefined');
                 }

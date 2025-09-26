@@ -9,7 +9,7 @@ import { useDebounce } from 'use-debounce'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { openModal } from '../../../../../shared/config/reducers/admin/DialogSlice'
+import { openModalAdmin } from '../../../../../shared/config/reducers/admin/DialogSlice'
 import { Show } from '../../../../../shared/utils/Show'
 import { DataTable } from '../../../student/features/tasks/-components/student-data-table'
 import ContentSection from '../../../student/settings/-components/content-section'
@@ -119,7 +119,7 @@ export const Route = createFileRoute(
           size="sm"
           onClick={() =>
             dispatch(
-              openModal({
+              openModalAdmin({
                 type: 'add-course-category',
                 props: { searchInput },
               })

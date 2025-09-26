@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { BlogsSchema } from '../-schemas/blogsSchema'
 import { useAppUtils } from '../../../../../../hooks/useAppUtils'
-import { openModal } from '../../../../../../shared/config/reducers/admin/DialogSlice'
+import { openModalAdmin } from '../../../../../../shared/config/reducers/admin/DialogSlice'
 
 export function BlogDataTableRowActions({ row }) {
   const blog = BlogsSchema.parse(row.original)
@@ -55,7 +55,7 @@ export function BlogDataTableRowActions({ row }) {
           <DropdownMenuItem
             onClick={() =>
               dispatch(
-                openModal({ type: 'delete-blog', props: { blogID: blog._id } })
+                openModalAdmin({ type: 'delete-blog', props: { blogID: blog._id } })
               )
             }
           >

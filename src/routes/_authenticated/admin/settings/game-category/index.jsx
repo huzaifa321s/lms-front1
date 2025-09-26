@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { openModal } from '../../../../../shared/config/reducers/admin/DialogSlice'
+import { openModalAdmin } from '../../../../../shared/config/reducers/admin/DialogSlice'
 import { Show } from '../../../../../shared/utils/Show'
 import { DataTable } from '../../../student/features/tasks/-components/student-data-table'
 import ContentSection from '../../../student/settings/-components/content-section'
@@ -125,7 +125,7 @@ let [paginationOptions, setPagination] = useState({
           size="sm"
           onClick={() =>
             dispatch(
-              openModal({
+              openModalAdmin({
                 type: 'add-game-category',
                 props: { searchInput },
               })

@@ -4,14 +4,12 @@ import { useNavigate } from "@tanstack/react-router"
 import { useInView } from "react-intersection-observer"
 import { BookOpen, Users, Gamepad, Layers } from "lucide-react"
 import { IconBooks } from "@tabler/icons-react"
-
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Header } from "@/components/layout/header"
 import { Main } from "@/components/layout/main"
 import { TopNav } from "@/components/layout/top-nav"
-import { Search } from "@/components/search"
 import { ProfileDropdown } from "../../-components/admin-profile-dropdown"
 
 import {
@@ -81,7 +79,7 @@ export default function Dashboard() {
     data: topCourses,
     refetch: coursesRefetch,
   } = useQuery({ ...topCoursesQueryOptions()})
-  const { data: earningsCardData } = useQuery(EarningsQuery())
+  const { data: earningsCardData ,isLoading:earningsCardLoading} = useQuery(EarningsQuery())
 
   useEffect(() => {
     if (tableInView) coursesRefetch()
@@ -201,6 +199,7 @@ export default function Dashboard() {
     thisMonthTotal={earningsCardData?.thisMonthTotalEarnings}
     earnings={earningsCardData?.earnings}
     months={earningsCardData?.months}
+    loading={earningsCardLoading}
   />
   <div className="flex flex-wrap gap-4 w-full">
     {topTeachers?.length > 0 && <TopTeachersCard topTeachers={topTeachers} />}

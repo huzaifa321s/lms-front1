@@ -7,7 +7,7 @@ export default function CoursesSummary({ total, active, inactive, fetchStatus })
       title: "Total Courses",
       value: total,
       icon: <BookOpen className="w-6 h-6 text-white" />,
-      bgClass: "bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white",
+      bgClass: " to-[#1d4ed8] text-white",
       shadow: "shadow-lg",
     },
     {
@@ -30,9 +30,10 @@ export default function CoursesSummary({ total, active, inactive, fetchStatus })
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
       {cards.map((card) => (
         <Card
-          key={card.title}
-          className={`${card.bgClass} ${card.shadow} rounded-[12px] transition-all duration-300  ${fetchStatus === 'fetching' && 'animate-pulse'}`}
+        key={card.title}
+        className={`${card.bgClass} ${card.shadow} rounded-[12px] transition-all duration-300  ${fetchStatus === 'fetching' && 'animate-pulse'}`}
         >
+          {console.log('card',card.bgClass)}
           <CardHeader className="flex items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-[#1e293b]">{card.title}</CardTitle>
             {card.icon}

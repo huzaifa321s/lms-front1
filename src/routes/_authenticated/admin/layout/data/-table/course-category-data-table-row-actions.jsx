@@ -12,7 +12,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { openModal } from '../../../../../../shared/config/reducers/admin/DialogSlice'
+import { openModalAdmin } from '../../../../../../shared/config/reducers/admin/DialogSlice'
 import { CourseCategoriesSchema } from '../-schemas/courseCategoriesSchema'
 
 
@@ -27,7 +27,7 @@ export function CourseCategoryDataTableRowActions({ row }) {
     <div className="flex items-center">
       <Button size="xs" variant="outline"  onClick={() =>
               dispatch(
-                openModal({
+                openModalAdmin({
                   type: 'course-category-view-modal',
                   props: { categoryID: category._id,searchInput:searchDeps.q },
                 })
@@ -47,7 +47,7 @@ export function CourseCategoryDataTableRowActions({ row }) {
           <DropdownMenuItem
             onClick={() =>
               dispatch(
-                openModal({
+                openModalAdmin({
                   type: 'course-category-edit-modal',
                   props: { category, searchDeps, inputValue: category.name,searchInput:searchDeps.q },
                 })
@@ -65,7 +65,7 @@ export function CourseCategoryDataTableRowActions({ row }) {
           <DropdownMenuItem
             onClick={() =>
               dispatch(
-                openModal({
+                openModalAdmin({
                   type: 'course-category-delete-modal',
                   props: { category,searchInput:searchDeps.q },
                 })

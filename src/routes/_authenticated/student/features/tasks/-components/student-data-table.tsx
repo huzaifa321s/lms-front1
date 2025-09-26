@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination } from './data-table-pagination'
 import { useDispatch } from 'react-redux'
-import { openModal } from '../../../../../../shared/config/reducers/admin/DialogSlice.js'
+import { openModalAdmin } from '../../../../../../shared/config/reducers/admin/DialogSlice.js'
 
 const NoDataSvg = () => (
   <svg
@@ -157,7 +157,7 @@ export function DataTable<TData, TValue>({
                     key={row.id}
                     onMouseOver={() =>
                       dispatch(
-                        openModal({
+                        openModalAdmin({
                           isOpen: false,
                           props: { searchInput: searchInput && searchInput },
                         }),

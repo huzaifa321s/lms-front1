@@ -1,10 +1,9 @@
-import { useEffect } from 'react';
-import { Outlet, useNavigate, useLocation } from '@tanstack/react-router';
-import { useSelector, useDispatch } from 'react-redux';
-import { createFileRoute } from '@tanstack/react-router';
-import { openModal } from '../../../../shared/config/reducers/student/studentDialogSlice';
-import axios from 'axios';
-import { showLoader } from '../../../student/route';
+import { useEffect } from 'react'
+import axios from 'axios'
+import { Outlet, useNavigate, useLocation } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
+import { useSelector, useDispatch } from 'react-redux'
+import { openModal } from '../../../../shared/config/reducers/student/studentDialogSlice'
 
 // Subscription routes that don't require checks
 const SUBSCRIPTION_ROUTES = [
@@ -12,59 +11,58 @@ const SUBSCRIPTION_ROUTES = [
   '/student/resubscription-plans',
   '/student/failed-subscription',
   '/student',
-];
+]
 
 export const Route = createFileRoute('/_authenticated/student/_subscribed')({
   component: RouteComponent,
-});
+})
 
- function hideLoader() {
-   const loader = document.getElementById('custom-loader');
-   if (loader) {
-       loader.remove();
-   }
+function hideLoader() {
+  const loader = document.getElementById('custom-loader')
+  if (loader) {
+    loader.remove()
+  }
 }
 
 function RouteComponent() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const dispatch = useDispatch();
-  const subscription = useSelector((state) => state.studentAuth.subscription);
+  const navigate = useNavigate()
+  const location = useLocation()
+  const dispatch = useDispatch()
+  const subscription = useSelector((state) => state.studentAuth.subscription)
 
-useEffect(() => {
-  const requestInterceptor = axios.interceptors.request.use(
-    function (config) {
-      // showLoader()
-      return config
-    },
-    function (error) {
-      return Promise.reject(error)
+  useEffect(() => {
+    const requestInterceptor = axios.interceptors.request.use(
+      function (config) {
+        // showLoader()
+        return config
+      },
+      function (error) {
+        return Promise.reject(error)
+      }
+    )
+
+    const responseInterceptor = axios.interceptors.response.use(
+      function (response) {
+        hideLoader()
+        return response
+      },
+      function (error) {
+        hideLoader()
+        return Promise.reject(error)
+      }
+    )
+
+    // Cleanup interceptors when component unmounts
+    return () => {
+      axios.interceptors.request.eject(requestInterceptor)
+      axios.interceptors.response.eject(responseInterceptor)
     }
-  )
-
-  const responseInterceptor = axios.interceptors.response.use(
-    function (response) {
-      hideLoader()
-      return response
-    },
-    function (error) {
-      hideLoader()
-      return Promise.reject(error)
-    }
-  )
-
-  // Cleanup interceptors when component unmounts
-  return () => {
-    axios.interceptors.request.eject(requestInterceptor)
-    axios.interceptors.response.eject(responseInterceptor)
-  }
-}, [])
-
+  }, [])
 
   useEffect(() => {
     // Skip checks for subscription routes
     if (SUBSCRIPTION_ROUTES.includes(location.pathname)) {
-      return;
+      return
     }
 
     // Missing subscription
@@ -74,9 +72,9 @@ useEffect(() => {
           type: 'subscription-modal',
           props: { redirect: location.pathname },
         })
-      );
-      navigate({ to: '/student', replace: true });
-      return;
+      )
+      navigate({ to: '/student', replace: true })
+      return
     }
 
     // Pending subscription
@@ -86,39 +84,44 @@ useEffect(() => {
           type: 'activate-subscription-modal',
           props: { redirect: '/student' },
         })
-      );
-      navigate({ to: '/student', replace: true });
-      return;
+      )
+      navigate({ to: '/student', replace: true })
+      return
     }
 
     // Failed states
-    if (['incomplete', 'incomplete_expired', 'past_due', 'unpaid'].includes(subscription?.status)) {
+    if (
+      ['incomplete', 'incomplete_expired', 'past_due', 'unpaid'].includes(
+        subscription?.status
+      )
+    ) {
       navigate({
         to: '/student/failed-subscription',
         replace: true,
         search: { redirect: location.pathname },
-      });
-      return;
+      })
+      return
     }
 
     // Cleanup to prevent multiple dispatches
     return () => {
       // Optional: Close modal if needed
       // dispatch(closeModal());
-    };
-  }, [subscription, location.pathname, dispatch, navigate]);
+    }
+  }, [subscription, location.pathname, dispatch, navigate])
 
   // Fallback UI for invalid subscription state
   if (!subscription) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
-        <div className="text-center">
-          <p className="text-lg text-slate-600">Checking subscription status...</p>
+      <div className='flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50'>
+        <div className='text-center'>
+          <p className='text-lg text-slate-600'>
+            Checking subscription status...
+          </p>
         </div>
       </div>
-    );
+    )
   }
 
-  return <Outlet />;
+  return <Outlet />
 }
-

@@ -11,7 +11,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { openModal } from '../../../../../../shared/config/reducers/admin/DialogSlice'
+import { openModalAdmin } from '../../../../../../shared/config/reducers/admin/DialogSlice'
 import { useDispatch } from 'react-redux'
 import { GameCategorySchema } from '../-schemas/gameCategoriesSchema'
 
@@ -24,7 +24,7 @@ export function GameCategoryDataTableRowActions({ row }) {
 
   return (
     <div className="flex items-center">
-     <Button size="xs" variant="outline"  onClick={() => dispatch(openModal({type:'view-game-category-modal',props:{categoryID:category._id}}))} >View</Button>
+     <Button size="xs" variant="outline"  onClick={() => dispatch(openModalAdmin({type:'view-game-category-modal',props:{categoryID:category._id}}))} >View</Button>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
@@ -36,7 +36,7 @@ export function GameCategoryDataTableRowActions({ row }) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
-          <DropdownMenuItem onClick={() => dispatch(openModal({type:'game-category-edit-modal',props:{category,inputValue:category.name,searchInput:searchParams.q}}))}>
+          <DropdownMenuItem onClick={() => dispatch(openModalAdmin({type:'game-category-edit-modal',props:{category,inputValue:category.name,searchInput:searchParams.q}}))}>
             Edit
             <DropdownMenuShortcut>
               <EditIcon />
@@ -44,7 +44,7 @@ export function GameCategoryDataTableRowActions({ row }) {
           </DropdownMenuItem>
          
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => dispatch(openModal({type:'game-category-delete-modal',props:{category:category,searchInput:searchParams.q}}))}>
+          <DropdownMenuItem onClick={() => dispatch(openModalAdmin({type:'game-category-delete-modal',props:{category:category,searchInput:searchParams.q}}))}>
             Delete
             <DropdownMenuShortcut>
               <IconTrash size={16} />

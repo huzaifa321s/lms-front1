@@ -1,4 +1,6 @@
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
+import { Elements } from '@stripe/react-stripe-js'
+import { loadStripe } from '@stripe/stripe-js'
 import { AlertCircle, CheckCircle, Info, XCircle } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { Toaster } from 'sonner'
@@ -6,31 +8,38 @@ import { NavigationProgress } from '@/components/navigation-progress'
 import GeneralError from '../routes/_authenticated/student/features/errors/general-error'
 import NotFoundError from '../routes/_authenticated/student/features/errors/not-found-error'
 import DialogWrapper from './_authenticated/student/-components/DialogWrapper'
-import { Elements } from '@stripe/react-stripe-js'
-import { loadStripe } from '@stripe/stripe-js'
-
-const stripePromise = loadStripe(
-  'pk_test_51P5zAtEdtHnRsYCMJUdZJ5Q6m6KA1LQfPxXsnKweKFvWiSsYMpEG4yRmG5jmzaBo0VBUeQSS5DTSBDDfnzLsiWGu00U3zAzcBU'
-)
 
 export const Route = createRootRouteWithContext()({
   component: () => {
     const selector = useSelector((state) => state.studentDialogSlice)
+    console.log('selector.type',selector.type)
+    let stripePromise = ''
+    if (selector.type === 'add-payment-method') {
+      stripePromise = loadStripe(
+        'pk_test_51P5zAtEdtHnRsYCMJUdZJ5Q6m6KA1LQfPxXsnKweKFvWiSsYMpEG4yRmG5jmzaBo0VBUeQSS5DTSBDDfnzLsiWGu00U3zAzcBU'
+      )
+    }
 
     return (
       <>
         <NavigationProgress />
         <Outlet />
+
         {selector.isOpen && (
-          <Elements stripe={stripePromise}>
+          selector.type === 'add-payment-method' ?  <Elements stripe={stripePromise}>
             <DialogWrapper
               modalType={selector.type}
               isOpen={selector.isOpen}
               modalData={selector.props}
               onClose={selector.onAction}
             />
-            </Elements>
-
+          </Elements> : <DialogWrapper
+              modalType={selector.type}
+              isOpen={selector.isOpen}
+              modalData={selector.props}
+              onClose={selector.onAction}
+            />
+         
         )}
         <Toaster
           duration={5000}
@@ -82,7 +91,6 @@ export const Route = createRootRouteWithContext()({
           visibleToasts={4}
           closeButton={true}
         />
-  
       </>
     )
   },

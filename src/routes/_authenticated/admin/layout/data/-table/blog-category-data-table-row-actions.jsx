@@ -1,7 +1,7 @@
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import {  useSearch } from '@tanstack/react-router'
-import { IconListDetails, IconTrash } from '@tabler/icons-react'
+import {  IconTrash } from '@tabler/icons-react'
 import { EditIcon } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { Button } from '@/components/ui/button'
@@ -13,7 +13,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { openModal } from '../../../../../../shared/config/reducers/admin/DialogSlice'
+import { openModalAdmin } from '../../../../../../shared/config/reducers/admin/DialogSlice'
 import { BlogCategoriesSchema } from '../-schemas/blogCategoriesSchema'
 
 
@@ -29,7 +29,7 @@ export function BlogCategoryDataTableRowActions({ row }) {
     <div className="flex items-center">
     <Button size="xs" variant="outline"  onClick={() =>
               dispatch(
-                openModal({
+                openModalAdmin({
                   type: 'blog-category-view-modal',
                   props: { categoryID: category._id },
                 })
@@ -50,7 +50,7 @@ export function BlogCategoryDataTableRowActions({ row }) {
           <DropdownMenuItem
             onClick={() =>
               dispatch(
-                openModal({
+                openModalAdmin({
                   type: 'edit-category-modal',
                   props: { searchInput, category, inputValue: category?.name },
                 })
@@ -66,7 +66,7 @@ export function BlogCategoryDataTableRowActions({ row }) {
           <DropdownMenuItem
             onClick={() =>
               dispatch(
-                openModal({
+                openModalAdmin({
                   type: 'delete-blog-category',
                   props: { searchInput ,category},
                 })

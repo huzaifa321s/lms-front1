@@ -15,7 +15,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { openModal } from '../../../../../shared/config/reducers/teacher/teacherDialogSlice';
+import { openModalTeacher } from '../../../../../shared/config/reducers/teacher/teacherDialogSlice';
 import { useAppUtils } from '../../../../../hooks/useAppUtils';
 import { format } from 'date-fns';
 import { memo, useEffect } from 'react';
@@ -128,7 +128,7 @@ console.log("courseImg ===>",courseImg)
                 console.log('Delete button clicked, courseId:', courseId, 'searchParams:', searchParams)
                 if (typeof dispatch === 'function') {
                   dispatch(
-                    openModal({
+                    openModalTeacher({
                       type: 'delete-course-modal',
                       props: { searchParams, courseId, courseDetails: { name, desc }, query, page, index },
                     })

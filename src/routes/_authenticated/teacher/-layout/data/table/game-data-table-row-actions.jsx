@@ -12,9 +12,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-import { openModal } from '../../../../../../shared/config/reducers/teacher/teacherDialogSlice'
 import { useDispatch } from 'react-redux'
 import { TrainingWheelGameSchema } from '../../../../admin/layout/data/-schemas/trainingWheelGameSchemas'
+import { openModal } from '../../../../../../shared/config/reducers/student/studentDialogSlice'
+import { openModalTeacher } from '../../../../../../shared/config/reducers/teacher/teacherDialogSlice'
 
 export function DataTableRowActions({ row }) {
   const game = TrainingWheelGameSchema.parse(row.original)
@@ -24,7 +25,7 @@ export function DataTableRowActions({ row }) {
 
   return (
     <>
-<Button size="xs" variant="outline" onClick={() => dispatch(openModal({type:'game-view',props:{gameID:game._id}}))}>View</Button>
+<Button size="xs" variant="outline" onClick={() => dispatch(openModal({type:'game-view',props:{gameID:game._id,userType:'teacher'}}))}>View</Button>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
@@ -47,7 +48,7 @@ export function DataTableRowActions({ row }) {
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => dispatch(openModal({type:'delete-game-modal',props:{gameID:game._id,params,gameDetails:{question:game.question}}}))}>
+          <DropdownMenuItem onClick={() => dispatch(openModalTeacher({type:'delete-game-modal',props:{gameID:game._id,params,gameDetails:{question:game.question}}}))}>
             Delete
             <DropdownMenuShortcut>
               <IconTrash size={16} />

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { CoursesSchema } from '../-schemas/coursesSchema'

@@ -4,7 +4,6 @@ import { Outlet } from '@tanstack/react-router'
 import { cn } from '@/lib/utils'
 import { SearchProvider } from '@/context/search-context'
 import { SidebarProvider } from '@/components/ui/sidebar'
-import { LoaderThree } from '@/components/ui/loader'
 
 import SkipToMain from '@/components/skip-to-main'
 import DialogWrapper from '../../../-components/DialogWrapper'
@@ -14,7 +13,7 @@ import { Loader2 } from 'lucide-react'
 export function SmallLoader() {
   return (
        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <Loader2 className="h-12 w-12 animate-spin text-white" />
+       <Loader2 className="h-12 w-12 animate-spin text-white" />
     </div>
   )
 }

@@ -28,7 +28,7 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 import { useDispatch } from 'react-redux'
-import { openModal } from '../../shared/config/reducers/student/studentDialogSlice'
+
 
 
 

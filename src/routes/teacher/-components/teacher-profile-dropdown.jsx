@@ -11,25 +11,16 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useDispatch, useSelector } from 'react-redux'
-import { useEffect, useState } from 'react'
-import { handleLogout } from '../../../shared/config/reducers/teacher/teacherAuthSlice'
-import { LogoutModal } from '../../../shared/components/LogoutModal'
-import { toast } from 'sonner'
-import { Book, ChevronDown, LogOut, Settings, User } from 'lucide-react' // Added for consistency with the second example
+import { useDispatch } from 'react-redux'
 import { getTeacherCreds } from '../../_authenticated/teacher/-utils/helperFunctions'
 import { useQuery } from '@tanstack/react-query'
+import { Book, ChevronDown, LogOut, Settings, User } from 'lucide-react'
+import { openModal } from '../../../shared/config/reducers/student/studentDialogSlice'
 
 export function ProfileDropdown() {
-  const navigate = useNavigate()
-  const [logoutModalCondition, setLogoutModalCondition] = useState(false)
   const dispatch = useDispatch();
   
-  const logout = () => {
-    dispatch(handleLogout())
-    toast.success('You have been logged out successfully.')
-    navigate({ to: '/teacher/login' })
-  }
+
 
    
   const {
@@ -46,12 +37,7 @@ export function ProfileDropdown() {
   })
   return (
     <>
-      <LogoutModal
-        modalCondition={logoutModalCondition}
-        logout={logout}
-        handleModalClose={setLogoutModalCondition}
-        isLoading={isLoading}
-      />
+      
    <DropdownMenu modal={false}>
   <DropdownMenuTrigger asChild>
     <Button
@@ -125,7 +111,7 @@ export function ProfileDropdown() {
     <DropdownMenuSeparator className="my-2 bg-[#e2e8f0]" />
 
     <DropdownMenuItem
-      onClick={() => setLogoutModalCondition(true)}
+      onClick={() => dispatch(openModal({type:"logout-modal",props:{userType:'teacher'}}))}
       className="rounded-[8px] transition-all duration-200 hover:bg-[#ef4444]/10 hover:text-[#dc2626] focus:bg-[#ef4444]/10 focus:text-[#dc2626]"
     >
       <LogOut size={16} className="mr-2 text-[#dc2626]" />

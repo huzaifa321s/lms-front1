@@ -1,8 +1,7 @@
-import { useActionState, useEffect, useState } from 'react'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
+import { Link } from '@tanstack/react-router'
 import { ChevronDown } from 'lucide-react'
-import { useDispatch, useSelector } from 'react-redux'
-import { toast } from 'sonner'
+import { useDispatch } from 'react-redux'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,34 +15,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { getAdminCreds } from '../-utils/helpeFuntions'
-import { LogoutModal } from '../../../../shared/components/LogoutModal'
-import { handleLogout } from '../../../../shared/config/reducers/admin/adminAuthSlice'
+import { openModal } from '../../../../shared/config/reducers/student/studentDialogSlice'
+
 
 export function ProfileDropdown() {
   const [credentials, setCredentials] = useState(null)
-  console.log('credentials ===>', credentials)
-  const navigate = useNavigate()
-  const [logoutModalCondition, setLogoutModalCondition] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch()
-
-  const [state, submitAction, isPending] = useActionState(() => {
-    dispatch(handleLogout())
-    toast.success('You have been logged out successfully.')
-    return { success: true }
-  })
-
-  if (state?.success) {
-    navigate({ to: '/admin/login' })
-  }
-
-  // const logout = () => {
-  //   setIsLoading(true)
-  //   dispatch(handleLogout())
-  //   setIsLoading(false)
-  //   navigate({ to: '/admin/login' })
-  // }
-
   useEffect(() => {
     async function fetchCredentials() {
       try {
@@ -57,12 +34,6 @@ export function ProfileDropdown() {
   }, [])
   return (
     <>
-      <LogoutModal
-        modalCondition={logoutModalCondition}
-        logout={submitAction}
-        handleModalClose={setLogoutModalCondition}
-        isLoading={isPending}
-      />
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
@@ -90,10 +61,7 @@ export function ProfileDropdown() {
         >
           <DropdownMenuLabel className='px-3 py-2 font-normal text-[#1e293b]'>
             <div className='flex flex-col space-y-1'>
-              <p className='text-sm font-semibold text-[#1e293b]'>
-                {console.log('credss ==>', credentials)}
-                {/* {credentials.name}  */}
-              </p>
+              <p className='text-sm font-semibold text-[#1e293b]'></p>
               <p className='truncate text-xs text-[#64748b]'>
                 {credentials?.email}
               </p>
@@ -146,7 +114,14 @@ export function ProfileDropdown() {
           </DropdownMenuGroup>
           <DropdownMenuSeparator className='my-1 bg-[#e2e8f0]' />
           <DropdownMenuItem
-            onClick={() => setLogoutModalCondition(true)}
+            onClick={() =>
+              dispatch(
+                openModal({
+                  type: 'logout-modal',
+                  props: { userType: 'admin' },
+                })
+              )
+            }
             className='rounded-[8px] font-medium text-[#1e293b] transition-all duration-200 hover:bg-[#ef4444]/10 hover:text-[#ef4444] focus:bg-[#ef4444]/10 focus:text-[#ef4444]'
           >
             Log out

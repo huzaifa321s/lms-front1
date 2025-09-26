@@ -1,10 +1,7 @@
-import { useEffect, useState } from 'react'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { ChevronsUpDown, LogOut } from 'lucide-react'
-import { useDispatch, useSelector } from 'react-redux'
-import { toast } from 'sonner'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import { useDispatch } from 'react-redux'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,33 +9,20 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from '@/components/ui/sidebar'
 import { getTeacherCreds } from '../../../-utils/helperFunctions'
-import LogoutModal from '../../../../../../shared/components/LogoutModal'
-// Updated to match NavUser's chevron style
-import { handleLogout } from '../../../../../../shared/config/reducers/admin/adminAuthSlice'
 import { useQuery } from '@tanstack/react-query'
+import { openModal } from '../../../../../../shared/config/reducers/student/studentDialogSlice'
+
 
 export function NavUser() {
-  const navigate = useNavigate()
-  const [logoutModalCondition, setLogoutModalCondition] = useState(false)
-
-  const dispatch = useDispatch()
-  const logout = () => {
-    dispatch(handleLogout())
-
-    toast.success('You have been logged out successfully.')
-    navigate({ to: '/teacher/login' }) // Should be /admin/login for admin context
-  }
-
+const dispatch = useDispatch()
   const {
     data: credentials,
     isLoading,
@@ -54,12 +38,7 @@ export function NavUser() {
 
   return (
     <>
-      <LogoutModal
-        modalCondition={logoutModalCondition}
-        logout={logout}
-        handleModalClose={setLogoutModalCondition}
-        isLoading={isLoading}
-      />
+
       <SidebarMenu>
         <SidebarMenuItem>
           <DropdownMenu modal={false}>
@@ -69,10 +48,6 @@ export function NavUser() {
                 className='flex w-full items-center rounded-[8px] border border-[#e2e8f0] bg-[#ffffff] px-4 py-3 shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-[1.02] hover:border-[#cbd5e1] hover:bg-[#f1f5f9] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]'
               >
                 <Avatar className='h-9 w-9 rounded-full ring-2 ring-[#e2e8f0]'>
-                  {/* <AvatarImage
-              src={user?.avatar}
-              alt={credentials?.firstName + " " + credentials?.lastName}
-            /> */}
                   <AvatarFallback className='rounded-full bg-[#f1f5f9] font-semibold text-[#1e293b]'>
                     {credentials?.firstName?.charAt(0)?.toUpperCase()}
                     {credentials?.lastName?.charAt(0)?.toUpperCase()}
@@ -98,10 +73,6 @@ export function NavUser() {
               <DropdownMenuLabel className='p-0 font-normal'>
                 <div className='flex items-center gap-2 px-3 py-2 text-left'>
                   <Avatar className='h-9 w-9 rounded-full ring-2 ring-[#e2e8f0]'>
-                    {/* <AvatarImage
-                src={user?.avatar}
-                alt={credentials?.firstName}
-              /> */}
                     <AvatarFallback className='rounded-full bg-[#f1f5f9] font-semibold text-[#1e293b]'>
                       {credentials?.firstName?.charAt(0)?.toUpperCase()}
                       {credentials?.lastName?.charAt(0)?.toUpperCase()}
@@ -161,7 +132,7 @@ export function NavUser() {
               <DropdownMenuSeparator className='my-2 bg-[#e2e8f0]' />
 
               <DropdownMenuItem
-                onClick={() => setLogoutModalCondition(true)}
+                onClick={() => {dispatch(openModal({type:'logout-modal',props:{userType:'teacher'}}))}}
                 className='rounded-[8px] font-medium text-[#1e293b] transition-all duration-200 hover:bg-[#ef4444]/10 hover:text-[#ef4444]'
               >
                 <LogOut size={16} className='mr-2 text-[#ef4444]' />

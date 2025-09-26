@@ -35,7 +35,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { useAppUtils } from '../../../../../hooks/useAppUtils'
-import { openModal } from '../../../../../shared/config/reducers/teacher/teacherDialogSlice'
+import { openModalTeacher } from '../../../../../shared/config/reducers/teacher/teacherDialogSlice'
 import { format } from 'date-fns'
 import { Header } from '@/components/layout/header';
 
@@ -158,7 +158,7 @@ console.log('fitleredStudents ====>',filteredStudents)
 
   const handleDeleteClick = () => {
     dispatch(
-      openModal({
+      openModalTeacher({
         type: 'delete-course-modal',
         props: {
           courseDetails: {

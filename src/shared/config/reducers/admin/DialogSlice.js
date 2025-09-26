@@ -9,7 +9,7 @@ export const DialogSlice = createSlice({
         }
     },
     reducers: {
-        openModal: (state, action) => {
+        openModalAdmin: (state, action) => {
             if (action.payload.isOpen == false) {
                 state.isOpen = false
             } else {
@@ -18,12 +18,12 @@ export const DialogSlice = createSlice({
             state.type = action.payload.type;
             state.props = action.payload.props;
         },
-        closeModal: (state, action) => {
+        closeModalAdmin: (state, action) => {
             state.isOpen = false;
             state.props = {};
         }
     }
 })
 
-export const { openModal, closeModal } = DialogSlice.actions;
+export const { openModalAdmin, closeModalAdmin} = DialogSlice.actions;
 export default DialogSlice.reducer
