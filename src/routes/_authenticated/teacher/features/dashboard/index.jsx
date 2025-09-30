@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { BookOpen, Plus } from 'lucide-react'
+import { BookOpen, Plus, Settings, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -22,6 +22,52 @@ import { ChartPieLabel } from './-components/ChartCourseByStudents.jsx'
 import { TopCourseChart } from './-components/TopCourseChart.jsx'
 import { ChartBarDefault } from './-components/overview'
 import './index.css'
+import { useSelector } from 'react-redux'
+import CountUp from 'react-countup'
+
+function WelcomeBanner({ userName ,creds }) {
+  return (
+    <div className="relative bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-3xl overflow-hidden p-8 mb-8 shadow-lg">
+      {/* Floating Decorative Circles */}
+      <div className="absolute -top-16 -left-16 w-56 h-56 bg-blue-400/20 rounded-full filter blur-3xl animate-[spin_25s_linear_infinite]"></div>
+      <div className="absolute -bottom-16 -right-16 w-72 h-72 bg-blue-500/20 rounded-full filter blur-3xl animate-[spin_30s_linear_infinite]"></div>
+
+   <div className="relative z-10 flex flex-col md:flex-row items-center md:justify-between gap-6">
+  <div className="text-center md:text-left">
+    <h1 className="text-3xl md:text-4xl font-bold mb-2">
+      Welcome {creds?.customerId ? "back" : ""},{" "}
+      <span className="text-blue-200">{userName}</span> 👩‍🏫
+    </h1>
+    <p className="text-blue-100 text-lg max-w-lg">
+      Manage your courses, track student progress, and share your knowledge
+      with learners worldwide.
+    </p>
+  </div>
+  <div className="flex gap-4">
+    {/* Manage Courses Button */}
+    <Button
+      size=""
+      className="bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all flex items-center gap-2"
+    >
+      <BookOpen className="h-5 w-5" />
+      Manage Courses
+    </Button>
+
+    {/* Profile Button */}
+    <Button
+      size=""
+      variant="outline"
+      className="bg-white/20 transition-all flex items-center gap-2"
+    >
+      <User className="h-5 w-5" />
+      My Profile
+    </Button>
+  </div>
+</div>
+
+    </div>
+  )
+}
 
 export default function Dashboard() {
   const isFirstRender = useRef(true)
@@ -31,7 +77,9 @@ export default function Dashboard() {
   })
   const { navigate } = useAppUtils()
   const { card, dounutData, monthlyEnrollments } = data
-
+ const credentials = useSelector((state) => state.teacherAuth.credentials)
+ console.log('credentials teacher',credentials)
+ console.log('card',card)
   return (
     <>
       {/* ===== Top Heading ===== */}
@@ -45,6 +93,7 @@ export default function Dashboard() {
       <div className='relative min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9]'>
         {/* ===== Main ===== */}
         <Main className='p-6'>
+          <WelcomeBanner userName={credentials?.firstName + " " + credentials?.lastName} creds={credentials} />
           <Tabs
             orientation='vertical'
             defaultValue='overview'
@@ -104,7 +153,7 @@ export default function Dashboard() {
                       </div>
                     </div>
                     <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-4xl font-bold text-transparent'>
-                      330
+                      <CountUp end={card.points}className="counter-value inline-block" /> 
                     </div>
                     <div className='mt-2 text-sm text-[#64748b]'>
                       Total Points
@@ -145,7 +194,7 @@ export default function Dashboard() {
                       </div>
                     </div>
                     <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-4xl font-bold text-transparent'>
-                      {card.myCoursesCount}
+                      {<CountUp end={card.myCoursesCount}className="counter-value inline-block" /> }
                     </div>
                     <p className='mt-2 text-sm text-[#64748b]'>
                       Courses I've Created
@@ -190,7 +239,7 @@ export default function Dashboard() {
                       <div className='flex items-center justify-between rounded-[8px] border border-[#e2e8f0] bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4'>
                         <div>
                           <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-3xl font-bold text-transparent'>
-                            {card.enrolledStudentsCount.toLocaleString()}
+                            {<CountUp end={card.enrolledStudentsCount.toLocaleString()}className="counter-value inline-block" /> }
                           </div>
                           <p className='text-sm text-[#64748b]'>
                             Total Students Enrolled
@@ -214,7 +263,7 @@ export default function Dashboard() {
                       <div className='flex items-center justify-between rounded-[8px] border border-[#e2e8f0] bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4'>
                         <div>
                           <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-3xl font-bold text-transparent'>
-                            {card.studentsEnrolledThisWeek}
+                            {<CountUp end={card.studentsEnrolledThisWeek}className="counter-value inline-block" /> }
                           </div>
                           <p className='text-sm text-[#64748b]'>
                             New Students This Week
@@ -298,7 +347,7 @@ export default function Dashboard() {
                       <div className='flex items-center justify-between rounded-[8px] border border-[#e2e8f0] bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4'>
                         <div>
                           <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-3xl font-bold text-transparent'>
-                            $324
+                           $<CountUp end={324} duration={4} className="counter-value inline-block" /> 
                           </div>
                           <p className='text-sm text-[#64748b]'>
                             Total Earnings (All Time)
@@ -322,7 +371,7 @@ export default function Dashboard() {
                       <div className='flex items-center justify-between rounded-[8px] border border-[#e2e8f0] bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4'>
                         <div>
                           <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-3xl font-bold text-transparent'>
-                            $234
+                            $<CountUp end={234} duration={4} className="counter-value inline-block" /> 
                           </div>
                           <p className='text-sm text-[#64748b]'>
                             Earnings This Month
@@ -346,7 +395,7 @@ export default function Dashboard() {
                       <div className='flex items-center justify-between rounded-[8px] border border-[#e2e8f0] bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4'>
                         <div>
                           <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-3xl font-bold text-transparent'>
-                            $234
+                            $<CountUp end={234} duration={4} className="counter-value inline-block" /> 
                           </div>
                           <p className='text-sm text-[#64748b]'>
                             Pending Payouts

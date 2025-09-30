@@ -11,27 +11,28 @@ import {
   GraduationCap,
   Home
 } from 'lucide-react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { toast } from 'sonner'
-import { Button } from '@/components/ui/button'
+import { useMutation } from '@tanstack/react-query'
+
+import { handleUpdateProfile } from '../../../../../shared/config/reducers/teacher/teacherAuthSlice'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { handleUpdateProfile } from '../../../../../shared/config/reducers/teacher/teacherAuthSlice'
-import { useMutation } from '@tanstack/react-query'
+import { Button } from '@/components/ui/button'
 import { PasswordInput } from '@/components/password-input'
+
 import { IconLock } from '@tabler/icons-react'
 
-export default function ProfileForm({teacherCreds}) {
+export default function ProfileForm({ teacherCreds }) {
   const dispatch = useDispatch()
   const [dp] = useState('')
   const [passBtnLoading, setPassBtnLoading] = useState(false)
@@ -48,24 +49,10 @@ export default function ProfileForm({teacherCreds}) {
   }
 
   const profileFormSchema = z.object({
-    firstname: z
-      .string()
-      .min(2, {
-        message: 'Firstname must be at least 2 characters.',
-      })
-      .max(30, {
-        message: 'Firstname must not be longer than 30 characters.',
-      }),
-    lastname: z
-      .string()
-      .min(2, {
-        message: 'Lastname must be at least 2 characters.',
-      })
-      .max(30, {
-        message: 'Lastname must not be longer than 30 characters.',
-      }),
+    firstname: z.string().min(2).max(30),
+    lastname: z.string().min(2).max(30),
     profile: z.string(),
-    bio: z.string().max(160).min(4),
+    bio: z.string().min(4).max(160),
     qualification: z.string().optional(),
     address: z.string().optional(),
   })
@@ -90,7 +77,7 @@ export default function ProfileForm({teacherCreds}) {
 
   const postData = useCallback(
     async (obj, endPoint = 'updateProfile') => {
-      endPoint === 'updatePassword' && setPassBtnLoading(true)
+      if (endPoint === 'updatePassword') setPassBtnLoading(true)
       try {
         let response = await axios.put(`/teacher/${endPoint}`, obj)
         response = response.data
@@ -104,17 +91,12 @@ export default function ProfileForm({teacherCreds}) {
           toast.success(response.message)
         }
       } catch (error) {
-        const errorResponse = error.response.data
-        if (endPoint === 'updatePassword') {
-          toast.error(errorResponse.message)
-        } else {
-          toast.error(errorResponse.message)
-        }
+        toast.error(error.response.data?.message || 'Error')
       } finally {
         setPassBtnLoading(false)
       }
     },
-    [axios, toast, dispatch]
+    [dispatch]
   )
 
   const mutation = useMutation({
@@ -129,63 +111,58 @@ export default function ProfileForm({teacherCreds}) {
         lastName: data.lastname,
         bio: data.bio,
         qualification: data.qualification,
-        address: data.address
+        address: data.address,
       }
       mutation.mutate(postObj)
     },
-    [ teacherCreds, mutation]
+    [teacherCreds, mutation]
   )
 
   return (
-   <div className="min-h-screen font-sans bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#f1f5f9]">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header Section */}
-        <div className="mb-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent mb-2">
-              Profile Settings
-            </h1>
-            <p className="text-[#64748b] text-lg">
-              Manage your personal information and account preferences
-            </p>
-          </div>
+    <div className="min-h-screen bg-gray-50 font-sans">
+      <div className="container mx-auto px-4">
+        {/* Header */}
+        <div className="mb-8 text-center">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-2">
+            Profile Settings
+          </h1>
+          <p className="text-gray-600 text-lg">
+            Manage your personal information and account preferences
+          </p>
         </div>
 
         <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Profile Overview Card */}
+          {/* Profile Card */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-[12px] p-6 border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300 sticky top-8">
+            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm sticky top-8">
               <div className="text-center">
                 <div className="relative inline-block mb-4">
-                  <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-[#e2e8f0] shadow-lg bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9]">
+                  <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-200 shadow-lg bg-gradient-to-br from-gray-100 to-gray-200">
                     <img
-                      className="w-full h-full object-cover"
                       src={
                         dp || teacherCreds?.profile
                           ? `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/teacher/profile/${teacherCreds.profile}`
                           : defaultProfile
                       }
                       alt="Profile"
-                      loading="lazy"
+                      className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 cursor-pointer">
+                  <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-blue-600 to-blue-800 p-3 rounded-full shadow-lg hover:scale-110 cursor-pointer transition">
                     <Camera className="w-4 h-4 text-white" />
                   </div>
                 </div>
-
-                <h3 className="text-xl font-semibold text-[#1e293b] mb-1">
+                <h3 className="text-xl font-semibold text-gray-800">
                   {teacherCreds?.firstName} {teacherCreds?.lastName}
                 </h3>
-                <p className="text-[#64748b] mb-4">{teacherCreds?.email}</p>
-
-                <div className="space-y-3 text-sm">
-                  <div className="flex items-center justify-center text-[#64748b]">
-                    <GraduationCap className="w-4 h-4 mr-2 text-[#2563eb]" />
+                <p className="text-gray-500">{teacherCreds?.email}</p>
+                <div className="space-y-2 mt-4 text-sm">
+                  <div className="flex items-center justify-center text-gray-600">
+                    <GraduationCap className="w-4 h-4 mr-2 text-blue-600" />
                     {teacherCreds?.qualification || 'Not provided'}
                   </div>
-                  <div className="flex items-center justify-center text-[#64748b]">
-                    <Home className="w-4 h-4 mr-2 text-[#2563eb]" />
+                  <div className="flex items-center justify-center text-gray-600">
+                    <Home className="w-4 h-4 mr-2 text-blue-600" />
                     {teacherCreds?.address || 'Not provided'}
                   </div>
                 </div>
@@ -193,66 +170,24 @@ export default function ProfileForm({teacherCreds}) {
             </div>
           </div>
 
-          {/* Main Form Section */}
+          {/* Main Form */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Personal Information Card */}
-            <div className="bg-white rounded-[12px] p-8 border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300">
+            {/* Personal Info Form */}
+            <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
               <div className="flex items-center mb-6">
-                <div className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] rounded-full p-3 mr-4">
+                <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-full p-3 mr-4">
                   <User className="w-6 h-6 text-white" />
                 </div>
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                   Personal Information
                 </h2>
               </div>
 
               <Form {...form}>
                 <form
-                  onSubmit={form.handleSubmit((data) => saveChanges(data))}
+                  onSubmit={form.handleSubmit(saveChanges)}
                   className="space-y-6"
                 >
-                  {/* Profile Picture Upload */}
-                  <FormField
-                    control={form.control}
-                    name="profile"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-[#64748b] font-medium flex items-center">
-                          <Camera className="w-4 h-4 mr-2 text-[#2563eb]" />
-                          Profile Picture
-                        </FormLabel>
-                        <div className="flex items-center space-x-4">
-                          <img
-                            className="h-16 w-16 rounded-full border-2 border-[#e2e8f0] shadow-lg"
-                            src={
-                              dp || teacherCreds?.profile
-                                ? `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/teacher/profile/${teacherCreds.profile}`
-                                : defaultProfile
-                            }
-                            alt="Current profile"
-                          />
-                          <Label
-                            htmlFor="image"
-                            className="cursor-pointer bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white px-4 py-2 rounded-[8px] hover:shadow-lg hover:scale-105 transition-all duration-300"
-                          >
-                            <Camera className="w-4 h-4 inline mr-2" />
-                            Change Photo
-                          </Label>
-                          <FormControl>
-                            <Input
-                              id="image"
-                              type="file"
-                              accept="image/*"
-                              {...field}
-                              className="hidden"
-                            />
-                          </FormControl>
-                        </div>
-                        <FormMessage className="text-[#ef4444]" />
-                      </FormItem>
-                    )}
-                  />
-
                   {/* Name Fields */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
@@ -260,66 +195,41 @@ export default function ProfileForm({teacherCreds}) {
                       name="firstname"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-[#64748b] font-medium">First Name</FormLabel>
+                          <FormLabel>First Name</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="Enter your first name"
-                              className="bg-white rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300"
-                              {...field}
-                            />
+                            <Input placeholder="Enter first name" {...field} />
                           </FormControl>
-                          <FormDescription className="text-[#94a3b8]">
-                            Your first name as it appears on official documents
-                          </FormDescription>
-                          <FormMessage className="text-[#ef4444]" />
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={form.control}
                       name="lastname"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-[#64748b] font-medium">Last Name</FormLabel>
+                          <FormLabel>Last Name</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="Enter your last name"
-                              className="bg-white rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300"
-                              {...field}
-                            />
+                            <Input placeholder="Enter last name" {...field} />
                           </FormControl>
-                          <FormDescription className="text-[#94a3b8]">
-                            Your family name or surname
-                          </FormDescription>
-                          <FormMessage className="text-[#ef4444]" />
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
                   </div>
 
-                  {/* Qualification and Address */}
+                  {/* Qualification & Address */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
                       name="qualification"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-[#64748b] font-medium flex items-center">
-                            <GraduationCap className="w-4 h-4 mr-2 text-[#2563eb]" />
-                            Qualification
-                          </FormLabel>
+                          <FormLabel>Qualification</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="Enter your highest qualification"
-                              className="bg-white rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300"
-                              {...field}
-                            />
+                            <Input placeholder="Enter highest qualification" {...field} />
                           </FormControl>
-                          <FormDescription className="text-[#94a3b8]">
-                            Your highest degree or certification
-                          </FormDescription>
-                          <FormMessage className="text-[#ef4444]" />
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -328,21 +238,11 @@ export default function ProfileForm({teacherCreds}) {
                       name="address"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-[#64748b] font-medium flex items-center">
-                            <Home className="w-4 h-4 mr-2 text-[#2563eb]" />
-                            Address
-                          </FormLabel>
+                          <FormLabel>Address</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="Enter your address"
-                              className="bg-white rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300"
-                              {...field}
-                            />
+                            <Input placeholder="Enter address" {...field} />
                           </FormControl>
-                          <FormDescription className="text-[#94a3b8]">
-                            Your current mailing address
-                          </FormDescription>
-                          <FormMessage className="text-[#ef4444]" />
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -354,115 +254,59 @@ export default function ProfileForm({teacherCreds}) {
                     name="bio"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-[#64748b] font-medium flex items-center">
-                          <FileText className="w-4 h-4 mr-2 text-[#2563eb]" />
-                          Bio
-                        </FormLabel>
+                        <FormLabel>Bio</FormLabel>
                         <FormControl>
-                          <Textarea
-                            placeholder="Tell us a little bit about yourself..."
-                            className="resize-none bg-white rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 min-h-[100px] transition-all duration-300"
-                            {...field}
-                          />
+                          <Textarea placeholder="Tell us about yourself" {...field} />
                         </FormControl>
-                        <FormDescription className="text-[#94a3b8]">
-                          Share a brief description about yourself (max 160 characters)
-                        </FormDescription>
-                        <FormMessage className="text-[#ef4444]" />
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
 
-                  <Button
-                    type="submit"
-                    disabled={mutation.status === 'pending'}
-                    className="w-full rounded-[8px] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] hover:from-[#1d4ed8] hover:to-[#1e40af] text-white font-semibold py-3 shadow-lg hover:shadow-[#cbd5e1]/50 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {mutation.status === 'pending' ? (
-                      <div className="flex items-center">
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        Updating Profile...
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center">
-                        <Save className="w-4 h-4 mr-2" />
-                        Update Profile
-                      </div>
-                    )}
+                  <Button type="submit" className="w-full">
+                    {mutation.status === 'pending' ? 'Updating...' : 'Update Profile'}
                   </Button>
                 </form>
               </Form>
             </div>
 
-            {/* Password Change Card */}
-            <div className="bg-white rounded-[12px] p-8 border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300">
+            {/* Password Form */}
+            <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
               <div className="flex items-center mb-6">
-                <div className="bg-gradient-to-r from-[#ef4444] to-[#dc2626] rounded-full p-3 mr-4">
+                <div className="bg-gradient-to-r from-red-600 to-red-800 rounded-full p-3 mr-4">
                   <IconLock className="w-6 h-6 text-white" />
                 </div>
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-[#ef4444] to-[#dc2626] bg-clip-text text-transparent">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">
                   Security Settings
                 </h2>
               </div>
 
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <Label className="text-[#64748b] font-medium mb-2 block">
-                      Current Password
-                    </Label>
-                    <PasswordInput
-                      placeholder="Enter current password"
-                      className="bg-white rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300 hide-password-toggle"
-                      onChange={handlePasswordChange}
-                      name="password"
-                    />
-                  </div>
-
-                  <div>
-                    <Label className="text-[#64748b] font-medium mb-2 block">
-                      New Password
-                    </Label>
-                    <PasswordInput
-                      placeholder="Enter new password"
-                      className="bg-white rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300 hide-password-toggle"
-                      onChange={handlePasswordChange}
-                      name="newPassword"
-                    />
-                  </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <PasswordInput
+                    placeholder="Current password"
+                    name="password"
+                    onChange={handlePasswordChange}
+                  />
                 </div>
-
-                <div className="flex justify-end">
-                  <Button
-                    variant="outline"
-                    disabled={disabled1 || disabled2 || passBtnLoading}
-                    onClick={() => postData(passwordObj, 'updatePassword')}
-                    className="rounded-[8px] bg-gradient-to-r from-[#ef4444] to-[#dc2626] hover:from-[#dc2626] hover:to-[#b91c1c] text-white border-0 px-6 py-2 shadow-lg hover:shadow-[#cbd5e1]/50 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {passBtnLoading ? (
-                      <div className="flex items-center">
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        Updating...
-                      </div>
-                    ) : (
-                      <div className="flex items-center">
-                        <IconLock className="w-4 h-4 mr-2" />
-                        Update Password
-                      </div>
-                    )}
-                  </Button>
+                <div>
+                  <PasswordInput
+                    placeholder="New password"
+                    name="newPassword"
+                    onChange={handlePasswordChange}
+                  />
                 </div>
               </div>
 
-              {/* Custom styles for hiding browser password toggles */}
-              <style>{`
-                .hide-password-toggle::-ms-reveal,
-                .hide-password-toggle::-ms-clear {
-                  visibility: hidden;
-                  pointer-events: none;
-                  display: none;
-                }
-              `}</style>
+              <div className="flex justify-end">
+                <Button
+                  variant="outline"
+                  disabled={disabled1 || disabled2 || passBtnLoading}
+                  onClick={() => postData(passwordObj, 'updatePassword')}
+                >
+                  {passBtnLoading ? 'Updating...' : 'Update Password'}
+                </Button>
+              </div>
             </div>
           </div>
         </div>

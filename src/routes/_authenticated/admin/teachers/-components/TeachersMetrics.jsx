@@ -1,6 +1,7 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Users } from "lucide-react";
+import CountUp from 'react-countup'
 
 export default function TeachersMetrics({ total, active, inactive, fetchStatus }) {
   const metrics = [
@@ -20,7 +21,7 @@ export default function TeachersMetrics({ total, active, inactive, fetchStatus }
             <CardTitle className="text-sm font-bold text-white">{metric.title}</CardTitle>
           </CardHeader>
           <CardContent className="flex items-center justify-between py-2 px-2">
-            <p className="font-extrabold text-white">{fetchStatus === 'fetching' ? 'loading...' : metric.value}</p>
+            <p className="font-extrabold text-white">{fetchStatus === 'fetching' ? 'loading...' : <CountUp end={metric.value}className="counter-value inline-block" /> }</p>
             <Users className="h-6 w-6 opacity-80" />
           </CardContent>
         </Card>

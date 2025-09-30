@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useMemo } from 'react'
 import axios from 'axios'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import { createFileRoute, useSearch } from '@tanstack/react-router'
@@ -11,7 +11,6 @@ import { Header } from '@/components/layout/header'
 import { TopNav } from '@/components/layout/top-nav'
 import { useAppUtils } from '../../../../hooks/useAppUtils'
 import { Show } from '../../../../shared/utils/Show'
-
 import {
   getDebounceInput,
   getRenderPaginationButtons,
@@ -118,10 +117,10 @@ function RouteComponent() {
   return (
     <>
       <Header>
-        <TopNav links={topNav} />
-        <div className='my-2 flex w-full items-center justify-between px-6'>
+        <TopNav links={topNav} >
+        <div className='flex w-full items-center justify-between px-6 p-2'>
           <div className='bg-clip-text text-2xl font-bold'>My Courses</div>
-          <div className='flex items-center gap-4'>
+          <div className='flex items-center'>
             <Button
               size='sm'
               className='flex items-center gap-2 rounded-[8px] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] font-medium text-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]'
@@ -165,6 +164,7 @@ function RouteComponent() {
             </Show>
           </div>
         </div>
+        </TopNav>
       </Header>
 
       <div className='relative min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9]'>

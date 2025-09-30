@@ -20,8 +20,8 @@ import {
   getRenderPaginationButtons,
   useSearchInput,
 } from '../../../../../utils/globalFunctions'
-import { CardDemo } from './-components/_Course_Card'
 import { SmallLoader } from '../../../teacher/-layout/data/components/teacher-authenticated-layout'
+import { CardDemo } from './-components/_Course_Card'
 
 const queryClient = new QueryClient()
 const coursesQueryOptions = (deps) =>
@@ -44,15 +44,14 @@ const coursesQueryOptions = (deps) =>
       }
     },
     placeholderData: (prev) => prev,
-
   })
 
 export const Route = createLazyFileRoute(
   '/_authenticated/student/_subscribed/enrolledcourses/'
 )({
   component: () => (
-    <Suspense fallback={<SmallLoader/>}>
-      <RouteComponent/>
+    <Suspense fallback={<SmallLoader />}>
+      <RouteComponent />
     </Suspense>
   ),
   validateSearch: (search) => {
@@ -98,22 +97,19 @@ function RouteComponent() {
     })
   }, [debouncedSearch])
 
-
-  
- 
   const queryClient = useQueryClient()
 
   const handlePageChange = async (page) => {
     if (searchInput !== '') {
       navigate({
         to: `/student/enrolledcourses`,
-        search: { page: page, input: `` },
+        search: { page: page, input: searchInput },
       })
     } else {
       navigate({
         to: `/student/enrolledcourses`,
         search: { page: page, input: `` },
-      })
+    })
     }
     await queryClient.invalidateQueries(
       coursesQueryOptions({ input: searchInput, page })
@@ -122,11 +118,11 @@ function RouteComponent() {
   const queryPage = useSearch({
     select: (search) => search.page,
   })
-     const paginationButtons = useMemo(
-      () => getRenderPaginationButtons(queryPage, pages, handlePageChange),
-      [queryPage, pages]
-    )
-  
+  const paginationButtons = useMemo(
+    () => getRenderPaginationButtons(queryPage, pages, handlePageChange),
+    [queryPage, pages]
+  )
+
   console.log('queryPage ===>', queryPage)
 
   const searchEnrolledCourses = async () => {
@@ -147,13 +143,12 @@ function RouteComponent() {
     })
   }
 
-      const baseUrl = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses`;
+  const baseUrl = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses`
 
   return (
     <>
-    
       <Header>
-        <h1 className='my-2 bg-clip-text text-2xl font-extrabold tracking-tight  drop-shadow-lg md:text-3xl'>
+        <h1 className='my-2 bg-clip-text text-2xl font-extrabold tracking-tight drop-shadow-lg md:text-3xl'>
           Enrolled Courses
         </h1>
         <TopNav links={topNav} />
@@ -184,64 +179,64 @@ function RouteComponent() {
           </Show>
         </div>
       </Header>
-<div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50'>
-      <div className='p-6'>
-        <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
-          <Show>
-            <Show.When isTrue={courses && courses.length > 0}>
-              {courses.map((course, index) => {
-                return (
-                  <CardDemo
-                    key={course._id || index}
-                    courseId={course._id}
-                    fetchStatus={fetchStatus}
-                    title={course.name}
-                    desc={course.description}
-                    image={`${baseUrl}/cover-images/${course.coverImage}`}
-                  />
-                )
-              })}
-            </Show.When>
-            <Show.Else>
-              <div className='col-span-full flex flex-col items-center justify-center py-12'>
-                <div className='mb-2 text-lg text-slate-400'>
-                  No courses found!
+      <div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50'>
+        <div className='p-6'>
+          <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
+            <Show>
+              <Show.When isTrue={courses && courses.length > 0}>
+                {courses.map((course, index) => {
+                  return (
+                    <CardDemo
+                      key={course._id || index}
+                      courseId={course._id}
+                      fetchStatus={fetchStatus}
+                      title={course.name}
+                      desc={course.description}
+                      image={`${baseUrl}/cover-images/${course.coverImage}`}
+                    />
+                  )
+                })}
+              </Show.When>
+              <Show.Else>
+                <div className='col-span-full flex flex-col items-center justify-center py-12'>
+                  <div className='mb-2 text-lg text-slate-400'>
+                    No courses found!
+                  </div>
+                  {searchInput?.trim() !== '' && (
+                    <p className='text-sm text-slate-500'>
+                      Try adjusting your search criteria
+                    </p>
+                  )}
                 </div>
-                {searchInput?.trim() !== '' && (
-                  <p className='text-sm text-slate-500'>
-                    Try adjusting your search criteria
-                  </p>
-                )}
-              </div>
-            </Show.Else>
-          </Show>
+              </Show.Else>
+            </Show>
+          </div>
         </div>
-      </div>
 
-      <div className='fixed bottom-20 left-1/2 -translate-x-1/2 transform'>
-        <div className='flex items-center gap-2 rounded-lg border border-slate-200 bg-white/80 p-2 shadow-lg backdrop-blur-sm'>
-          {queryPage > 1 && (
-            <Button
-              size='sm'
-              onClick={() => handlePageChange(queryPage - 1)}
-              className='bg-blue-600 text-white hover:bg-blue-700'
-            >
-              «
-            </Button>
-          )}
-          {paginationButtons}
-          {queryPage < pages && (
-            <Button
-              size='sm'
-              onClick={() => handlePageChange(queryPage + 1)}
-              className='bg-blue-600 text-white hover:bg-blue-700'
-            >
-              »
-            </Button>
-          )}
+        <div className='fixed bottom-20 left-1/2 -translate-x-1/2 transform'>
+          <div className='flex items-center gap-2 rounded-lg border border-slate-200 bg-white/80 p-2 shadow-lg backdrop-blur-sm'>
+            {queryPage > 1 && (
+              <Button
+                size='sm'
+                onClick={() => handlePageChange(queryPage - 1)}
+                className='bg-blue-600 text-white hover:bg-blue-700'
+              >
+                «
+              </Button>
+            )}
+            {paginationButtons}
+            {queryPage < pages && (
+              <Button
+                size='sm'
+                onClick={() => handlePageChange(queryPage + 1)}
+                className='bg-blue-600 text-white hover:bg-blue-700'
+              >
+                »
+              </Button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
     </>
   )
 }

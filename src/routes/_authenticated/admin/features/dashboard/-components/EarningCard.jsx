@@ -3,6 +3,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Line } from "react-chartjs-2"
 // Chart.js configuration
 import { Chart as ChartJS, LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend } from "chart.js"
+import CountUp from 'react-countup'
+
 // Register chart.js components
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend)
 
@@ -114,7 +116,7 @@ function EarningsCard({ totalEarnings, thisMonthTotal, earnings, months, loading
                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.02] to-transparent rounded-2xl opacity-0 group-hover/stat:opacity-100 transition-opacity duration-300" />
                 <p className="text-slate-500 text-sm font-semibold uppercase tracking-wider mb-2">Total Earnings</p>
                 <p className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-indigo-700 bg-clip-text text-transparent">
-                  ${totalEarnings}
+                  ${<CountUp end={totalEarnings}className="counter-value inline-block" />}
                 </p>
                 <div className="absolute top-4 right-4 w-2 h-2 bg-indigo-400 rounded-full animate-pulse" />
               </div>
@@ -123,7 +125,7 @@ function EarningsCard({ totalEarnings, thisMonthTotal, earnings, months, loading
                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.02] to-transparent rounded-2xl opacity-0 group-hover/stat:opacity-100 transition-opacity duration-300" />
                 <p className="text-slate-500 text-sm font-semibold uppercase tracking-wider mb-2">This Month</p>
                 <p className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-700 bg-clip-text text-transparent">
-                  ${thisMonthTotal}
+                  ${<CountUp end={thisMonthTotal}className="counter-value inline-block" />}
                 </p>
                 <div className="absolute top-4 right-4 w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
               </div>

@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { VariantProps, cva } from 'class-variance-authority'
 import { PanelLeftIcon } from 'lucide-react'
+// Assuming these are defined in your project
 import { cn } from '@/lib/utils'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { Button } from '@/components/ui/button'
@@ -22,12 +23,15 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 
+// --- Constants ---
 const SIDEBAR_COOKIE_NAME = 'sidebar_state'
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
 const SIDEBAR_WIDTH = '16rem'
 const SIDEBAR_WIDTH_MOBILE = '12rem'
 const SIDEBAR_WIDTH_ICON = '3rem'
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b'
+
+// --- Context and Hooks ---
 
 type SidebarContextProps = {
   state: 'expanded' | 'collapsed'
@@ -49,6 +53,18 @@ function useSidebar() {
   return context
 }
 
+// Helper function to read the initial state from cookie
+function getInitialSidebarState(defaultOpen: boolean) {
+  if (typeof window === 'undefined') return defaultOpen
+
+  const cookies = document.cookie.split('; ')
+  const stateCookie = cookies.find(row => row.startsWith(SIDEBAR_COOKIE_NAME))
+  if (stateCookie) {
+    return stateCookie.split('=')[1] === 'true'
+  }
+  return defaultOpen
+}
+
 function SidebarProvider({
   defaultOpen = true,
   open: openProp,
@@ -62,10 +78,11 @@ function SidebarProvider({
   open?: boolean
   onOpenChange?: (open: boolean) => void
 }) {
+  const initialOpenState = getInitialSidebarState(defaultOpen)
   const isMobile = useIsMobile()
   const [openMobile, setOpenMobile] = React.useState(false)
 
-  const [_open, _setOpen] = React.useState(defaultOpen)
+  const [_open, _setOpen] = React.useState(initialOpenState)
   const open = openProp ?? _open
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
@@ -76,6 +93,7 @@ function SidebarProvider({
         _setOpen(openState)
       }
 
+      // Set cookie to persist state
       document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
     },
     [setOpenProp, open]
@@ -85,13 +103,17 @@ function SidebarProvider({
     return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open)
   }, [isMobile, setOpen, setOpenMobile])
 
+  // Keyboard shortcut effect (Ctrl/Meta + B)
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
         event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
-        (event.metaKey || event.ctrlKey)
+        (event.metaKey || event.ctrlKey) &&
+        !event.altKey &&
+        !event.shiftKey
       ) {
-        event.preventDefault()
+        // Prevent default browser action (e.g., bookmark in some browsers)
+        event.preventDefault() 
         toggleSidebar()
       }
     }
@@ -124,10 +146,12 @@ function SidebarProvider({
             {
               '--sidebar-width': SIDEBAR_WIDTH,
               '--sidebar-width-icon': SIDEBAR_WIDTH_ICON,
+              '--sidebar-width-mobile': SIDEBAR_WIDTH_MOBILE,
               ...style,
             } as React.CSSProperties
           }
           className={cn(
+            // Dark background for inset variant wrapper
             'group/sidebar-wrapper has-data-[variant=inset]:bg-gradient-to-b has-data-[variant=inset]:from-[#1e293b] has-data-[variant=inset]:to-[#0f172a] flex min-h-svh w-full',
             className
           )}
@@ -139,6 +163,8 @@ function SidebarProvider({
     </SidebarContext.Provider>
   )
 }
+
+// --- Sidebar Component (The Layout) ---
 
 function Sidebar({
   side = "left",
@@ -154,15 +180,20 @@ function Sidebar({
 }) {
   const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
 
+  // 1. Non-Collapsible Sidebar (Always expanded, no mobile handling)
   if (collapsible === "none") {
     return (
       <div
         data-slot="sidebar"
+        data-variant={variant}
+        data-collapsible="none"
         className={cn(
+          // Base styles for non-collapsible, dark theme
           "bg-gradient-to-b from-[#1e293b] to-[#0f172a] text-[#e2e8f0] border-r border-[#475569] shadow-[0_4px_12px_rgba(0,0,0,0.2)]",
           "flex h-full w-[var(--sidebar-width)] flex-col",
+          // Variant-specific styles
           variant === "floating" && "rounded-[12px] m-2 shadow-[0_6px_16px_rgba(0,0,0,0.2)]",
-          variant === "inset" && "m-2 rounded-[12px]",
+          variant === "inset" && "m-2 rounded-[12px] border", // Added border for inset non-collapsible
           "hover:shadow-[0_8px_20px_rgba(0,0,0,0.3)] transition-shadow duration-300",
           className,
         )}
@@ -178,6 +209,7 @@ function Sidebar({
     )
   }
 
+  // 2. Mobile Sidebar (Sheet)
   if (isMobile) {
     return (
       <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
@@ -185,10 +217,10 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar"
           data-mobile="true"
+          // Sheet content takes full height but is hidden on desktop by isMobile check
           className={cn(
             "bg-gradient-to-b from-[#1e293b] to-[#0f172a] text-[#e2e8f0] w-[var(--sidebar-width)] p-0 [&>button]:hidden",
-            "border border-[#475569] shadow-[0_4px_12px_rgba(0,0,0,0.2)] rounded-t-[12px]",
-            "hover:shadow-[0_8px_20px_rgba(0,0,0,0.3)] transition-shadow duration-300",
+            "border border-[#475569] shadow-[0_4px_12px_rgba(0,0,0,0.2)] rounded-t-[12px]", // Enhanced styling
             className,
           )}
           style={
@@ -208,6 +240,7 @@ function Sidebar({
     )
   }
 
+  // 3. Desktop Collapsible Sidebar (The main wrapper)
   return (
     <div
       className="group peer text-[#e2e8f0] hidden md:block"
@@ -217,15 +250,19 @@ function Sidebar({
       data-side={side}
       data-slot="sidebar"
     >
+      {/* Sidebar Gap (Pusher for the main content) */}
       <div
         data-slot="sidebar-gap"
         className={cn(
-          "relative w-[var(--sidebar-width)] bg-transparent transition-[width] duration-200 ease-linear",
+          "relative bg-transparent transition-[width] duration-200 ease-linear",
+          "w-[var(--sidebar-width)]",
+          // Collapse logic
           "group-data-[collapsible=offcanvas]:w-0",
-          "group-data-[side=right]:rotate-180",
           variant === "floating" || variant === "inset"
-            ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+2rem)]"
+            ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+2rem)]" // Padding + width
             : "group-data-[collapsible=icon]:w-[var(--sidebar-width-icon)]",
+          // Side handling (for gap animation direction - not strictly necessary but good for completeness)
+          "group-data-[side=right]:rotate-180", 
         )}
         style={
           {
@@ -235,17 +272,21 @@ function Sidebar({
         }
       />
 
+      {/* Sidebar Container (The actual fixed sidebar) */}
       <div
         data-slot="sidebar-container"
         className={cn(
           "fixed inset-y-0 z-10 hidden h-svh transition-[left,right,width] duration-200 ease-linear md:flex",
           "w-[var(--sidebar-width)]",
+          // Side position and offcanvas transition
           side === "left"
             ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
             : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
+          // Icon collapse width + padding for floating/inset
           variant === "floating" || variant === "inset"
-            ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+2rem+2px)]"
+            ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+2rem+2px)]" // 2px for border
             : "group-data-[collapsible=icon]:w-[var(--sidebar-width-icon)]",
+          // Base styling
           "border-[#475569] bg-gradient-to-b from-[#1e293b] to-[#0f172a] shadow-[0_4px_12px_rgba(0,0,0,0.2)]",
           "hover:shadow-[0_8px_20px_rgba(0,0,0,0.3)] transition-shadow duration-300",
           className,
@@ -263,6 +304,7 @@ function Sidebar({
           data-slot="sidebar-inner"
           className={cn(
             "flex h-full w-full flex-col",
+            // Variant-specific inner container styles
             "group-data-[variant=floating]:rounded-[12px] group-data-[variant=floating]:border group-data-[variant=floating]:border-[#475569] group-data-[variant=floating]:shadow-[0_4px_12px_rgba(0,0,0,0.2)]",
             "group-data-[variant=inset]:bg-transparent",
           )}
@@ -274,6 +316,8 @@ function Sidebar({
   )
 }
 
+// --- Accessory Components ---
+
 function SidebarTrigger({
   className,
   onClick,
@@ -282,21 +326,28 @@ function SidebarTrigger({
   const { toggleSidebar } = useSidebar()
 
   return (
-    <Button
-      data-sidebar='trigger'
-      data-slot='sidebar-trigger'
-      variant='ghost'
-      size='icon'
-      className={cn('size-7 text-[#e2e8f0] hover:bg-[#2563eb]/20 hover:text-[#bfdbfe] rounded-[8px]', className)}
-      onClick={(event) => {
-        onClick?.(event)
-        toggleSidebar()
-      }}
-      {...props}
-    >
-      <PanelLeftIcon />
-      <span className='sr-only'>Toggle Sidebar</span>
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          data-sidebar='trigger'
+          data-slot='sidebar-trigger'
+          variant='ghost'
+          size='icon'
+          className={cn('size-7 text-[#e2e8f0] hover:bg-[#2563eb]/20 hover:text-[#bfdbfe] rounded-[8px]', className)}
+          onClick={(event) => {
+            onClick?.(event)
+            toggleSidebar()
+          }}
+          {...props}
+        >
+          <PanelLeftIcon className="size-4" /> {/* Set size explicitly */}
+          <span className='sr-only'>Toggle Sidebar</span>
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent className="bg-[#2d3748] text-[#e2e8f0] border-[#475569] shadow-[0_4px_12px_rgba(0,0,0,0.2)]" side="bottom" align="center">
+        Toggle Sidebar (<kbd>Cmd</kbd>+<kbd>B</kbd>)
+      </TooltipContent>
+    </Tooltip>
   )
 }
 
@@ -310,12 +361,21 @@ function SidebarRail({ className, ...props }: React.ComponentProps<'button'>) {
       aria-label='Toggle Sidebar'
       tabIndex={-1}
       onClick={toggleSidebar}
-      title='Toggle Sidebar'
+      title='Toggle Sidebar (Cmd+B)'
       className={cn(
-        'hover:after:bg-[#475569] absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] sm:flex',
-        'in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize',
-        '[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize',
-        'hover:group-data-[collapsible=offcanvas]:bg-[#1e293b] group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full',
+        // Base styles for the invisible rail area
+        'absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear sm:flex',
+        // Cursor changes based on side and state
+        'group-data-[side=left]:-right-4 group-data-[side=right]:left-0',
+        'group-data-[state=expanded]:group-data-[side=left]:cursor-w-resize group-data-[state=expanded]:group-data-[side=right]:cursor-e-resize',
+        'group-data-[state=collapsed]:group-data-[side=left]:cursor-e-resize group-data-[state=collapsed]:group-data-[side=right]:cursor-w-resize',
+        // Visible line/rail styling
+        'after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] after:transition-colors',
+        'hover:after:bg-[#475569]',
+        // Offcanvas-specific adjustments
+        'group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full',
+        'group-data-[collapsible=offcanvas]:hover:bg-[#1e293b]/20',
+        // Rail position for offcanvas mode
         '[[data-side=left][data-collapsible=offcanvas]_&]:-right-2',
         '[[data-side=right][data-collapsible=offcanvas]_&]:-left-1',
         className
@@ -330,7 +390,8 @@ function SidebarInset({ className, ...props }: React.ComponentProps<'main'>) {
     <main
       data-slot='sidebar-inset'
       className={cn(
-        'bg-gradient-to-b from-[#1e293b] to-[#0f172a] relative flex w-full flex-1 flex-col',
+        'bg-gradient-to-b from-[#1e293b] to-[#0f172a] relative flex w-full flex-1 flex-col overflow-auto',
+        // Responsive/Peer styles based on Sidebar state and variant
         'md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-[12px] md:peer-data-[variant=inset]:shadow-[0_4px_12px_rgba(0,0,0,0.2)] md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2',
         className
       )}
@@ -347,7 +408,7 @@ function SidebarInput({
     <Input
       data-slot='sidebar-input'
       data-sidebar='input'
-      className={cn('bg-[#2d3748] h-8 w-full shadow-none border-[#475569] rounded-[8px] text-[#e2e8f0] focus:ring-[#2563eb] focus:ring-2', className)}
+      className={cn('bg-[#2d3748] h-8 w-full shadow-none border-[#475569] rounded-[8px] text-[#e2e8f0] focus:ring-[#2563eb] focus:ring-2 placeholder:text-[#94a3b8]', className)}
       {...props}
     />
   )
@@ -369,7 +430,7 @@ function SidebarFooter({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot='sidebar-footer'
       data-sidebar='footer'
-      className={cn('flex flex-col gap-2 p-2', className)}
+      className={cn('flex flex-col gap-2 p-2 border-t border-[#475569]/50', className)}
       {...props}
     />
   )
@@ -395,13 +456,16 @@ function SidebarContent({ className, ...props }: React.ComponentProps<'div'>) {
       data-slot='sidebar-content'
       data-sidebar='content'
       className={cn(
-        'flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden',
+        // Allow scrolling, but hide overflow when collapsed to icon (to prevent content bleed)
+        'flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto overflow-x-hidden group-data-[collapsible=icon]:overflow-hidden',
         className
       )}
       {...props}
     />
   )
 }
+
+// --- Grouping Components ---
 
 function SidebarGroup({ className, ...props }: React.ComponentProps<'div'>) {
   return (
@@ -427,6 +491,7 @@ function SidebarGroupLabel({
       data-sidebar='group-label'
       className={cn(
         'text-[#e2e8f0] ring-[#2563eb] flex h-8 shrink-0 items-center rounded-[8px] px-2 text-xs font-medium outline-hidden transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0',
+        // Transition for icon mode collapse
         'group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0',
         className
       )}
@@ -448,8 +513,8 @@ function SidebarGroupAction({
       data-sidebar='group-action'
       className={cn(
         'text-[#e2e8f0] ring-[#2563eb] hover:bg-[#2563eb]/20 hover:text-[#bfdbfe] absolute top-3.5 right-3 flex aspect-square w-5 items-center justify-center rounded-[8px] p-0 outline-hidden transition-transform focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0',
-        'after:absolute after:-inset-2 md:after:hidden',
-        'group-data-[collapsible=icon]:hidden',
+        'after:absolute after:-inset-2 md:after:hidden', // Increased hit area
+        'group-data-[collapsible=icon]:hidden', // Hide when collapsed to icon
         className
       )}
       {...props}
@@ -470,6 +535,8 @@ function SidebarGroupContent({
     />
   )
 }
+
+// --- Menu Components ---
 
 function SidebarMenu({ className, ...props }: React.ComponentProps<'ul'>) {
   return (
@@ -494,23 +561,27 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<'li'>) {
 }
 
 const sidebarMenuButtonVariants = cva(
-  'peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-[8px] p-2 text-left text-sm outline-hidden ring-[#2563eb] transition-[width,height,padding] hover:bg-[#2563eb]/20 hover:text-[#bfdbfe] focus-visible:ring-2 active:bg-[#2563eb]/30 active:text-[#bfdbfe] disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-[#2563eb]/20 data-[active=true]:font-medium data-[active=true]:text-[#bfdbfe] data-[state=open]:hover:bg-[#2563eb]/20 data-[state=open]:hover:text-[#bfdbfe] group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0',
+  'peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-[8px] p-2 text-left text-sm outline-hidden ring-[#2563eb] transition-[width,height,padding] focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0',
   {
     variants: {
       variant: {
-        default: 'hover:bg-[#2563eb]/20 hover:text-[#bfdbfe]',
+        default: 'hover:bg-[#2563eb]/20 hover:text-[#bfdbfe] active:bg-[#2563eb]/30 active:text-[#bfdbfe]',
         outline:
-          'bg-[#2d3748] shadow-[0_0_0_1px_#475569] hover:bg-[#2563eb]/20 hover:text-[#bfdbfe] hover:shadow-[0_0_0_1px_#2563eb]',
+          'bg-[#2d3748] shadow-[0_0_0_1px_#475569] hover:bg-[#2563eb]/20 hover:text-[#bfdbfe] hover:shadow-[0_0_0_1px_#2563eb] active:bg-[#2563eb]/30 active:text-[#bfdbfe]',
       },
       size: {
         default: 'h-8 text-sm',
         sm: 'h-7 text-xs',
-        lg: 'h-12 text-sm group-data-[collapsible=icon]:p-0!',
+        lg: 'h-10 text-base group-data-[collapsible=icon]:p-0!',
+      },
+      isActive: {
+        true: 'bg-[#2563eb]/20 font-medium text-[#bfdbfe]',
       },
     },
     defaultVariants: {
       variant: 'default',
       size: 'default',
+      isActive: false,
     },
   }
 )
@@ -537,19 +608,27 @@ function SidebarMenuButton({
       data-sidebar='menu-button'
       data-size={size}
       data-active={isActive}
-      className={cn(sidebarMenuButtonVariants({ variant, size }), 'text-[#e2e8f0]', className)}
+      // Apply conditional active style via className if not handled by cva
+      className={cn(
+        sidebarMenuButtonVariants({ variant, size, isActive }),
+        'text-[#e2e8f0] group-has-data-[sidebar=menu-action]/menu-item:pr-8', // Adjust padding if action exists
+        'group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2!', // Icon mode styling
+        className
+      )}
       {...props}
     />
   )
 
-  if (!tooltip) {
+  // Use Tooltip only if a tooltip prop is provided and is applicable
+  const shouldShowTooltip = !!tooltip && state === 'collapsed' && !isMobile
+
+  if (!shouldShowTooltip) {
     return button
   }
 
-  if (typeof tooltip === 'string') {
-    tooltip = {
-      children: tooltip,
-    }
+  let tooltipProps: React.ComponentProps<typeof TooltipContent> = {
+    children: typeof tooltip === 'string' ? tooltip : undefined,
+    ...(typeof tooltip === 'object' ? tooltip : {}),
   }
 
   return (
@@ -558,9 +637,9 @@ function SidebarMenuButton({
       <TooltipContent
         side='right'
         align='center'
-        hidden={state !== 'collapsed' || isMobile}
+        // Styling for the dark tooltip
         className="bg-[#2d3748] text-[#e2e8f0] border-[#475569] shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
-        {...tooltip}
+        {...tooltipProps}
       />
     </Tooltip>
   )
@@ -582,12 +661,14 @@ function SidebarMenuAction({
       data-slot='sidebar-menu-action'
       data-sidebar='menu-action'
       className={cn(
-        'text-[#e2e8f0] ring-[#2563eb] hover:bg-[#2563eb]/20 hover:text-[#bfdbfe] peer-hover/menu-button:text-[#bfdbfe] absolute top-1.5 right-1 flex aspect-square w-5 items-center justify-center rounded-[8px] p-0 outline-hidden transition-transform focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0',
-        'after:absolute after:-inset-2 md:after:hidden',
+        'text-[#e2e8f0] ring-[#2563eb] hover:bg-[#2563eb]/20 hover:text-[#bfdbfe] peer-hover/menu-button:text-[#bfdbfe] absolute right-1 flex aspect-square w-5 items-center justify-center rounded-[8px] p-0 outline-hidden transition-transform focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0',
+        'after:absolute after:-inset-2 md:after:hidden', // Increased hit area
+        // Vertical positioning based on size of peer button
         'peer-data-[size=sm]/menu-button:top-1',
         'peer-data-[size=default]/menu-button:top-1.5',
         'peer-data-[size=lg]/menu-button:top-2.5',
         'group-data-[collapsible=icon]:hidden',
+        // Hover/Active visibility control
         showOnHover &&
           'peer-data-[active=true]/menu-button:text-[#bfdbfe] group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 md:opacity-0',
         className
@@ -606,12 +687,14 @@ function SidebarMenuBadge({
       data-slot='sidebar-menu-badge'
       data-sidebar='menu-badge'
       className={cn(
-        'text-[#e2e8f0] pointer-events-none absolute right-1 flex h-5 min-w-5 items-center justify-center rounded-[8px] px-1 text-xs font-medium tabular-nums select-none bg-[#2d3748]',
+        'text-[#e2e8f0] pointer-events-none absolute right-1 flex h-5 min-w-5 items-center justify-center rounded-[8px] px-1 text-xs font-medium tabular-nums select-none bg-[#2d3748] border border-[#475569]',
+        // Hover/Active styling
         'peer-hover/menu-button:text-[#bfdbfe] peer-data-[active=true]/menu-button:text-[#bfdbfe]',
+        // Vertical positioning based on size of peer button
         'peer-data-[size=sm]/menu-button:top-1',
         'peer-data-[size=default]/menu-button:top-1.5',
         'peer-data-[size=lg]/menu-button:top-2.5',
-        'group-data-[collapsible=icon]:hidden',
+        'group-data-[collapsible=icon]:hidden', // Hide when collapsed to icon
         className
       )}
       {...props}
@@ -627,7 +710,8 @@ function SidebarMenuSkeleton({
   showIcon?: boolean
 }) {
   const width = React.useMemo(() => {
-    return `${Math.floor(Math.random() * 40) + 50}%`
+    // Random width between 50% and 90%
+    return `${Math.floor(Math.random() * 40) + 50}%` 
   }, [])
 
   return (
@@ -639,12 +723,12 @@ function SidebarMenuSkeleton({
     >
       {showIcon && (
         <Skeleton
-          className='size-4 rounded-[8px] bg-[#475569]'
+          className='size-4 rounded-[4px] bg-[#475569]' // Adjusted rounded corner
           data-sidebar='menu-skeleton-icon'
         />
       )}
       <Skeleton
-        className='h-4 max-w-[var(--skeleton-width)] flex-1 bg-[#475569]'
+        className='h-4 max-w-[var(--skeleton-width)] flex-1 bg-[#475569] rounded-[4px]' // Adjusted rounded corner
         data-sidebar='menu-skeleton-text'
         style={
           {
@@ -656,6 +740,8 @@ function SidebarMenuSkeleton({
   )
 }
 
+// --- Sub-Menu Components ---
+
 function SidebarMenuSub({ className, ...props }: React.ComponentProps<'ul'>) {
   return (
     <ul
@@ -663,7 +749,7 @@ function SidebarMenuSub({ className, ...props }: React.ComponentProps<'ul'>) {
       data-sidebar='menu-sub'
       className={cn(
         'border-[#475569] mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l px-2.5 py-0.5',
-        'group-data-[collapsible=icon]:hidden',
+        'group-data-[collapsible=icon]:hidden', // Hide sub-menus entirely when collapsed
         className
       )}
       {...props}
@@ -705,10 +791,14 @@ function SidebarMenuSubButton({
       data-size={size}
       data-active={isActive}
       className={cn(
-        'text-[#e2e8f0] ring-[#2563eb] hover:bg-[#2563eb]/20 hover:text-[#bfdbfe] active:bg-[#2563eb]/30 active:text-[#bfdbfe] [&>svg]:text-[#bfdbfe] flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-[8px] px-2 outline-hidden focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0',
+        // Base styling
+        'text-[#e2e8f0] ring-[#2563eb] active:bg-[#2563eb]/30 active:text-[#bfdbfe] [&>svg]:text-[#bfdbfe] flex min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-[8px] px-2 outline-hidden focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0',
+        // Size variants
+        size === 'sm' && 'h-6 text-xs',
+        size === 'md' && 'h-7 text-sm',
+        // Hover/Active states
+        'hover:bg-[#2563eb]/20 hover:text-[#bfdbfe]',
         'data-[active=true]:bg-[#2563eb]/20 data-[active=true]:text-[#bfdbfe]',
-        size === 'sm' && 'text-xs',
-        size === 'md' && 'text-sm',
         'group-data-[collapsible=icon]:hidden',
         className
       )}
@@ -716,6 +806,8 @@ function SidebarMenuSubButton({
     />
   )
 }
+
+// --- Exports ---
 
 export {
   Sidebar,

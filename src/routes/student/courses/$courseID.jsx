@@ -53,7 +53,7 @@ import {
   isActiveSubscription,
 } from '../../../shared/utils/helperFunction'
 
-const courseQueryOptions = (deps) =>
+export const courseQueryOptions = (deps) =>
   queryOptions({
     queryKey: ['getCourse', deps.courseID, deps?.userID],
     queryFn: async () => {
@@ -116,17 +116,6 @@ export const Route = createFileRoute('/student/courses/$courseID')({
           search: { redirect: `/student/courses/${params.courseID}` },
         })
       }
-    } else {
-      store.dispatch(
-        openModal({
-          type: 'login-modal',
-          props: { redirect: `/student/courses/${params.courseID}` },
-        })
-      )
-      throw redirect({
-        to: '/student/courses',
-        replace: true,
-      })
     }
   },
   validateSearch: (search) => {
@@ -152,6 +141,7 @@ function RouteComponent() {
   console.log('data', data)
   const course = data?.course
   const isEnrolled = data?.isEnrolled
+  const isLoggedIn = data?.isLoggedIn
   const enrolledStudents = data?.enrolledStudents || 0
   const [activeTab, setActiveTab] = useState('overview')
 
@@ -249,7 +239,7 @@ function RouteComponent() {
             size='sm'
             variant='outline'
             className='group mb-6 border-2 border-white/30 bg-white/10 text-white backdrop-blur-sm transition-all duration-300 hover:border-white/50 hover:bg-white/20 hover:shadow-lg'
-            onClick={() => window.history.back()}
+            onClick={() => navigate({ to: '/student/courses' })}
           >
             <ArrowLeft className='h-4 w-4 transition-transform duration-200 group-hover:-translate-x-1' />
             <span className='ml-2 hidden font-medium sm:inline'>
@@ -290,6 +280,13 @@ function RouteComponent() {
                     {course.material?.length || 0} materials
                   </span>
                 </div>
+
+                {!isLoggedIn && (
+                  <div className='flex items-center gap-2 rounded-full border border-yellow-200 bg-white px-4 py-2 text-sm font-medium text-red-500'>
+                    <Lock className='h-4 w-4' />
+                    Login required
+                  </div>
+                )}
               </div>
             </div>
             <div className='relative'>
@@ -380,169 +377,191 @@ function RouteComponent() {
               </TabsContent>
 
               <TabsContent value='materials' className='space-y-4'>
-                <Accordion type='multiple' className='space-y-4'>
-                  {course.material?.map((material, index) => (
-                    <AccordionItem
-                      key={material._id}
-                      value={`material-${material._id}`}
-                      className='rounded-xl border border-slate-200 bg-white shadow-md transition-all hover:shadow-lg'
+                {!isLoggedIn ? (
+                  <div className='rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-8 text-center'>
+                    <Lock className='mx-auto mb-3 h-8 w-8 text-slate-500' />
+                    <p className='text-lg font-semibold text-slate-700'>
+                      Please login to view materials
+                    </p>
+                    <Button
+                      onClick={() =>
+                        navigate({
+                          to: '/student/login',
+                          search: {
+                            redirect: `/student/courses/${params.courseID}`,
+                            courseID: params.courseID,
+                          },
+                        })
+                      }
+                      className='mt-4 bg-blue-600 text-white'
                     >
-                      {/* Accordion Header */}
-                      <AccordionTrigger className='px-6 py-4 hover:no-underline [&[data-state=open]>div]:text-blue-600'>
-                        <div className='flex w-full items-center justify-between'>
-                          <div className='flex items-center gap-4'>
-                            <div className='flex h-10 w-14 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white'>
-                              {index + 1}
-                            </div>
-                            <div className='text-left'>
-                              <h3 className='text-base font-semibold text-slate-800'>
-                                {material.title}
-                              </h3>
-                              <p className='mt-1 line-clamp-1 text-sm text-slate-500'>
-                                {material.description}
-                              </p>
-                            </div>
-                          </div>
-
-                          {!isEnrolled && (
-                            <div className='flex items-center gap-2 rounded-full border border-red-200 bg-red-100 px-3 py-1'>
-                              <Lock className='h-4 w-4 text-red-500' />
-                              <span className='text-xs font-medium text-red-500'>
-                                Locked
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </AccordionTrigger>
-
-                      {/* Accordion Content */}
-                      <AccordionContent className='px-6 pb-6'>
-                        <div
-                          className={`rounded-xl p-5 transition-all ${
-                            isEnrolled
-                              ? 'border border-slate-200 bg-slate-50 hover:bg-slate-100'
-                              : 'border-2 border-red-200 bg-red-50/60'
-                          }`}
-                        >
-                          <div className='flex flex-wrap items-center justify-between gap-4'>
-                            {/* Media Info */}
+                      Login
+                    </Button>
+                  </div>
+                ) : (
+                  <Accordion type='multiple' className='space-y-4'>
+                    {course.material?.map((material, index) => (
+                      <AccordionItem
+                        key={material._id}
+                        value={`material-${material._id}`}
+                        className='rounded-xl border border-slate-200 bg-white shadow-md transition-all hover:shadow-lg'
+                      >
+                        {/* Accordion Header */}
+                        <AccordionTrigger className='px-6 py-4 hover:no-underline [&[data-state=open]>div]:text-blue-600'>
+                          <div className='flex w-full items-center justify-between'>
                             <div className='flex items-center gap-4'>
-                              <div
-                                className={`flex h-12 w-12 items-center justify-center rounded-lg ${
-                                  isEnrolled ? 'bg-blue-600' : 'bg-slate-400'
-                                }`}
-                              >
-                                {getMediaIcon(material.type)}
+                              <div className='flex h-10 w-14 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white'>
+                                {index + 1}
                               </div>
-                              <div>
-                                <h4 className='font-semibold text-slate-800'>
+                              <div className='text-left'>
+                                <h3 className='text-base font-semibold text-slate-800'>
                                   {material.title}
-                                </h4>
-                                <p className='mt-1 line-clamp-2 text-sm text-slate-600'>
+                                </h3>
+                                <p className='mt-1 line-clamp-1 text-sm text-slate-500'>
                                   {material.description}
                                 </p>
-                                <div className='mt-2 flex items-center gap-2'>
-                                  <span className='rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600'>
-                                    {material.type.charAt(0).toUpperCase() +
-                                      material.type.slice(1)}
-                                  </span>
-                                  {!isEnrolled && (
-                                    <span className='rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-500'>
-                                      Enrollment Required
-                                    </span>
-                                  )}
-                                </div>
                               </div>
                             </div>
 
-                            {/* Actions */}
-                            <div>
-                              {!isEnrolled ? (
-                                <div className='flex items-center gap-2 text-slate-400'>
-                                  <Lock className='h-4 w-4' />
-                                  <span className='text-sm font-medium'>
-                                    Locked
-                                  </span>
-                                </div>
-                              ) : (
-                                <Button
-                                  size='sm'
-                                  onClick={() =>
-                                    setOpenMaterial((prev) =>
-                                      prev === material._id
-                                        ? null
-                                        : material._id
-                                    )
-                                  }
-                                  className='flex items-center gap-2 rounded-lg bg-emerald-500 text-white shadow-sm hover:bg-emerald-600'
-                                >
-                                  <Play className='h-3 w-3' />
-                                  {openMaterial === material._id
-                                    ? 'Hide Material'
-                                    : 'Access Material'}
-                                </Button>
-                              )}
-                            </div>
+                            {!isEnrolled && (
+                              <div className='flex items-center gap-2 rounded-full border border-red-200 bg-red-100 px-3 py-1'>
+                                <Lock className='h-4 w-4 text-red-500' />
+                                <span className='text-xs font-medium text-red-500'>
+                                  Locked
+                                </span>
+                              </div>
+                            )}
                           </div>
+                        </AccordionTrigger>
 
-                          {/* Locked Alert */}
-                          {!isEnrolled && (
-                            <div className='mt-4 rounded-lg border border-red-200 bg-red-50 p-3'>
-                              <p className='text-sm font-medium text-red-600'>
-                                <Lock className='mr-2 inline h-4 w-4' />
-                                You need to enroll in this course to access the
-                                material content and media files.
-                              </p>
-                            </div>
-                          )}
+                        {/* Accordion Content */}
+                        <AccordionContent className='px-6 pb-6'>
+                          <div
+                            className={`rounded-xl p-5 transition-all ${
+                              isEnrolled
+                                ? 'border border-slate-200 bg-slate-50 hover:bg-slate-100'
+                                : 'border-2 border-red-200 bg-red-50/60'
+                            }`}
+                          >
+                            <div className='flex flex-wrap items-center justify-between gap-4'>
+                              {/* Media Info */}
+                              <div className='flex items-center gap-4'>
+                                <div
+                                  className={`flex h-12 w-12 items-center justify-center rounded-lg ${
+                                    isEnrolled ? 'bg-blue-600' : 'bg-slate-400'
+                                  }`}
+                                >
+                                  {getMediaIcon(material.type)}
+                                </div>
+                                <div>
+                                  <h4 className='font-semibold text-slate-800'>
+                                    {material.title}
+                                  </h4>
+                                  <p className='mt-1 line-clamp-2 text-sm text-slate-600'>
+                                    {material.description}
+                                  </p>
+                                  <div className='mt-2 flex items-center gap-2'>
+                                    <span className='rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600'>
+                                      {material.type.charAt(0).toUpperCase() +
+                                        material.type.slice(1)}
+                                    </span>
+                                    {!isEnrolled && (
+                                      <span className='rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-500'>
+                                        Enrollment Required
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
 
-                          {console.log('material.tyep', material.type)}
-                          {/* ✅ Show material inside accordion if clicked */}
-                          {isEnrolled && openMaterial === material._id && (
-                            <div className='mt-4 overflow-hidden rounded-lg border border-slate-200'>
-                              {material.type === 'application' && (
-                                <iframe
-                                  src={`${baseMaterialUrl}${material.media}`}
-                                  className='h-80 w-full'
-                                  title='PDF Viewer'
-                                />
-                              )}
-                              {material.type === 'video' && (
-                                <video
-                                  src={`${baseMaterialUrl}${material.media}`}
-                                  controls
-                                  className='h-80 w-full rounded-lg'
-                                />
-                              )}
-                              {material.media.match(/\.(mp4|webm)$/i) && (
-                                <img
-                                  src={`${baseMaterialUrl}${material.media}`}
-                                  alt={material.title}
-                                  className='h-80 w-full rounded-lg object-contain'
-                                />
-                              )}
+                              {/* Actions */}
+                              <div>
+                                {!isEnrolled ? (
+                                  <div className='flex items-center gap-2 text-slate-400'>
+                                    <Lock className='h-4 w-4' />
+                                    <span className='text-sm font-medium'>
+                                      Locked
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <Button
+                                    size='sm'
+                                    onClick={() =>
+                                      setOpenMaterial((prev) =>
+                                        prev === material._id
+                                          ? null
+                                          : material._id
+                                      )
+                                    }
+                                    className='flex items-center gap-2 rounded-lg bg-emerald-500 text-white shadow-sm hover:bg-emerald-600'
+                                  >
+                                    <Play className='h-3 w-3' />
+                                    {openMaterial === material._id
+                                      ? 'Hide Material'
+                                      : 'Access Material'}
+                                  </Button>
+                                )}
+                              </div>
                             </div>
-                          )}
+
+                            {/* Locked Alert */}
+                            {!isEnrolled && (
+                              <div className='mt-4 rounded-lg border border-red-200 bg-red-50 p-3'>
+                                <p className='text-sm font-medium text-red-600'>
+                                  <Lock className='mr-2 inline h-4 w-4' />
+                                  You need to enroll in this course to access
+                                  the material content and media files.
+                                </p>
+                              </div>
+                            )}
+
+                            {/* ✅ Show material inside accordion if clicked */}
+                            {isEnrolled && openMaterial === material._id && (
+                              <div className='mt-4 overflow-hidden rounded-lg border border-slate-200'>
+                                {material.type === 'application' && (
+                                  <iframe
+                                    src={`${baseMaterialUrl}${material.media}`}
+                                    className='h-80 w-full'
+                                    title='PDF Viewer'
+                                  />
+                                )}
+                                {material.type === 'video' && (
+                                  <video
+                                    src={`${baseMaterialUrl}${material.media}`}
+                                    controls
+                                    className='h-80 w-full rounded-lg'
+                                  />
+                                )}
+                                {material.media.match(/\.(mp4|webm)$/i) && (
+                                  <img
+                                    src={`${baseMaterialUrl}${material.media}`}
+                                    alt={material.title}
+                                    className='h-80 w-full rounded-lg object-contain'
+                                  />
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+
+                    {course.material?.length === 0 && (
+                      <div className='flex flex-col items-center justify-center rounded-[12px] border-2 border-dashed border-[#e2e8f0] bg-[#f8fafc] px-6 py-12'>
+                        <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f1f5f9]'>
+                          <BookOpen className='h-8 w-8 text-[#94a3b8]' />
                         </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-
-                  {course.material?.length === 0 && (
-                    <div className='flex flex-col items-center justify-center rounded-[12px] border-2 border-dashed border-[#e2e8f0] bg-[#f8fafc] px-6 py-12'>
-                      <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f1f5f9]'>
-                        <BookOpen className='h-8 w-8 text-[#94a3b8]' />
+                        <h3 className='mb-2 text-lg font-semibold text-[#64748b]'>
+                          No Materials Available
+                        </h3>
+                        <p className='max-w-md text-center text-sm text-[#94a3b8]'>
+                          This course doesn't have any materials yet. Check back
+                          later or contact the instructor for more information.
+                        </p>
                       </div>
-                      <h3 className='mb-2 text-lg font-semibold text-[#64748b]'>
-                        No Materials Available
-                      </h3>
-                      <p className='max-w-md text-center text-sm text-[#94a3b8]'>
-                        This course doesn't have any materials yet. Check back
-                        later or contact the instructor for more information.
-                      </p>
-                    </div>
-                  )}
-                </Accordion>
+                    )}
+                  </Accordion>
+                )}
               </TabsContent>
 
               <TabsContent value='instructor'>
@@ -606,25 +625,48 @@ function RouteComponent() {
           <div className='space-y-6'>
             <Card className='sticky top-6 rounded-[12px] border border-[#e2e8f0] shadow-[0_8px_25px_rgba(0,0,0,0.12)]'>
               <CardContent className='space-y-6 p-6'>
-                {isEnrolled ? (
+                {!isLoggedIn ? (
+                  <div className='space-y-4 text-center'>
+                    <div className='mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-500/10'>
+                      <Lock className='h-8 w-8 text-blue-600' />
+                    </div>
+                    <div>
+                      <p className='text-lg font-bold text-blue-600'>
+                        Please login to enroll
+                      </p>
+                      <Button
+                        onClick={() =>
+                          navigate({
+                            to: '/student/login',
+                            search: {
+                              redirect: `/student/courses/${params.courseID}`,
+                              courseID: params.courseID,
+                            },
+                          })
+                        }
+                        className='w-full rounded-[8px] bg-gradient-to-r from-blue-600 to-indigo-600 py-3 text-lg font-semibold text-white shadow hover:shadow-lg'
+                      >
+                        Login to Continue
+                      </Button>
+                    </div>
+                  </div>
+                ) : isEnrolled ? (
                   <div className='space-y-4 text-center'>
                     <div className='mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#10b981]/10'>
                       <CheckCircle className='h-8 w-8 text-[#10b981]' />
                     </div>
-                    <div>
-                      <p className='text-lg font-bold text-[#10b981]'>
-                        You're enrolled!
-                      </p>
-                      <p className='mt-1 text-sm text-[#64748b]'>
-                        Start learning with the materials above
-                      </p>
-                    </div>
+                    <p className='text-lg font-bold text-[#10b981]'>
+                      You're enrolled!
+                    </p>
+                    <p className='mt-1 text-sm text-[#64748b]'>
+                      Start learning with the materials above
+                    </p>
                   </div>
                 ) : (
                   <Button
                     onClick={handleEnroll}
                     disabled={enrollCourseMutation.isPending}
-                    className='w-full rounded-[8px] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] py-4 text-lg font-semibold shadow-sm transition-all duration-300 hover:from-[#1d4ed8] hover:to-[#1e40af] hover:shadow-[0_4px_12px_rgba(37,99,235,0.25)]'
+                    className='w-full rounded-[8px] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] py-4 text-lg font-semibold text-white shadow-sm hover:shadow-lg'
                   >
                     {enrollCourseMutation.isPending
                       ? 'Enrolling...'

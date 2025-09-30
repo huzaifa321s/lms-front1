@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Pie } from "react-chartjs-2"
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";;
+
 // Chart.js configuration
 ChartJS.register(ArcElement, Tooltip, Legend);
 

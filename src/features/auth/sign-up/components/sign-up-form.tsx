@@ -4,7 +4,7 @@ import axios from 'axios'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { ClipboardIcon, Images } from 'lucide-react'
+import { ClipboardIcon, Images, Camera } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -46,7 +46,7 @@ const formSchema = z
       .min(3, { message: 'First name must be at least 3 characters long.' }),
     lastName: z
       .string()
-      .min(3, { message: 'Lirst name must be at least 3 characters long.' }),
+      .min(3, { message: 'Last name must be at least 3 characters long.' }),
     email: z
       .string()
       .min(1, { message: 'Please enter your email' })
@@ -68,6 +68,7 @@ const formSchema = z
 
 export function SignUpForm({ className, ...props }: SignUpFormProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const [selectedImage, setSelectedImage] = useState(null)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -82,6 +83,7 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  
   async function onSubmit(data: z.infer<typeof formSchema>) {
     if(props.disabled) return
     setIsLoading(true)
@@ -94,9 +96,6 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
       let response = await axios.post('/student/register', RegisterationForm)
       response = response.data
       if (response.success) {
-        // localStorage.setItem("teacherEmail", JSON.stringify(registerObj.email));
-        // navigate('/teacher/verify-otp');
-        // navigate('/student/login');
         const { token, credentials } = response.data
         dispatch(handleLogin({ token, credentials }))
         toast.success('Registered successfully')
@@ -110,62 +109,47 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
     }
   }
 
-  const [selectedImage, setSelectedImage] = useState(null)
-
   return (
-    <Form {...form}>
+  <Form {...form}>
   <form
     onSubmit={form.handleSubmit(onSubmit)}
-    className={cn('space-y-6', className)}
-    style={{ fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' }}
+    className={cn('grid grid-cols-1 md:grid-cols-2 gap-4', className)} // two-column layout with gap
     {...props}
   >
-    {/* Enhanced Profile Image Section */}
-    <div className='flex flex-col items-center space-y-4'>
+    {/* Profile Image Section */}
+    <div className='col-span-1 md:col-span-2 flex flex-col items-center space-y-4 my-6'>
       <div className='relative group'>
         {selectedImage ? (
-          <div className='relative h-28 w-28 rounded-full border-4 border-[#2563eb] shadow-lg overflow-hidden'>
+          <div className='relative h-20 w-20 rounded-full border-4 border-blue-500 overflow-hidden ring-2 ring-blue-100 transition-all duration-300 group-hover:scale-105'>
             <img
               src={URL.createObjectURL(selectedImage)}
               alt='Selected profile'
               className='h-full w-full object-cover'
             />
-            {/* Hover Overlay */}
-            <div className='absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center'>
-              <svg className='h-6 w-6 text-white' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 4v16m8-8H4' />
-              </svg>
+            <div className='absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity'>
+              <Camera className='w-5 h-5 text-white' />
             </div>
           </div>
         ) : (
-          <div className='h-28 w-28 rounded-full border-4 border-dashed border-[#e2e8f0] bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] flex items-center justify-center group-hover:border-[#2563eb] group-hover:bg-[#2563eb]/5 transition-all duration-300'>
-            <div className='flex flex-col items-center space-y-2'>
-              <Images size={32} className='text-[#94a3b8] group-hover:text-[#2563eb] transition-colors duration-300' />
-              <span className='text-xs text-[#64748b] font-medium'>Add Photo</span>
-            </div>
+          <div className='h-20 w-20 rounded-full border-2 border-dashed border-slate-300 bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center group-hover:border-blue-400'>
+            <Images size={24} className='text-slate-400 group-hover:text-blue-500' />
           </div>
         )}
-        
-        {/* Camera Icon Overlay */}
-        <div className='absolute -bottom-1 -right-1 h-8 w-8 rounded-full bg-[#2563eb] border-4 border-white shadow-lg flex items-center justify-center'>
-          <svg className='h-4 w-4 text-white' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z' />
-            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 13a3 3 0 11-6 0 3 3 0 016 0z' />
-          </svg>
+        <div className='absolute -bottom-1 -right-1 h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 border-2 border-white flex items-center justify-center group-hover:scale-110 transition-transform'>
+          <Camera className='h-4 w-4 text-white' />
         </div>
       </div>
 
-      {/* Enhanced File Upload */}
       <FormField
         control={form.control}
         name='profile'
         render={({ field }) => (
-          <FormItem>
+          <FormItem className='w-full md:w-auto'>
             <FormControl>
               <div className='relative'>
                 <Input
                   type='file'
-                  className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
+                  className='absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10'
                   id='fileInput'
                   accept='image/*'
                   onBlur={field.onBlur}
@@ -180,196 +164,124 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
                   size='sm'
                   type='button'
                   variant='outline'
-                  className='pointer-events-none border-[#e2e8f0] bg-white text-[#475569] hover:bg-[#f8fafc] hover:border-[#2563eb] hover:text-[#2563eb] rounded-[8px] px-4 py-2 font-medium transition-all duration-200'
+                  className='pointer-events-none border-slate-200 bg-white text-slate-600 hover:bg-blue-50 hover:border-blue-400 hover:text-blue-600 rounded-lg px-4 py-2 text-sm shadow-sm'
                 >
-                  <ClipboardIcon className='mr-2 h-4 w-4' />
-                  Choose Profile Image
+                  {selectedImage ? 'Change Photo' : 'Choose Photo'}
                 </Button>
               </div>
             </FormControl>
-            <FormMessage className='text-[#ef4444] text-sm font-medium' />
+            <FormMessage className='text-red-500 text-xs text-center' />
           </FormItem>
         )}
       />
     </div>
 
-    {/* Enhanced Form Fields */}
-    <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-      {/* First Name */}
-      <FormField
-        control={form.control}
-        name='firstName'
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className='text-sm font-semibold text-[#1e293b]'>
-              First Name
-            </FormLabel>
-            <FormControl>
-              <div className='relative'>
-                <Input
-                  placeholder='Enter your first name'
-                  className='w-full rounded-[8px] border-2 border-[#e2e8f0] bg-white py-3 px-4 text-[#1e293b] placeholder-[#94a3b8] transition-all duration-300 hover:border-[#cbd5e1] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'
-                  {...field}
-                />
-                <div className='absolute right-3 top-1/2 -translate-y-1/2'>
-                  <svg className='h-4 w-4 text-[#64748b]' fill='currentColor' viewBox='0 0 20 20'>
-                    <path fillRule='evenodd' d='M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z' clipRule='evenodd' />
-                  </svg>
-                </div>
-              </div>
-            </FormControl>
-            <FormMessage className='text-[#ef4444] text-sm font-medium' />
-          </FormItem>
-        )}
-      />
-
-      {/* Last Name */}
-      <FormField
-        control={form.control}
-        name='lastName'
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className='text-sm font-semibold text-[#1e293b]'>
-              Last Name
-            </FormLabel>
-            <FormControl>
-              <div className='relative'>
-                <Input
-                  placeholder='Enter your last name'
-                  className='w-full rounded-[8px] border-2 border-[#e2e8f0] bg-white py-3 px-4 text-[#1e293b] placeholder-[#94a3b8] transition-all duration-300 hover:border-[#cbd5e1] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'
-                  {...field}
-                />
-                <div className='absolute right-3 top-1/2 -translate-y-1/2'>
-                  <svg className='h-4 w-4 text-[#64748b]' fill='currentColor' viewBox='0 0 20 20'>
-                    <path fillRule='evenodd' d='M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z' clipRule='evenodd' />
-                  </svg>
-                </div>
-              </div>
-            </FormControl>
-            <FormMessage className='text-[#ef4444] text-sm font-medium' />
-          </FormItem>
-        )}
-      />
-    </div>
-
-    {/* Email Field */}
+    {/* First & Last Name */}
     <FormField
       control={form.control}
-      name='email'
+      name='firstName'
       render={({ field }) => (
         <FormItem>
-          <FormLabel className='text-sm font-semibold text-[#1e293b]'>
-            Email Address
-          </FormLabel>
+          <FormLabel className='text-sm font-medium text-slate-700'>First Name</FormLabel>
           <FormControl>
-            <div className='relative'>
-              <Input
-                type='email'
-                placeholder='Enter your email address'
-                className='w-full rounded-[8px] border-2 border-[#e2e8f0] bg-white py-3 px-4 pr-10 text-[#1e293b] placeholder-[#94a3b8] transition-all duration-300 hover:border-[#cbd5e1] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'
-                {...field}
-              />
-              <div className='absolute right-3 top-1/2 -translate-y-1/2'>
-                <svg className='h-4 w-4 text-[#64748b]' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207' />
-                </svg>
-              </div>
-            </div>
+            <Input
+              placeholder='John'
+              className='h-9 rounded-md border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 text-sm'
+              {...field}
+            />
           </FormControl>
-          <FormMessage className='text-[#ef4444] text-sm font-medium' />
+          <FormMessage className='text-red-500 text-xs' />
         </FormItem>
       )}
     />
 
-    {/* Password Fields */}
-    <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-      {/* Password */}
-      <FormField
-        control={form.control}
-        name='password'
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className='text-sm font-semibold text-[#1e293b]'>
-              Password
-            </FormLabel>
-            <FormControl>
-              <PasswordInput
-                placeholder='Create a strong password'
-                className='w-full rounded-[8px] border-2 border-[#e2e8f0] bg-white py-3 px-4 text-[#1e293b] placeholder-[#94a3b8] transition-all duration-300 hover:border-[#cbd5e1] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'
-                {...field}
-              />
-            </FormControl>
-            <FormMessage className='text-[#ef4444] text-sm font-medium' />
-          </FormItem>
-        )}
-      />
-
-      {/* Confirm Password */}
-      <FormField
-        control={form.control}
-        name='confirmPassword'
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className='text-sm font-semibold text-[#1e293b]'>
-              Confirm Password
-            </FormLabel>
-            <FormControl>
-              <PasswordInput
-                placeholder='Confirm your password'
-                className='w-full rounded-[8px] border-2 border-[#e2e8f0] bg-white py-3 px-4 text-[#1e293b] placeholder-[#94a3b8] transition-all duration-300 hover:border-[#cbd5e1] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'
-                {...field}
-              />
-            </FormControl>
-            <FormMessage className='text-[#ef4444] text-sm font-medium' />
-          </FormItem>
-        )}
-      />
-    </div>
-
-
-    {/* Terms and Conditions */}
-    <div className='space-y-4'>
-      <div className='flex items-start space-x-3 p-4 rounded-[8px] bg-[#f8fafc] border border-[#e2e8f0]'>
-        <input
-          type='checkbox'
-          id='terms'
-          className='mt-0.5 h-4 w-4 text-[#2563eb] border-[#e2e8f0] rounded focus:ring-[#2563eb]/20 focus:ring-2'
-        />
-        <label htmlFor='terms' className='text-sm text-[#64748b] cursor-pointer'>
-          I agree to the{' '}
-          <a href='#' className='text-[#2563eb] hover:text-[#1d4ed8] font-medium hover:underline'>
-            Terms of Service
-          </a>{' '}
-          and{' '}
-          <a href='#' className='text-[#2563eb] hover:text-[#1d4ed8] font-medium hover:underline'>
-            Privacy Policy
-          </a>
-        </label>
-      </div>
-    </div>
-
-    {/* Enhanced Submit Button - Student Theme */}
-    <Button
-      type='submit'
-      disabled={isLoading}
-      loading={isLoading}
-      className='w-full bg-gradient-to-r from-[#f59e0b] to-[#d97706] hover:from-[#d97706] hover:to-[#b45309] text-white font-semibold py-3 px-6 rounded-[8px] shadow-sm transition-all duration-300 hover:shadow-[0_4px_12px_rgba(245,158,11,0.25)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 mt-6'
-    >
-      {isLoading ? (
-        <div className='flex items-center justify-center gap-2'>
-          
-          Creating Account...
-        </div>
-      ) : (
-        <div className='flex items-center justify-center gap-2'>
-          <svg className='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z' />
-          </svg>
-          Create Account
-        </div>
+    <FormField
+      control={form.control}
+      name='lastName'
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel className='text-sm font-medium text-slate-700'>Last Name</FormLabel>
+          <FormControl>
+            <Input
+              placeholder='Doe'
+              className='h-9 rounded-md border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 text-sm'
+              {...field}
+            />
+          </FormControl>
+          <FormMessage className='text-red-500 text-xs' />
+        </FormItem>
       )}
-    </Button>
+    />
+
+    {/* Email */}
+    <FormField
+      control={form.control}
+      name='email'
+      render={({ field }) => (
+        <FormItem className='col-span-1 md:col-span-2'>
+          <FormLabel className='text-sm font-medium text-slate-700'>Email Address</FormLabel>
+          <FormControl>
+            <Input
+              type='email'
+              placeholder='you@example.com'
+              className='h-9 rounded-md border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 text-sm'
+              {...field}
+            />
+          </FormControl>
+          <FormMessage className='text-red-500 text-xs' />
+        </FormItem>
+      )}
+    />
+
+    {/* Password & Confirm */}
+    <FormField
+      control={form.control}
+      name='password'
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel className='text-sm font-medium text-slate-700'>Password</FormLabel>
+          <FormControl>
+            <PasswordInput
+              placeholder='••••••••'
+              className='h-9 rounded-md border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 text-sm'
+              {...field}
+            />
+          </FormControl>
+          <FormMessage className='text-red-500 text-xs' />
+        </FormItem>
+      )}
+    />
+
+    <FormField
+      control={form.control}
+      name='confirmPassword'
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel className='text-sm font-medium text-slate-700'>Confirm Password</FormLabel>
+          <FormControl>
+            <PasswordInput
+              placeholder='••••••••'
+              className='h-9 rounded-md border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 text-sm'
+              {...field}
+            />
+          </FormControl>
+          <FormMessage className='text-red-500 text-xs' />
+        </FormItem>
+      )}
+    />
+
+    {/* Submit Button */}
+    <div className='col-span-1 md:col-span-2'>
+      <Button
+        type='submit'
+        disabled={isLoading}
+        className='w-full h-10 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-md shadow-sm transition-all duration-200 disabled:opacity-50'
+      >
+        {isLoading ? 'Creating Account...' : 'Create Student Account'}
+      </Button>
+    </div>
   </form>
 </Form>
+
   )
 }

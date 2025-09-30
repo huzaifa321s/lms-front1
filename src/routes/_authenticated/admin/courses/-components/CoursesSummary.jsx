@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpen, CheckCircle, XCircle } from "lucide-react";
+import CountUp from 'react-countup'
 
 export default function CoursesSummary({ total, active, inactive, fetchStatus }) {
   const cards = [
@@ -39,7 +40,7 @@ export default function CoursesSummary({ total, active, inactive, fetchStatus })
             {card.icon}
           </CardHeader>
           <CardContent>
-            <p className="font-bold text-2xl text-[#1e293b]">{fetchStatus === 'fetching' ? 'Loading...' : card.value}</p>
+            <p className="font-bold text-2xl text-[#1e293b]">{fetchStatus === 'fetching' ? 'Loading...' : <CountUp end={card.value}className="counter-value inline-block" /> }</p>
           </CardContent>
         </Card>
       ))}

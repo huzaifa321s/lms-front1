@@ -123,7 +123,7 @@ function RouteComponent() {
   return (
     <>
       <Header>
-         <TopNav links={topNav} />
+         <TopNav links={topNav}>
         <div className='my-2 flex w-full items-center justify-between max-w-7xl mx-auto px-4'>
           <div className='text-2xl font-semibold '>Training Wheel Game</div>
           <div className='flex items-center gap-4'>
@@ -179,6 +179,7 @@ function RouteComponent() {
             </Show>
           </div>
         </div>
+        </TopNav>
       </Header>
       <div className=" px-4 py-8">
         <DataTable

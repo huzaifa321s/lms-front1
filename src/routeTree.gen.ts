@@ -20,6 +20,7 @@ import { Route as StudentSubscriptionPlansRouteImport } from './routes/student/s
 import { Route as StudentResubscriptionPlansRouteImport } from './routes/student/resubscription-plans'
 import { Route as StudentRegisterRouteImport } from './routes/student/register'
 import { Route as StudentLoginRouteImport } from './routes/student/login'
+import { Route as StudentInstructorsRouteImport } from './routes/student/instructors'
 import { Route as StudentForgotPasswordRouteImport } from './routes/student/forgot-password'
 import { Route as StudentFailedSubscriptionRouteImport } from './routes/student/failed-subscription'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
@@ -39,6 +40,7 @@ import { Route as AuthenticatedStudentRouteRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as StudentQuizIndexRouteImport } from './routes/student/quiz/index'
 import { Route as StudentCoursesIndexRouteImport } from './routes/student/courses/index'
+import { Route as StudentBlogsIndexRouteImport } from './routes/student/blogs/index'
 import { Route as AuthenticatedTeacherIndexRouteImport } from './routes/_authenticated/teacher/index'
 import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student/index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
@@ -91,6 +93,9 @@ const AuthenticatedAdminCoursesIndexLazyRouteImport = createFileRoute(
 )()
 const AuthenticatedAdminBlogsIndexLazyRouteImport = createFileRoute(
   '/_authenticated/admin/blogs/',
+)()
+const StudentBlogsBlogDetailsBlogIDLazyRouteImport = createFileRoute(
+  '/student/blogs/blog-details/$blogID',
 )()
 const AuthenticatedAdminCoursesCourseIDLazyRouteImport = createFileRoute(
   '/_authenticated/admin/courses/$courseID',
@@ -173,6 +178,11 @@ const StudentRegisterRoute = StudentRegisterRouteImport.update({
 const StudentLoginRoute = StudentLoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => StudentRouteRoute,
+} as any)
+const StudentInstructorsRoute = StudentInstructorsRouteImport.update({
+  id: '/instructors',
+  path: '/instructors',
   getParentRoute: () => StudentRouteRoute,
 } as any)
 const StudentForgotPasswordRoute = StudentForgotPasswordRouteImport.update({
@@ -271,6 +281,11 @@ const StudentQuizIndexRoute = StudentQuizIndexRouteImport.update({
 const StudentCoursesIndexRoute = StudentCoursesIndexRouteImport.update({
   id: '/courses/',
   path: '/courses/',
+  getParentRoute: () => StudentRouteRoute,
+} as any)
+const StudentBlogsIndexRoute = StudentBlogsIndexRouteImport.update({
+  id: '/blogs/',
+  path: '/blogs/',
   getParentRoute: () => StudentRouteRoute,
 } as any)
 const AuthenticatedTeacherIndexRoute =
@@ -430,6 +445,16 @@ const AuthenticatedAdminSettingsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedAdminSettingsRouteRoute,
   } as any)
+const StudentBlogsBlogDetailsBlogIDLazyRoute =
+  StudentBlogsBlogDetailsBlogIDLazyRouteImport.update({
+    id: '/blogs/blog-details/$blogID',
+    path: '/blogs/blog-details/$blogID',
+    getParentRoute: () => StudentRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/student/blogs/blog-details/$blogID.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 const AuthenticatedAdminCoursesCourseIDLazyRoute =
   AuthenticatedAdminCoursesCourseIDLazyRouteImport.update({
     id: '/courses/$courseID',
@@ -702,6 +727,7 @@ export interface FileRoutesByFullPath {
   '/admin/login': typeof AdminLoginRoute
   '/student/failed-subscription': typeof StudentFailedSubscriptionRoute
   '/student/forgot-password': typeof StudentForgotPasswordRoute
+  '/student/instructors': typeof StudentInstructorsRoute
   '/student/login': typeof StudentLoginRoute
   '/student/register': typeof StudentRegisterRoute
   '/student/resubscription-plans': typeof StudentResubscriptionPlansRoute
@@ -716,11 +742,13 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/student/': typeof AuthenticatedStudentIndexRoute
   '/teacher/': typeof AuthenticatedTeacherIndexRoute
+  '/student/blogs': typeof StudentBlogsIndexRoute
   '/student/courses': typeof StudentCoursesIndexRoute
   '/student/quiz': typeof StudentQuizIndexRoute
   '/admin/teachers/$teacherID': typeof AuthenticatedAdminTeachersTeacherIDRoute
   '/student/course-teachers/$teacherID': typeof AuthenticatedStudentCourseTeachersTeacherIDRoute
   '/admin/courses/$courseID': typeof AuthenticatedAdminCoursesCourseIDLazyRoute
+  '/student/blogs/blog-details/$blogID': typeof StudentBlogsBlogDetailsBlogIDLazyRoute
   '/admin/settings/': typeof AuthenticatedAdminSettingsIndexRoute
   '/admin/trainingwheelgame': typeof AuthenticatedAdminTrainingwheelgameIndexRoute
   '/student/payment-methods': typeof AuthenticatedStudentPaymentMethodsIndexRoute
@@ -782,6 +810,7 @@ export interface FileRoutesByTo {
   '/admin/login': typeof AdminLoginRoute
   '/student/failed-subscription': typeof StudentFailedSubscriptionRoute
   '/student/forgot-password': typeof StudentForgotPasswordRoute
+  '/student/instructors': typeof StudentInstructorsRoute
   '/student/login': typeof StudentLoginRoute
   '/student/register': typeof StudentRegisterRoute
   '/student/resubscription-plans': typeof StudentResubscriptionPlansRoute
@@ -792,11 +821,13 @@ export interface FileRoutesByTo {
   '/student/courses/$courseID': typeof StudentCoursesCourseIDRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/teacher': typeof AuthenticatedTeacherIndexRoute
+  '/student/blogs': typeof StudentBlogsIndexRoute
   '/student/courses': typeof StudentCoursesIndexRoute
   '/student/quiz': typeof StudentQuizIndexRoute
   '/admin/teachers/$teacherID': typeof AuthenticatedAdminTeachersTeacherIDRoute
   '/student/course-teachers/$teacherID': typeof AuthenticatedStudentCourseTeachersTeacherIDRoute
   '/admin/courses/$courseID': typeof AuthenticatedAdminCoursesCourseIDLazyRoute
+  '/student/blogs/blog-details/$blogID': typeof StudentBlogsBlogDetailsBlogIDLazyRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsIndexRoute
   '/admin/trainingwheelgame': typeof AuthenticatedAdminTrainingwheelgameIndexRoute
   '/student/payment-methods': typeof AuthenticatedStudentPaymentMethodsIndexRoute
@@ -862,6 +893,7 @@ export interface FileRoutesById {
   '/admin/login': typeof AdminLoginRoute
   '/student/failed-subscription': typeof StudentFailedSubscriptionRoute
   '/student/forgot-password': typeof StudentForgotPasswordRoute
+  '/student/instructors': typeof StudentInstructorsRoute
   '/student/login': typeof StudentLoginRoute
   '/student/register': typeof StudentRegisterRoute
   '/student/resubscription-plans': typeof StudentResubscriptionPlansRoute
@@ -877,11 +909,13 @@ export interface FileRoutesById {
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
   '/_authenticated/teacher/': typeof AuthenticatedTeacherIndexRoute
+  '/student/blogs/': typeof StudentBlogsIndexRoute
   '/student/courses/': typeof StudentCoursesIndexRoute
   '/student/quiz/': typeof StudentQuizIndexRoute
   '/_authenticated/admin/teachers/$teacherID': typeof AuthenticatedAdminTeachersTeacherIDRoute
   '/_authenticated/student/course-teachers/$teacherID': typeof AuthenticatedStudentCourseTeachersTeacherIDRoute
   '/_authenticated/admin/courses/$courseID': typeof AuthenticatedAdminCoursesCourseIDLazyRoute
+  '/student/blogs/blog-details/$blogID': typeof StudentBlogsBlogDetailsBlogIDLazyRoute
   '/_authenticated/admin/settings/': typeof AuthenticatedAdminSettingsIndexRoute
   '/_authenticated/admin/trainingwheelgame/': typeof AuthenticatedAdminTrainingwheelgameIndexRoute
   '/_authenticated/student/payment-methods/': typeof AuthenticatedStudentPaymentMethodsIndexRoute
@@ -947,6 +981,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/student/failed-subscription'
     | '/student/forgot-password'
+    | '/student/instructors'
     | '/student/login'
     | '/student/register'
     | '/student/resubscription-plans'
@@ -961,11 +996,13 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/student/'
     | '/teacher/'
+    | '/student/blogs'
     | '/student/courses'
     | '/student/quiz'
     | '/admin/teachers/$teacherID'
     | '/student/course-teachers/$teacherID'
     | '/admin/courses/$courseID'
+    | '/student/blogs/blog-details/$blogID'
     | '/admin/settings/'
     | '/admin/trainingwheelgame'
     | '/student/payment-methods'
@@ -1027,6 +1064,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/student/failed-subscription'
     | '/student/forgot-password'
+    | '/student/instructors'
     | '/student/login'
     | '/student/register'
     | '/student/resubscription-plans'
@@ -1037,11 +1075,13 @@ export interface FileRouteTypes {
     | '/student/courses/$courseID'
     | '/admin'
     | '/teacher'
+    | '/student/blogs'
     | '/student/courses'
     | '/student/quiz'
     | '/admin/teachers/$teacherID'
     | '/student/course-teachers/$teacherID'
     | '/admin/courses/$courseID'
+    | '/student/blogs/blog-details/$blogID'
     | '/admin/settings'
     | '/admin/trainingwheelgame'
     | '/student/payment-methods'
@@ -1106,6 +1146,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/student/failed-subscription'
     | '/student/forgot-password'
+    | '/student/instructors'
     | '/student/login'
     | '/student/register'
     | '/student/resubscription-plans'
@@ -1121,11 +1162,13 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/'
     | '/_authenticated/student/'
     | '/_authenticated/teacher/'
+    | '/student/blogs/'
     | '/student/courses/'
     | '/student/quiz/'
     | '/_authenticated/admin/teachers/$teacherID'
     | '/_authenticated/student/course-teachers/$teacherID'
     | '/_authenticated/admin/courses/$courseID'
+    | '/student/blogs/blog-details/$blogID'
     | '/_authenticated/admin/settings/'
     | '/_authenticated/admin/trainingwheelgame/'
     | '/_authenticated/student/payment-methods/'
@@ -1259,6 +1302,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentLoginRouteImport
       parentRoute: typeof StudentRouteRoute
     }
+    '/student/instructors': {
+      id: '/student/instructors'
+      path: '/instructors'
+      fullPath: '/student/instructors'
+      preLoaderRoute: typeof StudentInstructorsRouteImport
+      parentRoute: typeof StudentRouteRoute
+    }
     '/student/forgot-password': {
       id: '/student/forgot-password'
       path: '/forgot-password'
@@ -1390,6 +1440,13 @@ declare module '@tanstack/react-router' {
       path: '/courses'
       fullPath: '/student/courses'
       preLoaderRoute: typeof StudentCoursesIndexRouteImport
+      parentRoute: typeof StudentRouteRoute
+    }
+    '/student/blogs/': {
+      id: '/student/blogs/'
+      path: '/blogs'
+      fullPath: '/student/blogs'
+      preLoaderRoute: typeof StudentBlogsIndexRouteImport
       parentRoute: typeof StudentRouteRoute
     }
     '/_authenticated/teacher/': {
@@ -1545,6 +1602,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/settings/'
       preLoaderRoute: typeof AuthenticatedAdminSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedAdminSettingsRouteRoute
+    }
+    '/student/blogs/blog-details/$blogID': {
+      id: '/student/blogs/blog-details/$blogID'
+      path: '/blogs/blog-details/$blogID'
+      fullPath: '/student/blogs/blog-details/$blogID'
+      preLoaderRoute: typeof StudentBlogsBlogDetailsBlogIDLazyRouteImport
+      parentRoute: typeof StudentRouteRoute
     }
     '/_authenticated/admin/courses/$courseID': {
       id: '/_authenticated/admin/courses/$courseID'
@@ -1776,13 +1840,16 @@ declare module '@tanstack/react-router' {
 interface StudentRouteRouteChildren {
   StudentFailedSubscriptionRoute: typeof StudentFailedSubscriptionRoute
   StudentForgotPasswordRoute: typeof StudentForgotPasswordRoute
+  StudentInstructorsRoute: typeof StudentInstructorsRoute
   StudentLoginRoute: typeof StudentLoginRoute
   StudentRegisterRoute: typeof StudentRegisterRoute
   StudentResubscriptionPlansRoute: typeof StudentResubscriptionPlansRoute
   StudentSubscriptionPlansRoute: typeof StudentSubscriptionPlansRoute
   StudentCoursesCourseIDRoute: typeof StudentCoursesCourseIDRoute
+  StudentBlogsIndexRoute: typeof StudentBlogsIndexRoute
   StudentCoursesIndexRoute: typeof StudentCoursesIndexRoute
   StudentQuizIndexRoute: typeof StudentQuizIndexRoute
+  StudentBlogsBlogDetailsBlogIDLazyRoute: typeof StudentBlogsBlogDetailsBlogIDLazyRoute
   StudentSettingInvoicesIndexRoute: typeof StudentSettingInvoicesIndexRoute
   StudentSettingInvoicesInvoiceDetailsInvoiceIDRoute: typeof StudentSettingInvoicesInvoiceDetailsInvoiceIDRoute
 }
@@ -1790,13 +1857,17 @@ interface StudentRouteRouteChildren {
 const StudentRouteRouteChildren: StudentRouteRouteChildren = {
   StudentFailedSubscriptionRoute: StudentFailedSubscriptionRoute,
   StudentForgotPasswordRoute: StudentForgotPasswordRoute,
+  StudentInstructorsRoute: StudentInstructorsRoute,
   StudentLoginRoute: StudentLoginRoute,
   StudentRegisterRoute: StudentRegisterRoute,
   StudentResubscriptionPlansRoute: StudentResubscriptionPlansRoute,
   StudentSubscriptionPlansRoute: StudentSubscriptionPlansRoute,
   StudentCoursesCourseIDRoute: StudentCoursesCourseIDRoute,
+  StudentBlogsIndexRoute: StudentBlogsIndexRoute,
   StudentCoursesIndexRoute: StudentCoursesIndexRoute,
   StudentQuizIndexRoute: StudentQuizIndexRoute,
+  StudentBlogsBlogDetailsBlogIDLazyRoute:
+    StudentBlogsBlogDetailsBlogIDLazyRoute,
   StudentSettingInvoicesIndexRoute: StudentSettingInvoicesIndexRoute,
   StudentSettingInvoicesInvoiceDetailsInvoiceIDRoute:
     StudentSettingInvoicesInvoiceDetailsInvoiceIDRoute,

@@ -1,7 +1,15 @@
 import { useCallback, useState } from 'react'
 import axios from 'axios'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate, useSearch } from '@tanstack/react-router'
+import { useQueryClient } from '@tanstack/react-query'
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useRouter,
+  useSearch,
+} from '@tanstack/react-router'
+import { BookOpen, Trophy, Users, Sparkles } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -17,8 +25,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/password-input'
 import image from '../../../../public/images/main-logo.jpg'
-import { handleLogin } from '../../../shared/config/reducers/student/studentAuthSlice'
 import { useAppUtils } from '../../../hooks/useAppUtils'
+import { handleLogin } from '../../../shared/config/reducers/student/studentAuthSlice'
+import { courseQueryOptions } from '../courses/$courseID'
 
 export function LoginForm({ className, ...props }) {
   const {
@@ -28,12 +37,14 @@ export function LoginForm({ className, ...props }) {
     reset,
     formState: { errors },
   } = useForm()
-  const {navigate,dispatch} = useAppUtils()
+  const { navigate, dispatch } = useAppUtils()
   const [isLoading, setIsLoading] = useState(false)
   const redirectTo = useSearch({
     from: '/student/login',
-    select: (search) => search.redirect,
   })
+  console.log('redirectTo', redirectTo)
+  const queryClient = useQueryClient()
+  const router = useRouter()
   const handleAdminLogin = useCallback(
     async (data) => {
       setIsLoading(true)
@@ -51,8 +62,21 @@ export function LoginForm({ className, ...props }) {
             })
           )
           console.log('redirectTo ===>', redirectTo)
-          if (redirectTo) {
-            navigate({ to: redirectTo })
+          if (redirectTo?.redirect) {
+            if (redirectTo?.courseID) {
+              queryClient.invalidateQueries(
+                courseQueryOptions({
+                  courseID: redirectTo?.courseID,
+                  userID: credentials?._id,
+                })
+              )
+              await router.invalidate({
+                routeId: '/student/courses/$courseID',
+                params: { courseID: redirectTo?.courseID },
+                search: { userID: credentials?._id },
+              })
+            }
+            navigate({ to: redirectTo?.redirect })
           } else {
             console.log('condition true')
             navigate({ to: '/' })
@@ -71,194 +95,241 @@ export function LoginForm({ className, ...props }) {
   )
 
   return (
-    <div
-      className={cn('flex flex-col gap-6', className)}
-      {...props}
-      style={{ fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' }}
-    >
-      <Card className='overflow-hidden rounded-[12px] border border-[#e2e8f0] bg-white shadow-[0_8px_25px_rgba(0,0,0,0.08)]'>
-        {/* Enhanced Header */}
-        <CardHeader className='border-b border-[#e2e8f0] bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] py-8 text-center'>
-          {/* Logo Section */}
-          <div className='mx-auto mb-4 w-fit'>
-            <div className='relative'>
-              <img src={image} loading='lazy' width={50} height={50} />
+    <div className='flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-4'>
+      <div className='grid w-full max-w-6xl items-center gap-8 lg:grid-cols-2'>
+        {/* Left Section - Student Features */}
+        <div className='hidden space-y-6 lg:block'>
+          <div className='space-y-3'>
+            <div className='inline-block'>
+              <img
+                src={image}
+                alt='Bruce LMS'
+                className='h-16 w-16 rounded-xl shadow-lg'
+              />
             </div>
+            <h1 className='bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 bg-clip-text text-5xl font-bold text-transparent'>
+              Welcome Back, Student!
+            </h1>
+            <p className='text-xl text-slate-600'>
+              Continue your learning journey and unlock your potential
+            </p>
           </div>
 
-          <CardTitle className='mb-2 text-2xl font-bold text-[#1e293b]'>
-            Welcome Back
-          </CardTitle>
-          <CardDescription className='text-base text-[#64748b]'>
-            Sign in to your student account to continue learning
-          </CardDescription>
-        </CardHeader>
+          <div className='space-y-4 pt-6'>
+            <div className='flex items-start gap-4 rounded-xl border border-blue-100 bg-white/60 p-4 backdrop-blur-sm transition-all duration-300 hover:border-blue-300 hover:shadow-md'>
+              <div className='flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600'>
+                <BookOpen className='h-6 w-6 text-white' />
+              </div>
+              <div>
+                <h3 className='mb-1 font-semibold text-slate-800'>
+                  Your Courses
+                </h3>
+                <p className='text-sm text-slate-600'>
+                  Access all your enrolled courses and track progress
+                </p>
+              </div>
+            </div>
 
-        <CardContent className='p-8'>
-          <form onSubmit={handleSubmit(handleAdminLogin)}>
-            <div className='space-y-6'>
+            <div className='flex items-start gap-4 rounded-xl border border-blue-100 bg-white/60 p-4 backdrop-blur-sm transition-all duration-300 hover:border-blue-300 hover:shadow-md'>
+              <div className='flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600'>
+                <Trophy className='h-6 w-6 text-white' />
+              </div>
+              <div>
+                <h3 className='mb-1 font-semibold text-slate-800'>
+                  Achievements
+                </h3>
+                <p className='text-sm text-slate-600'>
+                  Earn certificates and badges as you complete courses
+                </p>
+              </div>
+            </div>
+
+            <div className='flex items-start gap-4 rounded-xl border border-blue-100 bg-white/60 p-4 backdrop-blur-sm transition-all duration-300 hover:border-blue-300 hover:shadow-md'>
+              <div className='flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600'>
+                <Users className='h-6 w-6 text-white' />
+              </div>
+              <div>
+                <h3 className='mb-1 font-semibold text-slate-800'>Community</h3>
+                <p className='text-sm text-slate-600'>
+                  Connect with fellow learners and instructors
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Section - Login Form */}
+        <Card
+          className={cn(
+            'border-0 bg-white/80 shadow-2xl backdrop-blur-sm',
+            className
+          )}
+        >
+          <CardHeader className='space-y-4 pb-6'>
+            <div className='mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg'>
+              <Sparkles className='h-8 w-8 text-white' />
+            </div>
+
+            <CardTitle className='bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-center text-3xl font-bold text-transparent'>
+              Student Login
+            </CardTitle>
+
+            <CardDescription className='text-center text-base text-slate-600'>
+              Sign in to continue your learning journey
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className='px-6 pb-6'>
+            <form
+              onSubmit={handleSubmit(handleAdminLogin)}
+              className='space-y-5'
+            >
               {/* Email Field */}
-              <div className='space-y-3'>
+              <div className='space-y-2'>
                 <Label
                   htmlFor='email'
-                  className={`text-sm font-semibold ${
-                    errors.email ? 'text-[#ef4444]' : 'text-[#1e293b]'
-                  }`}
+                  className={cn(
+                    'text-sm font-medium text-slate-700',
+                    errors.email && 'text-red-500'
+                  )}
                 >
                   Email Address
                 </Label>
-                <div className='relative'>
-                  <Input
-                    type='email'
-                    id='email'
-                    placeholder='Enter your email address'
-                    className={`w-full rounded-[8px] border-2 bg-white px-4 py-3 text-[#1e293b] placeholder-[#94a3b8] transition-all duration-300 hover:border-[#cbd5e1] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20 ${
-                      errors.email
-                        ? 'border-[#ef4444] focus:border-[#ef4444] focus:ring-[#ef4444]/20'
-                        : 'border-[#e2e8f0]'
-                    }`}
-                    {...register('email', {
-                      required: 'Email is required',
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: 'Please enter a valid email address',
-                      },
-                    })}
-                  />
-                  {/* Email Icon */}
-                  <div className='absolute top-1/2 right-3 -translate-y-1/2'>
-                    <svg
-                      className={`h-5 w-5 ${errors.email ? 'text-[#ef4444]' : 'text-[#64748b]'}`}
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      stroke='currentColor'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth={1.5}
-                        d='M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207'
-                      />
-                    </svg>
-                  </div>
-                </div>
+                <Input
+                  type='email'
+                  id='email'
+                  placeholder='you@example.com'
+                  {...register('email', {
+                    required: 'Email is required',
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: 'Please enter a valid email address',
+                    },
+                  })}
+                  className={cn(
+                    'h-11 rounded-lg border-slate-200 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20',
+                    errors.email &&
+                      'border-red-300 focus:border-red-500 focus:ring-red-500/20'
+                  )}
+                />
                 {errors.email && (
-                  <div className='flex items-center gap-2 text-sm font-medium text-[#ef4444]'>
-                    <svg
-                      className='h-4 w-4'
-                      fill='currentColor'
-                      viewBox='0 0 20 20'
-                    >
-                      <path
-                        fillRule='evenodd'
-                        d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z'
-                        clipRule='evenodd'
-                      />
-                    </svg>
+                  <span className='flex items-center gap-1 text-xs text-red-500'>
+                    <span className='inline-block h-1 w-1 rounded-full bg-red-500'></span>
                     {errors.email.message}
-                  </div>
+                  </span>
                 )}
               </div>
 
               {/* Password Field */}
-              <div className='space-y-3'>
+              <div className='space-y-2'>
                 <div className='flex items-center justify-between'>
                   <Label
                     htmlFor='password'
-                    className={`text-sm font-semibold ${
-                      errors.password ? 'text-[#ef4444]' : 'text-[#1e293b]'
-                    }`}
+                    className={cn(
+                      'text-sm font-medium text-slate-700',
+                      errors.password && 'text-red-500'
+                    )}
                   >
                     Password
                   </Label>
                   <Link
                     to='/student/forgot-password'
-                    className='text-sm font-medium text-[#2563eb] transition-colors duration-200 hover:text-[#1d4ed8] hover:underline'
+                    className='text-xs font-medium text-blue-600 transition-colors duration-200 hover:text-blue-700'
                   >
-                    Forgot password?
+                    Forgot?
                   </Link>
                 </div>
-                <div className='relative'>
-                  <PasswordInput
-                    id='password'
-                    placeholder='Enter your password'
-                    className={`w-full rounded-[8px] border-2 bg-white px-4 py-3 pr-12 text-[#1e293b] placeholder-[#94a3b8] transition-all duration-300 hover:border-[#cbd5e1] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20 ${
-                      errors.password
-                        ? 'border-[#ef4444] focus:border-[#ef4444] focus:ring-[#ef4444]/20'
-                        : 'border-[#e2e8f0]'
-                    }`}
-                    {...register('password', {
-                      required: 'Password is required',
-                      minLength: {
-                        value: 6,
-                        message: 'Password must be at least 6 characters',
-                      },
-                    })}
-                  />
-                </div>
+                <PasswordInput
+                  id='password'
+                  placeholder='••••••••'
+                  {...register('password', {
+                    required: 'Password is required',
+                    minLength: {
+                      value: 6,
+                      message: 'Password must be at least 6 characters',
+                    },
+                  })}
+                  className={cn(
+                    'h-11 rounded-lg border-slate-200 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20',
+                    errors.password &&
+                      'border-red-300 focus:border-red-500 focus:ring-red-500/20'
+                  )}
+                />
                 {errors.password && (
-                  <div className='flex items-center gap-2 text-sm font-medium text-[#ef4444]'>
-                    <svg
-                      className='h-4 w-4'
-                      fill='currentColor'
-                      viewBox='0 0 20 20'
-                    >
-                      <path
-                        fillRule='evenodd'
-                        d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z'
-                        clipRule='evenodd'
-                      />
-                    </svg>
+                  <span className='flex items-center gap-1 text-xs text-red-500'>
+                    <span className='inline-block h-1 w-1 rounded-full bg-red-500'></span>
                     {errors.password.message}
-                  </div>
+                  </span>
                 )}
               </div>
 
-              {/* Enhanced Submit Button - Student Theme */}
+              {/* Login Button - Student Theme */}
               <Button
                 type='submit'
+                className='mt-6 h-11 w-full rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 font-semibold text-white shadow-md transition-all duration-200 hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50'
                 disabled={isLoading}
-                loading={isLoading}
-                className='w-full rounded-[8px] bg-gradient-to-r from-[#f59e0b] to-[#d97706] px-6 py-3 font-semibold text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:from-[#d97706] hover:to-[#b45309] hover:shadow-[0_4px_12px_rgba(245,158,11,0.25)] active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0'
               >
                 {isLoading ? (
-                  <div className='flex items-center gap-2'>Signing In...</div>
+                  <span className='flex items-center gap-2'>
+                    <span className='h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white'></span>
+                    Signing In...
+                  </span>
                 ) : (
-                  <div className='flex items-center justify-center gap-2'>
-                    <svg
-                      className='h-4 w-4'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      stroke='currentColor'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth={2}
-                        d='M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1'
-                      />
-                    </svg>
-                    Sign In
-                  </div>
+                  'Sign In to Learn'
                 )}
               </Button>
-            </div>
-          </form>
-        </CardContent>
 
-        {/* Enhanced Footer */}
-        <div className='border-t border-[#e2e8f0] bg-[#f8fafc] px-8 py-6'>
-          <p className='text-center text-sm text-[#64748b]'>
-            Don't have an account yet?{' '}
-            <Link
-              to='/student/register'
-              className='font-semibold text-[#2563eb] transition-colors duration-200 hover:text-[#1d4ed8] hover:underline'
-            >
-              Create Account
-            </Link>
-          </p>
-        </div>
-      </Card>
+              {/* Divider */}
+              <div className='relative my-6'>
+                <div className='absolute inset-0 flex items-center'>
+                  <div className='w-full border-t border-slate-200'></div>
+                </div>
+                <div className='relative flex justify-center text-xs'>
+                  <span className='bg-white px-2 text-slate-500'>
+                    New to Bruce LMS?
+                  </span>
+                </div>
+              </div>
+
+              {/* Sign Up Link */}
+              <div className='text-center'>
+                <Link
+                  to='/student/register'
+                  className='text-sm font-semibold text-blue-600 transition-colors duration-200 hover:text-blue-700'
+                >
+                  Create Student Account →
+                </Link>
+              </div>
+            </form>
+          </CardContent>
+
+          {/* Mobile Features */}
+          <div className='px-6 pb-4 lg:hidden'>
+            <div className='grid grid-cols-1 gap-2'>
+              <div className='flex items-center gap-3 rounded-lg border border-blue-100 bg-blue-50 p-3'>
+                <BookOpen className='h-4 w-4 flex-shrink-0 text-blue-600' />
+                <span className='text-xs text-slate-700'>
+                  Access your courses
+                </span>
+              </div>
+              <div className='flex items-center gap-3 rounded-lg border border-blue-100 bg-blue-50 p-3'>
+                <Trophy className='h-4 w-4 flex-shrink-0 text-blue-600' />
+                <span className='text-xs text-slate-700'>
+                  Earn certificates
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className='px-6 pb-6'>
+            <div className='mb-4 h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent' />
+            <p className='text-center text-xs leading-relaxed text-slate-500'>
+              Protected by enterprise-grade security
+            </p>
+          </div>
+        </Card>
+      </div>
     </div>
   )
 }

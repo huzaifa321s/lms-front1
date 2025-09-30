@@ -41,7 +41,7 @@ const dispatch = useDispatch()
 
       <SidebarMenu>
         <SidebarMenuItem>
-          <DropdownMenu modal={false}>
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton
                 size='lg'

@@ -11,6 +11,8 @@ import {
   Calendar,
   Award,
   Lock,
+  Settings,
+  User,
 } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { Button } from '@/components/ui/button';
@@ -24,10 +26,10 @@ import { Search } from '@/components/search';
 import { dashboardQueryOption } from '../..';
 import { useAppUtils } from '../../../../../hooks/useAppUtils';
 import { openModal } from '../../../../../shared/config/reducers/student/studentDialogSlice';
-import { Show } from '../../../../../shared/utils/Show';
 import { ProfileDropdown } from '../tasks/-components/student-profile-dropdown';
 import { ChartBarLabelCustom } from './-components/spendingByYear';
 import { memo, useCallback, useMemo } from 'react';
+import CountUp from 'react-countup'
 
 // Memoized MiniBarChart
 const MiniBarChart = memo(({ data, color = '#2563eb' }) => {
@@ -118,6 +120,47 @@ const MiniDonutChart = memo(({ percentage, color = '#f59e0b' }) => {
 });
 MiniDonutChart.displayName = 'MiniDonutChart';
 
+function WelcomeBanner({ userName ,creds }) {
+  return (
+    <div className="relative bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-3xl overflow-hidden p-8 mb-8 shadow-lg">
+      {/* Floating Decorative Circles */}
+      <div className="absolute -top-16 -left-16 w-56 h-56 bg-blue-400/20 rounded-full filter blur-3xl animate-[spin_25s_linear_infinite]"></div>
+      <div className="absolute -bottom-16 -right-16 w-72 h-72 bg-blue-500/20 rounded-full filter blur-3xl animate-[spin_30s_linear_infinite]"></div>
+
+      <div className="relative z-10 flex flex-col md:flex-row items-center md:justify-between gap-6">
+        <div className="text-center md:text-left">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">
+            Welcome {creds?.customerId ? "back" : ""}, <span className="text-blue-200">{userName}</span> 👋
+          </h1>
+          <p className="text-blue-100 text-lg max-w-lg">
+            Track your learning progress, explore new courses, and unlock premium features.
+          </p>
+        </div>
+        <div className="flex gap-4">
+          {/* Settings Button */}
+          <Button
+            size=""
+            className="bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all flex items-center gap-2"
+          >
+            <Settings className="h-5 w-5" />
+            Settings
+          </Button>
+
+          {/* Profile Button */}
+          <Button
+            size=""
+            variant="outline"
+            className="bg-white/20 transition-all flex items-center gap-2"
+          >
+            <User className="h-5 w-5" />
+            My Profile
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function Dashboard() {
   const { dispatch, navigate } = useAppUtils();
   const { data } = useQuery({
@@ -125,7 +168,6 @@ export default function Dashboard() {
     staleTime: 5 * 60 * 1000,
     suspense:true
   });
-  
   const {
     enrolledCourses,
     totalCharges,
@@ -133,6 +175,7 @@ export default function Dashboard() {
     courseTeachers,
     spendingByYear,
   } = data;
+  const credentials = useSelector((state) => state.studentAuth.credentials);
   const subscription = useSelector((state) => state.studentAuth.subscription);
 
   // Memoized subscription status check
@@ -231,8 +274,9 @@ export default function Dashboard() {
         </div>
       </Header>
       <Main className="flex-grow">
+          <WelcomeBanner userName={credentials?.firstName + " " + credentials?.lastName} creds={credentials} />
         <Tabs orientation="vertical" defaultValue="overview" className="space-y-4">
-          <div className="w-full overflow-x-auto pb-2">
+          <div className="w-full overflow-x-auto ">
             <TabsList className="border border-gray-200 bg-white shadow-sm">
               <TabsTrigger
                 value="overview"
@@ -255,7 +299,7 @@ export default function Dashboard() {
             </TabsList>
           </div>
 
-          <TabsContent value="overview" className="space-y-6">
+          <TabsContent value="overview" className="space-y-2">
             <div className="space-y-2 text-center">
               <h1 className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-3xl font-bold text-transparent">
                 Student Dashboard
@@ -275,7 +319,7 @@ export default function Dashboard() {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-600">Enrolled Courses</p>
-                      <p className="text-2xl font-bold text-blue-600">{enrolledCourses || 0}</p>
+                      <p className="text-2xl font-bold text-blue-600"><CountUp end={enrolledCourses || 0}className="counter-value inline-block" /> </p>
                     </div>
                   </div>
                 </CardHeader>
@@ -294,14 +338,14 @@ export default function Dashboard() {
 
               {/* Course Teachers Card */}
               <Card className="group relative overflow-hidden border border-green-100 bg-gradient-to-br from-white to-green-50/30 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-md">
-                <CardHeader className="pb-2">
+                <CardHeader className="">
                   <div className="flex items-center gap-2">
                     <div className="rounded-lg bg-green-100 p-2">
                       <UserCog className="h-4 w-4 text-green-600" />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-600">Teachers</p>
-                      <p className="text-2xl font-bold text-green-600">{courseTeachers?.length || 0}</p>
+                      <p className="text-2xl font-bold text-green-600"><CountUp end={courseTeachers?.length || 0}className="counter-value inline-block" /></p>
                     </div>
                   </div>
                 </CardHeader>
@@ -333,7 +377,7 @@ export default function Dashboard() {
                       <p className="text-sm font-medium text-gray-600">
                         Quiz Score <span className="rounded-md bg-gray-800 px-2 py-1 text-sm font-medium text-white">Demo Feature</span>
                       </p>
-                      <p className="text-2xl font-bold text-yellow-600">87%</p>
+                      <p className="text-2xl font-bold text-yellow-600"><CountUp end={87}className="counter-value inline-block" />%</p>
                     </div>
                   </div>
                 </CardHeader>
@@ -344,7 +388,7 @@ export default function Dashboard() {
                     </div>
                     <div className="ml-2 text-right">
                       <p className="text-xs text-gray-500">Avg Score</p>
-                      <p className="text-sm font-semibold text-yellow-600">87%</p>
+                      <p className="text-sm font-semibold text-yellow-600"><CountUp end={87}className="counter-value inline-block" />%</p>
                     </div>
                   </div>
                 </CardContent>
@@ -361,7 +405,7 @@ export default function Dashboard() {
                       <p className="text-sm font-medium text-gray-600">
                         Overall Progress <span className="rounded-md bg-gray-800 px-2 py-1 text-sm font-medium text-white">Demo Feature</span>
                       </p>
-                      <p className="text-2xl font-bold text-purple-600">73%</p>
+                      <p className="text-2xl font-bold text-purple-600"><CountUp end={73}className="counter-value inline-block" />%</p>
                     </div>
                   </div>
                 </CardHeader>
@@ -404,7 +448,7 @@ export default function Dashboard() {
                     <div>
                       <p className="text-sm font-medium text-gray-600">Total Spending</p>
                       {isSubscribed ? (
-                        <p className="text-2xl font-bold text-blue-600">${totalCharges || 0}</p>
+                        <p className="text-2xl font-bold text-blue-600">${<CountUp end={totalCharges}className="counter-value inline-block" />}</p>
                       ) : (
                         <div className="flex items-center gap-1">
                           <IconLock className="h-4 w-4 text-gray-400" />
@@ -449,7 +493,7 @@ export default function Dashboard() {
                     <div>
                       <p className="text-sm font-medium text-gray-600">Payment Methods</p>
                       {isSubscribed ? (
-                        <p className="text-2xl font-bold text-green-600">{paymentMethods?.length || 0}</p>
+                        <p className="text-2xl font-bold text-green-600">{<CountUp end={paymentMethods?.length || 0}className="counter-value inline-block" />}</p>
                       ) : (
                         <div className="flex items-center gap-1">
                           <IconLock className="h-4 w-4 text-gray-400" />
@@ -546,7 +590,7 @@ export default function Dashboard() {
             </div>
           </TabsContent>
 
-          <TabsContent value="analytics" className="space-y-6">
+          <TabsContent value="analytics" className="space-y-2">
             <div className="space-y-2 text-center">
               <h1 className="bg-gradient-to-r from-green-600 via-emerald-600 to-green-500 bg-clip-text text-3xl font-bold text-transparent">
                 Analytics Dashboard
@@ -564,7 +608,7 @@ export default function Dashboard() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
+                  <div className="space-y-2">
                     <div className="h-24">
                       <MiniLineChart data={[75, 82, 78, 85, 90, 88, 92]} color="#10b981" />
                     </div>
@@ -609,7 +653,7 @@ export default function Dashboard() {
                   <div className="flex items-center justify-center space-x-4">
                     <MiniDonutChart percentage={85} color="#9333ea" />
                     <div>
-                      <p className="text-2xl font-bold text-purple-600">85%</p>
+                      <p className="text-2xl font-bold text-purple-600"><CountUp end={85}className="counter-value inline-block" />%</p>
                       <p className="text-sm text-gray-600">Completion rate</p>
                     </div>
                   </div>
