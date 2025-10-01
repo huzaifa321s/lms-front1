@@ -20,7 +20,7 @@ export const Route = createFileRoute('/admin/login')({
 export default function LoginPage({disabled}) {
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm md:max-w-lg">
+      <div className="w-full ">
         <LoginForm disabled={disabled}/>
       </div>
     </div>

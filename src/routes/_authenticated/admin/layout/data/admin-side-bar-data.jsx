@@ -14,6 +14,7 @@ import {
   IconServerOff,
   IconSettings,
   IconTool,
+  IconUser,
   IconUserCog,
   IconUserOff,
 } from '@tabler/icons-react'
@@ -69,11 +70,7 @@ export const adminSideBarData = {
           title: 'Settings',
           icon: IconSettings,
           items: [
-            // {
-            //   title: 'Profile',
-            //   url: '/teacher/settings',
-            //   icon:IconUser
-            // },
+           
             {
               title:'Blog Category',
               url:'/admin/settings',
@@ -88,6 +85,11 @@ export const adminSideBarData = {
               title: 'Game Category',
               url: '/admin/settings/game-category',
               icon:EditIcon
+            },
+             {
+              title: 'Profile',
+              url: '/admin/settings/profile',
+              icon:IconUser
             },
           ],
         },

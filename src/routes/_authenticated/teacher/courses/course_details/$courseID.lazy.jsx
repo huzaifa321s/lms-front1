@@ -153,7 +153,7 @@ console.log('cover',cover)
   )
 console.log('fitleredStudents ====>',filteredStudents)
   const handleEditClick = () => {
-    navigate({ to: `/teacher/courses/edit_course/${params.courseID}` })
+    navigate({ to: `/teacher/courses/edit_/course/${params.courseID}` })
   }
 
   const handleDeleteClick = () => {

@@ -103,7 +103,7 @@ export function useSearchInput(from, key = 'q') {
 }
 
 
-        // const response = await axios.get(`/web/course/getCourse?${queryStr}`)
+        // const response = await axios.get(`/web//course/getCourse?${queryStr}`)
         // console.log('response ===>', response.data)
 export function exportToCSV(students) {
   if (!students || students.length === 0) return;

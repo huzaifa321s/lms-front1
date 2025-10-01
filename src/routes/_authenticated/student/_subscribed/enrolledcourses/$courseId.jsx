@@ -31,7 +31,7 @@ const courseQueryOptions = (params) =>
     queryFn: async () => {
       try {
         const response = await axios.get(
-          `/student/course/get-enrolled-course/${params.courseId}`
+          `/student/course/get-enrolled-/course/${params.courseId}`
         )
         console.log('res',response.data)
         if (response.data.success) {

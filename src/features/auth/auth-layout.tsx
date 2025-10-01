@@ -2,7 +2,7 @@ interface Props {
   children: React.ReactNode
 }
 
-import image from '../../../public/images/main-logo.jpg'
+import image from '/images/main-logo.jpg'
 export default function AuthLayout({ children }: Props) {
   return (
     <div className='bg-primary-foreground container grid h-svh max-w-none items-center justify-center'>

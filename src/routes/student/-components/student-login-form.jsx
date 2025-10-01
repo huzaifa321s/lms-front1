@@ -24,7 +24,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/password-input'
-import image from '../../../../public/images/main-logo.jpg'
+import image from '/images/main-logo.jpg'
 import { useAppUtils } from '../../../hooks/useAppUtils'
 import { handleLogin } from '../../../shared/config/reducers/student/studentAuthSlice'
 import { courseQueryOptions } from '../courses/$courseID'

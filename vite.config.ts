@@ -4,6 +4,8 @@ import tailwindcss from '@tailwindcss/vite';
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
 import terser from '@rollup/plugin-terser';
 import path from 'path';
+import viteCompression from 'vite-plugin-compression'
+import { imagetools } from 'vite-imagetools'
 
 export default defineConfig({
   plugins: [
@@ -14,6 +16,8 @@ export default defineConfig({
     react(),
     tailwindcss(),
     terser(), 
+    viteCompression(),
+    imagetools()
   ],
   resolve: {
     alias: {
@@ -28,10 +32,19 @@ export default defineConfig({
   },
   build: {
     assetsInlineLimit: 0, // Inline assets disable kiya for better control
-    minify: 'terser',
+     minify: 'terser',
     terserOptions: {
-      compress: { drop_console: true }, // Remove console.logs
-      mangle: true, // Shorten variable names
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        pure_funcs: ['console.info','console.debug'] // remove specific calls
+      },
+      mangle: {
+        toplevel: true
+      },
+      format: {
+        comments: false,
+      }
     },
     rollupOptions: {
       output: {

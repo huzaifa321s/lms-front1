@@ -28,7 +28,7 @@ export const Footer = () => {
           {/* Logo + About */}
           <div className="md:col-span-12 lg:col-span-4">
             <Link to="/" className="flex items-center gap-2 text-xl font-bold">
-              <img src="../../public/images/main-logo.jpg" alt="Logo" className="h-10" />
+              <img src="/images/main-logo.jpg" alt="Logo" className="h-10" />
               <span className="text-white">Bruce LMS</span>
             </Link>
             <p className="mt-6 leading-relaxed text-gray-400">

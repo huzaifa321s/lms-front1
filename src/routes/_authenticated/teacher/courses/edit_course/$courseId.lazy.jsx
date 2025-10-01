@@ -37,10 +37,9 @@ const editCourseQueryOptions = (params) =>
       try {
         let courseDetails = await axios.get(
           `/teacher/course/getCourse/${params.courseId}`,
-
           {}
         )
-
+console.log('courseDetails',courseDetails)
         courseDetails = courseDetails.data
 
         let courseCategories = await axios.get(
@@ -96,12 +95,12 @@ function App() {
 
   console.log('data ==>', data)
   // State to manage the course object, initialized with mock data
-  const [courseObj, setCourseObj] = useState(data.data || mockCourseDetails)
+  const [courseObj, setCourseObj] = useState(data.data)
       const baseUrl = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses`;
 
   // State for the cover image preview URL
   const [cover, setCover] = useState(
-    `${baseUrl}/cover-images/${data.data.coverImage}`
+    `${baseUrl}/cover-images/${data.data?.coverImage}`
   )
   console.log('cover',cover)
   // State to track if the data is being saved
@@ -157,7 +156,7 @@ function App() {
       updatedMaterials.splice(i, 1)
       setCourseObj((prev) => ({ ...prev, material: updatedMaterials }))
     },
-    [courseObj.material, params.courseId]
+    [courseObj?.material, params.courseId]
   )
 
   const handleMaterialChange = useCallback(
@@ -168,7 +167,7 @@ function App() {
       console.log('value ===>', value)
       setCourseObj((prev) => ({ ...prev, material: updatedMaterials }))
     },
-    [courseObj.material]
+    [courseObj?.material]
   )
 
   const handleMaterialFileUpload = useCallback(
@@ -178,7 +177,7 @@ function App() {
       updatedMaterials[i].media = file
       setCourseObj((prev) => ({ ...prev, material: updatedMaterials }))
     },
-    [courseObj.material]
+    [courseObj?.material]
   )
 
   // Simulating the mutation process

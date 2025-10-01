@@ -3,25 +3,23 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { Monitor, Plus } from 'lucide-react'
 import CountUp from 'react-countup'
 import { Button } from '@/components/ui/button'
-import hero from '../../public/images/1.png'
-import hero2 from '../../public/images/2.png'
-import bg from '../../public/images/bg.png'
-import team1 from '../../public/images/team/1.jpg'
-import team2 from '../../public/images/team/2.jpg'
-import team3 from '../../public/images/team/3.jpg'
-import team4 from '../../public/images/team/4.jpg'
-import team5 from '../../public/images/team/5.jpg'
 import { NavbarRouteComponent } from './-NavbarRouteComponent'
 import AboutSection from './-components/AboutSection'
 import Feature from './-components/AppFeature'
 import BlogSection from './-components/BlogSection'
+import BlogGrid from './-components/GridBlog'
 import CourseGrid from './-components/GridCourse'
 import TeamSection from './-components/Team'
 import Partners from './-components/partener'
 import { Footer } from './student/Footer'
-import BlogGrid from './-components/GridBlog'
-
-
+import hero from '/images/1.png'
+import hero2 from '/images/2.png'
+import bg from '/images/bg.png'
+import team1 from '/images/team/1.jpg'
+import team2 from '/images/team/2.jpg'
+import team3 from '/images/team/3.jpg'
+import team4 from '/images/team/4.jpg'
+import team5 from '/images/team/5.jpg'
 
 const CourseGridSkeleton = ({ grid }) => {
   return (
@@ -29,12 +27,12 @@ const CourseGridSkeleton = ({ grid }) => {
       {[...Array(3)].map((_, i) => (
         <div
           key={i}
-          className="animate-pulse bg-white/60 backdrop-blur-lg border border-slate-200 rounded-xl shadow-sm p-6"
+          className='animate-pulse rounded-xl border border-slate-200 bg-white/60 p-6 shadow-sm backdrop-blur-lg'
         >
-          <div className="h-40 bg-slate-200 rounded-lg mb-4"></div>
-          <div className="h-4 bg-slate-200 rounded w-3/4 mb-2"></div>
-          <div className="h-3 bg-slate-200 rounded w-1/2 mb-4"></div>
-          <div className="h-3 bg-slate-200 rounded w-1/4"></div>
+          <div className='mb-4 h-40 rounded-lg bg-slate-200'></div>
+          <div className='mb-2 h-4 w-3/4 rounded bg-slate-200'></div>
+          <div className='mb-4 h-3 w-1/2 rounded bg-slate-200'></div>
+          <div className='h-3 w-1/4 rounded bg-slate-200'></div>
         </div>
       ))}
     </div>
@@ -205,7 +203,12 @@ function LandingPage() {
 
             {/* Right Content */}
             <div className='relative lg:ms-8'>
-              <img src={hero} className='relative z-10 mx-auto' alt='hero' fetchPriority='high'/>
+              <img
+                src={hero}
+                className='relative z-10 mx-auto'
+                alt='hero'
+                fetchPriority='high'
+              />
 
               {/* Instructor Avatars */}
               <div className='mover absolute bottom-12 -left-2 z-20 w-56 rounded-xl bg-white/70 p-4 shadow-lg backdrop-blur-md md:bottom-16 md:-left-10'>
@@ -292,13 +295,13 @@ function LandingPage() {
               education platform pursue a new career.
             </p>
           </div>
-        <Suspense
-        fallback={
-          <CourseGridSkeleton grid="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 mt-6 gap-6" />
-        }
-      >
-        <CourseGrid grid="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 mt-6 gap-6" />
-      </Suspense>
+          <Suspense
+            fallback={
+              <CourseGridSkeleton grid='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 mt-6 gap-6' />
+            }
+          >
+            <CourseGrid grid='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 mt-6 gap-6' />
+          </Suspense>
           <div className='mt-6 grid grid-cols-1 md:grid-cols-12'>
             <div className='text-center md:col-span-12'>
               <Link
@@ -383,13 +386,13 @@ function LandingPage() {
               education platform pursue a new career.
             </p>
           </div>
-         <Suspense
-        fallback={
-          <CourseGridSkeleton grid="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 mt-6 gap-6" />
-        }
-      >
-        <BlogGrid grid="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 mt-6 gap-6" />
-      </Suspense>
+          <Suspense
+            fallback={
+              <CourseGridSkeleton grid='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 mt-6 gap-6' />
+            }
+          >
+            <BlogGrid grid='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 mt-6 gap-6' />
+          </Suspense>
         </div>
       </section>
       <Footer />

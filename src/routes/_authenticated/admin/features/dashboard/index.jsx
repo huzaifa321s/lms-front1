@@ -35,45 +35,7 @@ import ApexChart from './-components/radialChart'
 import { TopCourses } from './-components/topCourses'
 import { useSelector } from 'react-redux'
 import { motion } from "framer-motion"
-// function AdminWelcomeBanner({ userName }) {
-//   return (
-//     <div className='relative mb-8 overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 to-blue-700 p-8 text-white shadow-lg'>
-//       {/* Floating Decorative Circles */}
-//       <div className='absolute -top-16 -left-16 h-56 w-56 animate-[spin_25s_linear_infinite] rounded-full bg-blue-400/20 blur-3xl filter'></div>
-//       <div className='absolute -right-16 -bottom-16 h-72 w-72 animate-[spin_30s_linear_infinite] rounded-full bg-blue-500/20 blur-3xl filter'></div>
 
-//       <div className='relative z-10 flex flex-col items-center gap-6 md:flex-row md:justify-between'>
-//         {/* Left Content */}
-//         <div className='text-center md:text-left'>
-//           <h1 className='mb-2 text-3xl font-bold md:text-4xl'>
-//             Welcome
-//             <span className='text-blue-200 ml-1.5'>{userName}</span> 🛠️
-//           </h1>
-//           <p className='max-w-lg text-lg text-blue-100'>
-//             Monitor platform performance, manage users & courses, and keep the
-//             LMS running smoothly.
-//           </p>
-//         </div>
-
-//         {/* Right Buttons */}
-//         <div className='flex gap-4'>
-//           <Button className='flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg transition-all hover:from-blue-600 hover:to-blue-700'>
-//             <BarChart className='h-5 w-5' />
-//             View Analytics
-//           </Button>
-
-//           <Button
-//             variant='outline'
-//             className='flex items-center gap-2 bg-white/20 transition-all'
-//           >
-//             <Settings className='h-5 w-5' />
-//             Admin Settings
-//           </Button>
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
 
 
 function AdminWelcomeBanner({ userName }) {

@@ -1,6 +1,6 @@
 import React from "react"
-import about1 from "../../../public/course/1.jpg"
-import about2 from "../../../public/course/4.jpg"
+import about1 from "/course/1.jpg"
+import about2 from "/course/4.jpg"
 import "./index.css"
 import {
   Dialog,

@@ -121,7 +121,7 @@ export function LoginForm({ className, ...props }) {
         )}>
           <CardHeader className="space-y-4 pb-6">
             <div className="flex items-center justify-center w-16 h-16 rounded-full  mx-auto shadow-lg">
-              <img src="../../public/images/main-logo.jpg"/>
+              <img src="/images/main-logo.jpg"/>
             </div>
             
             <CardTitle className="text-3xl font-bold text-center bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">

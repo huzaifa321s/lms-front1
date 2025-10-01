@@ -21,7 +21,6 @@ import {
   IconUsers,
 } from '@tabler/icons-react'
 import { AudioWaveform, Command, GalleryVerticalEnd, List } from 'lucide-react'
-import { ClerkLogo } from '@/assets/clerk-logo'
 import { getCookie } from '../../../shared/utils/helperFunction';
 
 const credentials  = getCookie('teacherCredentials');
