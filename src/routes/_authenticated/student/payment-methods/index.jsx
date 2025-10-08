@@ -139,8 +139,8 @@ function RouteComponent() {
             My Payment Methods
           </h1>
           <Button
-            size="lg"
-            className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-[8px] bg-gradient-to-r from-[#f59e0b] to-[#d97706] px-6 py-3 font-medium text-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition duration-300 ease-out hover:scale-105 hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]"
+            size="sm"
+            className="group relative inline-flex  items-center justify-center overflow-hidden rounded-[8px] bg-gradient-to-r from-[#f59e0b] to-[#d97706] px-6 py-3 font-medium text-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition duration-300 ease-out hover:scale-105 hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]"
             onClick={() => dispatch(openModal({ type: 'add-payment-method' }))}
           >
             <span className="relative flex items-center gap-2">

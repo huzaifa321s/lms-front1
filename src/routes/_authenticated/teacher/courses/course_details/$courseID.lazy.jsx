@@ -15,11 +15,9 @@ import {
   FileText,
   Award,
   Clock,
-  Star,
   GraduationCap,
   Edit,
   Trash2,
-  Eye,
   Search,
   Filter,
   MoreVertical,
@@ -153,7 +151,7 @@ console.log('cover',cover)
   )
 console.log('fitleredStudents ====>',filteredStudents)
   const handleEditClick = () => {
-    navigate({ to: `/teacher/courses/edit_/course/${params.courseID}` })
+    navigate({ to: `/teacher/courses/edit_course/${params.courseID}` })
   }
 
   const handleDeleteClick = () => {

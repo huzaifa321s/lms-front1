@@ -1,37 +1,30 @@
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import {
   QueryClient,
   queryOptions,
   useQuery,
   useQueryClient,
-  useSuspenseQuery,
 } from '@tanstack/react-query'
-import {
-  useNavigate,
-  useRouter,
-  useSearch,
-  createLazyFileRoute,
-} from '@tanstack/react-router'
-import { IconLoader } from '@tabler/icons-react'
-import { Search } from 'lucide-react'
-import { useDispatch } from 'react-redux'
-import { toast } from 'sonner'
+import { useSearch, createLazyFileRoute } from '@tanstack/react-router'
+import { Loader, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { useAppUtils } from '../../../../hooks/useAppUtils'
-import { addTitle } from '../../../../shared/config/reducers/animateBgSlice'
 import { Show } from '../../../../shared/utils/Show'
 import {
   getDebounceInput,
   useSearchInput,
 } from '../../../../utils/globalFunctions'
-import { teachersSchemaStudentPanel } from '../features/tasks/-components/columns'
-import { DataTable } from '../features/tasks/-components/student-data-table'
 import { SmallLoader } from '../../teacher/-layout/data/components/teacher-authenticated-layout'
+import { teachersSchemaStudentPanel } from '../features/tasks/-components/columns'
+import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
+const DataTable = lazy(() => import("../features/tasks/-components/student-data-table"))
+
+
 
 const queryClient = new QueryClient()
 
@@ -86,7 +79,7 @@ export const Route = createLazyFileRoute(
     }
   },
   loader: ({ deps }) => queryClient.ensureQueryData(teachersQueryOptions(deps)),
-    component: () => (
+  component: () => (
     <Suspense fallback={<SmallLoader />}>
       <RouteComponent />
     </Suspense>
@@ -156,9 +149,9 @@ function RouteComponent() {
   return (
     <>
       <Header>
-    <h1 className=' w-full  bg-clip-text text-xl font-extrabold tracking-tight  drop-shadow-lg md:text-2xl'>
-  My Teachers
-</h1>
+        <h1 className='w-full bg-clip-text text-xl font-extrabold tracking-tight drop-shadow-lg md:text-2xl'>
+          My Teachers
+        </h1>
         <div className='my-2 flex w-full justify-between'>
           <div className='ml-auto'>
             <Show>
@@ -177,10 +170,10 @@ function RouteComponent() {
                     size='sm'
                     onClick={searchTeachers}
                     disabled={isFetching}
-                    className="text-black"
+                    className='text-black'
                   >
                     {isFetching ? (
-                      <IconLoader className='animate animate-spin' />
+                      <Loader className='animate animate-spin' />
                     ) : (
                       <Search />
                     )}
@@ -192,6 +185,7 @@ function RouteComponent() {
         </div>
       </Header>
       <Main>
+            <Suspense fallback={<DataTableSkeleton />}>
         <DataTable
           data={teachers?.length ? teachers : []}
           columns={teachersSchemaStudentPanel}
@@ -204,6 +198,7 @@ function RouteComponent() {
           pagination={true}
           paginationOptions={paginationOptions}
         />
+        </Suspense>
       </Main>
     </>
   )

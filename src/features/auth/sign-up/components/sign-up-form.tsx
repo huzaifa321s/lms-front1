@@ -4,7 +4,7 @@ import axios from 'axios'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { ClipboardIcon, Images, Camera } from 'lucide-react'
+import { Images, Camera, UserCircle } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -66,7 +66,7 @@ const formSchema = z
     path: ['confirmPassword'],
   })
 
-export function SignUpForm({ className, ...props }: SignUpFormProps) {
+export default function SignUpForm({ className, ...props }: SignUpFormProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
 
@@ -83,9 +83,9 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  
+
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    if(props.disabled) return
+    if (props.disabled) return
     setIsLoading(true)
     const RegisterationForm = new FormData()
     for (const key in data) {
@@ -102,186 +102,198 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
         navigate({ to: '/student/login' })
       }
     } catch (error) {
-      console.log('error', error);
-      toast.error(error.response.data.message);
+      console.log('error', error)
+      toast.error(error.response.data.message)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
   }
 
   return (
-  <Form {...form}>
-  <form
-    onSubmit={form.handleSubmit(onSubmit)}
-    className={cn('grid grid-cols-1 md:grid-cols-2 gap-4', className)} // two-column layout with gap
-    {...props}
-  >
-    {/* Profile Image Section */}
-    <div className='col-span-1 md:col-span-2 flex flex-col items-center space-y-4 my-6'>
-      <div className='relative group'>
-        {selectedImage ? (
-          <div className='relative h-20 w-20 rounded-full border-4 border-blue-500 overflow-hidden ring-2 ring-blue-100 transition-all duration-300 group-hover:scale-105'>
-            <img
-              src={URL.createObjectURL(selectedImage)}
-              alt='Selected profile'
-              className='h-full w-full object-cover'
-            />
-            <div className='absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity'>
-              <Camera className='w-5 h-5 text-white' />
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={cn('grid grid-cols-1 gap-4 md:grid-cols-2', className)} // two-column layout with gap
+        {...props}
+      >
+        {/* Profile Image Section */}
+        <div className='col-span-1 my-6 flex flex-col items-center space-y-4 md:col-span-2'>
+          <div className='group relative'>
+            {selectedImage ? (
+              <div className='relative h-20 w-20 overflow-hidden rounded-full border-4 border-blue-500 ring-2 ring-blue-100 transition-all duration-300 group-hover:scale-105'>
+                <img
+                  src={URL.createObjectURL(selectedImage)}
+                  alt='Selected profile'
+                  className='h-full w-full object-cover'
+                />
+                <div className='absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition-opacity group-hover:opacity-100'>
+                  <Camera className='h-5 w-5 text-white' />
+                </div>
+              </div>
+            ) : (
+              <div className='flex h-20 w-20 items-center justify-center rounded-full border-2 border-dashed border-slate-300 bg-gradient-to-br from-blue-50 to-indigo-50 group-hover:border-blue-400'>
+                <Images
+                  size={24}
+                  className='text-slate-400 group-hover:text-blue-500'
+                />
+              </div>
+            )}
+            <div className='absolute -right-1 -bottom-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-gradient-to-br from-blue-500 to-indigo-600 transition-transform group-hover:scale-110'>
+              <Camera className='h-4 w-4 text-white' />
             </div>
           </div>
-        ) : (
-          <div className='h-20 w-20 rounded-full border-2 border-dashed border-slate-300 bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center group-hover:border-blue-400'>
-            <Images size={24} className='text-slate-400 group-hover:text-blue-500' />
-          </div>
-        )}
-        <div className='absolute -bottom-1 -right-1 h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 border-2 border-white flex items-center justify-center group-hover:scale-110 transition-transform'>
-          <Camera className='h-4 w-4 text-white' />
+
+          <FormField
+            control={form.control}
+            name='profile'
+            render={({ field }) => (
+              <FormItem className='w-full md:w-auto'>
+                <FormControl>
+                  <div className='relative'>
+                    <Input
+                      type='file'
+                      className='absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0'
+                      id='fileInput'
+                      accept='image/*'
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      onChange={(e) => {
+                        field.onChange(e.target.files)
+                        setSelectedImage(e.target.files?.[0] || null)
+                      }}
+                      ref={field.ref}
+                    />
+                    <Button
+                      size='sm'
+                      type='button'
+                      variant='outline'
+                      className='pointer-events-none rounded-lg border-slate-200 bg-white px-4 py-2 text-sm text-slate-600 shadow-sm hover:border-blue-400 hover:bg-blue-50 hover:text-blue-600'
+                    >
+                      {selectedImage ? 'Change Photo' : 'Choose Photo'} <UserCircle/>
+                    </Button>
+                  </div>
+                </FormControl>
+                <FormMessage className='text-center text-xs text-red-500' />
+              </FormItem>
+            )}
+          />
         </div>
-      </div>
 
-      <FormField
-        control={form.control}
-        name='profile'
-        render={({ field }) => (
-          <FormItem className='w-full md:w-auto'>
-            <FormControl>
-              <div className='relative'>
+        {/* First & Last Name */}
+        <FormField
+          control={form.control}
+          name='firstName'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='text-sm font-medium text-slate-700'>
+                First Name
+              </FormLabel>
+              <FormControl>
                 <Input
-                  type='file'
-                  className='absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10'
-                  id='fileInput'
-                  accept='image/*'
-                  onBlur={field.onBlur}
-                  name={field.name}
-                  onChange={(e) => {
-                    field.onChange(e.target.files)
-                    setSelectedImage(e.target.files?.[0] || null)
-                  }}
-                  ref={field.ref}
+                  placeholder='John'
+                  className='h-9 rounded-md border-slate-200 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20'
+                  {...field}
                 />
-                <Button
-                  size='sm'
-                  type='button'
-                  variant='outline'
-                  className='pointer-events-none border-slate-200 bg-white text-slate-600 hover:bg-blue-50 hover:border-blue-400 hover:text-blue-600 rounded-lg px-4 py-2 text-sm shadow-sm'
-                >
-                  {selectedImage ? 'Change Photo' : 'Choose Photo'}
-                </Button>
-              </div>
-            </FormControl>
-            <FormMessage className='text-red-500 text-xs text-center' />
-          </FormItem>
-        )}
-      />
-    </div>
+              </FormControl>
+              <FormMessage className='text-xs text-red-500' />
+            </FormItem>
+          )}
+        />
 
-    {/* First & Last Name */}
-    <FormField
-      control={form.control}
-      name='firstName'
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel className='text-sm font-medium text-slate-700'>First Name</FormLabel>
-          <FormControl>
-            <Input
-              placeholder='John'
-              className='h-9 rounded-md border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 text-sm'
-              {...field}
-            />
-          </FormControl>
-          <FormMessage className='text-red-500 text-xs' />
-        </FormItem>
-      )}
-    />
+        <FormField
+          control={form.control}
+          name='lastName'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='text-sm font-medium text-slate-700'>
+                Last Name
+              </FormLabel>
+              <FormControl>
+                <Input
+                  placeholder='Doe'
+                  className='h-9 rounded-md border-slate-200 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20'
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage className='text-xs text-red-500' />
+            </FormItem>
+          )}
+        />
 
-    <FormField
-      control={form.control}
-      name='lastName'
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel className='text-sm font-medium text-slate-700'>Last Name</FormLabel>
-          <FormControl>
-            <Input
-              placeholder='Doe'
-              className='h-9 rounded-md border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 text-sm'
-              {...field}
-            />
-          </FormControl>
-          <FormMessage className='text-red-500 text-xs' />
-        </FormItem>
-      )}
-    />
+        {/* Email */}
+        <FormField
+          control={form.control}
+          name='email'
+          render={({ field }) => (
+            <FormItem className='col-span-1 md:col-span-2'>
+              <FormLabel className='text-sm font-medium text-slate-700'>
+                Email Address
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type='email'
+                  placeholder='you@example.com'
+                  className='h-9 rounded-md border-slate-200 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20'
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage className='text-xs text-red-500' />
+            </FormItem>
+          )}
+        />
 
-    {/* Email */}
-    <FormField
-      control={form.control}
-      name='email'
-      render={({ field }) => (
-        <FormItem className='col-span-1 md:col-span-2'>
-          <FormLabel className='text-sm font-medium text-slate-700'>Email Address</FormLabel>
-          <FormControl>
-            <Input
-              type='email'
-              placeholder='you@example.com'
-              className='h-9 rounded-md border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 text-sm'
-              {...field}
-            />
-          </FormControl>
-          <FormMessage className='text-red-500 text-xs' />
-        </FormItem>
-      )}
-    />
+        {/* Password & Confirm */}
+        <FormField
+          control={form.control}
+          name='password'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='text-sm font-medium text-slate-700'>
+                Password
+              </FormLabel>
+              <FormControl>
+                <PasswordInput
+                  placeholder='••••••••'
+                  className='h-9 rounded-md border-slate-200 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20'
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage className='text-xs text-red-500' />
+            </FormItem>
+          )}
+        />
 
-    {/* Password & Confirm */}
-    <FormField
-      control={form.control}
-      name='password'
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel className='text-sm font-medium text-slate-700'>Password</FormLabel>
-          <FormControl>
-            <PasswordInput
-              placeholder='••••••••'
-              className='h-9 rounded-md border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 text-sm'
-              {...field}
-            />
-          </FormControl>
-          <FormMessage className='text-red-500 text-xs' />
-        </FormItem>
-      )}
-    />
+        <FormField
+          control={form.control}
+          name='confirmPassword'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='text-sm font-medium text-slate-700'>
+                Confirm Password
+              </FormLabel>
+              <FormControl>
+                <PasswordInput
+                  placeholder='••••••••'
+                  className='h-9 rounded-md border-slate-200 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20'
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage className='text-xs text-red-500' />
+            </FormItem>
+          )}
+        />
 
-    <FormField
-      control={form.control}
-      name='confirmPassword'
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel className='text-sm font-medium text-slate-700'>Confirm Password</FormLabel>
-          <FormControl>
-            <PasswordInput
-              placeholder='••••••••'
-              className='h-9 rounded-md border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 text-sm'
-              {...field}
-            />
-          </FormControl>
-          <FormMessage className='text-red-500 text-xs' />
-        </FormItem>
-      )}
-    />
-
-    {/* Submit Button */}
-    <div className='col-span-1 md:col-span-2'>
-      <Button
-        type='submit'
-        disabled={isLoading}
-        className='w-full h-10 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-md shadow-sm transition-all duration-200 disabled:opacity-50'
-      >
-        {isLoading ? 'Creating Account...' : 'Create Student Account'}
-      </Button>
-    </div>
-  </form>
-</Form>
-
+        {/* Submit Button */}
+        <div className='col-span-1 md:col-span-2'>
+          <Button
+            type='submit'
+            disabled={isLoading}
+            className='h-10 w-full rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 font-medium text-white shadow-sm transition-all duration-200 hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50'
+          >
+            {isLoading ? 'Creating Account...' : 'Create Student Account'}
+          </Button>
+        </div>
+      </form>
+    </Form>
   )
 }

@@ -13,6 +13,11 @@ export const teacherAuthSlice = createSlice({
             const { token, credentials } = action.payload;
             state.token = token;
             state.credentials = credentials
+            console.log('teacer creds 1',credentials)
+            document.cookie = `teacherToken=${token}; path=/`
+            document.cookie = `teacherCredentials=${JSON.stringify(
+                credentials
+            )}; path=/`
         },
         handleLogoutTeacher: (state) => {
             state.token = null;
@@ -30,7 +35,7 @@ export const teacherAuthSlice = createSlice({
         }
     },
 
- 
+
 });
 
 export const { handleLogin, handleLogoutTeacher, handleUpdateProfile } = teacherAuthSlice.actions;

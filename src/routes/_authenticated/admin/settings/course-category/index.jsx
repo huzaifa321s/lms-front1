@@ -1,20 +1,19 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { QueryClient, queryOptions, useQuery } from '@tanstack/react-query'
 import { useNavigate, useSearch, createFileRoute } from '@tanstack/react-router'
-import { IconLoader } from '@tabler/icons-react'
-import { Search } from 'lucide-react'
+import { Loader, Plus, Search } from 'lucide-react'
 import { useDispatch } from 'react-redux'
-import { useDebounce } from 'use-debounce'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { openModalAdmin } from '../../../../../shared/config/reducers/admin/DialogSlice'
 import { Show } from '../../../../../shared/utils/Show'
-import { DataTable } from '../../../student/features/tasks/-components/student-data-table'
+const DataTable = lazy(() => import("../../../student/features/tasks/-components/student-data-table"))
 import ContentSection from '../../../student/settings/-components/content-section'
 import { courseCategoriesSchema } from '../../layout/data/-schemas/courseCategoriesSchema'
 import { getDebounceInput, useSearchInput } from '../../../../../utils/globalFunctions'
+import { DataTableSkeleton } from '../../../../-components/DataTableSkeleton'
 
 const queryClient = new QueryClient()
 
@@ -127,7 +126,7 @@ export const Route = createFileRoute(
           }
           className="rounded-[8px] bg-[#2563eb] text-white hover:bg-[#1d4ed8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
         >
-          Add Category
+       <Plus/>   Add Category
         </Button>
         <Show>
           <Show.When isTrue={true}>
@@ -148,7 +147,7 @@ export const Route = createFileRoute(
                 className="rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
               >
                 {isFetching ? (
-                  <IconLoader className="h-4 w-4 animate-spin text-[#2563eb]" />
+                  <Loader className="h-4 w-4 animate-spin text-[#2563eb]" />
                 ) : (
                   <Search className="h-4 w-4 text-[#2563eb]" />
                 )}
@@ -157,6 +156,7 @@ export const Route = createFileRoute(
           </Show.When>
         </Show>
       </div>
+          <Suspense fallback={<DataTableSkeleton />}>
       <DataTable
         data={courseCategories}
         totalPages={totalPages}
@@ -169,6 +169,7 @@ export const Route = createFileRoute(
         fetchStatus={fetchStatus}
         isFetching={isFetching}
       />
+      </Suspense>
     </ContentSection>
   )
 }

@@ -76,12 +76,7 @@ export const CoursesSchema = z.object({
   enrolledCount: z.number().optional(),
   instructorFirstName: z.string().optional(), // fallback empty string
   instructorLastName: z.string().optional(),
-  // category: z
-  //   .object({
-  //     _id: z.string(),
-  //     name: z.string(),
-  //   })
-  //   .optional(),
+
 });
 
 

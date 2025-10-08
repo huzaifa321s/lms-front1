@@ -1,22 +1,19 @@
-import { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
+import { Suspense, useCallback, useEffect,useState } from 'react'
 import axios from 'axios'
 import {
-  QueryClient,
   queryOptions,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
 import {
-  createFileRoute,
-  useLoaderData,
   useNavigate,
   useRouter,
   useSearch,
+  createFileRoute,
 } from '@tanstack/react-router'
-import { IconChalkboardTeacher } from '@tabler/icons-react'
-import { BookOpen, Users, Star } from 'lucide-react'
-import { useSelector, useDispatch } from 'react-redux'
+import { BookOpen, Users,UsersIcon } from 'lucide-react'
+import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -25,7 +22,6 @@ import { handleCourseEnrollment } from '../../../shared/config/reducers/student/
 import { Show } from '../../../shared/utils/Show'
 import {
   checkSubscriptionStatus,
-  getCookie,
   isActiveSubscription,
 } from '../../../shared/utils/helperFunction'
 import {
@@ -33,9 +29,7 @@ import {
   getRenderPaginationButtons,
   useSearchInput,
 } from '../../../utils/globalFunctions'
-import { SmallLoader } from '../../_authenticated/teacher/-layout/data/components/teacher-authenticated-layout'
 
-const queryClient = new QueryClient()
 const CoursesPageSkeleton = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 p-6 font-sans">
@@ -197,31 +191,6 @@ function hideLoader() {
 }
 
 
-const CourseListSkeleton = () => (
-  <div className='min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 p-6'>
-    <div className='mx-auto max-w-7xl'>
-      <div className='mb-8 animate-pulse'>
-        <div className='h-8 w-48 rounded-lg bg-slate-200'></div>
-        <div className='mt-2 h-4 w-96 rounded-lg bg-slate-200'></div>
-      </div>
-      <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-        {[...Array(8)].map((_, i) => (
-          <div
-            key={i}
-            className='animate-pulse rounded-xl bg-white p-4 shadow-lg'
-          >
-            <div className='h-44 w-full rounded-t-xl bg-slate-200'></div>
-            <div className='mt-4 space-y-2'>
-              <div className='h-6 w-3/4 rounded bg-slate-200'></div>
-              <div className='h-4 w-full rounded bg-slate-200'></div>
-              <div className='h-4 w-1/2 rounded bg-slate-200'></div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-)
 
 const MiniStats = ({ students = 1250, instructor }) => (
   <div className='mt-2 flex justify-between text-xs text-slate-600'>
@@ -231,7 +200,7 @@ const MiniStats = ({ students = 1250, instructor }) => (
     </div>
   
     <div className='flex items-center gap-1'>
-      <IconChalkboardTeacher className='h-3 w-3' />
+      <UsersIcon className='h-3 w-3' />
       <span>
         {instructor?.firstName} {instructor?.lastName}
       </span>
@@ -245,8 +214,8 @@ function RouteComponent() {
   const queryClient = useQueryClient()
   const { q, page: currentPage } = useSearch({ from: '/student/courses/' })
   const [searchInput, setSearchInput] = useSearchInput('/student/courses/')
-  const credentials = useSelector((s) => s.studentAuth.credentials)
-  const subscription = useSelector((s) => s.studentAuth.subscription)
+  const credentials = useSelector((s) => s.studentAuth.credentials,shallowEqual)
+  const subscription = useSelector((s) => s.studentAuth.subscription,shallowEqual)
   const isLoggedIn = useSelector((s) => !!s.studentAuth.token)
   const [selectedEnrolledCourseID, setSelectedEnrolledCourseID] = useState('')
 
@@ -484,115 +453,138 @@ useEffect(() => {
                   isLoggedIn && enrolledCourses?.includes(course._id)
 
                 return (
-                  <Card
-                    key={course._id}
-                    className='group relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md transition-all duration-500 hover:-translate-y-1 hover:shadow-xl'
-                    role='article'
-                    aria-label={`Course: ${course.name}`}
-                  >
-                    {/* Image Section */}
-                    <div className='relative h-44 overflow-hidden'>
-                      <img
-                        src={coverImageUrl}
-                        alt={course.name}
-                        className='h-full w-full object-cover transition-transform duration-700 group-hover:scale-110'
-                        loading='lazy'
-                      />
-                      <div className='absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent' />
+              <Card
+  key={course._id}
+  className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md transition-all duration-500 hover:-translate-y-1 hover:shadow-xl focus-within:ring-2 focus-within:ring-blue-500"
+  role="article"
+  aria-label={`Course: ${course.name}`}
+>
+  {/* Image Section */}
+  <div className="relative h-44 overflow-hidden">
+    <img
+      src={coverImageUrl}
+      alt={course.name || 'Course cover image'}
+      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+      loading="lazy"
+    />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
 
-                      {/* Category Badge */}
-                      <div className='absolute top-3 left-3 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 px-3 py-1 text-xs font-semibold text-white shadow-md'>
-                        {course.category?.name || 'N/A'}
-                      </div>
+    {/* Category Badge */}
+    <div
+      className="absolute top-3 left-3 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 px-3 py-1 text-xs font-semibold text-white shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+      title={`Category: ${course.category?.name || 'N/A'}`}
+      tabIndex={0}
+      aria-label={`Category: ${course.category?.name || 'N/A'}`}
+    >
+      {course.category?.name || 'N/A'}
+    </div>
 
-                      {/* Enrolled Badge */}
-                      {isEnrolled && (
-                        <div className='absolute top-3 right-3 flex items-center gap-1 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 px-3 py-1 text-xs font-semibold text-white shadow-md'>
-                          <svg
-                            className='h-3 w-3'
-                            fill='currentColor'
-                            viewBox='0 0 20 20'
-                          >
-                            <path
-                              fillRule='evenodd'
-                              d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 
+    {/* Enrolled Badge */}
+    {isEnrolled && (
+      <div
+        className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 px-3 py-1 text-xs font-semibold text-white shadow-md focus:outline-none focus:ring-2 focus:ring-green-400"
+        title="You are enrolled in this course"
+        tabIndex={0}
+        aria-label="Enrolled in this course"
+      >
+        <svg
+          className="h-3 w-3"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            fillRule="evenodd"
+            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 
             01-1.414 0l-4-4a1 1 0 011.414-1.414L8 
             12.586l7.293-7.293a1 1 0 011.414 
-            0z'
-                              clipRule='evenodd'
-                            />
-                          </svg>
-                          Enrolled
-                        </div>
-                      )}
-                    </div>
+            0z"
+            clipRule="evenodd"
+          />
+        </svg>
+        Enrolled
+      </div>
+    )}
+  </div>
 
-                    {/* Body */}
-                    <div className='space-y-3 p-5'>
-                      {/* Title */}
-                      <h3 className='line-clamp-2 text-lg font-bold text-slate-800 transition-colors duration-300 group-hover:text-blue-600'>
-                        {course.name}
-                      </h3>
-                      {/* Description */}
-                      <p className='line-clamp-2 text-sm text-slate-600'>
-                        {course.description}
-                      </p>
+  {/* Body */}
+  <div className="space-y-3 p-5">
+    {/* Title */}
+    <h3 className="line-clamp-2 text-lg font-bold text-slate-800 transition-colors duration-300 group-hover:text-blue-600">
+      {course.name}
+    </h3>
 
-                      {/* Stats */}
-                      <div className='border-t border-slate-100 pt-2'>
-                        <MiniStats
-                          students={course.enrolledStudents}
-                          rating={course.rating}
-                          instructor={course.instructor}
-                        />
-                      </div>
+    {/* Description */}
+    <p className="line-clamp-2 text-sm text-slate-600">{course.description}</p>
 
-                      {/* Buttons */}
-                      <div className='space-y-2 pt-2'>
-                        {isLoggedIn && !isEnrolled && (
-                          <Button
-                            disabled={
-                              isPending &&
-                              selectedEnrolledCourseID === course._id
-                            }
-                            onClick={() => handleEnrollCourse(course._id)}
-                            className='w-full rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 py-2.5 font-semibold text-white shadow-sm transition-all duration-300 hover:from-amber-600 hover:to-amber-700 hover:shadow-lg'
-                            aria-label={`Enroll in ${course.name}`}
-                          >
-                            {isPending &&
-                            selectedEnrolledCourseID === course._id ? (
-                              <div className='flex items-center'>
-                                <div className='mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white'></div>
-                                Enrolling...
-                              </div>
-                            ) : (
-                              <>
-                                <BookOpen className='mr-2 h-4 w-4' />
-                                Enroll Now
-                              </>
-                            )}
-                          </Button>
-                        )}
-                        <Button
-                          variant='outline'
-                          disabled={
-                            isPending && selectedEnrolledCourseID === course._id
-                          }
-                          onClick={() =>
-                            navigate({
-                              to: `/student/courses/${course._id}`,
-                              search: { userID: credentials?._id },
-                            })
-                          }
-                          className='w-full rounded-lg border-slate-200 text-slate-700 transition-all duration-300 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600'
-                          aria-label={`View details of ${course.name}`}
-                        >
-                          <BookOpen className='mr-2 h-4 w-4' />
-                          View Details
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
+    {/* Stats */}
+    <div className="border-t border-slate-100 pt-2">
+      <MiniStats
+        students={course.enrolledStudents}
+        rating={course.rating}
+        instructor={course.instructor}
+      />
+    </div>
+
+    {/* Buttons */}
+    <div className="space-y-2 pt-2">
+      {isLoggedIn && !isEnrolled && (
+        <Button
+          disabled={isPending && selectedEnrolledCourseID === course._id}
+          onClick={() => handleEnrollCourse(course._id)}
+          className="w-full rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 py-2.5 font-semibold text-white shadow-sm transition-all duration-300 hover:from-amber-600 hover:to-amber-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-400"
+          aria-label={`Enroll in ${course.name}`}
+          aria-pressed={isEnrolled}
+          aria-busy={isPending && selectedEnrolledCourseID === course._id}
+        >
+          {isPending && selectedEnrolledCourseID === course._id ? (
+            <div className="flex items-center justify-center">
+              <div className="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white" />
+              Enrolling...
+            </div>
+          ) : (
+            <>
+              <BookOpen className="mr-2 h-4 w-4" aria-hidden="true" />
+              Enroll Now
+            </>
+          )}
+        </Button>
+      )}
+
+      <Button
+        variant="outline"
+        disabled={isPending && selectedEnrolledCourseID === course._id}
+        onClick={() =>
+          navigate({
+            to: `/student/courses/${course._id}`,
+            search: { userID: credentials?._id },
+          })
+        }
+        className="w-full rounded-lg border-slate-200 text-slate-700 transition-all duration-300 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        aria-label={`View details of ${course.name}`}
+      >
+        <BookOpen className="mr-2 h-4 w-4" aria-hidden="true" />
+        View Details
+      </Button>
+    </div>
+
+    {/* Live region for enrollment status updates */}
+    <div
+      aria-live="polite"
+      className="sr-only"
+      role="status"
+      aria-atomic="true"
+    >
+      {isPending && selectedEnrolledCourseID === course._id
+        ? `Enrolling in ${course.name}...`
+        : isEnrolled
+        ? `You are enrolled in ${course.name}`
+        : ''}
+    </div>
+  </div>
+</Card>
+
                 )
               })}
             </div>

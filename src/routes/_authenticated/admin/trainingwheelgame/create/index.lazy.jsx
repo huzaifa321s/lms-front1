@@ -14,7 +14,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { createNewSentenceArray } from '../../../../../shared/utils/helperFunction'
 import { Main } from '@/components/layout/main'
 import { QueryClient, queryOptions, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
-import { Layers, Tag, CheckCircle, AlertTriangle, Target } from 'lucide-react'
+import { Layers, Tag, CheckCircle, AlertTriangle, Target, Plus, Loader } from 'lucide-react'
 
 const queryClient = new QueryClient()
 const gameCategoryQueryOptions = () =>
@@ -260,7 +260,7 @@ function RouteComponent() {
                   disabled={isAddButtonDisabled() || addBtnLoading}
                   className="rounded-[8px] bg-[#2563eb] text-white hover:bg-[#1d4ed8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {addBtnLoading ? 'Saving...' : 'Add'}
+                  {addBtnLoading ? 'Saving...' : 'Add'}    {addBtnLoading ? <Loader className="animate animate-spin"/> : <Plus/>}
                 </Button>
                 <Button
                   size="lg"

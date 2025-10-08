@@ -3,11 +3,6 @@ import { QueryClient, useInfiniteQuery } from '@tanstack/react-query'
 import { useNavigate, createLazyFileRoute } from '@tanstack/react-router'
 import {
   CheckCircle,
-  Calendar,
-  CreditCard,
-  User,
-  Hash,
-  DollarSign,
   Clock,
   XCircle,
   Eye,
@@ -16,7 +11,6 @@ import {
 import { useInView } from 'react-intersection-observer'
 import axios from 'axios'
 import { Button } from '@/components/ui/button'
-import { LoaderThree } from '@/components/ui/loader'
 import { SmallLoader } from '../../teacher/-layout/data/components/teacher-authenticated-layout'
 
 const queryClient = new QueryClient()

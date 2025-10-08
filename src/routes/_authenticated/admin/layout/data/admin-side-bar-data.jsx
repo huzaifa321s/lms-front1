@@ -1,24 +1,4 @@
-import {
-  IconBarrierBlock,
-  IconBrowserCheck,
-  IconBug,
-  IconCreditCard,
-  IconError404,
-  IconGoGame,
-  IconHelp,
-  IconLayoutDashboard,
-  IconLock,
-  IconLockAccess,
-  IconNotification,
-  IconPalette,
-  IconServerOff,
-  IconSettings,
-  IconTool,
-  IconUser,
-  IconUserCog,
-  IconUserOff,
-} from '@tabler/icons-react'
-import {  BookUser, Edit2, Edit3, EditIcon, List, Users2Icon, UsersIcon } from 'lucide-react'
+import {  Blocks, BookUser, Bug, CircleOff, CreditCard, Edit2, Edit3, EditIcon, Gamepad, LayoutDashboard, List, Lock, LockKeyholeOpen, ServerOff, Settings, User, UserMinus, Users2Icon, UsersIcon } from 'lucide-react'
 import { getCookie } from '../../../../../shared/utils/helperFunction';
 
 
@@ -38,7 +18,7 @@ export const adminSideBarData = {
         {
           title: 'Dashboard',
           url: '/admin',
-          icon: IconLayoutDashboard,
+          icon: LayoutDashboard,
         },
         {
           title: 'Courses',
@@ -64,11 +44,11 @@ export const adminSideBarData = {
         {
           title: "Training Wheel Game",
           url: '/admin/trainingwheelgame',
-          icon:IconGoGame
+          icon:Gamepad
         },
         {
           title: 'Settings',
-          icon: IconSettings,
+          icon: Settings,
           items: [
            
             {
@@ -89,7 +69,7 @@ export const adminSideBarData = {
              {
               title: 'Profile',
               url: '/admin/settings/profile',
-              icon:IconUser
+              icon:User
             },
           ],
         },
@@ -101,7 +81,7 @@ export const adminSideBarData = {
       items: [
         {
           title: 'Auth',
-          icon: IconLockAccess,
+          icon: LockKeyholeOpen,
           items: [
             {
               title: 'Sign In',
@@ -130,38 +110,38 @@ export const adminSideBarData = {
         },
         {
           title: 'Errors',
-          icon: IconBug,
+          icon: Bug,
           items: [
             {
               title: 'Unauthorized',
               url: '/admin/sample-pages/errors/unauthorized',
-              icon: IconLock,
+              icon: Lock,
             },
             {
               title: 'Forbidden',
               url: '/admin/sample-pages/errors/forbidden',
-              icon: IconUserOff,
+              icon:UserMinus,
             },
             {
               title: 'Not Found',
               url: '/admin/sample-pages/errors/not-found',
-              icon: IconError404,
+              icon: CircleOff,
             },
             {
               title: 'Internal Server Error',
               url: '/admin/sample-pages/errors/server-error',
-              icon: IconServerOff,
+              icon: ServerOff,
             },
             {
               title: 'Maintenance Error',
               url: '/admin/sample-pages/errors/maintenance-error',
-              icon: IconBarrierBlock,
+              icon: Blocks,
             },
           ],
         },
          {
       title: 'Subscriptions',
-      icon: IconCreditCard,
+      icon: CreditCard,
       items: [
         { title: 'Plans', url: '/admin/sample-pages/subscriptions/plans' },
         

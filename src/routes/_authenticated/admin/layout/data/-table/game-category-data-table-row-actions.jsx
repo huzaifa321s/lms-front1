@@ -1,7 +1,5 @@
-import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { useSearch } from '@tanstack/react-router'
-import { IconListDetails, IconTrash } from '@tabler/icons-react'
-import { EditIcon } from 'lucide-react'
+import {  EditIcon, Eye, MoreHorizontal, Trash } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -24,14 +22,14 @@ export function GameCategoryDataTableRowActions({ row }) {
 
   return (
     <div className="flex items-center">
-     <Button size="xs" variant="outline"  onClick={() => dispatch(openModalAdmin({type:'view-game-category-modal',props:{categoryID:category._id}}))} >View</Button>
+     <Button size="xs" variant="outline"  onClick={() => dispatch(openModalAdmin({type:'view-game-category-modal',props:{categoryID:category._id}}))} ><Eye/> View</Button>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
             variant='ghost'
             className='data-[state=open]:bg-muted flex h-8 w-8 p-0'
           >
-            <DotsHorizontalIcon className='h-4 w-4' />
+            <MoreHorizontal className='h-4 w-4' />
             <span className='sr-only'>Open menu</span>
           </Button>
         </DropdownMenuTrigger>
@@ -47,7 +45,7 @@ export function GameCategoryDataTableRowActions({ row }) {
           <DropdownMenuItem onClick={() => dispatch(openModalAdmin({type:'game-category-delete-modal',props:{category:category,searchInput:searchParams.q}}))}>
             Delete
             <DropdownMenuShortcut>
-              <IconTrash size={16} />
+              <Trash size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuContent>

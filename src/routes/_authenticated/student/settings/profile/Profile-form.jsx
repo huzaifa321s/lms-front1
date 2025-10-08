@@ -4,10 +4,10 @@ import axios from "axios"
 import { format } from "date-fns"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { CalendarIcon, User, Phone, Camera, Save, CalendarPlusIcon as CalendarLucide, FileText } from "lucide-react"
+import { CalendarIcon, User, Phone, Camera, Save, CalendarPlusIcon as CalendarLucide, FileText, Lock } from "lucide-react"
 import PhoneInput from "react-phone-number-input"
 import "react-phone-number-input/style.css"
-import { useDispatch, useSelector } from "react-redux"
+import { shallowEqual, useDispatch, useSelector } from "react-redux"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -20,11 +20,10 @@ import { Textarea } from "@/components/ui/textarea"
 import { handleUpdateProfile } from "../../../../../shared/config/reducers/student/studentAuthSlice"
 import { useMutation } from "@tanstack/react-query"
 import { PasswordInput } from "@/components/password-input"
-import { IconLock } from "@tabler/icons-react"
 
 export default function ProfileForm() {
   const dispatch = useDispatch()
-  const credentials = useSelector((state) => state.studentAuth.credentials)
+  const credentials = useSelector((state) => state.studentAuth.credentials,shallowEqual)
   const [dp, setDp] = useState("")
   const [date, setDate] = useState("")
   const [phone, setPhone] = useState(credentials?.phone)
@@ -415,7 +414,7 @@ export default function ProfileForm() {
         <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
           <div className="flex items-center mb-6">
             <div className="bg-gradient-to-r from-red-500 to-red-600 rounded-full p-3 mr-4">
-              <IconLock className="w-6 h-6 text-white" />
+              <Lock className="w-6 h-6 text-white" />
             </div>
             <h2 className="text-2xl font-bold bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
               Security Settings
@@ -459,7 +458,7 @@ export default function ProfileForm() {
                   </div>
                 ) : (
                   <div className="flex items-center">
-                    <IconLock className="w-4 h-4 mr-2" />
+                    <Lock className="w-4 h-4 mr-2" />
                     Update Password
                   </div>
                 )}

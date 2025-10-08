@@ -14,20 +14,6 @@ export const Header = ({
   children,
   ...props
 }: HeaderProps) => {
-  const [offset, setOffset] = React.useState(0)
-
-  React.useEffect(() => {
-    const onScroll = () => {
-      setOffset(document.body.scrollTop || document.documentElement.scrollTop)
-    }
-
-    // Add scroll listener to the body
-    document.addEventListener('scroll', onScroll, { passive: true })
-
-    // Clean up the event listener on unmount
-    return () => document.removeEventListener('scroll', onScroll)
-  }, [])
-
   return (
     <header
       className={cn(
@@ -38,11 +24,16 @@ export const Header = ({
       )}
       {...props}
     >
+      {/* Sidebar button trigger */}
       <SidebarTrigger
-        variant='outline'
-        className='scale-125 sm:scale-100 text-white border-blue-500 bg-blue-500'
+        variant="outline"
+        className="scale-125 sm:scale-100 text-white border-blue-500 bg-blue-500"
       />
-      <Separator orientation='vertical' className='h-6 bg-white' />
+
+      {/* Vertical line separator */}
+      <Separator orientation="vertical" className="h-6 bg-white" />
+
+      {/* Children area (title, nav, etc.) */}
       {children}
     </header>
   )

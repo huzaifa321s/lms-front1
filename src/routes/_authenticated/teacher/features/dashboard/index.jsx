@@ -1,6 +1,15 @@
-import { useRef } from 'react'
+import { lazy, Suspense, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { BookOpen, Plus, Settings, User } from 'lucide-react'
+import {
+  BarChart3,
+  BookOpen,
+  Gamepad,
+  LayoutDashboard,
+  Plus,
+  Settings,
+  User,
+} from 'lucide-react'
+import { shallowEqual, useSelector } from 'react-redux'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -10,61 +19,64 @@ import {
   CardFooter,
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { TopNav } from '@/components/layout/top-nav'
-import { Search } from '@/components/search'
 import { cardQueryOptions } from '../..'
 import { useAppUtils } from '../../../../../hooks/useAppUtils.jsx'
-import { ProfileDropdown } from '../../../../teacher/-components/teacher-profile-dropdown.jsx'
-import { ChartPieLabel } from './-components/ChartCourseByStudents.jsx'
-import { TopCourseChart } from './-components/TopCourseChart.jsx'
-import { ChartBarDefault } from './-components/overview'
 import './index.css'
-import { useSelector } from 'react-redux'
-import CountUp from 'react-countup'
 
-function WelcomeBanner({ userName ,creds }) {
+const ProfileDropdown = lazy(
+  () => import('../../../../teacher/-components/teacher-profile-dropdown.jsx')
+)
+const ChartPieLabel = lazy(
+  () => import('./-components/ChartCourseByStudents.jsx')
+)
+const TopCourseChart = lazy(() => import('./-components/TopCourseChart.jsx'))
+const ChartBarDefault = lazy(() => import('./-components/overview'))
+const CountUp = lazy(() => import('react-countup'))
+
+function WelcomeBanner({ userName, creds }) {
   return (
-    <div className="relative bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-3xl overflow-hidden p-8 mb-8 shadow-lg">
+    <div className='relative mb-2 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 p-8 text-white shadow-lg'>
       {/* Floating Decorative Circles */}
-      <div className="absolute -top-16 -left-16 w-56 h-56 bg-blue-400/20 rounded-full filter blur-3xl animate-[spin_25s_linear_infinite]"></div>
-      <div className="absolute -bottom-16 -right-16 w-72 h-72 bg-blue-500/20 rounded-full filter blur-3xl animate-[spin_30s_linear_infinite]"></div>
+      <div className='absolute -top-16 -left-16 h-56 w-56 animate-[spin_25s_linear_infinite] rounded-full bg-blue-400/20 blur-3xl filter'></div>
+      <div className='absolute -right-16 -bottom-16 h-72 w-72 animate-[spin_30s_linear_infinite] rounded-full bg-blue-500/20 blur-3xl filter'></div>
 
-   <div className="relative z-10 flex flex-col md:flex-row items-center md:justify-between gap-6">
-  <div className="text-center md:text-left">
-    <h1 className="text-3xl md:text-4xl font-bold mb-2">
-      Welcome {creds?.customerId ? "back" : ""},{" "}
-      <span className="text-blue-200">{userName}</span> 👩‍🏫
-    </h1>
-    <p className="text-blue-100 text-lg max-w-lg">
-      Manage your courses, track student progress, and share your knowledge
-      with learners worldwide.
-    </p>
-  </div>
-  <div className="flex gap-4">
-    {/* Manage Courses Button */}
-    <Button
-      size=""
-      className="bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all flex items-center gap-2"
-    >
-      <BookOpen className="h-5 w-5" />
-      Manage Courses
-    </Button>
+      <div className='relative z-10 flex flex-col items-center gap-6 md:flex-row md:justify-between'>
+        <div className='text-center md:text-left'>
+          <h1 className='mb-2 text-3xl font-bold md:text-4xl'>
+            Welcome {creds?.customerId ? 'back' : ''},{' '}
+            <span className='text-blue-200'>{userName}</span> 👩‍🏫
+          </h1>
+          <p className='max-w-lg text-lg text-blue-100'>
+            Manage your courses, track student progress, and share your
+            knowledge with learners worldwide.
+          </p>
+        </div>
+        <div className='flex gap-4'>
+          {/* Manage Courses Button */}
+          <Button
+            size=''
+            className='flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg transition-all hover:from-blue-600 hover:to-blue-700'
+          >
+            <BookOpen className='h-5 w-5' />
+            Manage Courses
+          </Button>
 
-    {/* Profile Button */}
-    <Button
-      size=""
-      variant="outline"
-      className="bg-white/20 transition-all flex items-center gap-2"
-    >
-      <User className="h-5 w-5" />
-      My Profile
-    </Button>
-  </div>
-</div>
-
+          {/* Profile Button */}
+          <Button
+            size=''
+            variant='outline'
+            className='flex items-center gap-2 bg-white/20 transition-all'
+          >
+            <User className='h-5 w-5' />
+            My Profile
+          </Button>
+        </div>
+      </div>
     </div>
   )
 }
@@ -77,9 +89,12 @@ export default function Dashboard() {
   })
   const { navigate } = useAppUtils()
   const { card, dounutData, monthlyEnrollments } = data
- const credentials = useSelector((state) => state.teacherAuth.credentials)
- console.log('credentials teacher',credentials)
- console.log('card',card)
+  const credentials = useSelector(
+    (state) => state.teacherAuth.credentials,
+    shallowEqual
+  )
+  console.log('credentials teacher', credentials)
+  console.log('card', card)
   return (
     <>
       {/* ===== Top Heading ===== */}
@@ -87,17 +102,26 @@ export default function Dashboard() {
         <TopNav links={topNav} />
         <div className='ml-auto flex items-center space-x-4'>
           {/* <Search className="rounded-[8px] border-[#e2e8f0] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20" /> */}
-          <ProfileDropdown className='text-[#64748b] transition-all duration-300 hover:text-[#2563eb]' />
+          <Suspense
+            fallback={
+              <div className='h-6 w-20 animate-pulse rounded bg-gray-200'></div>
+            }
+          >
+            <ProfileDropdown className='text-[#64748b] transition-all duration-300 hover:text-[#2563eb]' />
+          </Suspense>
         </div>
       </Header>
       <div className='relative min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9]'>
         {/* ===== Main ===== */}
         <Main className='p-6'>
-          <WelcomeBanner userName={credentials?.firstName + " " + credentials?.lastName} creds={credentials} />
+          <WelcomeBanner
+            userName={credentials?.firstName + ' ' + credentials?.lastName}
+            creds={credentials}
+          />
           <Tabs
             orientation='vertical'
             defaultValue='overview'
-            className='space-y-4'
+            className='space-y-2'
           >
             <div className='w-full overflow-x-auto pb-2'>
               <TabsList className='flex gap-2 bg-transparent'>
@@ -105,13 +129,13 @@ export default function Dashboard() {
                   value='overview'
                   className='rounded-[8px] px-4 py-2 font-medium text-[#64748b] transition-all duration-300 hover:bg-[#2563eb]/10 hover:text-[#2563eb] data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#2563eb] data-[state=active]:to-[#1d4ed8] data-[state=active]:text-white data-[state=active]:shadow-[0_4px_6px_rgba(0,0,0,0.05)]'
                 >
-                  Overview
+                  <LayoutDashboard /> Overview
                 </TabsTrigger>
                 <TabsTrigger
                   value='analytics'
                   className='rounded-[8px] px-4 py-2 font-medium text-[#64748b] transition-all duration-300 hover:bg-[#2563eb]/10 hover:text-[#2563eb] data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#2563eb] data-[state=active]:to-[#1d4ed8] data-[state=active]:text-white data-[state=active]:shadow-[0_4px_6px_rgba(0,0,0,0.05)]'
                 >
-                  Analytics
+                  <BarChart3 /> Analytics
                 </TabsTrigger>
                 <TabsTrigger
                   value='reports'
@@ -133,7 +157,7 @@ export default function Dashboard() {
             {/* Overview Tab */}
             <TabsContent
               value='overview'
-              className='space-y-6'
+              className='space-y-2'
               forceMount={false}
             >
               <h1 className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-2xl font-extrabold tracking-tight text-transparent drop-shadow-lg md:text-3xl'>
@@ -153,7 +177,14 @@ export default function Dashboard() {
                       </div>
                     </div>
                     <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-4xl font-bold text-transparent'>
-                      <CountUp end={card.points}className="counter-value inline-block" /> 
+                      <Suspense
+                        fallback={<span className='text-gray-400'>...</span>}
+                      >
+                        <CountUp
+                          end={card.points}
+                          className='counter-value inline-block'
+                        />
+                      </Suspense>
                     </div>
                     <div className='mt-2 text-sm text-[#64748b]'>
                       Total Points
@@ -194,7 +225,14 @@ export default function Dashboard() {
                       </div>
                     </div>
                     <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-4xl font-bold text-transparent'>
-                      {<CountUp end={card.myCoursesCount}className="counter-value inline-block" /> }
+                      <Suspense
+                        fallback={<span className='text-gray-400'>...</span>}
+                      >
+                        <CountUp
+                          end={card.myCoursesCount}
+                          className='counter-value inline-block'
+                        />{' '}
+                      </Suspense>
                     </div>
                     <p className='mt-2 text-sm text-[#64748b]'>
                       Courses I've Created
@@ -206,7 +244,7 @@ export default function Dashboard() {
                 <Card className='relative rounded-[8px] bg-white/95 p-6 shadow-[0_4px_6px_rgba(0,0,0,0.05)] backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]'>
                   <div className='absolute -top-4 -right-4 h-24 w-24 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-xl'></div>
                   <div className='absolute -bottom-4 -left-4 h-24 w-24 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-xl'></div>
-                  <div className='relative z-10 space-y-4'>
+                  <div className='relative z-10 space-y-2'>
                     <div className='flex items-center justify-between'>
                       <div>
                         <h3 className='text-lg font-bold text-[#1e293b]'>
@@ -235,11 +273,20 @@ export default function Dashboard() {
                         </svg>
                       </div>
                     </div>
-                    <div className='space-y-4'>
+                    <div className='space-y-2'>
                       <div className='flex items-center justify-between rounded-[8px] border border-[#e2e8f0] bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4'>
                         <div>
                           <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-3xl font-bold text-transparent'>
-                            {<CountUp end={card.enrolledStudentsCount.toLocaleString()}className="counter-value inline-block" /> }
+                            <Suspense
+                              fallback={
+                                <span className='text-gray-400'>...</span>
+                              }
+                            >
+                              <CountUp
+                                end={card.enrolledStudentsCount.toLocaleString()}
+                                className='counter-value inline-block'
+                              />{' '}
+                            </Suspense>
                           </div>
                           <p className='text-sm text-[#64748b]'>
                             Total Students Enrolled
@@ -263,7 +310,16 @@ export default function Dashboard() {
                       <div className='flex items-center justify-between rounded-[8px] border border-[#e2e8f0] bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4'>
                         <div>
                           <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-3xl font-bold text-transparent'>
-                            {<CountUp end={card.studentsEnrolledThisWeek}className="counter-value inline-block" /> }
+                            <Suspense
+                              fallback={
+                                <span className='text-gray-400'>...</span>
+                              }
+                            >
+                              <CountUp
+                                end={card.studentsEnrolledThisWeek}
+                                className='counter-value inline-block'
+                              />{' '}
+                            </Suspense>
                           </div>
                           <p className='text-sm text-[#64748b]'>
                             New Students This Week
@@ -316,7 +372,7 @@ export default function Dashboard() {
                 <Card className='relative rounded-[8px] bg-white/95 p-6 shadow-[0_4px_6px_rgba(0,0,0,0.05)] backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]'>
                   <div className='absolute -top-4 -right-4 h-24 w-24 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-xl'></div>
                   <div className='absolute -bottom-4 -left-4 h-24 w-24 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-xl'></div>
-                  <div className='relative z-10 space-y-4'>
+                  <div className='relative z-10 space-y-2'>
                     <div className='flex items-center justify-between'>
                       <div>
                         <h3 className='text-lg font-bold text-[#1e293b]'>
@@ -343,11 +399,22 @@ export default function Dashboard() {
                         </svg>
                       </div>
                     </div>
-                    <div className='space-y-4'>
+                    <div className='space-y-2'>
                       <div className='flex items-center justify-between rounded-[8px] border border-[#e2e8f0] bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4'>
                         <div>
                           <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-3xl font-bold text-transparent'>
-                           $<CountUp end={324} duration={4} className="counter-value inline-block" /> 
+                            ${' '}
+                            <Suspense
+                              fallback={
+                                <span className='text-gray-400'>...</span>
+                              }
+                            >
+                              <CountUp
+                                end={324}
+                                duration={4}
+                                className='counter-value inline-block'
+                              />{' '}
+                            </Suspense>
                           </div>
                           <p className='text-sm text-[#64748b]'>
                             Total Earnings (All Time)
@@ -371,7 +438,18 @@ export default function Dashboard() {
                       <div className='flex items-center justify-between rounded-[8px] border border-[#e2e8f0] bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4'>
                         <div>
                           <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-3xl font-bold text-transparent'>
-                            $<CountUp end={234} duration={4} className="counter-value inline-block" /> 
+                            ${' '}
+                            <Suspense
+                              fallback={
+                                <span className='text-gray-400'>...</span>
+                              }
+                            >
+                              <CountUp
+                                end={234}
+                                duration={4}
+                                className='counter-value inline-block'
+                              />
+                            </Suspense>
                           </div>
                           <p className='text-sm text-[#64748b]'>
                             Earnings This Month
@@ -395,7 +473,18 @@ export default function Dashboard() {
                       <div className='flex items-center justify-between rounded-[8px] border border-[#e2e8f0] bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4'>
                         <div>
                           <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-3xl font-bold text-transparent'>
-                            $<CountUp end={234} duration={4} className="counter-value inline-block" /> 
+                            ${' '}
+                            <Suspense
+                              fallback={
+                                <span className='text-gray-400'>...</span>
+                              }
+                            >
+                              <CountUp
+                                end={234}
+                                duration={4}
+                                className='counter-value inline-block'
+                              />
+                            </Suspense>
                           </div>
                           <p className='text-sm text-[#64748b]'>
                             Pending Payouts
@@ -431,7 +520,7 @@ export default function Dashboard() {
                     Course Management
                   </CardTitle>
                 </CardHeader>
-                <CardContent className='space-y-3 text-[#64748b]'>
+                <CardContent className='space-y-2 text-[#64748b]'>
                   <p className='text-sm'>
                     Manage all your courses in one place. You can create new
                     courses or view your existing ones.
@@ -462,7 +551,7 @@ export default function Dashboard() {
             {/* Analytics Tab */}
             <TabsContent
               value='analytics'
-              className='space-y-6'
+              className='space-y-2'
               forceMount={false}
             >
               <h1 className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-2xl font-extrabold tracking-tight text-transparent drop-shadow-lg md:text-3xl'>
@@ -470,15 +559,27 @@ export default function Dashboard() {
               </h1>
               <div className='flex items-center gap-4'>
                 <div className='w-[50%]'>
-                  <ChartBarDefault monthlyEnrollments={monthlyEnrollments} />
+                  <Suspense
+                    fallback={<Skeleton className='h-[200px] w-50'></Skeleton>}
+                  >
+                    <ChartBarDefault monthlyEnrollments={monthlyEnrollments} />
+                  </Suspense>
                 </div>
                 <div className='w-[50%]'>
-                  <TopCourseChart />
+                  <Suspense
+                    fallback={<Skeleton className='h-[200px] w-50'></Skeleton>}
+                  >
+                    <TopCourseChart />
+                  </Suspense>
                 </div>
               </div>
               <div className='flex-1'>
                 <div className='h-full flex-1'>
-                  <ChartPieLabel dounutData={dounutData} />
+                  <Suspense
+                    fallback={<Skeleton className='h-[200px] w-50'></Skeleton>}
+                  >
+                    <ChartPieLabel dounutData={dounutData} />
+                  </Suspense>
                 </div>
               </div>
             </TabsContent>
@@ -495,23 +596,27 @@ const topNav = [
     href: '/teacher/',
     isActive: true,
     disabled: false,
+    icon: LayoutDashboard,
   },
   {
     title: 'Courses',
     href: '/teacher/courses',
     isActive: false,
     disabled: false,
+    icon: BookOpen,
   },
   {
     title: 'Games',
     href: '/teacher/trainingwheelgame',
     isActive: false,
     disabled: false,
+    icon: Gamepad,
   },
   {
     title: 'Settings',
     href: '/teacher/settings',
     isActive: false,
     disabled: false,
+    icon: Settings,
   },
 ]

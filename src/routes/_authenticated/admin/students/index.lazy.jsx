@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import {
   QueryClient,
@@ -7,8 +7,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 import { useSearch, createLazyFileRoute } from '@tanstack/react-router'
-import { IconLoader } from '@tabler/icons-react'
-import { Download, Search } from 'lucide-react'
+import { Download, GraduationCap, LayoutDashboard, Loader, Search, Settings, User2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -17,15 +16,16 @@ import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { TopNav } from '@/components/layout/top-nav'
 import { useAppUtils } from '../../../../hooks/useAppUtils'
-import { Show } from '../../../../shared/utils/Show'
 import {
   getDebounceInput,
   useSearchInput,
   exportToCSV,
 } from '../../../../utils/globalFunctions'
-import { DataTable } from '../../student/features/tasks/-components/student-data-table'
+const DataTable = lazy(() => import("../../student/features/tasks/-components/student-data-table"))
+
 import { studentsSchema } from '../layout/data/-schemas/studentsSchema'
 import StudentsMetrics from './-components/StudentsMetrics'
+import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
 
 const queryClient = new QueryClient()
 
@@ -149,7 +149,7 @@ if(response.success){
       <Header >
         <TopNav links={topNav} />
       </Header>
-      <Main className=" px-4 py-8 ">
+      <Main className=" px-4 py-2">
         <h1 className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-2xl font-extrabold tracking-tight text-transparent md:text-3xl">
           Students Management
         </h1>
@@ -160,10 +160,10 @@ if(response.success){
           active={studentsStatus?.active}
           inactive={studentsStatus?.inActive}
         />
-        <Separator className="my-5 bg-[#e2e8f0]" />
+        <Separator className="my-2 bg-[#e2e8f0]" />
 
-        <div className="flex justify-between">
-          <h2 className="mb-4 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-lg font-bold text-transparent">
+        <div className="flex justify-between mb-2">
+          <h2 className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-lg font-bold text-transparent">
             Students
           </h2>
           <div className="flex items-center gap-1">
@@ -189,7 +189,7 @@ if(response.success){
                 className="rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
               >
                 {isFetching ? (
-                  <IconLoader className="h-4 w-4 animate-spin text-[#2563eb]" />
+                  <Loader className="h-4 w-4 animate-spin text-[#2563eb]" />
                 ) : (
                   <Search className="h-4 w-4 text-[#2563eb]" />
                 )}
@@ -206,6 +206,7 @@ if(response.success){
             </Button>
           </div>
         </div>
+    <Suspense fallback={<DataTableSkeleton />}>
 
         <DataTable
           data={students}
@@ -218,6 +219,7 @@ if(response.success){
           handlePagination={handlePagination}
           paginationOptions={paginationOptions}
         />
+        </Suspense>
       </Main>
     </>
   )
@@ -228,23 +230,27 @@ const topNav = [
     href: '/admin',
     isActive: false,
     disabled: false,
+    icon:LayoutDashboard
   },
   {
     title: 'Students',
     href: '/admin/students',
     isActive: true,
     disabled: false,
+    icon:User2
   },
   {
     title: 'Teachers',
     href: '/admin/teachers',
     isActive: false,
     disabled: false,
+    icon: GraduationCap
   },
   {
     title: 'Settings',
     href: '/admin/settings',
     isActive: false,
     disabled: false,
+    icon:Settings
   },
 ]

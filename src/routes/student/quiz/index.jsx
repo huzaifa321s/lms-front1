@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import {Quiz} from './-components/quiz'
 import { Brain, Link } from 'lucide-react'
+import { Quiz } from './-components/quiz'
 
 export const Route = createFileRoute('/student/quiz/')({
   component: RouteComponent,
@@ -8,17 +8,15 @@ export const Route = createFileRoute('/student/quiz/')({
 
 function RouteComponent() {
   return (
-     <div className='flex justify-center items-center h-lvh'>
-         <Link
-              to="/student/courses"    
-                  className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
-              
-                >
-                  <Brain className="w-5 h-5" />
-                  <span className="font-medium">Quiz</span>
-                </Link>
-        <Quiz/>
+    <div className='flex h-lvh items-center justify-center'>
+      <Link
+        to='/student/courses'
+        className='flex items-center space-x-3 rounded-lg px-4 py-3 text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-600'
+      >
+        <Brain className='h-5 w-5' />
+        <span className='font-medium'>Quiz</span>
+      </Link>
+      <Quiz />
     </div>
-    
   )
 }

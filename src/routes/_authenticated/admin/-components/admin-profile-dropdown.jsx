@@ -18,7 +18,7 @@ import { getAdminCreds } from '../-utils/helpeFuntions'
 import { openModal } from '../../../../shared/config/reducers/student/studentDialogSlice'
 
 
-export function ProfileDropdown() {
+export default function ProfileDropdown() {
   const [credentials, setCredentials] = useState(null)
   const dispatch = useDispatch()
   useEffect(() => {

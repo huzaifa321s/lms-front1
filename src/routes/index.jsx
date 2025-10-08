@@ -1,16 +1,11 @@
-import { Suspense, useState } from 'react'
+import { lazy, Suspense } from 'react'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { Monitor, Plus } from 'lucide-react'
+import { ChevronRight, GraduationCap, Monitor, Plus } from 'lucide-react'
 import CountUp from 'react-countup'
 import { Button } from '@/components/ui/button'
 import { NavbarRouteComponent } from './-NavbarRouteComponent'
-import AboutSection from './-components/AboutSection'
-import Feature from './-components/AppFeature'
-import BlogSection from './-components/BlogSection'
-import BlogGrid from './-components/GridBlog'
-import CourseGrid from './-components/GridCourse'
-import TeamSection from './-components/Team'
-import Partners from './-components/partener'
+
+
 import { Footer } from './student/Footer'
 import hero from '/images/1.png'
 import hero2 from '/images/2.png'
@@ -20,19 +15,22 @@ import team2 from '/images/team/2.jpg'
 import team3 from '/images/team/3.jpg'
 import team4 from '/images/team/4.jpg'
 import team5 from '/images/team/5.jpg'
+const TeamSection = lazy(() => import('./-components/Team'))
+const Partners = lazy(() => import('./-components/partener'))
+const AboutSection = lazy(() => import('./-components/AboutSection'))
+const Feature = lazy(() => import('./-components/AppFeature'))
+const BlogGrid = lazy(() => import('./-components/GridBlog'))
+const CourseGrid = lazy(() => import('./-components/GridCourse'))
 
 const CourseGridSkeleton = ({ grid }) => {
   return (
     <div className={grid}>
       {[...Array(3)].map((_, i) => (
-        <div
-          key={i}
-          className='animate-pulse rounded-xl border border-slate-200 bg-white/60 p-6 shadow-sm backdrop-blur-lg'
-        >
-          <div className='mb-4 h-40 rounded-lg bg-slate-200'></div>
-          <div className='mb-2 h-4 w-3/4 rounded bg-slate-200'></div>
-          <div className='mb-4 h-3 w-1/2 rounded bg-slate-200'></div>
-          <div className='h-3 w-1/4 rounded bg-slate-200'></div>
+       <div key={i} className="card-skeleton">
+          <div className="mb-4 h-40 rounded-lg bg-slate-200"></div>
+          <div className="mb-2 h-4 w-3/4 rounded bg-slate-200"></div>
+          <div className="mb-4 h-3 w-1/2 rounded bg-slate-200"></div>
+          <div className="h-3 w-1/4 rounded bg-slate-200"></div>
         </div>
       ))}
     </div>
@@ -41,108 +39,6 @@ const CourseGridSkeleton = ({ grid }) => {
 
 const teamImg = [team1, team2, team3, team4, team5]
 function LandingPage() {
-  const data = [
-    {
-      id: 1,
-      coverImage: '1.jpg',
-      lessons: 12,
-      students: 340,
-      title: 'React Basics for Beginners',
-      description:
-        'Learn the fundamentals of React including components, state, and props to build modern web apps.',
-      name: 'John Doe',
-    },
-    {
-      id: 2,
-      coverImage: '2.jpg',
-      lessons: 18,
-      students: 420,
-      title: 'Advanced JavaScript Concepts',
-      description:
-        'Deep dive into closures, async programming, ES6+ features, and advanced patterns in JavaScript.',
-      name: 'Jane Smith',
-    },
-    {
-      id: 3,
-      coverImage: '3.jpg',
-      lessons: 10,
-      students: 210,
-      title: 'Mastering CSS and Flexbox',
-      description:
-        'Understand CSS deeply with modern layouts using Flexbox and responsive design techniques.',
-      name: 'Alex Johnson',
-    },
-    {
-      id: 4,
-      coverImage: '4.jpg',
-      lessons: 25,
-      students: 510,
-      title: 'Node.js API Development',
-      description:
-        'Build powerful backend applications with Node.js, Express, and MongoDB integration.',
-      name: 'Emily Davis',
-    },
-    {
-      id: 5,
-      coverImage: '5.jpg',
-      lessons: 15,
-      students: 300,
-      title: 'UI/UX Design Principles',
-      description:
-        'Learn design thinking, wireframing, prototyping, and usability testing to improve product design.',
-      name: 'Michael Brown',
-    },
-    {
-      id: 6,
-      coverImage: '6.jpg',
-      lessons: 8,
-      students: 150,
-      title: 'Python for Data Science',
-      description:
-        'Get started with Python, NumPy, and Pandas for analyzing and visualizing datasets.',
-      name: 'Sarah Wilson',
-    },
-    {
-      id: 7,
-      coverImage: '7.jpg',
-      lessons: 20,
-      students: 600,
-      title: 'Fullstack Web Development',
-      description:
-        'End-to-end guide for building frontend and backend applications with React and Node.js.',
-      name: 'David Miller',
-    },
-    {
-      id: 8,
-      coverImage: '8.jpg',
-      lessons: 14,
-      students: 280,
-      title: 'TailwindCSS Crash Course',
-      description:
-        'Quickly style modern web applications with utility-first TailwindCSS framework.',
-      name: 'Sophia Martinez',
-    },
-    {
-      id: 9,
-      coverImage: '9.jpg',
-      lessons: 30,
-      students: 800,
-      title: 'Machine Learning Essentials',
-      description:
-        'Learn supervised and unsupervised learning, model evaluation, and ML algorithms basics.',
-      name: 'Daniel Lee',
-    },
-    {
-      id: 10,
-      coverImage: '10.jpg',
-      lessons: 22,
-      students: 450,
-      title: 'TypeScript with React',
-      description:
-        'Enhance your React apps with TypeScript, strong typing, and better developer experience.',
-      name: 'Olivia Harris',
-    },
-  ]
   const navigate = useNavigate()
   return (
     <>
@@ -174,7 +70,7 @@ function LandingPage() {
                 <Button
                   onClick={() => navigate({ to: '/student/courses' })}
                   size=''
-                  className='inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 font-medium tracking-wide text-white shadow-lg transition hover:scale-105'
+                  className='btn-gradient'
                 >
                   Browse Courses{' '}
                   <i className='mdi mdi-arrow-right ms-2 align-middle'></i>
@@ -184,9 +80,9 @@ function LandingPage() {
                   onClick={() => navigate({ to: '/teacher/register' })}
                   size=''
                   variant='outline'
-                  className='rounded-lg border-blue-600 tracking-wide text-blue-600 hover:bg-blue-50'
+                   className="btn-outline-blue"
                 >
-                  Become Instructor
+                  <GraduationCap /> Become Instructor
                 </Button>
 
                 {/* New Button: View Our Instructors */}
@@ -194,9 +90,9 @@ function LandingPage() {
                   onClick={() => navigate({ to: '/student/instructors' })}
                   size=''
                   variant='ghost'
-                  className='rounded-lg border border-blue-600 tracking-wide text-blue-600 transition hover:scale-105 hover:bg-blue-50'
+                  className="btn-ghost-blue"
                 >
-                  View Our Instructors
+                  <GraduationCap /> View Our Instructors
                 </Button>
               </div>
             </div>
@@ -208,6 +104,7 @@ function LandingPage() {
                 className='relative z-10 mx-auto'
                 alt='hero'
                 fetchPriority='high'
+                loading="lazy"
               />
 
               {/* Instructor Avatars */}
@@ -225,6 +122,7 @@ function LandingPage() {
                         src={item}
                         alt='team member'
                         className='size-10 rounded-full border-2 border-white shadow-md'
+                        loading="lazy"
                       />
                     </li>
                   ))}
@@ -265,11 +163,23 @@ function LandingPage() {
       </section>
 
       <section className='pt-6'>
-        <Partners />
+  <Suspense
+            fallback={
+              <div className='animate h-50 w-full animate-pulse bg-gray-100'></div>
+            }
+          >
+            <Partners />
+          </Suspense>
       </section>
       <section className='relative flex flex-col items-center py-16 md:py-24'>
         <div className='relative container'>
-          <AboutSection />
+          <Suspense
+            fallback={
+              <div className='animate h-50 w-full animate-pulse bg-gray-100'></div>
+            }
+          >
+            <AboutSection />
+          </Suspense>
         </div>
 
         <div className='relative container mt-16 p-10 md:mt-24'>
@@ -282,7 +192,13 @@ function LandingPage() {
               education platform pursue a new career.
             </p>
           </div>
-          <Feature />
+          <Suspense
+            fallback={
+              <div className='animate h-50 w-full animate-pulse bg-gray-100'></div>
+            }
+          >
+            <Feature />
+          </Suspense>
         </div>
 
         <div className='relative container mt-16 p-10 md:mt-24'>
@@ -306,10 +222,9 @@ function LandingPage() {
             <div className='text-center md:col-span-12'>
               <Link
                 to='/student/courses'
-                className='text-slate-400 duration-500 ease-in-out hover:text-violet-600'
+                className='text-slate-400 duration-500 ease-in-out inline-flex items-center hover:text-violet-600'
               >
-                See More Courses{' '}
-                <i className='mdi mdi-arrow-right align-middle'></i>
+                See More Courses <ChevronRight className='h-4 w-4' />
               </Link>
             </div>
           </div>
@@ -335,12 +250,12 @@ function LandingPage() {
                       type='email'
                       id='subscribe'
                       name='email'
-                      className='w-full flex-1 rounded-full bg-blue-700 px-4 py-3 text-white placeholder-white/60 outline-none focus:ring-2 focus:ring-cyan-400'
+                      className='newsletter-input'
                       placeholder='Enter your email'
                     />
                     <button
                       type='submit'
-                      className='w-full rounded-full bg-cyan-500 px-6 py-3 font-medium text-white shadow-md shadow-cyan-500/20 transition hover:bg-cyan-600 md:w-auto'
+                      className='newsletter-btn'
                     >
                       Subscribe
                     </button>
@@ -354,6 +269,7 @@ function LandingPage() {
                       src={hero2}
                       className='relative z-10 mx-auto w-64 md:w-80 lg:w-[350px]'
                       alt='hero2'
+                      loading="lazy"
                     />
                     <div className='absolute bottom-0 left-1/2 z-0 size-64 -translate-x-1/2 rounded-full bg-gradient-to-tl from-blue-600/20 to-indigo-600 shadow-lg shadow-blue-500/20 md:size-[350px]'></div>
                   </div>
@@ -373,7 +289,13 @@ function LandingPage() {
               education platform pursue a new career.
             </p>
           </div>
-          <TeamSection />
+   <Suspense
+            fallback={
+              <div className='animate h-50 w-full animate-pulse bg-gray-100'></div>
+            }
+          >
+            <TeamSection />
+          </Suspense>
         </div>
 
         <div className='relative container mt-16 p-10 md:mt-24'>

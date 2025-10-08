@@ -1,14 +1,4 @@
-import {
-  IconArrowDown,
-  IconArrowRight,
-  IconArrowUp,
-  IconCircle,
-  IconCircleCheck,
-  IconCircleX,
-  IconExclamationCircle,
-  IconFunctionOff,
-  IconStopwatch,
-} from '@tabler/icons-react'
+import { ArrowDown, ArrowRight, ArrowUp, Circle, CircleCheck, CircleX, FileQuestionMark, FunctionSquare } from 'lucide-react'
 
 export const labels = [
   {
@@ -29,27 +19,27 @@ export const statuses = [
   {
     value: 'draft',
     label: 'Draft',
-    icon: IconExclamationCircle,
+    icon: FileQuestionMark,
   },
   {
     value: 'open',
     label: 'Open',
-    icon: IconCircle,
+    icon: Circle,
   },
   {
     value: 'paid',
     label: 'Paid',
-    icon: IconCircleCheck,
+    icon: CircleCheck,
   },
   {
     value: 'void',
     label: 'Void',
-    icon: IconCircleX,
+    icon: CircleX,
   },
   {
     value: 'uncollectible',
     label: 'Uncollectible',
-    icon: IconFunctionOff,
+    icon: FunctionSquare,
   },
 ]
 
@@ -57,16 +47,16 @@ export const priorities = [
   {
     label: 'Low',
     value: 'low',
-    icon: IconArrowDown,
+    icon:ArrowDown,
   },
   {
     label: 'Medium',
     value: 'medium',
-    icon: IconArrowRight,
+    icon: ArrowRight,
   },
   {
     label: 'High',
     value: 'high',
-    icon: IconArrowUp,
+    icon: ArrowUp,
   },
 ]

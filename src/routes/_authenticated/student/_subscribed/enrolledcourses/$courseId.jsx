@@ -1,16 +1,14 @@
-import { memo, useEffect, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import axios from 'axios'
 import {
   QueryClient,
   queryOptions,
-  useSuspenseQuery,
 } from '@tanstack/react-query'
 import {
   useParams,
   createFileRoute,
   useLoaderData,
 } from '@tanstack/react-router'
-import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer'
 import {
   Accordion,
   AccordionContent,
@@ -20,6 +18,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Header } from '@/components/layout/header'
+import { ArrowLeft } from 'lucide-react'
 
 // Initialize QueryClient
 const queryClient = new QueryClient()
@@ -31,7 +30,7 @@ const courseQueryOptions = (params) =>
     queryFn: async () => {
       try {
         const response = await axios.get(
-          `/student/course/get-enrolled-/course/${params.courseId}`
+          `/student/course/get-enrolled-course/${params.courseId}`
         )
         console.log('res',response.data)
         if (response.data.success) {
@@ -65,9 +64,6 @@ const gradientTextStyle = {
 }
 
 function RouteComponent() {
-  const { courseId } = useParams({
-    from: '/_authenticated/student/_subscribed/enrolledcourses/$courseId',
-  })
   const data = useLoaderData({
     from: '/_authenticated/student/_subscribed/enrolledcourses/$courseId',
   })
@@ -117,20 +113,7 @@ function RouteComponent() {
             variant='outline'
             className='ml-auto flex items-center gap-2 rounded-lg border-slate-200 bg-slate-100 font-medium text-slate-600 shadow-lg hover:border-slate-300 hover:bg-slate-200 hover:shadow-xl'
           >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              strokeWidth={1.5}
-              stroke='currentColor'
-              className='h-4 w-4'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3'
-              />
-            </svg>
+      <ArrowLeft/>
             Back
           </Button>
         </div>

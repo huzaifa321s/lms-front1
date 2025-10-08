@@ -1,14 +1,16 @@
-import { Suspense } from 'react'
 import axios from 'axios'
 import { createFileRoute} from '@tanstack/react-router'
 import {
   invoicesSchema,
 } from '../../../_authenticated/student/features/tasks/-components/columns'
-import { DataTable } from '../../../_authenticated/student/features/tasks/-components/data-table'
+const DataTable = lazy(() => import("../../../_authenticated/student/features/tasks/-components/data-table"))
+
+
 import { QueryClient, queryOptions, useSuspenseQuery } from '@tanstack/react-query'
-import {LoaderThree} from '@/components/ui/loader'
 import { Receipt, FileText, DollarSign, Calendar, Download, Filter } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { lazy, Suspense } from 'react'
+import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
 
 const queryClient = new QueryClient();
 export const invoicesQueryOption = (length) => 
@@ -167,11 +169,14 @@ function RouteComponent() {
 
           <div className='relative min-h-[500px]'>
             {invoices && invoices.length > 0 ? (
+               <Suspense fallback={<DataTableSkeleton />}>
+              
               <DataTable 
                 data={invoices} 
                 columns={invoicesSchema} 
                 fetchStatus={fetchStatus} 
               />
+              </Suspense>
             ) : (
               <div className='flex flex-col items-center justify-center py-20 px-8'>
                 <div className='p-8 bg-gradient-to-r from-gray-100 to-gray-200 rounded-full mb-8'>

@@ -1,26 +1,4 @@
-import {
-  IconBarrierBlock,
-  IconBrowserCheck,
-  IconBug,
-  IconChecklist,
-  IconError404,
-  IconGoGame,
-  IconHelp,
-  IconLayoutDashboard,
-  IconLock,
-  IconLockAccess,
-  IconMessages,
-  IconNotification,
-  IconPackages,
-  IconPalette,
-  IconServerOff,
-  IconSettings,
-  IconTool,
-  IconUserCog,
-  IconUserOff,
-  IconUsers,
-} from '@tabler/icons-react'
-import { AudioWaveform, Command, GalleryVerticalEnd, List } from 'lucide-react'
+import { Gamepad, LayoutDashboard, List, Settings } from 'lucide-react'
 import { getCookie } from '../../../shared/utils/helperFunction';
 
 const credentials  = getCookie('teacherCredentials');
@@ -40,7 +18,7 @@ export const teacherSideBarData = {
         {
           title: 'Dashboard',
           url: '/teacher',
-          icon: IconLayoutDashboard,
+          icon: LayoutDashboard,
         },
         {
           title: 'My Courses',
@@ -50,11 +28,11 @@ export const teacherSideBarData = {
         {
           title: 'Training Wheel Game',
           url: '/teacher/trainingwheelgame',
-          icon: IconGoGame,
+          icon:Gamepad,
         },
         {
           title: 'Settings',
-          icon: IconSettings,
+          icon: Settings,
           items: [
             {
               title: 'Profile',

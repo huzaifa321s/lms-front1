@@ -7,7 +7,7 @@ import {
   Home,
   ChevronDown,
 } from 'lucide-react'
-import { useDispatch, useSelector } from 'react-redux'
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -22,8 +22,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { openModal } from '../../../../../../shared/config/reducers/student/studentDialogSlice'
 
-export function ProfileDropdown() {
-  const credentials = useSelector((state) => state.studentAuth?.credentials)
+ function ProfileDropdown() {
+  const credentials = useSelector((state) => state.studentAuth?.credentials,shallowEqual)
   const dispatch = useDispatch()
 
   return (
@@ -136,3 +136,5 @@ export function ProfileDropdown() {
     </>
   )
 }
+
+export default ProfileDropdown

@@ -1,11 +1,10 @@
 import axios from "axios"
 import { format } from "date-fns"
-import { QueryClient, queryOptions, useSuspenseQuery } from "@tanstack/react-query"
+import { QueryClient, queryOptions } from "@tanstack/react-query"
 import { useParams, createFileRoute, useLoaderData } from "@tanstack/react-router"
 import { Status, StatusIndicator, StatusLabel } from "@/components/ui/shadcn-io/status"
 import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { IconArrowLeftToArc } from "@tabler/icons-react"
 import { ArrowLeft, Download, Mail, PrinterIcon } from "lucide-react"
 
 const queryClient = new QueryClient()
@@ -34,9 +33,6 @@ export const Route = createFileRoute("/student/setting/invoices/invoice-details/
 })
 
 function InvoiceDetails() {
-  const { invoiceID } = useParams({
-    from: "/student/setting/invoices/invoice-details/$invoiceID",
-  })
   const  data  = useLoaderData({from:"/student/setting/invoices/invoice-details/$invoiceID"})
   const invoiceDetails  = data
 

@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react'
 import axios from 'axios'
 import { useForm } from 'react-hook-form'
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { IconLoader } from '@tabler/icons-react'
 import { toast } from 'sonner'
 import {
   Card,

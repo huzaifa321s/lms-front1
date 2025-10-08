@@ -7,7 +7,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 import { useSearch, createLazyFileRoute } from '@tanstack/react-router'
-import { Search } from 'lucide-react'
+import { BookOpen, LayoutDashboard, Puzzle, Search, Settings } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -44,11 +44,14 @@ const coursesQueryOptions = (deps) =>
       }
     },
     placeholderData: (prev) => prev,
+    staleTime: 1000 * 60 * 5,
+
   })
 
 export const Route = createLazyFileRoute(
   '/_authenticated/student/_subscribed/enrolledcourses/'
 )({
+  
   component: () => (
     <Suspense fallback={<SmallLoader />}>
       <RouteComponent />
@@ -109,7 +112,7 @@ function RouteComponent() {
       navigate({
         to: `/student/enrolledcourses`,
         search: { page: page, input: `` },
-    })
+      })
     }
     await queryClient.invalidateQueries(
       coursesQueryOptions({ input: searchInput, page })
@@ -148,37 +151,38 @@ function RouteComponent() {
   return (
     <>
       <Header>
-        <h1 className='my-2 bg-clip-text text-2xl font-extrabold tracking-tight drop-shadow-lg md:text-3xl'>
-          Enrolled Courses
-        </h1>
-        <TopNav links={topNav} />
-        <div className='ml-auto w-fit'>
-          <Show>
-            <Show.When isTrue={true}>
-              <Label className='flex items-center gap-2'>
-                <Input
-                  size='sm'
-                  type='text'
-                  value={searchInput}
-                  className='grow border-slate-200 focus:border-blue-500 focus:ring-blue-500'
-                  placeholder='Search courses...'
-                  onChange={(e) => setSearchInput(e.target.value)}
-                />
-                <Button
-                  variant='outline'
-                  size='sm'
-                  onClick={searchEnrolledCourses}
-                  loading={isFetching}
-                  disabled={isFetching}
-                  className='border-blue-500 text-blue-600 hover:bg-blue-50'
-                >
-                  {!isFetching && <Search className='h-4 w-4' />}
-                </Button>
-              </Label>
-            </Show.When>
-          </Show>
-        </div>
+        <TopNav links={topNav}/>
+          <div className='ml-auto w-fit'>
+            <Show>
+              <Show.When isTrue={true}>
+                <Label className='flex items-center gap-2'>
+                  <Input
+                    size='sm'
+                    type='text'
+                    value={searchInput}
+                    className='grow border-slate-200 focus:border-blue-500 focus:ring-blue-500'
+                    placeholder='Search courses...'
+                    onChange={(e) => setSearchInput(e.target.value)}
+                  />
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={searchEnrolledCourses}
+                    loading={isFetching}
+                    disabled={isFetching}
+                    className='border-blue-500 text-blue-600 hover:bg-blue-50'
+                  >
+                    {!isFetching && <Search className='h-4 w-4' />}
+                  </Button>
+                </Label>
+              </Show.When>
+            </Show>
+          </div>
+
       </Header>
+      <h1 className='mx-2 my-2 bg-clip-text text-2xl font-extrabold tracking-tight drop-shadow-lg md:text-3xl'>
+        Enrolled Courses
+      </h1>
       <div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50'>
         <div className='p-6'>
           <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
@@ -247,23 +251,28 @@ const topNav = [
     href: '/student',
     isActive: false,
     disabled: false,
+    icon:LayoutDashboard
   },
   {
     title: 'Courses',
     href: '/student/enrolledcourses',
     isActive: true,
     disabled: false,
+    icon:BookOpen
   },
   {
     title: 'Quizzes (Dummy)',
     href: 'dashboard/products',
     isActive: false,
     disabled: true,
+    icon:Puzzle
+    
   },
   {
     title: 'Settings',
     href: '/student/settings',
     isActive: false,
     disabled: false,
+    icon:Settings
   },
 ]

@@ -1,13 +1,5 @@
-import axios from 'axios'
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import { clearCookie, getCookie } from '../../../utils/helperFunction';
-
-
-
-// export const getLeadsContent = createAsyncThunk('/teacher/auth', async () => {
-// 	const response = await axios.get('/api/users?page=2', {})
-// 	return response.data;
-// })
 
 export const studentAuthSlice = createSlice({
     name: "studentAuth",
@@ -80,17 +72,16 @@ export const studentAuthSlice = createSlice({
         },
         updateSubscription: (state, action) => {
             const { subscription, remainingEnrollmentCount } = action.payload;
+            state.subscription = subscription;
             const updatedCredentials = {
                 ...state.credentials, subscription, remainingEnrollmentCount,
             };
-            state.subscription = subscription;
             console.log('subscription Slice ===>', subscription)
             state.credentials = updatedCredentials
             document.cookie = `studentSubscription=${JSON.stringify(subscription)}; path=/`;
         },
         handleCourseEnrollment: (state, action) => {
             const { id, remainingEnrollmentCount } = action.payload;
-
 
             state.credentials = {
                 ...state.credentials,
@@ -108,22 +99,7 @@ export const studentAuthSlice = createSlice({
             }
         },
 
-    },
-
-    extraReducers: (builder) => {
-        // builder
-        // // Register
-        // .addCase(getLeadsContent.pending, (state) => {
-        //   state.isLoading = true;
-        // })
-        // .addCase(getLeadsContent.fulfilled, (state, action) => {
-        //   state.leads = action.payload.data;
-        //   state.isLoading = false;
-        // })
-        // .addCase(getLeadsContent.rejected, (state, action) => {
-        //   state.isLoading = false;
-        // });
-    },
+    }
 });
 
 export const { handleLogin, handleLogout, handleUpdateProfile, setCustomerId, updateSubscription, handleCourseEnrollment } = studentAuthSlice.actions;

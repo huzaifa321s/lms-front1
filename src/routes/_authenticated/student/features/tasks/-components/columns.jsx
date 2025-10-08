@@ -3,7 +3,6 @@ import { createColumnHelper } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge'
 import { labels, priorities, statuses } from '../data/data'
 import { DataTableColumnHeader } from './data-table-column-header'
-import { DataTableRowActions } from '../../../../teacher/-layout/data/table/game-data-table-row-actions.jsx'
 import { Status, StatusIndicator, StatusLabel } from '@/components/ui/shadcn-io/status';
 import { InvoicesDataTableRowActions } from './invoices-table-row-actions.jsx'
 import { Button } from '@/components/ui/button.js'
@@ -221,59 +220,6 @@ export const invoicesSchema = [
   },
 ]
 
-
-
-// export const trainingWheelGamesSchema = [
-//   { id: 'select', cell: ({ row }) => <p>{row.index + 1}</p> },
-//   columnHelper.accessor('question', {
-//     header: ({ column }) => (
-//       <DataTableColumnHeader column={column} title='Question' />
-//     ),
-//     cell: (info) => <p>{info.getValue()}</p>,
-//   }),
-//   columnHelper.accessor('category.name', {
-//     header: ({ column }) => (
-//       <DataTableColumnHeader column={column} title='Category' />
-//     ),
-//     cell: (info) => <p>{info.getValue()}</p>,
-//   }),
-//   columnHelper.accessor('difficulties', {
-//     header: ({ column }) => (
-//       <DataTableColumnHeader column={column} title='Difficulty Levels' />
-//     ),
-//     cell: (info) => (
-//       <>
-//         <div className='flex w-[20px] flex-wrap'>
-//           {info.getValue().length > 0 &&
-//             info.getValue().map((item) => {
-//               return (
-//                 <Badge
-//                  className="my-0.5"
-//                   variant={
-//                     item === 'beginner'
-//                       ? 'secondary'
-//                       : item === 'intermediate'
-//                         ? 'default'
-//                         : item === 'expert'
-//                           ? 'destructive'
-//                           : 'default'
-//                   }
-//                 >
-//                   {' '}
-//                   {item}
-//                 </Badge>
-//               )
-//             })}
-//         </div>
-//       </>
-//     ),
-//   }),
-//   {
-//     id: 'actions',
-//     header: ({  }) => <p>Actions</p>,
-//     cell: ({ row }) => <DataTableRowActions row={row} />,
-//   },
-// ]
 
 
 export const coursesSchemaStudent = [

@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { memo } from 'react';
+import { Eye } from 'lucide-react';
 
 const DEFAULT_COURSE_IMAGE =
   "https://images.unsplash.com/photo-1516321310762-90b0e7f8b4b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=320&h=160&q=80";
@@ -29,12 +30,15 @@ export const CardDemo = memo(({ courseId, title, desc, category, image = DEFAULT
     >
       {/* Image */}
       <div className="relative h-32 overflow-hidden">
-        <img
-          src={image}
-          alt={`${title} thumbnail`}
-          className="w-full h-full object-cover rounded-t-xl transition-transform duration-700 group-hover:scale-110"
-          loading="lazy"
-        />
+      <img
+  src={image}
+  alt={`${title} thumbnail`}
+  width={320}
+  height={160}
+  className="w-full h-full object-cover rounded-t-xl transition-transform duration-700 group-hover:scale-110"
+  loading="lazy"
+/>
+
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
         {/* Category Badge */}
@@ -65,19 +69,20 @@ export const CardDemo = memo(({ courseId, title, desc, category, image = DEFAULT
 
       {/* Footer Button */}
       <CardFooter className="p-3 pt-0">
-        <Button
-          size="sm"
-          className="relative w-full rounded-lg overflow-hidden 
-                     bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium py-2 
-                     shadow-md transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
-          onClick={() => navigate({ to: `/student/enrolledcourses/${courseId}` })}
-          aria-label={`View details for ${title} course`}
-        >
-          <span className="relative z-10">View Course</span>
-          {/* Shine Effect */}
-          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent 
-                           translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
-        </Button>
+       <Button
+  size="sm"
+  className="relative w-full rounded-lg overflow-hidden 
+             bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium py-2
+             shadow-md transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
+  onClick={() => navigate({ to: `/student/enrolledcourses/${courseId}` })}
+  aria-label={`View details for ${title} course`}
+>
+  <span className="relative z-10 flex items-center justify-center gap-2">
+    <Eye className="w-4 h-4" />
+    View Course
+  </span>
+</Button>
+
       </CardFooter>
     </Card>
   );

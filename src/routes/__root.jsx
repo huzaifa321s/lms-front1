@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
@@ -7,12 +8,15 @@ import { Toaster } from 'sonner'
 import { NavigationProgress } from '@/components/navigation-progress'
 import GeneralError from '../routes/_authenticated/student/features/errors/general-error'
 import NotFoundError from '../routes/_authenticated/student/features/errors/not-found-error'
-import DialogWrapper from './_authenticated/student/-components/DialogWrapper'
+
+const DialogWrapper = lazy(
+  () => import('./_authenticated/student/-components/DialogWrapper')
+)
 
 export const Route = createRootRouteWithContext()({
   component: () => {
     const selector = useSelector((state) => state.studentDialogSlice)
-    console.log('selector.type',selector.type)
+    console.log('selector.type', selector.type)
     let stripePromise = ''
     if (selector.type === 'add-payment-method') {
       stripePromise = loadStripe(
@@ -24,23 +28,27 @@ export const Route = createRootRouteWithContext()({
       <>
         <NavigationProgress />
         <Outlet />
+        <Suspense fallback={<div>Loading...</div>}>
+          {selector.isOpen &&
+            (selector.type === 'add-payment-method' ? (
+              <Elements stripe={stripePromise}>
+                <DialogWrapper
+                  modalType={selector.type}
+                  isOpen={selector.isOpen}
+                  modalData={selector.props}
+                  onClose={selector.onAction}
+                />
+              </Elements>
+            ) : (
+              <DialogWrapper
+                modalType={selector.type}
+                isOpen={selector.isOpen}
+                modalData={selector.props}
+                onClose={selector.onAction}
+              />
+            ))}
+        </Suspense>
 
-        {selector.isOpen && (
-          selector.type === 'add-payment-method' ?  <Elements stripe={stripePromise}>
-            <DialogWrapper
-              modalType={selector.type}
-              isOpen={selector.isOpen}
-              modalData={selector.props}
-              onClose={selector.onAction}
-            />
-          </Elements> : <DialogWrapper
-              modalType={selector.type}
-              isOpen={selector.isOpen}
-              modalData={selector.props}
-              onClose={selector.onAction}
-            />
-         
-        )}
         <Toaster
           duration={5000}
           position='top-center'

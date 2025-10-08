@@ -16,8 +16,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/password-input'
-import { handleLogin } from '../../../shared/config/reducers/student/studentAuthSlice'
-import { BookOpen, Shield, Zap, Award } from 'lucide-react'
+import { BookOpen, Shield, Zap } from 'lucide-react'
+import { handleLogin } from '../../../shared/config/reducers/teacher/teacherAuthSlice'
 
 export function LoginForm({ className, ...props }) {
   const {
@@ -43,12 +43,7 @@ export function LoginForm({ className, ...props }) {
         response = response.data
         if (response.success) {
           const { token, credentials } = response.data
-          document.cookie = `teacherToken=${token}; path=/`
-          document.cookie = `teacherCredentials=${JSON.stringify(
-            credentials
-          )}; path=/`
           dispatch(handleLogin({ token, credentials }))
-
           toast.success('Logged in successfully!')
           reset()
 

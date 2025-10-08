@@ -21,7 +21,7 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { objectToFormData } from '../../../../../shared/utils/helperFunction'
 import { Header } from '@/components/layout/header';
-import { ArrowLeft, Notebook } from 'lucide-react'
+import { ArrowLeft, Delete, Notebook, PlusCircle, Save } from 'lucide-react'
 
 // Recreating components from shadcn/ui and icons from lucide-react with Tailwind CSS and inline SVGs.
 
@@ -256,22 +256,7 @@ function App() {
                   'Saving...'
                 ) : (
                   <>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      width='16'
-                      height='16'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      stroke='currentColor'
-                      strokeWidth='2'
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      className='mr-2'
-                    >
-                      <path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z' />
-                      <polyline points='17 21 17 13 7 13 7 21' />
-                      <polyline points='7 3 7 8 15 8' />
-                    </svg>
+                   <Save/>
                     Save Changes
                   </>
                 )}
@@ -461,21 +446,7 @@ function App() {
                 className='rounded-[8px] border-[#e2e8f0] px-4 py-2 font-medium text-[#2563eb] shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-[1.02] hover:bg-[#2563eb]/10 hover:text-[#1d4ed8]'
                 onClick={addMaterial}
               >
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  width='16'
-                  height='16'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth='2'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  className='mr-2'
-                >
-                  <path d='M5 12h14' />
-                  <path d='M12 5v14' />
-                </svg>
+              <PlusCircle/>
                 Add Material
               </Button>
             </div>
@@ -514,21 +485,7 @@ function App() {
                     className='absolute top-2 right-2 rounded-full p-1 text-[#64748b] transition-colors duration-200 hover:bg-transparent hover:text-[#ef4444]'
                     onClick={() => removeMaterial(i)}
                   >
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      width='16'
-                      height='16'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      stroke='currentColor'
-                      strokeWidth='2'
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                    >
-                      <path d='M3 6h18' />
-                      <path d='M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6' />
-                      <path d='M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2' />
-                    </svg>
+                  <Delete/>
                   </Button>}
                   <CardContent className='space-y-4 p-0'>
                     <div>

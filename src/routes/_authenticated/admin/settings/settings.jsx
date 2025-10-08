@@ -1,5 +1,5 @@
 import { Outlet } from '@tanstack/react-router'
-import { Edit, Edit2, Edit3, User } from 'lucide-react'
+import { Edit, Edit2, Edit3, GraduationCap, LayoutDashboard, Settings2, Settings2Icon, SettingsIcon, User, User2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Header } from '@/components/layout/header'
@@ -19,20 +19,7 @@ export default function Settings() {
             onClick={() => window.history.back()}
             variant='outline'
           >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              strokeWidth={1.5}
-              stroke='currentColor'
-              className='h-6 w-6'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3'
-              />
-            </svg>
+          <Settings2/>
           </Button>
         </div>
       </Header>
@@ -106,23 +93,27 @@ const topNav = [
     href: '/admin',
     isActive: false,
     disabled: false,
+    icon:LayoutDashboard
   },
   {
     title: 'Students',
     href: '/admin/students',
     isActive: false,
     disabled: false,
+    icon:User2
   },
   {
     title: 'Teachers',
     href: '/admin/teachers',
     isActive: false,
     disabled: false,
+    icon:GraduationCap
   },
   {
     title: 'Settings',
     href: '/admin/settings',
     isActive: true,
     disabled: false,
+    icon:SettingsIcon
   },
 ]

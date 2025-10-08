@@ -1,11 +1,5 @@
 import { Link } from '@tanstack/react-router'
 import {
-  Dribbble,
-  Linkedin,
-  Facebook,
-  Instagram,
-  Twitter,
-  Mail,
   MapPin,
   Phone,
   ChevronRight,
@@ -15,14 +9,13 @@ import { Separator } from '@/components/ui/separator'
 import {
   footerLink1,
   footerLink2,
-  footerSocial,
 } from '../-components/partenerData'
 
 export const Footer = () => {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="relative bg-slate-900 text-gray-300 dark:bg-slate-800">
+    <footer className="relative bg-slate-900 text-gray-300">
       <div className="container px-6 py-16">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
           {/* Logo + About */}
@@ -107,31 +100,6 @@ export const Footer = () => {
                 Play Store
               </Button>
             </div>
-{/* 
-      <ul className="mt-6 flex gap-3">
-  {footerSocial.map((item, index) => {
-    const Icon = item.icon
-    return (
-      <li key={index}>
-        <Button
-          variant="outline"
-          size="icon"
-          asChild
-          className="rounded-md border-gray-700 text-gray-400 transition-colors hover:border-violet-600 hover:bg-violet-600 hover:text-white"
-        >
-          <a
-            href={item.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={item.name || "social-link"}
-          >
-            <Icon className="h-4 w-4" />
-          </a>
-        </Button>
-      </li>
-    )
-  })}
-</ul> */}
 
           </div>
         </div>
@@ -141,7 +109,7 @@ export const Footer = () => {
       <Separator className="bg-gray-700" />
       <div className="container flex flex-col items-center justify-between gap-4 py-6 text-sm text-gray-400 md:flex-row">
         <p>
-          © {year} Edupath. Made with ❤️ by{' '}
+          © {year} BruceLMS. Made with ❤️ by{' '}
           <a
             href="https://shreethemes.in/"
             className="transition-colors hover:text-violet-400"
@@ -163,7 +131,7 @@ export const Footer = () => {
             </Link>
           </li>
           <li>
-            <Link to="/login" className="hover:text-violet-400">
+            <Link to="/student/login" className="hover:text-violet-400">
               Login
             </Link>
           </li>

@@ -6,7 +6,6 @@ import axios from "axios";
        response = response.data
        if(response.success) {
          response = response.data
-         console.log('response after',response)
         return response
        }
     }catch(error){

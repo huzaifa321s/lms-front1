@@ -58,7 +58,7 @@ interface DataTableProps<TData, TValue> {
   paginationOptions: any
 }
 
-export function DataTable<TData, TValue>({
+ function DataTable<TData, TValue>({
   columns,
   data,
   fetchStatus,
@@ -228,3 +228,5 @@ export function DataTable<TData, TValue>({
     </div>
   )
 }
+
+export default DataTable

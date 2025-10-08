@@ -1,11 +1,6 @@
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  DoubleArrowLeftIcon,
-  DoubleArrowRightIcon,
-} from '@radix-ui/react-icons'
 import { Table } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
+import { ArrowLeftCircle, ArrowRightCircle, ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>
@@ -57,7 +52,7 @@ export function DataTablePagination<TData>({
             disabled={!table.getCanPreviousPage()}
           >
             <span className='sr-only'>Go to first page</span>
-            <DoubleArrowLeftIcon className='h-4 w-4' />
+            <ArrowLeftCircle className='h-4 w-4' />
           </Button>
           <Button
             variant='outline'
@@ -66,7 +61,7 @@ export function DataTablePagination<TData>({
             disabled={!table.getCanPreviousPage()}
           >
             <span className='sr-only'>Go to previous page</span>
-            <ChevronLeftIcon className='h-4 w-4' />
+            <ChevronLeft className='h-4 w-4' />
           </Button>
           <Button
             variant='outline'
@@ -75,7 +70,7 @@ export function DataTablePagination<TData>({
             disabled={!table.getCanNextPage()}
           >
             <span className='sr-only'>Go to next page</span>
-            <ChevronRightIcon className='h-4 w-4' />
+            <ChevronRight className='h-4 w-4' />
           </Button>
           <Button
             variant='outline'
@@ -84,7 +79,7 @@ export function DataTablePagination<TData>({
             disabled={!table.getCanNextPage()}
           >
             <span className='sr-only'>Go to last page</span>
-            <DoubleArrowRightIcon className='h-4 w-4' />
+            <ArrowRightCircle className='h-4 w-4' />
           </Button>
         </div>
       </div>

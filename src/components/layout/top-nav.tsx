@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { IconMenu } from '@tabler/icons-react'
+import { Menu } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,7 +8,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { motion } from 'framer-motion'
 
 interface TopNavProps extends React.HTMLAttributes<HTMLElement> {
   links: {
@@ -23,50 +22,45 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
   return (
     <>
       {/* Mobile Menu */}
-      <div className="md:hidden">
+      <div className='md:hidden'>
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
-            <motion.div whileTap={{ scale: 0.95 }}>
-              <Button
-                size="icon"
-                variant="outline"
-                className="rounded-[8px] border-[#475569] bg-[#0f172a] text-[#e2e8f0] 
-                  transition-all duration-300 hover:bg-[#2563eb]/20 hover:text-[#bfdbfe] 
-                  hover:border-[#2563eb] hover:scale-[1.05] shadow-none"
-              >
-                <IconMenu />
-              </Button>
-            </motion.div>
+            <Button
+              size='icon'
+              variant='outline'
+              className='rounded-[8px] border-[#475569] bg-[#0f172a] text-[#e2e8f0] shadow-none transition-all duration-300 hover:scale-[1.05] hover:border-[#2563eb] hover:bg-[#2563eb]/20 hover:text-[#bfdbfe]'
+            >
+              <Menu />
+            </Button>
           </DropdownMenuTrigger>
 
           <DropdownMenuContent
-            side="bottom"
-            align="start"
-            className="w-56 rounded-[12px] bg-[#0f172a] border border-[#475569] p-2 shadow-lg"
+            side='bottom'
+            align='start'
+            className='w-56 rounded-[12px] border border-[#475569] bg-[#0f172a] p-2 shadow-lg'
           >
-            {links.map(({ title, href, isActive, disabled }, i) => (
-              <motion.div
-                key={`${title}-${href}`}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
-              >
-                <DropdownMenuItem
-                  asChild
-                  className={cn(
-                    'rounded-[8px] px-2 py-1 transition-all duration-200 cursor-pointer',
-                    isActive
-                      ? 'text-[#bfdbfe] bg-[#2563eb]/30'
-                      : 'text-[#e2e8f0] hover:bg-[#2563eb]/20 hover:text-[#bfdbfe]',
-                    disabled && 'opacity-50 cursor-not-allowed'
-                  )}
-                >
-                  <Link to={href} disabled={disabled}>
-                    {title}
-                  </Link>
-                </DropdownMenuItem>
-              </motion.div>
-            ))}
+            {links.map(({ title, href, icon, isActive, disabled }, i) => {
+              const Icon = icon
+
+              return (
+                <div key={`${title}-${href}`}>
+                  <DropdownMenuItem
+                    asChild
+                    className={cn(
+                      'cursor-pointer rounded-[8px] px-2 py-1 transition-all duration-200',
+                      isActive
+                        ? 'bg-[#2563eb]/30 text-[#bfdbfe]'
+                        : 'text-[#e2e8f0] hover:bg-[#2563eb]/20 hover:text-[#bfdbfe]',
+                      disabled && 'cursor-not-allowed opacity-50'
+                    )}
+                  >
+                    <Link to={href} disabled={disabled} className="flex items-center">
+                      <Icon className='h-5 w-5 text-white' /> {title}
+                    </Link>
+                  </DropdownMenuItem>
+                </div>
+              )
+            })}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -79,36 +73,43 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
         )}
         {...props}
       >
-        {links.map(({ title, href, isActive, disabled }, i) => (
-          <motion.div
-            key={`${title}-${href}`}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.07 }}
-          >
-            <Link
-              to={href}
-              disabled={disabled}
-              className={cn(
-                'relative text-sm font-medium rounded-[8px] px-3 py-1.5 transition-all duration-300',
-                isActive
-                  ? 'text-white bg-blue-600 shadow-md'
-                  : 'text-[#e2e8f0] hover:bg-blue-500/30 hover:text-[#bfdbfe]',
-                disabled && 'opacity-50 cursor-not-allowed'
-              )}
-            >
-              {/* Magic UI style hover underline */}
-              <span className="relative z-10">{title}</span>
-              <motion.span
-                layoutId="underline"
-                className={cn(
-                  'absolute left-0 bottom-0 h-[2px] w-full bg-blue-500',
-                  !isActive && 'hidden'
-                )}
-              />
-            </Link>
-          </motion.div>
-        ))}
+        {links.map(({ title, href, icon, isActive, disabled }, i) => {
+          const Icon = icon
+          return (
+            <div key={`${title}-${href}`}>
+           <Link
+  to={href}
+  disabled={disabled}
+  className={cn(
+    'relative rounded-[8px] px-3 py-1.5 text-sm font-medium transition-all duration-300 flex items-center gap-2',
+    'text-[#e2e8f0] hover:text-[#bfdbfe]',
+    disabled && 'cursor-not-allowed opacity-50'
+  )}
+>
+  {/* Icon with background highlight */}
+  <span
+    className={cn(
+      'flex items-center justify-center rounded-md p-1 transition-colors duration-300',
+      isActive
+        ? 'bg-blue-600 text-white shadow-md'
+        : 'hover:bg-blue-500/30 hover:text-[#bfdbfe]'
+    )}
+  >
+    <Icon className="h-5 w-5" />
+  </span>
+
+  {/* Title */}
+  <span className="z-10">{title}</span>
+
+  {/* Active underline */}
+  {isActive && (
+    <span className="absolute bottom-0 left-0 h-[2px] w-full bg-blue-500" />
+  )}
+</Link>
+
+            </div>
+          )
+        })}
       </nav>
     </>
   )

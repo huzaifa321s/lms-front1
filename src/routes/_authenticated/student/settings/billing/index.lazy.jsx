@@ -1,12 +1,14 @@
-import { Suspense, useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { useSelector } from 'react-redux'
+import { Plus } from 'lucide-react'
+import { shallowEqual, useSelector } from 'react-redux'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import ContentSection from '../-components/content-section'
+import { DataTableSkeleton } from '../../../../-components/DataTableSkeleton'
 import { useAppUtils } from '../../../../../hooks/useAppUtils'
 import { openModal } from '../../../../../shared/config/reducers/student/studentDialogSlice'
 import { Show } from '../../../../../shared/utils/Show'
@@ -18,33 +20,35 @@ import { setCardAsDefault } from '../../../../../utils/globalFunctions'
 import { queryClient } from '../../../../../utils/globalVars'
 import PaymentMethods from '../../../../student/-components/paymentMethods'
 import { invoicesQueryOption } from '../../../../student/setting/invoices'
-import { invoicesSchema } from '../../features/tasks/-components/columns'
-import { DataTable } from '../../features/tasks/-components/data-table'
-import { paymentMethodsQueryOptions } from '../../payment-methods'
 import { SmallLoader } from '../../../teacher/-layout/data/components/teacher-authenticated-layout'
+import { invoicesSchema } from '../../features/tasks/-components/columns'
+import { paymentMethodsQueryOptions } from '../../payment-methods'
+
+const DataTable = lazy(
+  () => import('../../features/tasks/-components/data-table')
+)
 
 export const Route = createLazyFileRoute(
   '/_authenticated/student/settings/billing/'
 )({
   component: () => (
     <>
-        <Suspense fallback={<SmallLoader />}>
-      <ContentSection
-        title="Billing"
-        desc="Manage your subscription plans, payment methods, and view invoices in one place."
-      >
-        <Billing />
-      </ContentSection>
-    </Suspense>
+      <Suspense fallback={<SmallLoader />}>
+        <ContentSection
+          title='Billing'
+          desc='Manage your subscription plans, payment methods, and view invoices in one place.'
+        >
+          <Billing />
+        </ContentSection>
+      </Suspense>
     </>
   ),
   loader: () => {
-  return Promise.all([
-    queryClient.ensureQueryData(paymentMethodsQueryOptions()),
-    queryClient.ensureQueryData(invoicesQueryOption(5)),
-  ])
-}
-
+    return Promise.all([
+      queryClient.ensureQueryData(paymentMethodsQueryOptions()),
+      queryClient.ensureQueryData(invoicesQueryOption(5)),
+    ])
+  },
 })
 
 const plans = ['daily', 'bronze', 'silver', 'gold']
@@ -53,14 +57,20 @@ function Billing() {
   const { dispatch, router, navigate } = useAppUtils()
   const { data, fetchStatus } = useSuspenseQuery(paymentMethodsQueryOptions())
   const [fetchInvoices, setFetchInvoices] = useState(false)
-const { data: invoicesData } = useSuspenseQuery(invoicesQueryOption(5))
+  const { data: invoicesData } = useSuspenseQuery(invoicesQueryOption(5))
 
   console.log('invoicesData ==>', invoicesData)
   const invoices = invoicesData?.invoices
   const { paymentMethods, defaultPM } = data
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('')
-  const credentials = useSelector((state) => state.studentAuth.credentials)
-  const subscription = useSelector((state) => state.studentAuth.subscription)
+  const credentials = useSelector(
+    (state) => state.studentAuth.credentials,
+    shallowEqual
+  )
+  const subscription = useSelector(
+    (state) => state.studentAuth.subscription,
+    shallowEqual
+  )
   console.log('subscription ==>', subscription)
   const filteredPlans = plans.filter(
     (p) => p !== subscription?.name?.toLowerCase()
@@ -99,7 +109,7 @@ const { data: invoicesData } = useSuspenseQuery(invoicesQueryOption(5))
               onClick={() => setFetchInvoices(true)}
               className='flex items-center gap-2 rounded-lg font-medium transition-all duration-200 data-[state=active]:border data-[state=active]:border-blue-200/50 data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-md'
             >
-              📄 Invoices
+              📄 Billing History
             </TabsTrigger>
           </TabsList>
         </div>
@@ -163,94 +173,118 @@ const { data: invoicesData } = useSuspenseQuery(invoicesQueryOption(5))
                       </div>
                     )}
                   </div>
-        {subscription?.status === 'active' ? (
-  // ✅ Case 1: Active subscription
-  (<div className='rounded-2xl border border-green-200/50 bg-green-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
-    <h1 className='text-3xl font-bold text-green-600 md:text-4xl'>
-      Subscription Active
-    </h1>
-    <p className='mt-4 text-base leading-relaxed text-green-700 md:text-lg'>
-      Your subscription is active. Enjoy all premium features!
-    </p>
-    <Button
-      onClick={() => dispatch( openModal({ type: "cancel-subscription-modal", props: { currentPlan: subscription }, }))}
-      className='mt-6 rounded-xl bg-gradient-to-r from-red-500 to-red-600 font-semibold text-white shadow-lg transition-all duration-300 hover:from-red-600 hover:to-red-700 hover:shadow-xl'
-    >
-      Cancel Subscription
-    </Button>
-  </div>)
-) : subscription?.status === 'canceled' ? (
-  // ❌ Case 2: Canceled subscription
-  (<div className='rounded-2xl border border-red-200/50 bg-red-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
-    <h1 className='text-3xl font-bold text-red-600 md:text-4xl'>
-      Subscription Canceled
-    </h1>
-    <p className='mt-4 text-base leading-relaxed text-red-700 md:text-lg'>
-      Your subscription has been canceled. Please resubscribe to continue.
-    </p>
-    <Button
-      onClick={() => navigate({ to: '/student/resubscription-plans' ,search:{redirect:'/student/settings/billing'}})}
-      className='mt-6 rounded-xl bg-gradient-to-r from-red-500 to-red-600 font-semibold text-white shadow-lg transition-all duration-300 hover:from-red-600 hover:to-red-700 hover:shadow-xl'
-    >
-      Resubscribe
-    </Button>
-  </div>)
-) : subscription?.status === 'pending' ? (
-  // ⏳ Case 3: Pending subscription
-  (<div className='rounded-2xl border border-yellow-200/50 bg-yellow-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
-    <h1 className='text-3xl font-bold text-yellow-600 md:text-4xl'>
-      Subscription Pending
-    </h1>
-    <p className='mt-4 text-base leading-relaxed text-yellow-700 md:text-lg'>
-      Your subscription is pending. Please complete the payment process to activate your plan.
-    </p>
-    <Button
-      onClick={async () => {
-        try {
-          toast.info('This function will be available in a future update.')
-        } catch (err) {
-          console.error('Payment completion error:', err)
-          alert('Something went wrong while completing payment.')
-        }
-      }}
-      className='mt-6 w-full rounded-xl bg-gradient-to-r from-yellow-500 to-yellow-600 font-semibold text-white shadow-lg transition-all duration-300 hover:from-yellow-600 hover:to-yellow-700 hover:shadow-xl md:w-auto'
-    >
-      Complete Payment
-    </Button>
-  </div>)
-) : subscription?.status === 'past_due' ? (
-  // ⚠️ Case 4: Past due subscription
-  (<div className='rounded-2xl border border-orange-200/50 bg-orange-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
-    <h1 className='text-3xl font-bold text-orange-600 md:text-4xl'>
-      Payment Past Due
-    </h1>
-    <p className='mt-4 text-base leading-relaxed text-orange-700 md:text-lg'>
-      Your payment is overdue. Please update your payment method to continue.
-    </p>
-    <Button
-      onClick={() => navigate({ to: '/student/settings/payment-methods' })}
-      className='mt-6 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 font-semibold text-white shadow-lg transition-all duration-300 hover:from-orange-600 hover:to-orange-700 hover:shadow-xl'
-    >
-      Update Payment Method
-    </Button>
-  </div>)
-) : (
-  // 🚫 Case 5: Inactive / No subscription
-  (<div className='rounded-2xl border border-slate-200/50 bg-slate-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
-    <h1 className='text-3xl font-bold text-slate-600 md:text-4xl'>
-      No Active Subscription
-    </h1>
-    <p className='mt-4 text-base leading-relaxed text-slate-700 md:text-lg'>
-      You don’t have an active subscription. Choose a plan to get started.
-    </p>
-    <Button
-      onClick={() => navigate({ to: '/student/subscription-plans' })}
-      className='mt-6 rounded-xl bg-gradient-to-r from-slate-500 to-slate-600 font-semibold text-white shadow-lg transition-all duration-300 hover:from-slate-600 hover:to-slate-700 hover:shadow-xl'
-    >
-      Subscribe Now
-    </Button>
-  </div>)
-)}
+                  {subscription?.status === 'active' ? (
+                    // ✅ Case 1: Active subscription
+                    <div className='rounded-2xl border border-green-200/50 bg-green-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
+                      <h1 className='text-3xl font-bold text-green-600 md:text-4xl'>
+                        Subscription Active
+                      </h1>
+                      <p className='mt-4 text-base leading-relaxed text-green-700 md:text-lg'>
+                        Your subscription is active. Enjoy all premium features!
+                      </p>
+                      <Button
+                        onClick={() =>
+                          dispatch(
+                            openModal({
+                              type: 'cancel-subscription-modal',
+                              props: { currentPlan: subscription },
+                            })
+                          )
+                        }
+                        className='mt-6 rounded-xl bg-gradient-to-r from-red-500 to-red-600 font-semibold text-white shadow-lg transition-all duration-300 hover:from-red-600 hover:to-red-700 hover:shadow-xl'
+                      >
+                        Cancel Subscription
+                      </Button>
+                    </div>
+                  ) : subscription?.status === 'canceled' ? (
+                    // ❌ Case 2: Canceled subscription
+                    <div className='rounded-2xl border border-red-200/50 bg-red-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
+                      <h1 className='text-3xl font-bold text-red-600 md:text-4xl'>
+                        Subscription Canceled
+                      </h1>
+                      <p className='mt-4 text-base leading-relaxed text-red-700 md:text-lg'>
+                        Your subscription has been canceled. Please resubscribe
+                        to continue.
+                      </p>
+                      <Button
+                        onClick={() =>
+                          navigate({
+                            to: '/student/resubscription-plans',
+                            search: { redirect: '/student/settings/billing' },
+                          })
+                        }
+                        className='mt-6 rounded-xl bg-gradient-to-r from-red-500 to-red-600 font-semibold text-white shadow-lg transition-all duration-300 hover:from-red-600 hover:to-red-700 hover:shadow-xl'
+                      >
+                        Resubscribe
+                      </Button>
+                    </div>
+                  ) : subscription?.status === 'pending' ? (
+                    // ⏳ Case 3: Pending subscription
+                    <div className='rounded-2xl border border-yellow-200/50 bg-yellow-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
+                      <h1 className='text-3xl font-bold text-yellow-600 md:text-4xl'>
+                        Subscription Pending
+                      </h1>
+                      <p className='mt-4 text-base leading-relaxed text-yellow-700 md:text-lg'>
+                        Your subscription is pending. Please complete the
+                        payment process to activate your plan.
+                      </p>
+                      <Button
+                        onClick={async () => {
+                          try {
+                            toast.info(
+                              'This function will be available in a future update.'
+                            )
+                          } catch (err) {
+                            console.error('Payment completion error:', err)
+                            alert(
+                              'Something went wrong while completing payment.'
+                            )
+                          }
+                        }}
+                        className='mt-6 w-full rounded-xl bg-gradient-to-r from-yellow-500 to-yellow-600 font-semibold text-white shadow-lg transition-all duration-300 hover:from-yellow-600 hover:to-yellow-700 hover:shadow-xl md:w-auto'
+                      >
+                        Complete Payment
+                      </Button>
+                    </div>
+                  ) : subscription?.status === 'past_due' ? (
+                    // ⚠️ Case 4: Past due subscription
+                    <div className='rounded-2xl border border-orange-200/50 bg-orange-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
+                      <h1 className='text-3xl font-bold text-orange-600 md:text-4xl'>
+                        Payment Past Due
+                      </h1>
+                      <p className='mt-4 text-base leading-relaxed text-orange-700 md:text-lg'>
+                        Your payment is overdue. Please update your payment
+                        method to continue.
+                      </p>
+                      <Button
+                        onClick={() =>
+                          navigate({ to: '/student/settings/payment-methods' })
+                        }
+                        className='mt-6 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 font-semibold text-white shadow-lg transition-all duration-300 hover:from-orange-600 hover:to-orange-700 hover:shadow-xl'
+                      >
+                        Update Payment Method
+                      </Button>
+                    </div>
+                  ) : (
+                    // 🚫 Case 5: Inactive / No subscription
+                    <div className='rounded-2xl border border-slate-200/50 bg-slate-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
+                      <h1 className='text-3xl font-bold text-slate-600 md:text-4xl'>
+                        No Active Subscription
+                      </h1>
+                      <p className='mt-4 text-base leading-relaxed text-slate-700 md:text-lg'>
+                        You don’t have an active subscription. Choose a plan to
+                        get started.
+                      </p>
+                      <Button
+                        onClick={() =>
+                          navigate({ to: '/student/subscription-plans' })
+                        }
+                        className='mt-6 rounded-xl bg-gradient-to-r from-slate-500 to-slate-600 font-semibold text-white shadow-lg transition-all duration-300 hover:from-slate-600 hover:to-slate-700 hover:shadow-xl'
+                      >
+                        Subscribe Now
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -299,193 +333,193 @@ const { data: invoicesData } = useSuspenseQuery(invoicesQueryOption(5))
                         })}
                       </TabsList>
 
-                     {/* Daily Plan */}
-<TabsContent value='daily'>
-  {subscription?.name !== 'Daily' && (
-    <div className='rounded-xl border border-blue-200/30 bg-gradient-to-br from-blue-50/30 to-slate-50/30 p-6'>
-      <div className='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
-        <div className='space-y-4'>
-          <h3 className='text-lg font-bold text-blue-600 sm:text-xl'>
-            $10 per day
-          </h3>
-          <ul className='space-y-2 text-slate-600'>
-            <li className='flex items-center gap-2 text-sm sm:text-base'>
-              <div className='h-2 w-2 rounded-full bg-blue-400'></div>
-              Access to 1 course
-            </li>
-            <li className='flex items-center gap-2 text-sm sm:text-base'>
-              <div className='h-2 w-2 rounded-full bg-blue-400'></div>
-              Basic support
-            </li>
-            <li className='flex items-center gap-2 text-sm sm:text-base'>
-              <div className='h-2 w-2 rounded-full bg-blue-400'></div>
-              Limited features
-            </li>
-          </ul>
-        </div>
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={() => {
-            dispatch(
-              openModal({
-                type: 'update-subscription-modal',
-                props: {
-                  selectedPlan: 'Daily',
-                  currentPlan: subscription,
-                },
-              })
-            );
-          }}
-          className='w-full border border-blue-200/50 bg-gradient-to-r from-white to-blue-50/80 font-medium text-blue-700 shadow-lg transition-all duration-200 hover:border-blue-300 hover:from-blue-50 hover:to-slate-50 hover:shadow-xl sm:w-auto'
-        >
-          Update to Daily Plan
-        </Button>
-      </div>
-    </div>
-  )}
-</TabsContent>
+                      {/* Daily Plan */}
+                      <TabsContent value='daily'>
+                        {subscription?.name !== 'Daily' && (
+                          <div className='rounded-xl border border-blue-200/30 bg-gradient-to-br from-blue-50/30 to-slate-50/30 p-6'>
+                            <div className='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
+                              <div className='space-y-4'>
+                                <h3 className='text-lg font-bold text-blue-600 sm:text-xl'>
+                                  $10 per day
+                                </h3>
+                                <ul className='space-y-2 text-slate-600'>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>
+                                    Access to 1 course
+                                  </li>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>
+                                    Basic support
+                                  </li>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>
+                                    Limited features
+                                  </li>
+                                </ul>
+                              </div>
+                              <Button
+                                variant='outline'
+                                size='sm'
+                                onClick={() => {
+                                  dispatch(
+                                    openModal({
+                                      type: 'update-subscription-modal',
+                                      props: {
+                                        selectedPlan: 'Daily',
+                                        currentPlan: subscription,
+                                      },
+                                    })
+                                  )
+                                }}
+                                className='w-full border border-blue-200/50 bg-gradient-to-r from-white to-blue-50/80 font-medium text-blue-700 shadow-lg transition-all duration-200 hover:border-blue-300 hover:from-blue-50 hover:to-slate-50 hover:shadow-xl sm:w-auto'
+                              >
+                                Update to Daily Plan
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </TabsContent>
 
-{/* Bronze Plan */}
-<TabsContent value='bronze'>
-  {subscription?.name !== 'Bronze' && (
-    <div className='rounded-xl border border-blue-200/30 bg-gradient-to-br from-blue-50/30 to-slate-50/30 p-6'>
-      <div className='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
-        <div className='space-y-4'>
-          <h3 className='text-lg font-bold text-blue-600 sm:text-xl'>
-            $170 per month
-          </h3>
-          <ul className='space-y-2 text-slate-600'>
-            <li className='flex items-center gap-2 text-sm sm:text-base'>
-              <div className='h-2 w-2 rounded-full bg-blue-400'></div>
-              Can buy 4 courses
-            </li>
-            <li className='flex items-center gap-2 text-sm sm:text-base'>
-              <div className='h-2 w-2 rounded-full bg-blue-400'></div>
-              Limited support
-            </li>
-            <li className='flex items-center gap-2 text-sm sm:text-base'>
-              <div className='h-2 w-2 rounded-full bg-blue-400'></div>
-              Basic features
-            </li>
-          </ul>
-        </div>
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={() => {
-            dispatch(
-              openModal({
-                type: 'update-subscription-modal',
-                props: {
-                  selectedPlan: 'Bronze',
-                  currentPlan: subscription,
-                },
-              })
-            );
-          }}
-          className='w-full border border-blue-200/50 bg-gradient-to-r from-white to-blue-50/80 font-medium text-blue-700 shadow-lg transition-all duration-200 hover:border-blue-300 hover:from-blue-50 hover:to-slate-50 hover:shadow-xl sm:w-auto'
-        >
-          Update to Bronze Plan
-        </Button>
-      </div>
-    </div>
-  )}
-</TabsContent>
+                      {/* Bronze Plan */}
+                      <TabsContent value='bronze'>
+                        {subscription?.name !== 'Bronze' && (
+                          <div className='rounded-xl border border-blue-200/30 bg-gradient-to-br from-blue-50/30 to-slate-50/30 p-6'>
+                            <div className='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
+                              <div className='space-y-4'>
+                                <h3 className='text-lg font-bold text-blue-600 sm:text-xl'>
+                                  $170 per month
+                                </h3>
+                                <ul className='space-y-2 text-slate-600'>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>
+                                    Can buy 4 courses
+                                  </li>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>
+                                    Limited support
+                                  </li>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>
+                                    Basic features
+                                  </li>
+                                </ul>
+                              </div>
+                              <Button
+                                variant='outline'
+                                size='sm'
+                                onClick={() => {
+                                  dispatch(
+                                    openModal({
+                                      type: 'update-subscription-modal',
+                                      props: {
+                                        selectedPlan: 'Bronze',
+                                        currentPlan: subscription,
+                                      },
+                                    })
+                                  )
+                                }}
+                                className='w-full border border-blue-200/50 bg-gradient-to-r from-white to-blue-50/80 font-medium text-blue-700 shadow-lg transition-all duration-200 hover:border-blue-300 hover:from-blue-50 hover:to-slate-50 hover:shadow-xl sm:w-auto'
+                              >
+                                Update to Bronze Plan
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </TabsContent>
 
-{/* Silver Plan */}
-<TabsContent value='silver'>
-  {subscription?.name !== 'Silver' && (
-    <div className='rounded-xl border border-blue-200/30 bg-gradient-to-br from-blue-50/30 to-slate-50/30 p-6'>
-      <div className='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
-        <div className='space-y-4'>
-          <h3 className='text-lg font-bold text-blue-600 sm:text-xl'>
-            $300 per month
-          </h3>
-          <ul className='space-y-2 text-slate-600'>
-            <li className='flex items-center gap-2 text-sm sm:text-base'>
-              <div className='h-2 w-2 rounded-full bg-blue-400'></div>
-              Can buy 8 courses
-            </li>
-            <li className='flex items-center gap-2 text-sm sm:text-base'>
-              <div className='h-2 w-2 rounded-full bg-blue-400'></div>
-              Priority support
-            </li>
-            <li className='flex items-center gap-2 text-sm sm:text-base'>
-              <div className='h-2 w-2 rounded-full bg-blue-400'></div>
-              Advanced features
-            </li>
-          </ul>
-        </div>
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={() => {
-            dispatch(
-              openModal({
-                type: 'update-subscription-modal',
-                props: {
-                  selectedPlan: 'Silver',
-                  currentPlan: subscription,
-                },
-              })
-            );
-          }}
-          className='w-full border border-blue-200/50 bg-gradient-to-r from-white to-blue-50/80 font-medium text-blue-700 shadow-lg transition-all duration-200 hover:border-blue-300 hover:from-blue-50 hover:to-slate-50 hover:shadow-xl sm:w-auto'
-        >
-          Update to Silver Plan
-        </Button>
-      </div>
-    </div>
-  )}
-</TabsContent>
+                      {/* Silver Plan */}
+                      <TabsContent value='silver'>
+                        {subscription?.name !== 'Silver' && (
+                          <div className='rounded-xl border border-blue-200/30 bg-gradient-to-br from-blue-50/30 to-slate-50/30 p-6'>
+                            <div className='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
+                              <div className='space-y-4'>
+                                <h3 className='text-lg font-bold text-blue-600 sm:text-xl'>
+                                  $300 per month
+                                </h3>
+                                <ul className='space-y-2 text-slate-600'>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>
+                                    Can buy 8 courses
+                                  </li>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>
+                                    Priority support
+                                  </li>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>
+                                    Advanced features
+                                  </li>
+                                </ul>
+                              </div>
+                              <Button
+                                variant='outline'
+                                size='sm'
+                                onClick={() => {
+                                  dispatch(
+                                    openModal({
+                                      type: 'update-subscription-modal',
+                                      props: {
+                                        selectedPlan: 'Silver',
+                                        currentPlan: subscription,
+                                      },
+                                    })
+                                  )
+                                }}
+                                className='w-full border border-blue-200/50 bg-gradient-to-r from-white to-blue-50/80 font-medium text-blue-700 shadow-lg transition-all duration-200 hover:border-blue-300 hover:from-blue-50 hover:to-slate-50 hover:shadow-xl sm:w-auto'
+                              >
+                                Update to Silver Plan
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </TabsContent>
 
-{/* Gold Plan */}
-<TabsContent value='gold'>
-  {subscription?.name !== 'Gold' && (
-    <div className='rounded-xl border border-blue-200/30 bg-gradient-to-br from-blue-50/30 to-slate-50/30 p-6'>
-      <div className='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
-        <div className='space-y-4'>
-          <h3 className='text-lg font-bold text-blue-600 sm:text-xl'>
-            $500 per month
-          </h3>
-          <ul className='space-y-2 text-slate-600'>
-            <li className='flex items-center gap-2 text-sm sm:text-base'>
-              <div className='h-2 w-2 rounded-full bg-blue-400'></div>
-              Unlimited courses
-            </li>
-            <li className='flex items-center gap-2 text-sm sm:text-base'>
-              <div className='h-2 w-2 rounded-full bg-blue-400'></div>
-              24/7 premium support
-            </li>
-            <li className='flex items-center gap-2 text-sm sm:text-base'>
-              <div className='h-2 w-2 rounded-full bg-blue-400'></div>
-              All features unlocked
-            </li>
-          </ul>
-        </div>
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={() => {
-            dispatch(
-              openModal({
-                type: 'update-subscription-modal',
-                props: {
-                  selectedPlan: 'Gold',
-                  currentPlan: subscription,
-                },
-              })
-            );
-          }}
-          className='w-full border border-blue-200/50 bg-gradient-to-r from-white to-blue-50/80 font-medium text-blue-700 shadow-lg transition-all duration-200 hover:border-blue-300 hover:from-blue-50 hover:to-slate-50 hover:shadow-xl sm:w-auto'
-        >
-          Update to Gold Plan
-        </Button>
-      </div>
-    </div>
-  )}
-</TabsContent>
+                      {/* Gold Plan */}
+                      <TabsContent value='gold'>
+                        {subscription?.name !== 'Gold' && (
+                          <div className='rounded-xl border border-blue-200/30 bg-gradient-to-br from-blue-50/30 to-slate-50/30 p-6'>
+                            <div className='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
+                              <div className='space-y-4'>
+                                <h3 className='text-lg font-bold text-blue-600 sm:text-xl'>
+                                  $500 per month
+                                </h3>
+                                <ul className='space-y-2 text-slate-600'>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>
+                                    Unlimited courses
+                                  </li>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>
+                                    24/7 premium support
+                                  </li>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>
+                                    All features unlocked
+                                  </li>
+                                </ul>
+                              </div>
+                              <Button
+                                variant='outline'
+                                size='sm'
+                                onClick={() => {
+                                  dispatch(
+                                    openModal({
+                                      type: 'update-subscription-modal',
+                                      props: {
+                                        selectedPlan: 'Gold',
+                                        currentPlan: subscription,
+                                      },
+                                    })
+                                  )
+                                }}
+                                className='w-full border border-blue-200/50 bg-gradient-to-r from-white to-blue-50/80 font-medium text-blue-700 shadow-lg transition-all duration-200 hover:border-blue-300 hover:from-blue-50 hover:to-slate-50 hover:shadow-xl sm:w-auto'
+                              >
+                                Update to Gold Plan
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </TabsContent>
                       {/* Same logic repeat for Silver, Gold, Daily */}
                     </Tabs>
                   )}
@@ -539,7 +573,7 @@ const { data: invoicesData } = useSuspenseQuery(invoicesQueryOption(5))
                     size='sm'
                     className='mt-4 w-full bg-gradient-to-r from-blue-600 to-blue-700 font-medium text-white shadow-lg transition-all duration-200 hover:from-blue-700 hover:to-blue-800 hover:shadow-xl sm:mt-0 sm:w-auto'
                   >
-                    Add Payment Method
+                    <Plus /> Add Payment Method
                   </Button>
                 </div>
               </div>
@@ -557,7 +591,7 @@ const { data: invoicesData } = useSuspenseQuery(invoicesQueryOption(5))
                   <span className='text-xl'>📄</span>
                 </div>
                 <h1 className='bg-gradient-to-r from-blue-600 to-slate-700 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl'>
-                  Invoices
+                  Billing History
                 </h1>
               </div>
 
@@ -570,12 +604,13 @@ const { data: invoicesData } = useSuspenseQuery(invoicesQueryOption(5))
                       </p>
                     </div>
                     <div className='overflow-hidden rounded-xl border border-blue-200/30 bg-white/70 backdrop-blur-sm'>
-                      {console.log('invoices ==>', invoices)}
-                      <DataTable
-                        data={invoices}
-                        columns={invoicesSchema}
-                        pagination={false}
-                      />
+                      <Suspense fallback={<DataTableSkeleton />}>
+                        <DataTable
+                          data={invoices}
+                          columns={invoicesSchema}
+                          pagination={false}
+                        />
+                      </Suspense>
                     </div>
                     {invoicesData?.has_more && (
                       <Button

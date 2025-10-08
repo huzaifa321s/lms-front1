@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import LoginPage from '../../../../admin/login'
+import LoginPage from '../../../../admin/login.lazy'
 import { Header } from '@/components/layout/header'
 
 export const Route = createFileRoute(

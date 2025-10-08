@@ -7,12 +7,10 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
-import { Provider, useSelector } from 'react-redux'
+import { Provider, shallowEqual, useSelector } from 'react-redux'
 import { toast } from 'sonner'
 import { handleServerError } from '@/utils/handle-server-error'
-import { LoaderThree } from '@/components/ui/loader'
 import { FontProvider } from './context/font-context'
-import { ThemeProvider } from './context/theme-context'
 import UseAuth from './hooks/use-auth'
 import './index.css'
 // Generated Routes
@@ -86,7 +84,7 @@ const App = () => {
   axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL
   console.log('axios.defaults.baseURL --->', axios.defaults.baseURL)
   const TOKEN = getCookie('studentToken')
-  const credentials = useSelector((state) => state.studentAuth.credentials)
+  const credentials = useSelector((state) => state.studentAuth.credentials ,shallowEqual)
   console.log('Token ====>', TOKEN)
   console.log('credentials 34 ==>', credentials)
 

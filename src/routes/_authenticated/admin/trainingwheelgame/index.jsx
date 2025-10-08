@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import {
   QueryClient,
@@ -6,16 +6,18 @@ import {
   useQuery,
 } from '@tanstack/react-query'
 import { useNavigate, useSearch, createFileRoute } from '@tanstack/react-router'
-import { IconLoader } from '@tabler/icons-react'
-import { Search } from 'lucide-react'
+import { Loader, Plus, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Header } from '@/components/layout/header'
 import { Show } from '../../../../shared/utils/Show'
-import { DataTable } from '../../student/features/tasks/-components/student-data-table'
+const DataTable = lazy(() => import("../../student/features/tasks/-components/student-data-table"))
+
+
 import { trainingWheelGamesSchemaAdmin } from '../layout/data/-schemas/trainingWheelGameSchemas'
 import { getDebounceInput, useSearchInput } from '../../../../utils/globalFunctions'
+import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
 
 const queryClient = new QueryClient()
 
@@ -129,20 +131,7 @@ function RouteComponent() {
               className="rounded-[8px] bg-[#2563eb] text-white hover:bg-[#1d4ed8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
             >
               Create Game
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="h-6 w-6 ml-2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15"
-                />
-              </svg>
+         <Plus/>
             </Button>
             <Show>
               <Show.When isTrue={true}>
@@ -163,7 +152,7 @@ function RouteComponent() {
                     className="rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
                   >
                     {isFetching ? (
-                      <IconLoader className="h-4 w-4 animate-spin text-[#2563eb]" />
+                      <Loader className="h-4 w-4 animate-spin text-[#2563eb]" />
                     ) : (
                       <Search className="h-4 w-4 text-[#2563eb]" />
                     )}
@@ -177,6 +166,7 @@ function RouteComponent() {
          <div className="min-h-screen bg-[#f8fafc]">
 
       <div className=" px-4 py-8">
+          <Suspense fallback={<DataTableSkeleton />}>
         <DataTable
           data={games}
           columns={trainingWheelGamesSchemaAdmin}
@@ -188,6 +178,7 @@ function RouteComponent() {
           handlePagination={handlePagination}
           paginationOptions={paginationOptions}
         />
+        </Suspense>
       </div>
     </div>
     </>

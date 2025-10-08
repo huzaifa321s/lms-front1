@@ -61,7 +61,7 @@ const TrendingDown = () => (
   </svg>
 );
 
-export function ChartBarDefault({ monthlyEnrollments }) {
+ function ChartBarDefault({ monthlyEnrollments }) {
   const chartConfig = {
     student: {
       label: 'Students',
@@ -81,7 +81,7 @@ export function ChartBarDefault({ monthlyEnrollments }) {
   const trendingUp = trend >= 0;
 
   return (
-    <div className="relative group">
+    <div className="relative group ">
       {/* Main Card */}
       <Card className="relative bg-white/95 backdrop-blur-sm">
         {/* Background decorative elements */}
@@ -191,32 +191,7 @@ export function ChartBarDefault({ monthlyEnrollments }) {
   );
 }
 
-export default function App() {
-  const [monthlyEnrollments, setMonthlyEnrollments] = useState({
-    pastSixMonths: ['January', 'February', 'March', 'April', 'May', 'June'],
-    monthlyCounts: [28, 35, 42, 38, 51, 58],
-  });
 
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] p-4 sm:p-8 font-sans antialiased">
-      <style>
-        {`
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-          body { font-family: 'Inter', sans-serif; }
-          .recharts-tooltip-wrapper {
-            z-index: 1000;
-          }
-        `}
-      </style>
-      <div className="w-full max-w-3xl mx-auto flex flex-col space-y-8">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent mb-2">
-            Dashboard Analytics
-          </h1>
-          <div className="w-24 h-1 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] rounded-full mx-auto"></div>
-        </div>
-        <ChartBarDefault monthlyEnrollments={monthlyEnrollments} />
-      </div>
-    </div>
-  );
-}
+
+
+export default ChartBarDefault

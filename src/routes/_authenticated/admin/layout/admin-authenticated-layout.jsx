@@ -15,33 +15,7 @@ import { SmallLoader } from '../../teacher/-layout/data/components/teacher-authe
 export function AuthenticatedLayout({ children }) {
   const defaultOpen = Cookies.get('sidebar_state') !== 'false'
   const selector = useSelector((state) => state.dialogSlice)
-  const dispatch = useDispatch()
-  // const initializeAxios = () => {
-  //   if (TOKEN && credentials) {
-  //     axios.defaults.headers.common['Authorization'] = `Bearer ${TOKEN}`
-  //     axios.interceptors.request.use(
-  //       function (config) {
-  //         if (!suspenseLoading.suspenseLoading) {
-  //           document.body.classList.add('loading-indicator')
-  //         }
-  //         return config
-  //       },
-  //       function (error) {
-  //         return Promise.reject(error)
-  //       }
-  //     )
-  //     axios.interceptors.response.use(
-  //       function (response) {
-  //         document.body.classList.remove('loading-indicator')
-  //         return response
-  //       },
-  //       function (error) {
-  //         document.body.classList.remove('loading-indicator')
-  //         return Promise.reject(error)
-  //       }
-  //     )
-  //   }
-  // }
+ 
 
   return (
     <SearchProvider>

@@ -4,13 +4,10 @@ import { useForm } from 'react-hook-form'
 import { useQueryClient } from '@tanstack/react-query'
 import {
   Link,
-  useLocation,
-  useNavigate,
   useRouter,
   useSearch,
 } from '@tanstack/react-router'
 import { BookOpen, Trophy, Users, Sparkles } from 'lucide-react'
-import { useDispatch } from 'react-redux'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -29,7 +26,7 @@ import { useAppUtils } from '../../../hooks/useAppUtils'
 import { handleLogin } from '../../../shared/config/reducers/student/studentAuthSlice'
 import { courseQueryOptions } from '../courses/$courseID'
 
-export function LoginForm({ className, ...props }) {
+export default function LoginForm({ className, ...props }) {
   const {
     register,
     handleSubmit,
@@ -45,7 +42,7 @@ export function LoginForm({ className, ...props }) {
   console.log('redirectTo', redirectTo)
   const queryClient = useQueryClient()
   const router = useRouter()
-  const handleAdminLogin = useCallback(
+  const handleStudentLogin = useCallback(
     async (data) => {
       setIsLoading(true)
       try {
@@ -181,7 +178,7 @@ export function LoginForm({ className, ...props }) {
 
           <CardContent className='px-6 pb-6'>
             <form
-              onSubmit={handleSubmit(handleAdminLogin)}
+              onSubmit={handleSubmit(handleStudentLogin)}
               className='space-y-5'
             >
               {/* Email Field */}

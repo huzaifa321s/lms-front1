@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { useNavigate } from "@tanstack/react-router"
-import { IconArrowRight, IconCircleCheck } from "@tabler/icons-react"
+import { ArrowRight, CircleCheck } from "lucide-react"
 
 export default function LevelCard({ level, setStep, selectedLevel }) {
   const navigate = useNavigate()
@@ -69,7 +69,7 @@ export default function LevelCard({ level, setStep, selectedLevel }) {
           {level.features.map((f, i) => (
             <li key={i} className="flex items-center gap-2 text-sm text-[#64748b]">
               <span className={`${themeColors.icon}`}>
-                <IconCircleCheck size={18} />
+                <CircleCheck size={18} />
               </span>
               <span
                 className={`${
@@ -100,7 +100,7 @@ export default function LevelCard({ level, setStep, selectedLevel }) {
           >
             <span className="flex items-center gap-2">
               Let’s Begin
-              {selectedLevel === level.title && <IconArrowRight size={18} />}
+              {selectedLevel === level.title && <ArrowRight size={18} />}
             </span>
           </Button>
         </div>

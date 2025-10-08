@@ -8,48 +8,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Pie } from "react-chartjs-2"
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";;
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
-// Chart.js configuration
-ChartJS.register(ArcElement, Tooltip, Legend);
+function ApexChart({ totalStudents = 0, totalTeachers = 0 }) {
+  const chartData = [
+    { name: "Teachers", value: totalTeachers, color: "#2563eb", border: "#1d4ed8" },
+    { name: "Students", value: totalStudents, color: "#10b981", border: "#0d9488" },
+  ];
 
- function ApexChart({ totalStudents = 0, totalTeachers = 0 }) {
-  const chartConfig = {
-  type: 'pie',
-  data: {
-    labels: ["Teachers", "Students"],
-    datasets: [
-      {
-        label: "Registered Users",
-        data: [totalTeachers, totalStudents],
-        backgroundColor: ["#2563eb", "#10b981"], // Primary Blue, Success Green
-        borderColor: ["#1d4ed8", "#0d9488"],
-        borderWidth: 2,
-        hoverOffset: 15,
-      },
-    ],
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "bottom",
-        labels: {
-          color: "#1e293b", // Primary text
-          font: { weight: "600" },
-        },
-      },
-      tooltip: {
-        enabled: true,
-        backgroundColor: "#2563eb",
-        titleColor: "#ffffff",
-        bodyColor: "#ffffff",
-      },
-    },
-  },
-};
   return (
     <section className="space-y-6">
       {/* Chart Card */}
@@ -64,10 +37,47 @@ ChartJS.register(ArcElement, Tooltip, Legend);
         </CardHeader>
 
         <CardContent className="flex-1 h-[400px] md:h-[500px]">
-          <div className="relative w-full h-full">
-          <Pie data={chartConfig.data} options={chartConfig.options} />
-         
-          </div>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={chartData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                innerRadius={80}
+                outerRadius={150}
+                paddingAngle={4}
+              >
+                {chartData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={entry.color}
+                    stroke={entry.border}
+                    strokeWidth={2}
+                  />
+                ))}
+              </Pie>
+
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#2563eb",
+                  borderRadius: "12px",
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  color: "#fff",
+                }}
+                formatter={(value, name) => [`${value}`, `${name}`]}
+              />
+              <Legend
+                verticalAlign="bottom"
+                align="center"
+                iconType="circle"
+                formatter={(value) => (
+                  <span style={{ color: "#1e293b", fontWeight: 600 }}>{value}</span>
+                )}
+              />
+            </PieChart>
+          </ResponsiveContainer>
         </CardContent>
 
         <CardFooter className="flex-col gap-2 text-sm">
@@ -94,5 +104,4 @@ ChartJS.register(ArcElement, Tooltip, Legend);
   );
 }
 
-
-export default ApexChart
+export default ApexChart;

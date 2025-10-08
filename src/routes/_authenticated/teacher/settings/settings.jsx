@@ -1,14 +1,11 @@
 import { Outlet } from '@tanstack/react-router'
-import {
-  IconPalette,
-  IconUser,
-} from '@tabler/icons-react'
 import { Separator } from '@/components/ui/separator'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { Button } from '@/components/ui/button'
 import SidebarNav from './-components/_side-bar_nav'
 import { TopNav } from "@/components/layout/top-nav"
+import { ArrowLeft, BookOpen, Gamepad, LayoutDashboard, SettingsIcon, User } from 'lucide-react'
 export default function Settings() {
   return (
     <>
@@ -17,20 +14,7 @@ export default function Settings() {
         <TopNav links={topNav} />
           <div className='absolute right-0 px-5 flex items-center gap-1'>
             <Button size='sm' onClick={() => window.history.back()} variant="outline">
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='black'
-                className='h-6 w-6'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3'
-                />
-              </svg>
+          <ArrowLeft/>
             </Button>
           </div>
       </Header>
@@ -61,7 +45,7 @@ export default function Settings() {
 const sidebarNavItems = [
   {
     title: 'Profile',
-    icon: <IconUser size={18} />,
+    icon: <User size={18} />,
     href: '/teacher/settings',
   },
 
@@ -74,23 +58,27 @@ const topNav = [
     href: '/teacher/',
     isActive: false,
     disabled: false,
+    icon:LayoutDashboard
   },
   {
     title: 'Courses',
     href: '/teacher/courses',
     isActive: false,
     disabled: false,
+    icon:BookOpen
   },
   {
     title: 'Games',
     href: '/teacher/trainingwheelgame',
     isActive: false,
     disabled: false,
+    icon:Gamepad
   },
   {
     title: 'Settings',
     href: '/teacher/settings',
     isActive: true,
     disabled: false,
+    icon:SettingsIcon
   },
 ]

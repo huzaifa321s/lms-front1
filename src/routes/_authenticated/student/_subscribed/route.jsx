@@ -1,127 +1,41 @@
-import { useEffect } from 'react'
-import axios from 'axios'
-import { Outlet, useNavigate, useLocation } from '@tanstack/react-router'
-import { createFileRoute } from '@tanstack/react-router'
-import { useSelector, useDispatch } from 'react-redux'
-import { openModal } from '../../../../shared/config/reducers/student/studentDialogSlice'
-
-// Subscription routes that don't require checks
-const SUBSCRIPTION_ROUTES = [
-  '/student/subscription-plans',
-  '/student/resubscription-plans',
-  '/student/failed-subscription',
-  '/student',
-]
+import { createFileRoute, redirect } from '@tanstack/react-router'
+import { Outlet } from '@tanstack/react-router'
+import store from '../../../../shared/config/store/store'
 
 export const Route = createFileRoute('/_authenticated/student/_subscribed')({
+  beforeLoad: async () => {
+    const state = store.getState()
+    const subscription = state.studentAuth.subscription
+
+    // ❌ Missing subscription → redirect to resubscription plan
+    if (!subscription || !subscription.subscriptionId) {
+      throw redirect({
+        to: '/student/resubscription-plans',
+      })
+    }
+
+    // ⏳ Pending subscription → go to activation page
+    if (subscription.status === 'pending') {
+      throw redirect({
+        to: '/student/activate-subscription',
+      })
+    }
+
+    // 💀 Failed payments → failed-subscription page
+    if (
+      ['incomplete', 'incomplete_expired', 'past_due', 'unpaid'].includes(
+        subscription.status
+      )
+    ) {
+      throw redirect({
+        to: '/student/failed-subscription',
+      })
+    }
+  },
+
   component: RouteComponent,
 })
 
-function hideLoader() {
-  const loader = document.getElementById('custom-loader')
-  if (loader) {
-    loader.remove()
-  }
-}
-
 function RouteComponent() {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const dispatch = useDispatch()
-  const subscription = useSelector((state) => state.studentAuth.subscription)
-
-  useEffect(() => {
-    const requestInterceptor = axios.interceptors.request.use(
-      function (config) {
-        // showLoader()
-        return config
-      },
-      function (error) {
-        return Promise.reject(error)
-      }
-    )
-
-    const responseInterceptor = axios.interceptors.response.use(
-      function (response) {
-        hideLoader()
-        return response
-      },
-      function (error) {
-        hideLoader()
-        return Promise.reject(error)
-      }
-    )
-
-    // Cleanup interceptors when component unmounts
-    return () => {
-      axios.interceptors.request.eject(requestInterceptor)
-      axios.interceptors.response.eject(responseInterceptor)
-    }
-  }, [])
-
-  useEffect(() => {
-    // Skip checks for subscription routes
-    if (SUBSCRIPTION_ROUTES.includes(location.pathname)) {
-      return
-    }
-
-    // Missing subscription
-    if (!subscription || !subscription?.subscriptionId) {
-      dispatch(
-        openModal({
-          type: 'subscription-modal',
-          props: { redirect: location.pathname },
-        })
-      )
-      navigate({ to: '/student', replace: true })
-      return
-    }
-
-    // Pending subscription
-    if (subscription?.subscriptionId && subscription.status === 'pending') {
-      dispatch(
-        openModal({
-          type: 'activate-subscription-modal',
-          props: { redirect: '/student' },
-        })
-      )
-      navigate({ to: '/student', replace: true })
-      return
-    }
-
-    // Failed states
-    if (
-      ['incomplete', 'incomplete_expired', 'past_due', 'unpaid'].includes(
-        subscription?.status
-      )
-    ) {
-      navigate({
-        to: '/student/failed-subscription',
-        replace: true,
-        search: { redirect: location.pathname },
-      })
-      return
-    }
-
-    // Cleanup to prevent multiple dispatches
-    return () => {
-      // Optional: Close modal if needed
-      // dispatch(closeModal());
-    }
-  }, [subscription, location.pathname, dispatch, navigate])
-
-  // Fallback UI for invalid subscription state
-  if (!subscription) {
-    return (
-      <div className='flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50'>
-        <div className='text-center'>
-          <p className='text-lg text-slate-600'>
-            Checking subscription status...
-          </p>
-        </div>
-      </div>
-    )
-  }
-
-  return <Outlet />
+  return <Outlet /> // safe to render now
 }

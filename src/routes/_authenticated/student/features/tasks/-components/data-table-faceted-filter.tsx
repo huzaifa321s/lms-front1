@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { CheckIcon, PlusCircledIcon } from '@radix-ui/react-icons'
 import { Column } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
@@ -20,6 +19,7 @@ import {
 } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 import { Status, StatusIndicator, StatusLabel } from '@/components/ui/shadcn-io/status';
+import { Check, Plus } from 'lucide-react'
 
 
 interface DataTableFacetedFilterProps<TData, TValue> {
@@ -43,7 +43,7 @@ export function DataTableFacetedFilter<TData, TValue>({
     <Popover>
       <PopoverTrigger asChild>
         <Button variant='outline' size='sm' className='h-8 border-dashed'>
-          <PlusCircledIcon className='mr-2 h-4 w-4' />
+          <Plus className='mr-2 h-4 w-4' />
           {title}
           {selectedValues?.size > 0 && (
             <>
@@ -108,7 +108,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                           : 'opacity-50 [&_svg]:invisible'
                       )}
                     >
-                      <CheckIcon className={cn('h-4 w-4')} />
+                      <Check className={cn('h-4 w-4')} />
                     </div>
                     {option.icon && (
                       <Status status={option.label} key={option.label} >

@@ -30,7 +30,7 @@ import {
   FileText,
   ArrowLeft,
 } from 'lucide-react'
-import { useSelector } from 'react-redux'
+import { shallowEqual, useSelector } from 'react-redux'
 import { toast } from 'sonner'
 import {
   Accordion,
@@ -45,8 +45,6 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { coursesQueryOptions } from '.'
 import { useAppUtils } from '../../../hooks/useAppUtils'
 import { handleCourseEnrollment } from '../../../shared/config/reducers/student/studentAuthSlice'
-import { openModal } from '../../../shared/config/reducers/student/studentDialogSlice'
-import store from '../../../shared/config/store/store'
 import {
   checkSubscriptionStatus,
   getCookie,
@@ -107,8 +105,9 @@ export const Route = createFileRoute('/student/courses/$courseID')({
           search: { redirect: `/student/courses/${params.courseID}` },
         })
       } else if (
-        subscription?.status !== 'active' &&
-        subscription?.subscriptionId
+        subscription?.status === 'past_due' ||
+        subscription?.status === 'unpaid' ||
+        subscription?.status === 'incomplete'
       ) {
         throw redirect({
           to: '/student/failed-subscription',
@@ -133,15 +132,40 @@ export const Route = createFileRoute('/student/courses/$courseID')({
 
 function RouteComponent() {
   const params = useParams({ from: '/student/courses/$courseID' })
-  const credentials = useSelector((state) => state.studentAuth.credentials)
-  const subscription = useSelector((state) => state.studentAuth.subscription)
-
+  const credentials = useSelector(
+    (state) => state.studentAuth.credentials,
+    shallowEqual
+  )
+  const subscription = useSelector(
+    (state) => state.studentAuth.subscription,
+    shallowEqual
+  )
+  console.log('crd', credentials)
   const [openMaterial, setOpenMaterial] = useState(null)
   const data = useLoaderData({ from: '/student/courses/$courseID' })
-  console.log('data', data)
+
   const course = data?.course
   const isEnrolled = data?.isEnrolled
-  const isLoggedIn = data?.isLoggedIn
+  const getLoggedStatus = () => {
+    if(data?.isLoggedIn === false){
+      if(credentials === null){
+        return false
+      }else{
+        return false
+      }
+    }else if(data?.isLoggedIn === true){
+     if(credentials !== null){
+        return true
+     }else{
+      return false
+     }
+    }
+  }
+  const isLoggedIn = getLoggedStatus()
+    
+  
+
+  console.log('is', isLoggedIn)
   const enrolledStudents = data?.enrolledStudents || 0
   const [activeTab, setActiveTab] = useState('overview')
 
@@ -226,71 +250,62 @@ function RouteComponent() {
   const baseMaterialUrl = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses/material/`
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9]'>
+    <div className='page-bg'>
       {/* Enhanced Hero Section */}
-      <div className='relative overflow-hidden bg-gradient-to-br from-[#2563eb] to-[#1d4ed8] text-white'>
+      <div className='hero-bg'>
         <div className='absolute inset-0 overflow-hidden'>
-          <div className='absolute -top-40 -right-40 h-80 w-80 rounded-full bg-gradient-to-br from-white/10 to-white/5 blur-3xl'></div>
-          <div className='absolute -bottom-20 -left-20 h-60 w-60 rounded-full bg-gradient-to-br from-[#f59e0b]/20 to-[#d97706]/10 blur-2xl'></div>
+          <div className='blur-circle-white -top-40 -right-40 h-80 w-80'></div>
+          <div className='blur-circle-amber -bottom-20 -left-20 h-60 w-60'></div>
         </div>
 
-        <div className='relative mx-auto max-w-7xl px-6 py-12'>
+        <div className='container-max'>
           <Button
             size='sm'
             variant='outline'
-            className='group mb-6 border-2 border-white/30 bg-white/10 text-white backdrop-blur-sm transition-all duration-300 hover:border-white/50 hover:bg-white/20 hover:shadow-lg'
+            className='btn-outline-white'
             onClick={() => navigate({ to: '/student/courses' })}
           >
-            <ArrowLeft className='h-4 w-4 transition-transform duration-200 group-hover:-translate-x-1' />
+            <ArrowLeft className='icon-transition' />
             <span className='ml-2 hidden font-medium sm:inline'>
               Back to Courses
             </span>
           </Button>
 
-          <div className='grid grid-cols-1 items-center gap-12 lg:grid-cols-2'>
+          <div className='course-grid'>
             <div className='space-y-6'>
               <div className='flex items-center gap-3'>
-                <div className='flex items-center gap-2 rounded-full border border-white/20 bg-white/15 px-4 py-2 text-sm font-semibold backdrop-blur-sm'>
+                <div className='badge-category'>
                   <BookOpen className='h-4 w-4' />
                   <span>{course?.category?.name || 'N/A'}</span>
                 </div>
                 {isEnrolled && (
-                  <div className='flex items-center gap-2 rounded-full border border-[#10b981]/30 bg-[#10b981]/20 px-4 py-2 text-sm font-semibold backdrop-blur-sm'>
+                  <div className='badge-enrolled'>
                     <CheckCircle className='h-4 w-4 text-[#10b981]' />
-                    <span className='text-[#10b981]'>Enrolled</span>
+                    <span>Enrolled</span>
                   </div>
                 )}
               </div>
-              <h1 className='text-4xl leading-tight font-bold lg:text-5xl'>
-                {course.name}
-              </h1>
-              <p className='line-clamp-3 text-xl leading-relaxed text-white/90'>
-                {course.description}
-              </p>
-              <div className='flex flex-wrap items-center gap-6 text-sm'>
-                <div className='flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm'>
+              <h1 className='course-title'>{course.name}</h1>
+              <p className='course-desc'>{course.description}</p>
+              <div className='course-info'>
+                <div className='course-info-item'>
                   <Users className='h-4 w-4' />
-                  <span className='font-medium'>
-                    {enrolledStudents} students
-                  </span>
+                  <span>{enrolledStudents} students</span>
                 </div>
-                <div className='flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm'>
+                <div className='course-info-item'>
                   <FileText className='h-4 w-4' />
-                  <span className='font-medium'>
-                    {course.material?.length || 0} materials
-                  </span>
+                  <span>{course.material?.length || 0} materials</span>
                 </div>
-
                 {!isLoggedIn && (
-                  <div className='flex items-center gap-2 rounded-full border border-yellow-200 bg-white px-4 py-2 text-sm font-medium text-red-500'>
+                  <div className='badge-locked'>
                     <Lock className='h-4 w-4' />
                     Login required
                   </div>
                 )}
               </div>
             </div>
-            <div className='relative'>
-              <div className='absolute inset-0 rounded-[12px] bg-gradient-to-br from-[#f59e0b]/20 to-transparent'></div>
+            <div className='image-container'>
+              <div className='image-overlay'></div>
               <img
                 src={
                   course?.coverImage
@@ -298,87 +313,72 @@ function RouteComponent() {
                     : defaultCover
                 }
                 alt={course.name}
-                className='w-full rounded-[12px] border border-white/20 shadow-2xl'
+                className='course-image'
                 loading='lazy'
               />
             </div>
           </div>
         </div>
       </div>
-      <div className='mx-auto max-w-7xl px-6 py-8'>
-        <div className='grid grid-cols-1 gap-8 lg:grid-cols-3'>
+      <div className='container-max py-8'>
+        <div className='main-grid'>
           <div className='space-y-6 lg:col-span-2'>
             <Tabs
               value={activeTab}
               onValueChange={setActiveTab}
-              className='w-full'
+              className='tabs-container'
             >
-              <TabsList className='grid w-full grid-cols-3 rounded-[12px] border border-[#e2e8f0] bg-white p-1 shadow-[0_4px_6px_rgba(0,0,0,0.05)]'>
-                <TabsTrigger
-                  value='overview'
-                  className='rounded-[8px] font-medium text-[#64748b] transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#2563eb] data-[state=active]:to-[#1d4ed8] data-[state=active]:text-white data-[state=active]:shadow-sm'
-                >
+              <TabsList className='tabs-list'>
+                <TabsTrigger value='overview' className='tabs-trigger'>
                   Overview
                 </TabsTrigger>
-                <TabsTrigger
-                  value='materials'
-                  className='rounded-[8px] font-medium text-[#64748b] transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#2563eb] data-[state=active]:to-[#1d4ed8] data-[state=active]:text-white data-[state=active]:shadow-sm'
-                >
+                <TabsTrigger value='materials' className='tabs-trigger'>
                   Materials
                 </TabsTrigger>
-                <TabsTrigger
-                  value='instructor'
-                  className='rounded-[8px] font-medium text-[#64748b] transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#2563eb] data-[state=active]:to-[#1d4ed8] data-[state=active]:text-white data-[state=active]:shadow-sm'
-                >
+                <TabsTrigger value='instructor' className='tabs-trigger'>
                   Instructor
                 </TabsTrigger>
               </TabsList>
 
               <TabsContent value='overview' className='space-y-6'>
-                <Card className='rounded-[12px] border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:shadow-[0_8px_25px_rgba(0,0,0,0.12)]'>
-                  <CardHeader className='border-b border-[#f1f5f9]'>
-                    <CardTitle className='flex items-center gap-3 text-[#1e293b]'>
-                      <div className='flex h-10 w-10 items-center justify-center rounded-full bg-[#2563eb]/10'>
+                <Card className='card-rounded'>
+                  <CardHeader className='card-header'>
+                    <CardTitle className='card-title'>
+                      <div className='card-icon'>
                         <BookOpen className='h-5 w-5 text-[#2563eb]' />
                       </div>
                       Course Description
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className='p-6'>
+                  <CardContent className='card-content'>
                     <p className='mb-8 text-lg leading-relaxed text-[#64748b]'>
                       {course.description}
                     </p>
-                    <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
-                      <div className='rounded-[12px] border border-[#10b981]/10 bg-gradient-to-br from-[#10b981]/5 to-[#059669]/5 p-6 text-center'>
-                        <div className='mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[#10b981]'>
+                    <div className='stat-grid'>
+                      <div className='stat-green'>
+                        <div className='stat-icon bg-[#10b981]'>
                           <Users className='h-6 w-6 text-white' />
                         </div>
-                        <div className='text-2xl font-bold text-[#1e293b]'>
-                          {enrolledStudents}
-                        </div>
-                        <div className='text-sm font-medium text-[#64748b]'>
-                          Students Enrolled
-                        </div>
+                        <div className='stat-value'>{enrolledStudents}</div>
+                        <div className='stat-label'>Students Enrolled</div>
                       </div>
-                      <div className='rounded-[12px] border border-[#2563eb]/10 bg-gradient-to-br from-[#2563eb]/5 to-[#1d4ed8]/5 p-6 text-center'>
-                        <div className='mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[#2563eb]'>
+                      <div className='stat-blue'>
+                        <div className='stat-icon bg-[#2563eb]'>
                           <FileText className='h-6 w-6 text-white' />
                         </div>
-                        <div className='text-2xl font-bold text-[#1e293b]'>
+                        <div className='stat-value'>
                           {course.material?.length || 0}
                         </div>
-                        <div className='text-sm font-medium text-[#64748b]'>
-                          Learning Materials
-                        </div>
+                        <div className='stat-label'>Learning Materials</div>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
               </TabsContent>
 
-              <TabsContent value='materials' className='space-y-4'>
+              <TabsContent value='materials' className='accordion-container'>
                 {!isLoggedIn ? (
-                  <div className='rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-8 text-center'>
+                  <div className='locked-section'>
                     <Lock className='mx-auto mb-3 h-8 w-8 text-slate-500' />
                     <p className='text-lg font-semibold text-slate-700'>
                       Please login to view materials
@@ -399,82 +399,71 @@ function RouteComponent() {
                     </Button>
                   </div>
                 ) : (
-                  <Accordion type='multiple' className='space-y-4'>
+                  <Accordion type='multiple' className='accordion-container'>
+                    {console.log('oourse.material', course.material)}
                     {course.material?.map((material, index) => (
                       <AccordionItem
                         key={material._id}
                         value={`material-${material._id}`}
-                        className='rounded-xl border border-slate-200 bg-white shadow-md transition-all hover:shadow-lg'
+                        className='accordion-item'
                       >
-                        {/* Accordion Header */}
-                        <AccordionTrigger className='px-6 py-4 hover:no-underline [&[data-state=open]>div]:text-blue-600'>
-                          <div className='flex w-full items-center justify-between'>
+                        <AccordionTrigger className='accordion-trigger'>
+                          <div className='material-header'>
                             <div className='flex items-center gap-4'>
-                              <div className='flex h-10 w-14 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white'>
-                                {index + 1}
-                              </div>
+                              <div className='material-number'>{index + 1}</div>
                               <div className='text-left'>
-                                <h3 className='text-base font-semibold text-slate-800'>
+                                <h3 className='material-title'>
                                   {material.title}
                                 </h3>
-                                <p className='mt-1 line-clamp-1 text-sm text-slate-500'>
+                                <p className='material-desc'>
                                   {material.description}
                                 </p>
                               </div>
                             </div>
-
                             {!isEnrolled && (
-                              <div className='flex items-center gap-2 rounded-full border border-red-200 bg-red-100 px-3 py-1'>
+                              <div className='material-locked'>
                                 <Lock className='h-4 w-4 text-red-500' />
-                                <span className='text-xs font-medium text-red-500'>
-                                  Locked
-                                </span>
+                                <span>Locked</span>
                               </div>
                             )}
                           </div>
                         </AccordionTrigger>
 
-                        {/* Accordion Content */}
                         <AccordionContent className='px-6 pb-6'>
                           <div
-                            className={`rounded-xl p-5 transition-all ${
+                            className={
                               isEnrolled
-                                ? 'border border-slate-200 bg-slate-50 hover:bg-slate-100'
-                                : 'border-2 border-red-200 bg-red-50/60'
-                            }`}
+                                ? 'material-card'
+                                : 'material-card-locked'
+                            }
                           >
                             <div className='flex flex-wrap items-center justify-between gap-4'>
-                              {/* Media Info */}
-                              <div className='flex items-center gap-4'>
+                              <div className='material-info'>
                                 <div
-                                  className={`flex h-12 w-12 items-center justify-center rounded-lg ${
-                                    isEnrolled ? 'bg-blue-600' : 'bg-slate-400'
-                                  }`}
+                                  className={`material-icon ${isEnrolled ? 'bg-blue-600' : 'bg-slate-400'}`}
                                 >
                                   {getMediaIcon(material.type)}
                                 </div>
                                 <div>
-                                  <h4 className='font-semibold text-slate-800'>
+                                  <h4 className='material-title'>
                                     {material.title}
                                   </h4>
                                   <p className='mt-1 line-clamp-2 text-sm text-slate-600'>
                                     {material.description}
                                   </p>
                                   <div className='mt-2 flex items-center gap-2'>
-                                    <span className='rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600'>
+                                    <span className='material-type'>
                                       {material.type.charAt(0).toUpperCase() +
                                         material.type.slice(1)}
                                     </span>
                                     {!isEnrolled && (
-                                      <span className='rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-500'>
+                                      <span className='material-locked-badge'>
                                         Enrollment Required
                                       </span>
                                     )}
                                   </div>
                                 </div>
                               </div>
-
-                              {/* Actions */}
                               <div>
                                 {!isEnrolled ? (
                                   <div className='flex items-center gap-2 text-slate-400'>
@@ -493,7 +482,7 @@ function RouteComponent() {
                                           : material._id
                                       )
                                     }
-                                    className='flex items-center gap-2 rounded-lg bg-emerald-500 text-white shadow-sm hover:bg-emerald-600'
+                                    className='material-action'
                                   >
                                     <Play className='h-3 w-3' />
                                     {openMaterial === material._id
@@ -503,10 +492,8 @@ function RouteComponent() {
                                 )}
                               </div>
                             </div>
-
-                            {/* Locked Alert */}
                             {!isEnrolled && (
-                              <div className='mt-4 rounded-lg border border-red-200 bg-red-50 p-3'>
+                              <div className='material-alert'>
                                 <p className='text-sm font-medium text-red-600'>
                                   <Lock className='mr-2 inline h-4 w-4' />
                                   You need to enroll in this course to access
@@ -514,10 +501,8 @@ function RouteComponent() {
                                 </p>
                               </div>
                             )}
-
-                            {/* ✅ Show material inside accordion if clicked */}
                             {isEnrolled && openMaterial === material._id && (
-                              <div className='mt-4 overflow-hidden rounded-lg border border-slate-200'>
+                              <div className='material-content'>
                                 {material.type === 'application' && (
                                   <iframe
                                     src={`${baseMaterialUrl}${material.media}`}
@@ -545,10 +530,9 @@ function RouteComponent() {
                         </AccordionContent>
                       </AccordionItem>
                     ))}
-
                     {course.material?.length === 0 && (
-                      <div className='flex flex-col items-center justify-center rounded-[12px] border-2 border-dashed border-[#e2e8f0] bg-[#f8fafc] px-6 py-12'>
-                        <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f1f5f9]'>
+                      <div className='no-materials'>
+                        <div className='no-materials-icon'>
                           <BookOpen className='h-8 w-8 text-[#94a3b8]' />
                         </div>
                         <h3 className='mb-2 text-lg font-semibold text-[#64748b]'>
@@ -564,54 +548,48 @@ function RouteComponent() {
                 )}
               </TabsContent>
 
-              <TabsContent value='instructor'>
-                <Card className='rounded-[12px] border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:shadow-[0_8px_25px_rgba(0,0,0,0.12)]'>
-                  <CardContent className='p-8'>
-                    <div className='flex items-start gap-8'>
-                      <Avatar className='h-24 w-24 border-4 border-[#e2e8f0]'>
+              <TabsContent value='instructor' className='space-y-6'>
+                <Card className='card-rounded'>
+                  <CardContent className='card-content p-8'>
+                    <div className='instructor-card'>
+                      <Avatar className='instructor-avatar'>
                         <AvatarImage
                           src={course.instructor.profile || '/placeholder.svg'}
                         />
-                        <AvatarFallback className='bg-[#2563eb] text-lg font-bold text-white'>
+                        <AvatarFallback className='instructor-fallback'>
                           {course.instructor.firstName.charAt(0) +
                             course.instructor.lastName.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
                       <div className='flex-1 space-y-6'>
                         <div>
-                          <h3 className='text-3xl font-bold text-[#1e293b]'>
+                          <h3 className='instructor-name'>
                             {course.instructor.firstName +
                               ' ' +
                               course.instructor.lastName}
                           </h3>
-                          <p className='mt-2 text-lg leading-relaxed text-[#64748b]'>
+                          <p className='instructor-bio'>
                             {course.instructor.bio || 'No bio available.'}
                           </p>
                         </div>
-                        <div className='grid grid-cols-1 gap-6 md:grid-cols-3'>
-                          <div className='rounded-[12px] border border-[#2563eb]/10 bg-[#2563eb]/5 p-4 text-center'>
+                        <div className='instructor-stats'>
+                          <div className='instructor-stat instructor-stat-blue'>
                             <div className='text-2xl font-bold text-[#2563eb]'>
                               {format(course.instructor.createdAt, 'PPP')}
                             </div>
-                            <div className='mt-1 text-sm font-medium text-[#64748b]'>
-                              Date Joined
-                            </div>
+                            <div className='stat-label'>Date Joined</div>
                           </div>
-                          <div className='rounded-[12px] border border-[#10b981]/10 bg-[#10b981]/5 p-4 text-center'>
+                          <div className='instructor-stat instructor-stat-green'>
                             <div className='text-2xl font-bold text-[#10b981]'>
                               {course.instructor.students?.length || 0}
                             </div>
-                            <div className='mt-1 text-sm font-medium text-[#64748b]'>
-                              Total Students
-                            </div>
+                            <div className='stat-label'>Total Students</div>
                           </div>
-                          <div className='rounded-[12px] border border-[#f59e0b]/10 bg-[#f59e0b]/5 p-4 text-center'>
+                          <div className='instructor-stat instructor-stat-amber'>
                             <div className='text-2xl font-bold text-[#f59e0b]'>
                               {course.instructor.courses?.length || 0}
                             </div>
-                            <div className='mt-1 text-sm font-medium text-[#64748b]'>
-                              Courses Created
-                            </div>
+                            <div className='stat-label'>Courses Created</div>
                           </div>
                         </div>
                       </div>
@@ -623,17 +601,15 @@ function RouteComponent() {
           </div>
 
           <div className='space-y-6'>
-            <Card className='sticky top-6 rounded-[12px] border border-[#e2e8f0] shadow-[0_8px_25px_rgba(0,0,0,0.12)]'>
-              <CardContent className='space-y-6 p-6'>
+            <Card className='enroll-card'>
+              <CardContent className='enroll-content'>
                 {!isLoggedIn ? (
-                  <div className='space-y-4 text-center'>
-                    <div className='mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-500/10'>
+                  <div className='enroll-locked'>
+                    <div className='enroll-icon'>
                       <Lock className='h-8 w-8 text-blue-600' />
                     </div>
                     <div>
-                      <p className='text-lg font-bold text-blue-600'>
-                        Please login to enroll
-                      </p>
+                      <p className='enroll-message'>Please login to enroll</p>
                       <Button
                         onClick={() =>
                           navigate({
@@ -644,21 +620,19 @@ function RouteComponent() {
                             },
                           })
                         }
-                        className='w-full rounded-[8px] bg-gradient-to-r from-blue-600 to-indigo-600 py-3 text-lg font-semibold text-white shadow hover:shadow-lg'
+                        className='enroll-btn'
                       >
                         Login to Continue
                       </Button>
                     </div>
                   </div>
                 ) : isEnrolled ? (
-                  <div className='space-y-4 text-center'>
-                    <div className='mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#10b981]/10'>
+                  <div className='enrolled-section'>
+                    <div className='enrolled-icon'>
                       <CheckCircle className='h-8 w-8 text-[#10b981]' />
                     </div>
-                    <p className='text-lg font-bold text-[#10b981]'>
-                      You're enrolled!
-                    </p>
-                    <p className='mt-1 text-sm text-[#64748b]'>
+                    <p className='enrolled-message'>You're enrolled!</p>
+                    <p className='enrolled-info'>
                       Start learning with the materials above
                     </p>
                   </div>
@@ -666,7 +640,7 @@ function RouteComponent() {
                   <Button
                     onClick={handleEnroll}
                     disabled={enrollCourseMutation.isPending}
-                    className='w-full rounded-[8px] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] py-4 text-lg font-semibold text-white shadow-sm hover:shadow-lg'
+                    className='enroll-btn'
                   >
                     {enrollCourseMutation.isPending
                       ? 'Enrolling...'
@@ -676,32 +650,26 @@ function RouteComponent() {
               </CardContent>
             </Card>
 
-            <Card className='rounded-[12px] border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)]'>
-              <CardHeader className='border-b border-[#f1f5f9]'>
-                <CardTitle className='text-lg font-semibold text-[#1e293b]'>
-                  Course Information
-                </CardTitle>
+            <Card className='course-info-card'>
+              <CardHeader className='info-header'>
+                <CardTitle className='info-title'>Course Information</CardTitle>
               </CardHeader>
-              <CardContent className='space-y-4 p-6'>
-                <div className='flex items-center justify-between'>
-                  <span className='font-medium text-[#64748b]'>Materials</span>
-                  <span className='rounded-full bg-[#f1f5f9] px-3 py-1 font-semibold text-[#1e293b]'>
+              <CardContent className='info-content'>
+                <div className='info-item'>
+                  <span className='info-label'>Materials</span>
+                  <span className='info-value'>
                     {course.material?.length || 0}
                   </span>
                 </div>
-                <div className='flex items-center justify-between'>
-                  <span className='font-medium text-[#64748b]'>
-                    Last Updated
-                  </span>
-                  <span className='font-semibold text-[#1e293b]'>
+                <div className='info-item'>
+                  <span className='info-label'>Last Updated</span>
+                  <span className='info-value'>
                     {format(course.updatedAt, 'PPP')}
                   </span>
                 </div>
-                <div className='flex items-center justify-between'>
-                  <span className='font-medium text-[#64748b]'>Students</span>
-                  <span className='rounded-full bg-[#10b981]/10 px-3 py-1 font-semibold text-[#1e293b] text-[#10b981]'>
-                    {enrolledStudents}
-                  </span>
+                <div className='info-item'>
+                  <span className='info-label'>Students</span>
+                  <span className='info-value-green'>{enrolledStudents}</span>
                 </div>
               </CardContent>
             </Card>

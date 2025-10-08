@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, useEffect, useRef, useState ,Suspense} from 'react'
 import axios from 'axios'
 import {
   queryOptions,
@@ -8,19 +8,20 @@ import {
   createLazyFileRoute,
   useSearch,
 } from '@tanstack/react-router'
-import { IconLoader } from '@tabler/icons-react'
-import { Search } from 'lucide-react'
+import { Loader, PlusIcon, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { Show } from '../../../../shared/utils/Show'
-import { DataTable } from '../../student/features/tasks/-components/student-data-table'
+const DataTable = lazy(() => import("../../student/features/tasks/-components/student-data-table"))
+
 import { blogsSchema } from '../layout/data/-schemas/blogsSchema'
 import { useAppUtils } from '../../../../hooks/useAppUtils'
 import { queryClient } from '../../../../utils/globalVars'
 import { getDebounceInput, useSearchInput } from '../../../../utils/globalFunctions'
+import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
 
 
 export const blogsQueryOptions = (deps) =>
@@ -127,20 +128,7 @@ function RouteComponent() {
               onClick={() => navigate({ to: '/admin/blogs/create' })}
             >
               Create Blog
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='currentColor'
-                className='h-6 w-6'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M12 4.5v15m7.5-7.5h-15'
-                />
-              </svg>
+              <PlusIcon/>
             </Button>
             <Show>
               <Show.When isTrue={true}>
@@ -160,7 +148,7 @@ function RouteComponent() {
                                  disabled={isFetching}
                                  >
                                  {isFetching ? (
-                                   <IconLoader className='animate animate-spin' />
+                                   <Loader className='animate animate-spin' />
                                  ) : (
                                    <Search />
                                  )}
@@ -172,6 +160,7 @@ function RouteComponent() {
         </div>
       </Header>
       <Main>
+          <Suspense fallback={<DataTableSkeleton />}>
         <DataTable
           data={blogs?.length > 0 ? blogs : []}
           columns={blogsSchema}
@@ -184,6 +173,7 @@ function RouteComponent() {
           setPagination={setPagination}
           handlePagination={handlePagination}
         />
+        </Suspense>
       </Main>
     </>
   )

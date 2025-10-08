@@ -23,13 +23,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { useDispatch, useSelector } from 'react-redux'
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { openModal } from '../../../../../../shared/config/reducers/student/studentDialogSlice'
 
 
 export function NavUser({ user }) {
   const { isMobile } = useSidebar()
-  const credentials = useSelector((state) => state.studentAuth.credentials)
+  const credentials = useSelector((state) => state.studentAuth.credentials,shallowEqual)
   const dispatch = useDispatch()
 
   return (

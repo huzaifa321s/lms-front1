@@ -45,10 +45,10 @@ export const studentsSchema = [
     size="xs"
   className={cn(
     
-    info.getValue() === "Daily" && "bg-gray-200 text-gray-800 dark:bg-gray-700",
-    info.getValue() === "Silver" && "bg-slate-400 text-white dark:bg-slate-500",
-    info.getValue() === "Gold" && "bg-yellow-500 text-white dark:bg-yellow-600",
-    info.getValue() === "Bronze" && "bg-amber-600 text-white dark:bg-amber-700"
+    info.getValue() === "Daily" && "bg-gray-200 text-gray-800 ",
+    info.getValue() === "Silver" && "bg-slate-400 text-white ",
+    info.getValue() === "Gold" && "bg-yellow-500 text-white ",
+    info.getValue() === "Bronze" && "bg-amber-600 text-white "
   )}
 >
   {info.getValue()}

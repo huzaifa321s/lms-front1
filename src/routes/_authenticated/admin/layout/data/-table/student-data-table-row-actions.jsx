@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { StudentSchema } from '../-schemas/coursesSchema'
 import { useAppUtils } from '../../../../../../hooks/useAppUtils'
 import { openModalAdmin } from '../../../../../../shared/config/reducers/admin/DialogSlice'
+import { Eye } from 'lucide-react'
 
 export function StudentDataTableRowActions({ row }) {
   const student = StudentSchema.parse(row.original)
@@ -21,7 +22,7 @@ export function StudentDataTableRowActions({ row }) {
           )
         }
       >
-        View Details
+      <Eye/>  View Details
       </Button>
     </>
   )

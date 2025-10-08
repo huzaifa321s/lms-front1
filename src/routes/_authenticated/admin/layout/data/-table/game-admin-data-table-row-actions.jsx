@@ -1,7 +1,6 @@
-import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+
 import { useNavigate, useSearch } from '@tanstack/react-router'
-import { IconTrash } from '@tabler/icons-react'
-import { EditIcon } from 'lucide-react'
+import {  EditIcon, Eye, MoreHorizontal, Trash } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { Button } from '@/components/ui/button'
 import {
@@ -38,6 +37,7 @@ export function DataTableRowActionsAdmin({ row }) {
           )
         }
       >
+        <Eye/>
         View
       </Button>
       <DropdownMenu modal={false}>
@@ -46,7 +46,7 @@ export function DataTableRowActionsAdmin({ row }) {
             variant='ghost'
             className='data-[state=open]:bg-muted flex h-8 w-8 p-0'
           >
-            <DotsHorizontalIcon className='h-4 w-4' />
+            <MoreHorizontal className='h-4 w-4' />
             <span className='sr-only'>Open menu</span>
           </Button>
         </DropdownMenuTrigger>
@@ -74,7 +74,7 @@ export function DataTableRowActionsAdmin({ row }) {
           >
             Delete
             <DropdownMenuShortcut>
-              <IconTrash size={16} />
+              <Trash size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuContent>

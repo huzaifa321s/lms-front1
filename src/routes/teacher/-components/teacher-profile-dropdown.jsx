@@ -1,4 +1,4 @@
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -17,7 +17,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Book, ChevronDown, LogOut, Settings, User } from 'lucide-react'
 import { openModal } from '../../../shared/config/reducers/student/studentDialogSlice'
 
-export function ProfileDropdown() {
+function ProfileDropdown() {
   const dispatch = useDispatch();
   
 
@@ -124,3 +124,6 @@ export function ProfileDropdown() {
     </>
   )
 }
+
+
+export default ProfileDropdown

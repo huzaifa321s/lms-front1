@@ -51,7 +51,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ChartBarLabelCustom({ spendingByYear }) {
+ function ChartBarLabelCustom({ spendingByYear }) {
 const years = useMemo(() => {
   if (spendingByYear && Object.keys(spendingByYear).length > 0) {
     return Object.keys(spendingByYear);
@@ -347,3 +347,6 @@ const years = useMemo(() => {
     </div>
   );
 }
+
+
+export default ChartBarLabelCustom

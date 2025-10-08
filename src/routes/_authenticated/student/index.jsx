@@ -3,10 +3,7 @@ import axios from 'axios'
 import { QueryClient, queryOptions } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
-import { Tabs, TabsContent } from '@/components/ui/tabs'
 import { Skeleton } from '@/components/ui/skeleton'
-
 import { getCookie } from '../../../shared/utils/helperFunction'
 import Dashboard from './features/dashboard/index'
 

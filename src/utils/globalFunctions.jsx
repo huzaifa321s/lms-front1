@@ -24,9 +24,7 @@ export const getRenderPaginationButtons = (
     pages,
     handlePageChange
 ) => {
-    console.log('currentPage ===>', currentPage)
-    console.log('pages ===>', pages)
-    console.log('handlePageChange ===>', handlePageChange)
+
     const buttons = []
     const maxButtons = 4
     const startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2))
@@ -103,8 +101,6 @@ export function useSearchInput(from, key = 'q') {
 }
 
 
-        // const response = await axios.get(`/web//course/getCourse?${queryStr}`)
-        // console.log('response ===>', response.data)
 export function exportToCSV(students) {
   if (!students || students.length === 0) return;
 

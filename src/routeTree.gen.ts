@@ -11,19 +11,15 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TeacherRouteRouteImport } from './routes/teacher/route'
 import { Route as StudentRouteRouteImport } from './routes/student/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TeacherRegisterRouteImport } from './routes/teacher/register'
-import { Route as TeacherLoginRouteImport } from './routes/teacher/login'
 import { Route as TeacherForgotPasswordRouteImport } from './routes/teacher/forgot-password'
-import { Route as StudentSubscriptionPlansRouteImport } from './routes/student/subscription-plans'
 import { Route as StudentResubscriptionPlansRouteImport } from './routes/student/resubscription-plans'
-import { Route as StudentRegisterRouteImport } from './routes/student/register'
-import { Route as StudentLoginRouteImport } from './routes/student/login'
 import { Route as StudentInstructorsRouteImport } from './routes/student/instructors'
 import { Route as StudentForgotPasswordRouteImport } from './routes/student/forgot-password'
 import { Route as StudentFailedSubscriptionRouteImport } from './routes/student/failed-subscription'
-import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminForgotPasswordRouteImport } from './routes/admin/forgot-password'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
@@ -74,6 +70,13 @@ import { Route as AuthenticatedAdminSamplePagesAuthForgotPasswordRouteImport } f
 import { Route as AuthenticatedAdminSamplePagesAuthStudentSignUpRouteImport } from './routes/_authenticated/admin/sample-pages/auth/student/sign-up'
 import { Route as AuthenticatedAdminSamplePagesAuthStudentcopySignUpRouteImport } from './routes/_authenticated/admin/sample-pages/auth/student copy/sign-up'
 
+const TeacherLoginLazyRouteImport = createFileRoute('/teacher/login')()
+const StudentSubscriptionPlansLazyRouteImport = createFileRoute(
+  '/student/subscription-plans',
+)()
+const StudentRegisterLazyRouteImport = createFileRoute('/student/register')()
+const StudentLoginLazyRouteImport = createFileRoute('/student/login')()
+const AdminLoginLazyRouteImport = createFileRoute('/admin/login')()
 const AuthenticatedTeacherTrainingwheelgameIndexLazyRouteImport =
   createFileRoute('/_authenticated/teacher/trainingwheelgame/')()
 const AuthenticatedStudentInvoicesIndexLazyRouteImport = createFileRoute(
@@ -133,6 +136,11 @@ const AuthenticatedAdminBlogsBlogDetailsBlogIDLazyRouteImport = createFileRoute(
   '/_authenticated/admin/blogs/blog-details/$blogID',
 )()
 
+const TeacherRouteRoute = TeacherRouteRouteImport.update({
+  id: '/teacher',
+  path: '/teacher',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StudentRouteRoute = StudentRouteRouteImport.update({
   id: '/student',
   path: '/student',
@@ -143,43 +151,52 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TeacherRegisterRoute = TeacherRegisterRouteImport.update({
-  id: '/teacher/register',
-  path: '/teacher/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TeacherLoginRoute = TeacherLoginRouteImport.update({
-  id: '/teacher/login',
-  path: '/teacher/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TeacherForgotPasswordRoute = TeacherForgotPasswordRouteImport.update({
-  id: '/teacher/forgot-password',
-  path: '/teacher/forgot-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StudentSubscriptionPlansRoute =
-  StudentSubscriptionPlansRouteImport.update({
+const TeacherLoginLazyRoute = TeacherLoginLazyRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => TeacherRouteRoute,
+} as any).lazy(() => import('./routes/teacher/login.lazy').then((d) => d.Route))
+const StudentSubscriptionPlansLazyRoute =
+  StudentSubscriptionPlansLazyRouteImport.update({
     id: '/subscription-plans',
     path: '/subscription-plans',
     getParentRoute: () => StudentRouteRoute,
-  } as any)
+  } as any).lazy(() =>
+    import('./routes/student/subscription-plans.lazy').then((d) => d.Route),
+  )
+const StudentRegisterLazyRoute = StudentRegisterLazyRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => StudentRouteRoute,
+} as any).lazy(() =>
+  import('./routes/student/register.lazy').then((d) => d.Route),
+)
+const StudentLoginLazyRoute = StudentLoginLazyRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => StudentRouteRoute,
+} as any).lazy(() => import('./routes/student/login.lazy').then((d) => d.Route))
+const AdminLoginLazyRoute = AdminLoginLazyRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/admin/login.lazy').then((d) => d.Route))
+const TeacherRegisterRoute = TeacherRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => TeacherRouteRoute,
+} as any)
+const TeacherForgotPasswordRoute = TeacherForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => TeacherRouteRoute,
+} as any)
 const StudentResubscriptionPlansRoute =
   StudentResubscriptionPlansRouteImport.update({
     id: '/resubscription-plans',
     path: '/resubscription-plans',
     getParentRoute: () => StudentRouteRoute,
   } as any)
-const StudentRegisterRoute = StudentRegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => StudentRouteRoute,
-} as any)
-const StudentLoginRoute = StudentLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => StudentRouteRoute,
-} as any)
 const StudentInstructorsRoute = StudentInstructorsRouteImport.update({
   id: '/instructors',
   path: '/instructors',
@@ -196,11 +213,6 @@ const StudentFailedSubscriptionRoute =
     path: '/failed-subscription',
     getParentRoute: () => StudentRouteRoute,
   } as any)
-const AdminLoginRoute = AdminLoginRouteImport.update({
-  id: '/admin/login',
-  path: '/admin/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminForgotPasswordRoute = AdminForgotPasswordRouteImport.update({
   id: '/admin/forgot-password',
   path: '/admin/forgot-password',
@@ -711,8 +723,8 @@ const AuthenticatedAdminSamplePagesAuthStudentcopySignUpRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/student': typeof AuthenticatedStudentSubscribedRouteRouteWithChildren
-  '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/teacher': typeof AuthenticatedTeacherRouteRouteWithChildren
+  '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
   '/otp': typeof authOtpRoute
   '/sign-in': typeof authSignInRoute
@@ -724,17 +736,17 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/admin/forgot-password': typeof AdminForgotPasswordRoute
-  '/admin/login': typeof AdminLoginRoute
   '/student/failed-subscription': typeof StudentFailedSubscriptionRoute
   '/student/forgot-password': typeof StudentForgotPasswordRoute
   '/student/instructors': typeof StudentInstructorsRoute
-  '/student/login': typeof StudentLoginRoute
-  '/student/register': typeof StudentRegisterRoute
   '/student/resubscription-plans': typeof StudentResubscriptionPlansRoute
-  '/student/subscription-plans': typeof StudentSubscriptionPlansRoute
   '/teacher/forgot-password': typeof TeacherForgotPasswordRoute
-  '/teacher/login': typeof TeacherLoginRoute
   '/teacher/register': typeof TeacherRegisterRoute
+  '/admin/login': typeof AdminLoginLazyRoute
+  '/student/login': typeof StudentLoginLazyRoute
+  '/student/register': typeof StudentRegisterLazyRoute
+  '/student/subscription-plans': typeof StudentSubscriptionPlansLazyRoute
+  '/teacher/login': typeof TeacherLoginLazyRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRouteRouteWithChildren
   '/student/settings': typeof AuthenticatedStudentSettingsRouteRouteWithChildren
   '/teacher/settings': typeof AuthenticatedTeacherSettingsRouteRouteWithChildren
@@ -796,6 +808,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/student': typeof AuthenticatedStudentIndexRoute
+  '/teacher': typeof AuthenticatedTeacherIndexRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/otp': typeof authOtpRoute
   '/sign-in': typeof authSignInRoute
@@ -807,20 +820,19 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/admin/forgot-password': typeof AdminForgotPasswordRoute
-  '/admin/login': typeof AdminLoginRoute
   '/student/failed-subscription': typeof StudentFailedSubscriptionRoute
   '/student/forgot-password': typeof StudentForgotPasswordRoute
   '/student/instructors': typeof StudentInstructorsRoute
-  '/student/login': typeof StudentLoginRoute
-  '/student/register': typeof StudentRegisterRoute
   '/student/resubscription-plans': typeof StudentResubscriptionPlansRoute
-  '/student/subscription-plans': typeof StudentSubscriptionPlansRoute
   '/teacher/forgot-password': typeof TeacherForgotPasswordRoute
-  '/teacher/login': typeof TeacherLoginRoute
   '/teacher/register': typeof TeacherRegisterRoute
+  '/admin/login': typeof AdminLoginLazyRoute
+  '/student/login': typeof StudentLoginLazyRoute
+  '/student/register': typeof StudentRegisterLazyRoute
+  '/student/subscription-plans': typeof StudentSubscriptionPlansLazyRoute
+  '/teacher/login': typeof TeacherLoginLazyRoute
   '/student/courses/$courseID': typeof StudentCoursesCourseIDRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
-  '/teacher': typeof AuthenticatedTeacherIndexRoute
   '/student/blogs': typeof StudentBlogsIndexRoute
   '/student/courses': typeof StudentCoursesIndexRoute
   '/student/quiz': typeof StudentQuizIndexRoute
@@ -876,6 +888,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/student': typeof StudentRouteRouteWithChildren
+  '/teacher': typeof TeacherRouteRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/student': typeof AuthenticatedStudentRouteRouteWithChildren
   '/_authenticated/teacher': typeof AuthenticatedTeacherRouteRouteWithChildren
@@ -890,17 +903,17 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/admin/forgot-password': typeof AdminForgotPasswordRoute
-  '/admin/login': typeof AdminLoginRoute
   '/student/failed-subscription': typeof StudentFailedSubscriptionRoute
   '/student/forgot-password': typeof StudentForgotPasswordRoute
   '/student/instructors': typeof StudentInstructorsRoute
-  '/student/login': typeof StudentLoginRoute
-  '/student/register': typeof StudentRegisterRoute
   '/student/resubscription-plans': typeof StudentResubscriptionPlansRoute
-  '/student/subscription-plans': typeof StudentSubscriptionPlansRoute
   '/teacher/forgot-password': typeof TeacherForgotPasswordRoute
-  '/teacher/login': typeof TeacherLoginRoute
   '/teacher/register': typeof TeacherRegisterRoute
+  '/admin/login': typeof AdminLoginLazyRoute
+  '/student/login': typeof StudentLoginLazyRoute
+  '/student/register': typeof StudentRegisterLazyRoute
+  '/student/subscription-plans': typeof StudentSubscriptionPlansLazyRoute
+  '/teacher/login': typeof TeacherLoginLazyRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRouteRouteWithChildren
   '/_authenticated/student/_subscribed': typeof AuthenticatedStudentSubscribedRouteRouteWithChildren
   '/_authenticated/student/settings': typeof AuthenticatedStudentSettingsRouteRouteWithChildren
@@ -965,8 +978,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/student'
-    | '/admin'
     | '/teacher'
+    | '/admin'
     | '/forgot-password'
     | '/otp'
     | '/sign-in'
@@ -978,17 +991,17 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/admin/forgot-password'
-    | '/admin/login'
     | '/student/failed-subscription'
     | '/student/forgot-password'
     | '/student/instructors'
+    | '/student/resubscription-plans'
+    | '/teacher/forgot-password'
+    | '/teacher/register'
+    | '/admin/login'
     | '/student/login'
     | '/student/register'
-    | '/student/resubscription-plans'
     | '/student/subscription-plans'
-    | '/teacher/forgot-password'
     | '/teacher/login'
-    | '/teacher/register'
     | '/admin/settings'
     | '/student/settings'
     | '/teacher/settings'
@@ -1050,6 +1063,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/student'
+    | '/teacher'
     | '/forgot-password'
     | '/otp'
     | '/sign-in'
@@ -1061,20 +1075,19 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/admin/forgot-password'
-    | '/admin/login'
     | '/student/failed-subscription'
     | '/student/forgot-password'
     | '/student/instructors'
+    | '/student/resubscription-plans'
+    | '/teacher/forgot-password'
+    | '/teacher/register'
+    | '/admin/login'
     | '/student/login'
     | '/student/register'
-    | '/student/resubscription-plans'
     | '/student/subscription-plans'
-    | '/teacher/forgot-password'
     | '/teacher/login'
-    | '/teacher/register'
     | '/student/courses/$courseID'
     | '/admin'
-    | '/teacher'
     | '/student/blogs'
     | '/student/courses'
     | '/student/quiz'
@@ -1129,6 +1142,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/student'
+    | '/teacher'
     | '/_authenticated/admin'
     | '/_authenticated/student'
     | '/_authenticated/teacher'
@@ -1143,17 +1157,17 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/admin/forgot-password'
-    | '/admin/login'
     | '/student/failed-subscription'
     | '/student/forgot-password'
     | '/student/instructors'
+    | '/student/resubscription-plans'
+    | '/teacher/forgot-password'
+    | '/teacher/register'
+    | '/admin/login'
     | '/student/login'
     | '/student/register'
-    | '/student/resubscription-plans'
     | '/student/subscription-plans'
-    | '/teacher/forgot-password'
     | '/teacher/login'
-    | '/teacher/register'
     | '/_authenticated/admin/settings'
     | '/_authenticated/student/_subscribed'
     | '/_authenticated/student/settings'
@@ -1217,6 +1231,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   StudentRouteRoute: typeof StudentRouteRouteWithChildren
+  TeacherRouteRoute: typeof TeacherRouteRouteWithChildren
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
   AuthenticatedStudentRouteRoute: typeof AuthenticatedStudentRouteRouteWithChildren
   AuthenticatedTeacherRouteRoute: typeof AuthenticatedTeacherRouteRouteWithChildren
@@ -1231,14 +1246,18 @@ export interface RootRouteChildren {
   errors500Route: typeof errors500Route
   errors503Route: typeof errors503Route
   AdminForgotPasswordRoute: typeof AdminForgotPasswordRoute
-  AdminLoginRoute: typeof AdminLoginRoute
-  TeacherForgotPasswordRoute: typeof TeacherForgotPasswordRoute
-  TeacherLoginRoute: typeof TeacherLoginRoute
-  TeacherRegisterRoute: typeof TeacherRegisterRoute
+  AdminLoginLazyRoute: typeof AdminLoginLazyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/teacher': {
+      id: '/teacher'
+      path: '/teacher'
+      fullPath: '/teacher'
+      preLoaderRoute: typeof TeacherRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/student': {
       id: '/student'
       path: '/student'
@@ -1253,53 +1272,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/teacher/register': {
-      id: '/teacher/register'
-      path: '/teacher/register'
-      fullPath: '/teacher/register'
-      preLoaderRoute: typeof TeacherRegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/teacher/login': {
       id: '/teacher/login'
-      path: '/teacher/login'
+      path: '/login'
       fullPath: '/teacher/login'
-      preLoaderRoute: typeof TeacherLoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/teacher/forgot-password': {
-      id: '/teacher/forgot-password'
-      path: '/teacher/forgot-password'
-      fullPath: '/teacher/forgot-password'
-      preLoaderRoute: typeof TeacherForgotPasswordRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof TeacherLoginLazyRouteImport
+      parentRoute: typeof TeacherRouteRoute
     }
     '/student/subscription-plans': {
       id: '/student/subscription-plans'
       path: '/subscription-plans'
       fullPath: '/student/subscription-plans'
-      preLoaderRoute: typeof StudentSubscriptionPlansRouteImport
-      parentRoute: typeof StudentRouteRoute
-    }
-    '/student/resubscription-plans': {
-      id: '/student/resubscription-plans'
-      path: '/resubscription-plans'
-      fullPath: '/student/resubscription-plans'
-      preLoaderRoute: typeof StudentResubscriptionPlansRouteImport
+      preLoaderRoute: typeof StudentSubscriptionPlansLazyRouteImport
       parentRoute: typeof StudentRouteRoute
     }
     '/student/register': {
       id: '/student/register'
       path: '/register'
       fullPath: '/student/register'
-      preLoaderRoute: typeof StudentRegisterRouteImport
+      preLoaderRoute: typeof StudentRegisterLazyRouteImport
       parentRoute: typeof StudentRouteRoute
     }
     '/student/login': {
       id: '/student/login'
       path: '/login'
       fullPath: '/student/login'
-      preLoaderRoute: typeof StudentLoginRouteImport
+      preLoaderRoute: typeof StudentLoginLazyRouteImport
+      parentRoute: typeof StudentRouteRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teacher/register': {
+      id: '/teacher/register'
+      path: '/register'
+      fullPath: '/teacher/register'
+      preLoaderRoute: typeof TeacherRegisterRouteImport
+      parentRoute: typeof TeacherRouteRoute
+    }
+    '/teacher/forgot-password': {
+      id: '/teacher/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/teacher/forgot-password'
+      preLoaderRoute: typeof TeacherForgotPasswordRouteImport
+      parentRoute: typeof TeacherRouteRoute
+    }
+    '/student/resubscription-plans': {
+      id: '/student/resubscription-plans'
+      path: '/resubscription-plans'
+      fullPath: '/student/resubscription-plans'
+      preLoaderRoute: typeof StudentResubscriptionPlansRouteImport
       parentRoute: typeof StudentRouteRoute
     }
     '/student/instructors': {
@@ -1322,13 +1348,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/student/failed-subscription'
       preLoaderRoute: typeof StudentFailedSubscriptionRouteImport
       parentRoute: typeof StudentRouteRoute
-    }
-    '/admin/login': {
-      id: '/admin/login'
-      path: '/admin/login'
-      fullPath: '/admin/login'
-      preLoaderRoute: typeof AdminLoginRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/admin/forgot-password': {
       id: '/admin/forgot-password'
@@ -1841,10 +1860,10 @@ interface StudentRouteRouteChildren {
   StudentFailedSubscriptionRoute: typeof StudentFailedSubscriptionRoute
   StudentForgotPasswordRoute: typeof StudentForgotPasswordRoute
   StudentInstructorsRoute: typeof StudentInstructorsRoute
-  StudentLoginRoute: typeof StudentLoginRoute
-  StudentRegisterRoute: typeof StudentRegisterRoute
   StudentResubscriptionPlansRoute: typeof StudentResubscriptionPlansRoute
-  StudentSubscriptionPlansRoute: typeof StudentSubscriptionPlansRoute
+  StudentLoginLazyRoute: typeof StudentLoginLazyRoute
+  StudentRegisterLazyRoute: typeof StudentRegisterLazyRoute
+  StudentSubscriptionPlansLazyRoute: typeof StudentSubscriptionPlansLazyRoute
   StudentCoursesCourseIDRoute: typeof StudentCoursesCourseIDRoute
   StudentBlogsIndexRoute: typeof StudentBlogsIndexRoute
   StudentCoursesIndexRoute: typeof StudentCoursesIndexRoute
@@ -1858,10 +1877,10 @@ const StudentRouteRouteChildren: StudentRouteRouteChildren = {
   StudentFailedSubscriptionRoute: StudentFailedSubscriptionRoute,
   StudentForgotPasswordRoute: StudentForgotPasswordRoute,
   StudentInstructorsRoute: StudentInstructorsRoute,
-  StudentLoginRoute: StudentLoginRoute,
-  StudentRegisterRoute: StudentRegisterRoute,
   StudentResubscriptionPlansRoute: StudentResubscriptionPlansRoute,
-  StudentSubscriptionPlansRoute: StudentSubscriptionPlansRoute,
+  StudentLoginLazyRoute: StudentLoginLazyRoute,
+  StudentRegisterLazyRoute: StudentRegisterLazyRoute,
+  StudentSubscriptionPlansLazyRoute: StudentSubscriptionPlansLazyRoute,
   StudentCoursesCourseIDRoute: StudentCoursesCourseIDRoute,
   StudentBlogsIndexRoute: StudentBlogsIndexRoute,
   StudentCoursesIndexRoute: StudentCoursesIndexRoute,
@@ -1875,6 +1894,22 @@ const StudentRouteRouteChildren: StudentRouteRouteChildren = {
 
 const StudentRouteRouteWithChildren = StudentRouteRoute._addFileChildren(
   StudentRouteRouteChildren,
+)
+
+interface TeacherRouteRouteChildren {
+  TeacherForgotPasswordRoute: typeof TeacherForgotPasswordRoute
+  TeacherRegisterRoute: typeof TeacherRegisterRoute
+  TeacherLoginLazyRoute: typeof TeacherLoginLazyRoute
+}
+
+const TeacherRouteRouteChildren: TeacherRouteRouteChildren = {
+  TeacherForgotPasswordRoute: TeacherForgotPasswordRoute,
+  TeacherRegisterRoute: TeacherRegisterRoute,
+  TeacherLoginLazyRoute: TeacherLoginLazyRoute,
+}
+
+const TeacherRouteRouteWithChildren = TeacherRouteRoute._addFileChildren(
+  TeacherRouteRouteChildren,
 )
 
 interface AuthenticatedAdminSettingsRouteRouteChildren {
@@ -2113,6 +2148,7 @@ const AuthenticatedTeacherRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   StudentRouteRoute: StudentRouteRouteWithChildren,
+  TeacherRouteRoute: TeacherRouteRouteWithChildren,
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
   AuthenticatedStudentRouteRoute: AuthenticatedStudentRouteRouteWithChildren,
   AuthenticatedTeacherRouteRoute: AuthenticatedTeacherRouteRouteWithChildren,
@@ -2127,10 +2163,7 @@ const rootRouteChildren: RootRouteChildren = {
   errors500Route: errors500Route,
   errors503Route: errors503Route,
   AdminForgotPasswordRoute: AdminForgotPasswordRoute,
-  AdminLoginRoute: AdminLoginRoute,
-  TeacherForgotPasswordRoute: TeacherForgotPasswordRoute,
-  TeacherLoginRoute: TeacherLoginRoute,
-  TeacherRegisterRoute: TeacherRegisterRoute,
+  AdminLoginLazyRoute: AdminLoginLazyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

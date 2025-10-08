@@ -37,13 +37,16 @@ export function AuthenticatedLayout({ children }) {
             'has-[main.fixed-main]:group-data-[scroll-locked=1]/body:h-svh'
           )}
         >
-          {selector.isOpen && 
-          <DialogWrapper
-            modalType={selector.type}
-            isOpen={selector.isOpen}
-            modalData={selector.props}
-            onClose={selector.onAction}
-          />}
+      {selector.isOpen && (
+            <Suspense fallback={<SmallLoader />}>
+              <DialogWrapper
+                modalType={selector.type}
+                isOpen={selector.isOpen}
+                modalData={selector.props}
+                onClose={selector.onAction}
+              />
+            </Suspense>
+          )}
           <Suspense fallback={ <SmallLoader/> }>{children ? children : <Outlet />}</Suspense>
         </div>
       </SidebarProvider>

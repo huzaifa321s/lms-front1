@@ -1,14 +1,12 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import axios from 'axios'
 import {
   QueryClient,
   queryOptions,
   useQuery,
-  useQueryClient,
 } from '@tanstack/react-query'
 import { useParams, useSearch, createFileRoute, useLoaderData } from '@tanstack/react-router'
-import { IconLoader } from '@tabler/icons-react'
-import { Mail, Phone, Search, BookOpen, Award, User } from 'lucide-react'
+import { Mail,Search, BookOpen, Award, User, ArrowLeft, Loader } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Header } from '@/components/layout/header'
@@ -18,7 +16,10 @@ import {
   useSearchInput,
 } from '../../../../utils/globalFunctions'
 import { coursesSchemaStudent } from '../features/tasks/-components/columns'
-import { DataTable } from '../features/tasks/-components/student-data-table'
+import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
+const DataTable = lazy(() => import("../features/tasks/-components/student-data-table"))
+
+
 
 const queryClient = new QueryClient()
 
@@ -244,22 +245,9 @@ function RouteComponent() {
             size="sm"
             variant="outline"
             onClick={() => window.history.back()}
-            className="ml-auto transform border-0  text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+            className="ml-auto transform border-0  text-black shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="white"
-              className="mr-2 h-4 w-4"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
-              />
-            </svg>
+          <ArrowLeft/>
             Back
           </Button>
         </div>
@@ -367,7 +355,7 @@ function RouteComponent() {
                     className="transform rounded-2xl border-0 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] px-4 py-2 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
                   >
                     {isFetching ? (
-                      <IconLoader className="h-4 w-4 animate-spin" />
+                      <Loader className="h-4 w-4 animate-spin" />
                     ) : (
                       <Search className="h-4 w-4" />
                     )}
@@ -379,6 +367,7 @@ function RouteComponent() {
 
             <div className="relative min-h-[400px]">
               {courses && courses.length > 0 ? (
+                    <Suspense fallback={<DataTableSkeleton />}>
                 <DataTable
                   data={courses}
                   totalPages={totalPages}
@@ -391,6 +380,7 @@ function RouteComponent() {
                   pagination={true}
                   paginationOptions={paginationOptions}
                 />
+                </Suspense>
               ) : (
                 <div className="flex flex-col items-center justify-center px-8 py-16">
                   <div className="mb-6 rounded-full bg-blue-100 p-6">

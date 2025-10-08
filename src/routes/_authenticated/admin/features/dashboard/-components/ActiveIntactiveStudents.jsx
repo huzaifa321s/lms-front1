@@ -8,7 +8,7 @@ export default function ActiveInactiveStudents() {
     { name: "Inactive Students", value: 45 },
   ]
 
-  const COLORS = ["#2563eb", "#ef4444"] // Primary Blue, Danger Red
+  const COLORS = ["#2563eb", "#ef4444"] 
 
   return (
     <Card className="w-full rounded-[12px] bg-white border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300">

@@ -1,7 +1,7 @@
-import { IconSearch } from '@tabler/icons-react'
 import { cn } from '@/lib/utils'
 import { useSearch } from '@/context/search-context'
 import { Button } from './ui/button'
+import { SearchIcon } from 'lucide-react'
 
 interface Props {
   className?: string
@@ -9,7 +9,7 @@ interface Props {
   placeholder?: string
 }
 
-export function Search({ className = '', placeholder = 'Search' }: Props) {
+ function Search({ className = '', placeholder = 'Search' }: Props) {
   const { setOpen } = useSearch()
   return (
     <Button
@@ -21,7 +21,7 @@ export function Search({ className = '', placeholder = 'Search' }: Props) {
       )}
       onClick={() => setOpen(true)}
     >
-      <IconSearch
+      <SearchIcon
         aria-hidden='true'
         className='absolute top-1/2 left-1.5 -translate-y-1/2 text-white'
       />
@@ -32,3 +32,5 @@ export function Search({ className = '', placeholder = 'Search' }: Props) {
     </Button>
   )
 }
+
+export default Search

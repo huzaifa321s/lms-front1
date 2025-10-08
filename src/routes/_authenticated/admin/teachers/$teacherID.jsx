@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import {
   QueryClient,
@@ -12,15 +12,17 @@ import {
   useParams,
   useSearch,
 } from '@tanstack/react-router'
-import { IconLoader } from '@tabler/icons-react'
-import { Search, ArrowLeft, User, Mail, Phone, Calendar, GraduationCap, Award } from 'lucide-react'
+import { Search, ArrowLeft, User, Mail, GraduationCap, Award, Loader } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Header } from '@/components/layout/header'
-import { DataTable } from '../../student/features/tasks/-components/student-data-table'
+const DataTable = lazy(() => import("../../student/features/tasks/-components/student-data-table"))
+
+
 import { coursesSchema } from '../layout/data/-schemas/coursesSchema'
 import { getDebounceInput, useSearchInput } from '../../../../utils/globalFunctions'
+import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
 
 const queryClient = new QueryClient()
 const teacherDetailsQueryOptions = (params) =>
@@ -306,7 +308,7 @@ console.log('teacher 1 ====>',teacher)
                     className="rounded-[8px] bg-[#2563eb] text-white hover:bg-[#1d4ed8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
                   >
                     {isFetching ? (
-                      <IconLoader className="w-4 h-4 animate-spin" />
+                      <Loader className="w-4 h-4 animate-spin" />
                     ) : (
                       <Search className="w-4 h-4" />
                     )}
@@ -315,6 +317,7 @@ console.log('teacher 1 ====>',teacher)
               </div>
 
               <div className="bg-white rounded-[8px] border border-[#e2e8f0] overflow-hidden">
+                 <Suspense fallback={<DataTableSkeleton />}>
                 <DataTable
                   data={courses}
                   columns={coursesSchema}
@@ -328,6 +331,7 @@ console.log('teacher 1 ====>',teacher)
                   setPagination={setPagination}
                   handlePagination={handlePagination}
                 />
+                </Suspense>
               </div>
             </CardContent>
           </Card>

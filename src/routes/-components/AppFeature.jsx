@@ -3,7 +3,6 @@ import { ThumbsUp, Medal, Laptop, Smile, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { featureData } from "./partenerData"
 import { useNavigate } from "@tanstack/react-router"
-
 const icons = { ThumbsUp, Medal, Laptop, Smile }
 
 const Feature = () => {

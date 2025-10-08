@@ -1,30 +1,30 @@
-import {  IconCircleCheck, IconCircleX, IconExclamationCircle, IconHeading, IconStopwatch } from "@tabler/icons-react";
+import { CircleCheck, CircleX, FileQuestion, Heading, Watch } from "lucide-react";
 
 export const statuses = [
   {
     value: 'April 9, 2024 at 03:05 AM',
     label: 'Created',
-    icon: IconExclamationCircle,
+    icon: FileQuestion,
   },
   {
     value: 'April 9, 2024 at 03:05 AM',
     label: 'title',
-    icon: IconHeading,
+    icon: Heading,
   },
   {
     value: 'April 9, 2024 at 03:05 AM',
     label: 'In Progress',
-    icon: IconStopwatch,
+    icon: Watch,
   },
   {
     value: 'April 9, 2024 at 03:05 AM',
     label: 'Done',
-    icon: IconCircleCheck,
+    icon: CircleCheck,
   },
   {
     value: 'canceled',
     label: 'Canceled',
-    icon: IconCircleX,
+    icon: CircleX,
   },
 ]
 

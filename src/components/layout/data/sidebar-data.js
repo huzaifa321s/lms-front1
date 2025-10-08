@@ -1,14 +1,12 @@
 import {
-  IconLayoutDashboard,
-  IconLock,
-  IconSettings,
-} from '@tabler/icons-react'
-import {
   AudioWaveform,
   BookOpen,
   Command,
   GalleryVerticalEnd,
+  LayoutDashboard,
+  Lock,
   Puzzle,
+  Settings,
   UserCircle,
   Wallet,
 } from 'lucide-react'
@@ -63,11 +61,11 @@ export function getSidebarData() {
           {
             title: 'Dashboard',
             url: '/student',
-            icon: IconLayoutDashboard,
+            icon: LayoutDashboard,
           },
           {
             title: 'Settings',
-            icon: IconSettings,
+            icon:Settings,
             items: [
               {
                 title: 'Profile',
@@ -85,18 +83,18 @@ export function getSidebarData() {
             ? {
                 title: `Locked – ${subscription?.status === 'pending' ? "Activate Subscription" :  "Subscribe"}  to Unlock`,
                 url: '',
-                icon: IconLock,
+                icon: Lock,
                 className: 'bg-yellow-600 text-white ',
                 items: [
                   {
                     title: 'Enrolled Courses',
                     url: '/student/enrolledcourses',
-                    icon: IconLock,
+                    icon: Lock,
                   },
                   {
                     title: 'Training Wheel Game',
                     url: '/student/trainingwheelgame',
-                    icon: IconLock,
+                    icon:Lock,
                   },
                 ],
               }

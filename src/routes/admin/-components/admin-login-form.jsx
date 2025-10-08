@@ -1,8 +1,7 @@
 import { useCallback, useState } from 'react'
 import axios from 'axios'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from '@tanstack/react-router'
-import { useDispatch } from 'react-redux'
+import { Link } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -20,7 +19,7 @@ import { handleLogin } from '../../../shared/config/reducers/admin/adminAuthSlic
 import { useAppUtils } from '../../../hooks/useAppUtils'
 import { Shield, Lock, Database, Settings } from 'lucide-react'
 
-export function LoginForm({ className, ...props }) {
+export default function LoginForm({ className, ...props }) {
   const {
     register,
     handleSubmit,

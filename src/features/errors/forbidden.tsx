@@ -1,5 +1,6 @@
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
+import { ArrowLeft, ArrowLeftCircle } from 'lucide-react'
 
 export default function ForbiddenError({disabled}) {
   const navigate = useNavigate()
@@ -15,7 +16,7 @@ export default function ForbiddenError({disabled}) {
         </p>
         <div className='mt-6 flex gap-4'>
           <Button variant='outline' disabled={disabled} onClick={() => history.go(-1)}>
-            Go Back
+            Go Back <ArrowLeftCircle/>
           </Button>
           <Button disabled={disabled} onClick={() => navigate({ to: '/' })}>Back to Home</Button>
         </div>

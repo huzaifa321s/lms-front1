@@ -1,10 +1,9 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useStripe, useElements, CardNumberElement, CardExpiryElement, CardCvcElement, CardElement, PaymentElement } from "@stripe/react-stripe-js";
+import React, {  useState } from "react";
+import { useStripe, useElements, CardElement} from "@stripe/react-stripe-js";
 import { useDispatch } from "react-redux";
 import { updateSubscription } from "../../../../../shared/config/reducers/student/studentAuthSlice";
 import { Button } from "@/components/ui/button";
-
 import { useNavigate } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";

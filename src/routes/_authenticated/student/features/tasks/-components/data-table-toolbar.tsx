@@ -1,10 +1,10 @@
-import { Cross2Icon } from '@radix-ui/react-icons'
 import { Table } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { DataTableViewOptions } from './data-table-view-options'
 import { statuses } from '../data/data'
 import { DataTableFacetedFilter } from './data-table-faceted-filter'
+import { Cross } from 'lucide-react'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -48,7 +48,7 @@ export function DataTableToolbar<TData>({
             size='sm'
           >
             Reset
-            <Cross2Icon className='ml-2 h-4 w-4' />
+            <Cross className='ml-2 h-4 w-4' />
           </Button>
         )}
       </div>
