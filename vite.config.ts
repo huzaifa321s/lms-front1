@@ -41,7 +41,7 @@ export default defineConfig(({ command }) => {
         },
       }),
       terser(),
-
+      
       viteCompression({ algorithm: 'brotliCompress' }),
       imagetools(),
 
@@ -70,9 +70,9 @@ export default defineConfig(({ command }) => {
           ]
         : []),
     ],
-    optimizeDeps: {
-      include: ['@tinymce/tinymce-react'],
-    },
+optimizeDeps: {
+  include: ["@tinymce/tinymce-react"], 
+},
 
     resolve: {
       alias: {
@@ -96,67 +96,69 @@ export default defineConfig(({ command }) => {
         mangle: { toplevel: true },
         format: { comments: false },
       },
-      sourcemap: true,
       rollupOptions: {
         output: {
-          manualChunks: {
-            // 🔹 Core React
-            react: ['react', 'react-dom'],
+     manualChunks: {
+          // 🔹 Core React
+          react: ["react", "react-dom"],
 
-            // 🔹 UI + Icons (Radix + Lucide + Shadcn)
-            ui: [
-              '@radix-ui/react-accordion',
-              '@radix-ui/react-avatar',
-              '@radix-ui/react-collapsible',
-              '@radix-ui/react-dialog',
-              '@radix-ui/react-dropdown-menu',
-              '@radix-ui/react-icons',
-              '@radix-ui/react-label',
-              '@radix-ui/react-navigation-menu',
-              '@radix-ui/react-popover',
-              '@radix-ui/react-progress',
-              '@radix-ui/react-scroll-area',
-              '@radix-ui/react-select',
-              '@radix-ui/react-separator',
-              '@radix-ui/react-slot',
-              '@radix-ui/react-tabs',
-              '@radix-ui/react-tooltip',
-              'lucide-react',
-            ],
+          // 🔹 UI + Icons (Radix + Lucide + Shadcn)
+          ui: [
+            "@radix-ui/react-accordion",
+            "@radix-ui/react-avatar",
+            "@radix-ui/react-collapsible",
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-dropdown-menu",
+            "@radix-ui/react-icons",
+            "@radix-ui/react-label",
+            "@radix-ui/react-navigation-menu",
+            "@radix-ui/react-popover",
+            "@radix-ui/react-progress",
+            "@radix-ui/react-scroll-area",
+            "@radix-ui/react-select",
+            "@radix-ui/react-separator",
+            "@radix-ui/react-slot",
+            "@radix-ui/react-tabs",
+            "@radix-ui/react-tooltip",
+            "lucide-react"
+          ],
 
-            // 🔹 Forms & Validation
-            forms: [
-              'react-hook-form',
-              '@hookform/resolvers',
-              'zod',
-              'react-phone-number-input',
-            ],
+          // 🔹 Forms & Validation
+          forms: [
+            "react-hook-form",
+            "@hookform/resolvers",
+            "zod",
+            "react-phone-number-input"
+          ],
 
-            // 🔹 Charts & Visualization
-            charts: ['recharts'],
+          // 🔹 Charts & Visualization
+          charts: [
+            "recharts",
+          ],
 
-            // 🔹 State Management
-            state: ['react-redux', '@reduxjs/toolkit'],
+          // 🔹 State Management
+          state: ["react-redux", "@reduxjs/toolkit"],
 
-            // 🔹 Utils & Helpers
-            utils: [
-              'date-fns',
-              'axios',
-              'clsx',
-              'js-cookie',
-              'sonner',
-              'use-debounce',
-            ],
+          // 🔹 Utils & Helpers
+          utils: [
+            "date-fns",
+            "axios",
+            "clsx",
+            "js-cookie",
+            "sonner",
+            "use-debounce"
+          ],
 
-            // 🔹 Editors
-            editor: ['@tinymce/tinymce-react'],
+          // 🔹 Editors
+          editor: ["@tinymce/tinymce-react"],
 
-            // 🔹 Animations
-            motion: ['motion', 'react-confetti', 'react-countup'],
 
-            // 🔹 Other big libs
-            swiper: ['swiper'],
-          },
+          // 🔹 Animations
+          motion: ["motion", "react-confetti", "react-countup"],
+
+          // 🔹 Other big libs
+          swiper: ["swiper"],
+        }
         },
       },
     },
