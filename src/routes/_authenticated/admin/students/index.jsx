@@ -17,7 +17,6 @@ import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { TopNav } from '@/components/layout/top-nav'
 import { useAppUtils } from '../../../../hooks/useAppUtils'
-import { Show } from '../../../../shared/utils/Show'
 import {
   getDebounceInput,
   useSearchInput,
@@ -31,10 +30,10 @@ const queryClient = new QueryClient()
 
 const studentsQueryOptions = (deps) =>
   queryOptions({
-    queryKey: ['student', deps.q,deps.page],
+    queryKey: ['student', deps.q, deps.page],
     queryFn: async () => {
       try {
-        const pageNumber = deps.page;
+        const pageNumber = deps.page
         const searchQuery = deps.q
         let queryStr = `page=${pageNumber}`
         if (searchQuery) {
@@ -43,8 +42,11 @@ const studentsQueryOptions = (deps) =>
         let response = await axios.get(`/admin/student/get?${queryStr}`)
         response = response.data
         if (response.success) {
-          console.log('response.data ===>',response.data)
-          return {students:response.data.students,totalPages:response.data.totalPages}
+          console.log('response.data ===>', response.data)
+          return {
+            students: response.data.students,
+            totalPages: response.data.totalPages,
+          }
         }
       } catch (error) {
         console.log('error', error)
@@ -55,10 +57,10 @@ const studentsQueryOptions = (deps) =>
 
 export const Route = createFileRoute('/_authenticated/admin/students/')({
   validateSearch: (search) => {
-    return { q: search.q || '',page:Number(search.page ?? 1) }
+    return { q: search.q || '', page: Number(search.page ?? 1) }
   },
   loaderDeps: ({ search }) => {
-    return { q: search.q ,page:search.page}
+    return { q: search.q, page: search.page }
   },
   loader: ({ deps }) => queryClient.ensureQueryData(studentsQueryOptions(deps)),
   component: RouteComponent,
@@ -71,47 +73,43 @@ function RouteComponent() {
     '/_authenticated/admin/students/'
   )
   let currentPage = useSearch({
-      from: '/_authenticated/admin/students/',
-      select: (search) => search.page,
-    })
-  const debouncedSearch = getDebounceInput(searchInput,800)
-  const { data, fetchStatus, isFetching } = useQuery(
-    {...studentsQueryOptions({
+    from: '/_authenticated/admin/students/',
+    select: (search) => search.page,
+  })
+  const debouncedSearch = getDebounceInput(searchInput, 800)
+  const { data, fetchStatus, isFetching } = useQuery({
+    ...studentsQueryOptions({
       q: debouncedSearch,
-      page:currentPage
-    }),suspense: isFirstRender.current,
-}
-  )
+      page: currentPage,
+    }),
+    suspense: isFirstRender.current,
+  })
 
-
-
-  const { data: studentsStatus,fetchStatus:statusFetchStatus } = useQuery({
+  const { data: studentsStatus, fetchStatus: statusFetchStatus } = useQuery({
     queryKey: ['get-students-status'],
-    queryFn:async () => {
-      try{
-let response = await axios.get(`/admin/student/get-students-status`)
-console.log('student response ===>',response);
-response = response.data;
-if(response.success){
-  return {...response.data}
-}
-      }catch(error){
-        console.log('error',error);
+    queryFn: async () => {
+      try {
+        let response = await axios.get(`/admin/student/get-students-status`)
+        console.log('student response ===>', response)
+        response = response.data
+        if (response.success) {
+          return { ...response.data }
+        }
+      } catch (error) {
+        console.log('error', error)
       }
-    }
-  });
-  console.log('studentsStatus ===>',studentsStatus)
-
+    },
+  })
+  console.log('studentsStatus ===>', studentsStatus)
 
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false
     }
-  }, []);
+  }, [])
 
-
-  const students = data?.students;
-  const totalPages = data?.totalPages;
+  const students = data?.students
+  const totalPages = data?.totalPages
 
   const { navigate } = useAppUtils()
   const searchStudents = async () => {
@@ -126,31 +124,27 @@ if(response.success){
     }
   }
 
-
-  
-    let [paginationOptions, setPagination] = useState({
+  let [paginationOptions, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   })
 
   const handlePagination = (newPageIndex) => {
-  const newPagination = { ...paginationOptions, pageIndex: newPageIndex }
-  setPagination(newPagination) // table update
-  navigate({
-    to: '/admin/students',
-    search: { q: searchInput, page: newPageIndex + 1 }, // URL 1-based
-  })
-}
-
-
+    const newPagination = { ...paginationOptions, pageIndex: newPageIndex }
+    setPagination(newPagination)
+    navigate({
+      to: '/admin/students',
+      search: { q: searchInput, page: newPageIndex + 1 },
+    })
+  }
 
   return (
-   <>
-      <Header className="fixed bg-white border-b border-[#e2e8f0] ">
+    <>
+      <Header className='fixed border-b border-[#e2e8f0] bg-white'>
         <TopNav links={topNav} />
       </Header>
-      <Main className="max-w-7xl mx-auto px-4 py-8 pt-20">
-        <h1 className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-2xl font-extrabold tracking-tight text-transparent md:text-3xl">
+      <Main className='mx-auto max-w-7xl px-4 py-8 pt-20'>
+        <h1 className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-2xl font-extrabold tracking-tight text-transparent md:text-3xl'>
           Students Management
         </h1>
 
@@ -160,48 +154,48 @@ if(response.success){
           active={studentsStatus?.active}
           inactive={studentsStatus?.inActive}
         />
-        <Separator className="my-5 bg-[#e2e8f0]" />
+        <Separator className='my-5 bg-[#e2e8f0]' />
 
-        <div className="flex justify-between">
-          <h2 className="mb-4 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-lg font-bold text-transparent">
+        <div className='flex justify-between'>
+          <h2 className='mb-4 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-lg font-bold text-transparent'>
             Students
           </h2>
-          <div className="flex items-center gap-1">
+          <div className='flex items-center gap-1'>
             <Label>
               <Input
-                type="text"
-                className="grow rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300"
-                size="sm"
-                placeholder="Search Students"
+                type='text'
+                className='grow rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] transition-all duration-300 placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
+                size='sm'
+                placeholder='Search Students'
                 value={searchInput || ''}
                 onChange={(e) => {
-                  setSearchInput(e.target.value);
+                  setSearchInput(e.target.value)
                   navigate({
                     to: '/admin/students',
-                    search: { q: debouncedSearch }
-                  });
+                    search: { q: debouncedSearch },
+                  })
                 }}
               />
               <Button
-                variant="outline"
-                size="sm"
+                variant='outline'
+                size='sm'
                 onClick={searchStudents}
-                className="rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
+                className='rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] shadow-sm transition-all duration-300 hover:border-[#cbd5e1] hover:bg-[#e2e8f0] hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
               >
                 {isFetching ? (
-                  <IconLoader className="h-4 w-4 animate-spin text-[#2563eb]" />
+                  <IconLoader className='h-4 w-4 animate-spin text-[#2563eb]' />
                 ) : (
-                  <Search className="h-4 w-4 text-[#2563eb]" />
+                  <Search className='h-4 w-4 text-[#2563eb]' />
                 )}
               </Button>
             </Label>
             <Button
-              size="xs"
+              size='xs'
               onClick={() => exportToCSV(data)}
-              variant="outline"
-              className="ml-2 rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300 flex items-center gap-2"
+              variant='outline'
+              className='ml-2 flex items-center gap-2 rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] shadow-sm transition-all duration-300 hover:border-[#cbd5e1] hover:bg-[#e2e8f0] hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
             >
-              <Download className="h-4 w-4 text-[#2563eb]" />
+              <Download className='h-4 w-4 text-[#2563eb]' />
               Export CSV
             </Button>
           </div>
