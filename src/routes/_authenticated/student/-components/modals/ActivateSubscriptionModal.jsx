@@ -32,9 +32,8 @@ export default function ActivateSubscriptionDialog({ closeModal }) {
 
           <div className="flex justify-end gap-4">
             <Button
-              variant="ghost"
+              variant="outline"
               onClick={closeModal}
-              className="rounded-[8px] text-[#64748b] transition-all duration-300 hover:bg-green-50 hover:text-green-600"
             >
               Cancel
             </Button>
@@ -44,7 +43,6 @@ export default function ActivateSubscriptionDialog({ closeModal }) {
                   "This feature will be available in a future update."
                 )
               }}
-              className="rounded-[8px] bg-gradient-to-r from-green-600 to-emerald-600 font-medium text-white transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]"
             >
               Activate Now
             </Button>

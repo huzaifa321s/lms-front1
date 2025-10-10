@@ -118,10 +118,10 @@ const ScoreCard = ({ scoreCard, setStep }) => {
           </div>
 
           {/* Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col gap-2">
             <Button
               size="lg"
-              className="flex-1 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition rounded-lg px-8 py-4 text-lg font-semibold"
+              className="w-full"
               onClick={() => setStep("game")}
             >
               <RotateCcw className="w-5 h-5 mr-2" />
@@ -131,8 +131,8 @@ const ScoreCard = ({ scoreCard, setStep }) => {
             <Button
               variant="outline"
               size="lg"
-              className="flex-1 bg-[#f1f5f9] text-[#475569] border border-[#e2e8f0] hover:bg-[#e2e8f0] transition rounded-lg px-8 py-4 text-lg font-semibold"
-              onClick={() => navigate({ to: "/student/trainingwheelgame", reloadDocument: true })}
+              className="w-full"
+              onClick={() => setStep("start-game")}
             >
               <Home className="w-5 h-5 mr-2" />
               Main Menu

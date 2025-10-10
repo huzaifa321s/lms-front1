@@ -94,7 +94,8 @@ function RouteComponent() {
     from: '/_authenticated/admin/teachers/',
     select: (search) => search.page,
   })
-  const debouncedSearch = getDebounceInput(searchInput, 800)
+  const delay = searchInput.length < 3 ? 400 : 800
+  const debouncedSearch = getDebounceInput(searchInput, delay)
   const { data, fetchStatus, isFetching } = useQuery(
     teachersQueryOptions({
       q: debouncedSearch,
@@ -154,6 +155,14 @@ function RouteComponent() {
     })
   }
 
+  useEffect(() => {
+    navigate({
+      to: '/admin/teachers/',
+      search: { q: debouncedSearch, page: 1 },
+      replace: true,
+    })
+  }, [debouncedSearch, 1])
+
   return (
     <>
       <Header>
@@ -172,7 +181,7 @@ function RouteComponent() {
         />
         <Separator className='my-2 bg-[#e2e8f0]' />
 
-        <div className='flex justify-between mb-2'>
+        <div className='mb-2 flex justify-between'>
           <h2 className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-lg font-bold text-transparent'>
             Teachers
           </h2>
@@ -191,7 +200,6 @@ function RouteComponent() {
                 size='sm'
                 onClick={searchTeachers}
                 disabled={isFetching}
-                className='rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] shadow-sm transition-all duration-300 hover:border-[#cbd5e1] hover:bg-[#e2e8f0] hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
               >
                 {isFetching ? (
                   <Loader className='h-4 w-4 animate-spin text-[#2563eb]' />
@@ -204,7 +212,6 @@ function RouteComponent() {
               size='xs'
               onClick={() => exportToCSV(data)}
               variant='outline'
-              className='ml-2 flex items-center gap-2 rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] shadow-sm transition-all duration-300 hover:border-[#cbd5e1] hover:bg-[#e2e8f0] hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
             >
               <Download className='h-4 w-4 text-[#2563eb]' />
               Export CSV

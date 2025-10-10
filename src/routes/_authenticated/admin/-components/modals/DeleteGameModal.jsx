@@ -72,13 +72,13 @@ export default function DeleteGameDialog({ dialogOpen, closeModalAdmin, modalDat
                 <div className="bg-destructive/10 border-destructive rounded-lg border p-4">
                        <Label
       htmlFor='deleteInput'
-      className='text-xs font-semibold text-[#1e293b] sm:text-sm'
+      className='text-xs font-semibold text-[#1e293b] sm:text-sm my-1'
     >
       Please type{' '}
-      <button
+      <Button
         type='button'
         onClick={handleCopy}
-        className='inline-flex items-center gap-1 font-bold text-[#ef4444] hover:underline focus:outline-none'
+        size="sm"
       >
         'delete'
         {copied ? (
@@ -86,7 +86,7 @@ export default function DeleteGameDialog({ dialogOpen, closeModalAdmin, modalDat
         ) : (
           <ClipboardIcon className='h-3 w-3 text-gray-500' />
         )}
-      </button>{' '}
+      </Button>{' '}
       to confirm
     </Label>
                   <Input

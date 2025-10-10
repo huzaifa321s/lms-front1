@@ -78,13 +78,6 @@ function RouteComponent() {
   // Compute cover image using useMemo for performance
   const coverImage = useMemo(() => {
     const baseUrl = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public`
-    console.log('details.coverImage', details.coverImage)
-    console.log(
-      'sss',
-      details?.coverImage
-        ? `${baseUrl}/courses/cover-images/${details.coverImage}`
-        : DEFAULT_COURSE_IMAGE
-    )
     return details?.coverImage
       ? `${baseUrl}/courses/cover-images/${details.coverImage}`
       : DEFAULT_COURSE_IMAGE
@@ -106,17 +99,16 @@ function RouteComponent() {
         >
           Course Details
         </h1>
-        <div className='my-2 flex w-full items-center justify-between'>
           <Button
             size='sm'
             onClick={() => window.history.back()}
             variant='outline'
-            className='ml-auto flex items-center gap-2 rounded-lg border-slate-200 bg-slate-100 font-medium text-slate-600 shadow-lg hover:border-slate-300 hover:bg-slate-200 hover:shadow-xl'
+            className="ml-auto text-black"
           >
       <ArrowLeft/>
             Back
           </Button>
-        </div>
+
       </Header>
       <div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50'>
       {/* Course Card */}

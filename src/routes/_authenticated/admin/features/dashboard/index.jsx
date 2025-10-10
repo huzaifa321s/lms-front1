@@ -49,35 +49,37 @@ const CategoriesPopularityChart = lazy(
 
 function AdminWelcomeBanner({ userName }) {
   return (
-    <div className='relative mb-2 overflow-hidden rounded-xl bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-500 p-8 text-white shadow-xl'>
-      {/* Floating Decorative Circles (Magic UI style) */}
-      <div className='absolute -top-16 -left-16 h-56 w-56 rounded-full bg-indigo-400/20 blur-3xl filter'></div>
-      <div className='absolute -right-16 -bottom-16 h-72 w-72 rounded-full bg-cyan-400/20 blur-3xl filter'></div>
+     <div className="relative mb-2 overflow-hidden rounded-xl bg-blue-700 p-8 text-white shadow-xl">
+      {/* Floating Decorative Circles (Subtle Glow Effect) */}
+      <div className="absolute -top-16 -left-16 h-56 w-56 rounded-full bg-blue-400/20 blur-3xl filter"></div>
+      <div className="absolute -right-16 -bottom-16 h-72 w-72 rounded-full bg-blue-500/20 blur-3xl filter"></div>
 
       {/* Content */}
-      <div className='relative z-10 flex flex-col items-center gap-6 md:flex-row md:justify-between'>
-        <div className='text-center md:text-left'>
-          <h1 className='mb-2 text-3xl font-bold md:text-4xl'>
-            Welcome back, <span className='text-yellow-300'>{userName}</span> 🚀
+      <div className="relative z-10 flex flex-col items-center gap-6 md:flex-row md:justify-between">
+        {/* Left Section */}
+        <div className="text-center md:text-left">
+          <h1 className="mb-2 text-3xl font-bold md:text-4xl">
+            Welcome back, <span className="text-yellow-300">{userName}</span> 🚀
           </h1>
-          <p className='max-w-lg text-lg text-blue-100'>
+          <p className="max-w-lg text-lg text-blue-100">
             Manage users, monitor courses, and keep your LMS running smoothly.
           </p>
         </div>
 
-        <div className='flex gap-4'>
+        {/* Right Section – Buttons */}
+        <div className="flex gap-4">
           {/* Settings Button */}
-          <Button className='flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 shadow-lg transition-all hover:from-orange-500 hover:to-yellow-500'>
-            <Settings className='h-5 w-5' />
+          <Button >
+            <Settings className="h-5 w-5" />
             Settings
           </Button>
 
           {/* Profile Button */}
           <Button
-            variant='outline'
-            className='flex items-center gap-2 border-white/40 bg-white/20 text-white transition-all hover:bg-white/30'
+          className="text-black"
+            variant="outline"
           >
-            <User className='h-5 w-5' />
+            <User className="h-5 w-5" />
             My Profile
           </Button>
         </div>
@@ -110,7 +112,6 @@ function DashboardCard({ title, icon: Icon, value, loading, footer, onClick }) {
         <Button
           size='xs'
           variant='outline'
-          className='mt-2 rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] shadow-sm transition-all duration-300 hover:border-[#cbd5e1] hover:bg-[#e2e8f0] hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
           onClick={onClick}
         >
           View All

@@ -391,8 +391,8 @@ export default function ProfileForm() {
 
               <Button
                 type="submit"
+                className="w-full"
                 disabled={mutation.status === "pending"}
-                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {mutation.status === "pending" ? (
                   <div className="flex items-center">
@@ -449,7 +449,6 @@ export default function ProfileForm() {
                 variant="outline"
                 disabled={disabled1 || disabled2 || passBtnLoading}
                 onClick={() => postData(passwordObj, "updatePassword")}
-                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white border-0 px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {passBtnLoading ? (
                   <div className="flex items-center">

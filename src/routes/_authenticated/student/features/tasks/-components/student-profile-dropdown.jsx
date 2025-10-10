@@ -31,8 +31,8 @@ import { openModal } from '../../../../../../shared/config/reducers/student/stud
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
-            variant='ghost'
-            className='relative h-8 rounded-[8px] border border-[#e2e8f0] bg-[#ffffff] px-4 shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-[1.02] hover:border-[#cbd5e1] hover:bg-[#f1f5f9] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]'
+            variant='outline'
+            
             size='sm'
           >
             <Avatar className='h-8 w-8 rounded-full ring-2 ring-[#e2e8f0]'>

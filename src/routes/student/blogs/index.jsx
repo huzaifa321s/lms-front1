@@ -2,7 +2,7 @@ import { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
 import { useQuery, queryOptions, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useSearch, createFileRoute } from '@tanstack/react-router'
-import { BookOpen, Users } from 'lucide-react'
+import { BookOpen, Search, Users } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -53,7 +53,8 @@ function RouteComponent() {
   const navigate = useNavigate()
   const { q, page: currentPage } = useSearch({ from: '/student/blogs/' })
   const [searchInput, setSearchInput] = useSearchInput('/student/blogs/')
-  const debouncedSearch = getDebounceInput(searchInput, 800)
+  const delay = searchInput.length < 3 ? 400 : 800
+  const debouncedSearch = getDebounceInput(searchInput, delay)
   const queryClient = useQueryClient()
 
   const { data, isLoading } = useQuery({
@@ -127,25 +128,13 @@ const handlePageChange = async (page) => {
                 className="w-full rounded-lg border-slate-200 bg-white py-2.5 pr-10 pl-10 text-slate-800 placeholder-slate-400 transition-all duration-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                 aria-label="Search blogs"
               />
-              <button
+              <Button
                 onClick={() => handleNavigation()}
-                className="absolute top-1/2 left-3 -translate-y-1/2 text-slate-600 transition-all duration-200 hover:text-blue-600"
+                variant="outline"
                 aria-label="Search"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                  />
-                </svg>
-              </button>
+            <Search/>
+              </Button>
             </div>
           </div>
         </div>
@@ -187,7 +176,6 @@ const handlePageChange = async (page) => {
                       onClick={() =>
                         navigate({ to: `/student/blogs/blog-details/${blog._id}` })
                       }
-                      className="w-full rounded-lg border-slate-200 text-slate-700 transition-all duration-300 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600"
                       aria-label={`Read more: ${blog.title}`}
                     >
                       Read More
@@ -222,7 +210,6 @@ const handlePageChange = async (page) => {
                   size="sm"
                   variant="ghost"
                   onClick={() => handleNavigation({ page: currentPage - 1 })}
-                  className="h-10 w-10 rounded-lg text-blue-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700"
                   aria-label="Previous page"
                 >
                   &#8249;
@@ -234,7 +221,7 @@ const handlePageChange = async (page) => {
                   size="sm"
                   variant="ghost"
                   onClick={() => handleNavigation({ page: currentPage + 1 })}
-                  className="h-10 w-10 rounded-lg text-blue-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700"
+                 
                   aria-label="Next page"
                 >
                   &#8250;

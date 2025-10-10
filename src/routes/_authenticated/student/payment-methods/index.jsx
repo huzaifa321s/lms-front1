@@ -140,7 +140,6 @@ function RouteComponent() {
           </h1>
           <Button
             size="sm"
-            className="group relative inline-flex  items-center justify-center overflow-hidden rounded-[8px] bg-gradient-to-r from-[#f59e0b] to-[#d97706] px-6 py-3 font-medium text-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition duration-300 ease-out hover:scale-105 hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]"
             onClick={() => dispatch(openModal({ type: 'add-payment-method' }))}
           >
             <span className="relative flex items-center gap-2">
@@ -173,7 +172,6 @@ function RouteComponent() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="text-[#2563eb] border border-[#2563eb]/20 bg-[#2563eb]/10 hover:bg-[#2563eb]/20 hover:text-[#1d4ed8] transition-colors rounded-[8px]"
                           onClick={() => cardDefaultMutation.mutate(pm.paymentMethodId)}
                           disabled={cardDefaultMutation.status === 'pending'}
                         >
@@ -185,7 +183,6 @@ function RouteComponent() {
                     <Button
                       size="sm"
                       variant="destructive"
-                      className="p-2 bg-gradient-to-r from-[#ef4444] to-[#dc2626] text-white rounded-[8px] transition-transform hover:scale-105 hover:shadow-[0_4px_6px_rgba(0,0,0,0.1)]"
                       onClick={() =>
                         dispatch(
                           openModal({

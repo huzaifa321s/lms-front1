@@ -1,89 +1,122 @@
-import { useNavigate } from '@tanstack/react-router';
-import { Button } from '@/components/ui/button';
+import { memo } from 'react'
+import { format } from 'date-fns'
+import { useNavigate } from '@tanstack/react-router'
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { memo } from 'react';
-import { Eye } from 'lucide-react';
-
+  Eye,
+  BookOpen,
+  Info,
+  Tag,
+  FileText,
+  User,
+  CalendarDays,
+} from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 const DEFAULT_COURSE_IMAGE =
-  "https://images.unsplash.com/photo-1516321310762-90b0e7f8b4b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=320&h=160&q=80";
+  'https://images.unsplash.com/photo-1516321310762-90b0e7f8b4b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=320&h=160&q=80'
 
-export const CardDemo = memo(({ courseId, title, desc, category, image = DEFAULT_COURSE_IMAGE }) => {
+export  const CardDemo = memo(({
+  image,
+  title,
+  desc,
+  category,
+  material,
+  instructor,
+  enrollmentDate,
+  courseId,
+}) => {
   const navigate = useNavigate();
 
-  const gradientTextStyle = {
-    background: "linear-gradient(45deg, #2563eb, #1d4ed8)",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-  };
-
   return (
-    <Card
-      className="flex flex-col h-[22rem] w-full md:w-72 relative 
-                 bg-white rounded-xl shadow-sm border border-slate-200 
-                 transition-all duration-500 hover:shadow-xl hover:-translate-y-1 overflow-hidden"
-    >
-      {/* Image */}
-      <div className="relative h-32 overflow-hidden">
-      <img
-  src={image}
-  alt={`${title} thumbnail`}
-  width={320}
-  height={160}
-  className="w-full h-full object-cover rounded-t-xl transition-transform duration-700 group-hover:scale-110"
-  loading="lazy"
-/>
-
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+    <Card className="group relative flex h-[24rem] w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl md:w-72">
+      {/* Image Section */}
+      <div className="relative h-44 overflow-hidden">
+        <img
+          src={image}
+          alt={title}
+          width={320}
+          height={160}
+          className="h-full w-full object-cover rounded-t-2xl transition-transform duration-700 group-hover:scale-110"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
 
         {/* Category Badge */}
         {category && (
-          <Badge
-            className="absolute top-2 left-2 rounded-full px-2.5 py-0.5 text-[11px] font-medium 
-                       bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md border-0"
-          >
+          <Badge className="absolute top-2 left-2 flex items-center gap-1 rounded-full border-0 bg-gradient-to-r from-blue-600 to-blue-700 px-2.5 py-0.5 text-[11px] font-medium text-white shadow-md">
+            <Tag className="h-3 w-3" />
             {category}
           </Badge>
         )}
       </div>
 
       {/* Title */}
-      <CardHeader className="p-3 pb-1">
-        <h2
-          className="text-base font-bold line-clamp-2 font-sans transition-colors duration-300"
-          style={gradientTextStyle}
-        >
+      <CardHeader className="p-4 pb-1">
+        <h2 className="flex items-center gap-2 line-clamp-2 font-sans text-base font-bold text-slate-800 group-hover:text-blue-700 transition-colors duration-300">
+          <BookOpen className="h-4 w-4 text-blue-600" />
           {title}
         </h2>
       </CardHeader>
 
-      {/* Description */}
-      <CardContent className="p-3 pt-0 text-xs sm:text-sm text-slate-600 flex-grow line-clamp-3">
-        {desc}
-      </CardContent>
+      {/* Footer with Actions */}
+      <CardFooter className="flex items-center justify-between p-4 mt-auto">
+        <Button
+          size="sm"
+          onClick={() => navigate({ to: `/student/enrolledcourses/${courseId}` })}
+          aria-label={`View details for ${title} course`}
+          className="relative w-[48%] overflow-hidden bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md transition-all duration-500 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg"
+        >
+          <Eye className="h-4 w-4 mr-1" />
+          View
+        </Button>
 
-      {/* Footer Button */}
-      <CardFooter className="p-3 pt-0">
-       <Button
-  size="sm"
-  className="relative w-full rounded-lg overflow-hidden 
-             bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium py-2
-             shadow-md transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
-  onClick={() => navigate({ to: `/student/enrolledcourses/${courseId}` })}
-  aria-label={`View details for ${title} course`}
->
-  <span className="relative z-10 flex items-center justify-center gap-2">
-    <Eye className="w-4 h-4" />
-    View Course
-  </span>
-</Button>
-
+        {/* Popover for Details */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-[48%] border-blue-600 text-blue-600 hover:bg-blue-50"
+            >
+              <Info className="h-4 w-4 mr-1" />
+              Details
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            side="top"
+            align="center"
+            className="w-64 text-sm space-y-2"
+          >
+            <p className="text-slate-700 line-clamp-3">{desc}</p>
+            <div className="border-t border-slate-200 pt-2 space-y-2">
+              <div className="flex items-center gap-2 text-slate-700">
+                <FileText className="h-4 w-4 text-blue-500" />
+                <span>
+                  <strong>{material || 0}</strong> materials
+                </span>
+              </div>
+              <div className="flex items-center gap-2 text-slate-700">
+                <User className="h-4 w-4 text-blue-500" />
+                <span>
+                  {instructor?.firstName
+                    ? `${instructor.firstName} ${instructor.lastName || ""}`
+                    : "Unknown Instructor"}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 text-slate-700">
+                <CalendarDays className="h-4 w-4 text-blue-500" />
+                <span>Enrolled on {format(enrollmentDate, "PPP")}</span>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
       </CardFooter>
     </Card>
   );
-});
+})

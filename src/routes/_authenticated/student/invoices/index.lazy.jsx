@@ -381,13 +381,12 @@ function InvoiceRowCards() {
 
                     <div className="flex items-center space-x-2">
                       <Button
-                        className="rounded-[8px] border border-[#e2e8f0] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] p-2 text-white transition-all duration-300 hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)] hover:scale-[1.02]"
+
                         onClick={() => navigate({ to: `/student/setting/invoices/invoice-details/${invoice?.invoice_id}` })}
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
                       <Button
-                        className="rounded-[8px] border border-[#e2e8f0] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] p-2 text-white transition-all duration-300 hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)] hover:scale-[1.02]"
                       >
                         <Download className="h-4 w-4" />
                       </Button>
@@ -403,7 +402,7 @@ function InvoiceRowCards() {
           <Button
             disabled={!hasNextPage}
             onClick={() => fetchNextPage()}
-            className="mt-6 rounded-[8px] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)] hover:scale-[1.02] disabled:bg-[#e2e8f0] disabled:text-[#64748b]"
+            className="mt-6 "
           >
             {isFetchingNextPage ? 'Loading More...' : hasNextPage ? 'Load More' : 'No More'}
           </Button>

@@ -114,22 +114,16 @@ function RouteComponent() {
             Add Game Question
           </div>
           <Button
-            
+            className="text-black"
             variant="outline"
-            className="rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
             onClick={() => window.history.back()}
           >
             Back
           </Button>
         </div>
       </Header>
-      {/* Background glow effects */}
+      
  <div className="min-h-screen bg-[#f8fafc]">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-[#2563eb]/20 to-[#1d4ed8]/20 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-[#10b981]/20 to-[#059669]/20 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-[#2563eb]/10 to-[#1d4ed8]/10 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-500"></div>
-      </div>
 
    
 
@@ -258,7 +252,6 @@ function RouteComponent() {
                   size="lg"
                   onClick={() => addQuestion('add')}
                   disabled={isAddButtonDisabled() || addBtnLoading}
-                  className="rounded-[8px] bg-[#2563eb] text-white hover:bg-[#1d4ed8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {addBtnLoading ? 'Saving...' : 'Add'}    {addBtnLoading ? <Loader className="animate animate-spin"/> : <Plus/>}
                 </Button>
@@ -267,7 +260,6 @@ function RouteComponent() {
                   variant="secondary"
                   onClick={() => addQuestion('add-and-new')}
                   disabled={isAddButtonDisabled() || addNewBtnLoading}
-                  className="rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {addNewBtnLoading ? 'Saving...' : 'Add & New'}
                 </Button>

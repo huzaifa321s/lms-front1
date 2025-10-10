@@ -29,6 +29,7 @@ import {
   Video,
   FileText,
   ArrowLeft,
+  LogIn,
 } from 'lucide-react'
 import { shallowEqual, useSelector } from 'react-redux'
 import { toast } from 'sonner'
@@ -147,23 +148,21 @@ function RouteComponent() {
   const course = data?.course
   const isEnrolled = data?.isEnrolled
   const getLoggedStatus = () => {
-    if(data?.isLoggedIn === false){
-      if(credentials === null){
+    if (data?.isLoggedIn === false) {
+      if (credentials === null) {
         return false
-      }else{
+      } else {
         return false
       }
-    }else if(data?.isLoggedIn === true){
-     if(credentials !== null){
+    } else if (data?.isLoggedIn === true) {
+      if (credentials !== null) {
         return true
-     }else{
-      return false
-     }
+      } else {
+        return false
+      }
     }
   }
   const isLoggedIn = getLoggedStatus()
-    
-  
 
   console.log('is', isLoggedIn)
   const enrolledStudents = data?.enrolledStudents || 0
@@ -285,8 +284,8 @@ function RouteComponent() {
                   </div>
                 )}
               </div>
-              <h1 className='course-title'>{course.name}</h1>
-              <p className='course-desc'>{course.description}</p>
+              <h1 className='text-white text-lg font-bold'>{course.name}</h1>
+              <p className='text-white font-medium'>{course.description}</p>
               <div className='course-info'>
                 <div className='course-info-item'>
                   <Users className='h-4 w-4' />
@@ -328,14 +327,14 @@ function RouteComponent() {
               onValueChange={setActiveTab}
               className='tabs-container'
             >
-              <TabsList className='tabs-list'>
-                <TabsTrigger value='overview' className='tabs-trigger'>
+              <TabsList className='bg-gray-300'>
+                <TabsTrigger value='overview' >
                   Overview
                 </TabsTrigger>
-                <TabsTrigger value='materials' className='tabs-trigger'>
+                <TabsTrigger value='materials'>
                   Materials
                 </TabsTrigger>
-                <TabsTrigger value='instructor' className='tabs-trigger'>
+                <TabsTrigger value='instructor'>
                   Instructor
                 </TabsTrigger>
               </TabsList>
@@ -395,12 +394,11 @@ function RouteComponent() {
                       }
                       className='mt-4 bg-blue-600 text-white'
                     >
-                      Login
+                      <LogIn /> Login
                     </Button>
                   </div>
                 ) : (
                   <Accordion type='multiple' className='accordion-container'>
-                    {console.log('oourse.material', course.material)}
                     {course.material?.map((material, index) => (
                       <AccordionItem
                         key={material._id}

@@ -73,7 +73,7 @@ function LandingPage() {
                   className='btn-gradient'
                 >
                   Browse Courses{' '}
-                  <i className='mdi mdi-arrow-right ms-2 align-middle'></i>
+                  
                 </Button>
 
                 <Button

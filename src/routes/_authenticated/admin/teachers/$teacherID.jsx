@@ -100,7 +100,8 @@ function RouteComponent() {
   const isFirstRender = useRef(true)
   const [searchInput, setSearchInput] = useSearchInput('/_authenticated/admin/teachers/$teacherID')
   console.log('search Input ===>',searchInput)
-  const debouncedSearch = getDebounceInput(searchInput,800)
+  const delay = searchInput.length < 3 ? 400 : 800
+  const debouncedSearch = getDebounceInput(searchInput, delay)
   const deps = { q: debouncedSearch,page:currentPage }
  
   const params = { deps, params: { teacherID } }
@@ -154,6 +155,13 @@ console.log('teacher 1 ====>',teacher)
     })
   }
 
+    useEffect(() => {
+        navigate({
+          to: '/admin/teachers/$teacherID',
+          search: { q: debouncedSearch, page:1 },
+          replace: true
+        })
+      }, [debouncedSearch,1])
   return (
     <>
           <Header >
@@ -170,8 +178,8 @@ console.log('teacher 1 ====>',teacher)
           </div>
           <Button
             variant="outline"
-            className="rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
             onClick={() => window.history.back()}
+            className="text-black"
           >
             <ArrowLeft className="w-5 h-5 text-[#2563eb] group-hover:transform group-hover:-translate-x-1 transition-transform duration-200" />
             <span className="ml-2 hidden sm:inline">Back</span>
@@ -179,12 +187,7 @@ console.log('teacher 1 ====>',teacher)
         </div>
       </Header>
       <div className="min-h-screen bg-[#f8fafc]">
-      {/* Background glow effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-[#2563eb]/20 to-[#1d4ed8]/20 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-[#10b981]/20 to-[#059669]/20 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-[#2563eb]/10 to-[#1d4ed8]/10 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-500"></div>
-      </div>
+ 
 
   
 
@@ -305,7 +308,6 @@ console.log('teacher 1 ====>',teacher)
                     size="sm"
                     disabled={isFetching}
                     onClick={searchCourses}
-                    className="rounded-[8px] bg-[#2563eb] text-white hover:bg-[#1d4ed8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
                   >
                     {isFetching ? (
                       <Loader className="w-4 h-4 animate-spin" />

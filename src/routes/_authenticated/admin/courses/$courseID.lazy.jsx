@@ -104,7 +104,6 @@ function RouteComponent() {
   const { data: enrolledStudents = [] } = useQuery(
     enrolledStudentsQueryOption(courseID)
   )
-  const navigate = useNavigate()
   const [courseObj, setCourseObj] = useState(data)
   const defaultCover = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/defaults/course-cover.png`
   const [cover, setCover] = useState(
@@ -130,22 +129,16 @@ function RouteComponent() {
           </div>
           <Button
             variant='outline'
-            className='group rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:border-[#cbd5e1] hover:bg-[#e2e8f0] hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
+            className="text-black"
             onClick={() => window.history.back()}
           >
-            <ArrowLeft className='h-5 w-5 text-[#2563eb] transition-transform duration-200 group-hover:-translate-x-1 group-hover:transform' />
+            <ArrowLeft />
             <span className='ml-2 hidden sm:inline'>Back</span>
           </Button>
         </div>
       </Header>
 
       <div className='min-h-screen bg-[#f8fafc]'>
-        {/* Background glow effects */}
-        <div className='pointer-events-none absolute inset-0 overflow-hidden'>
-          <div className='absolute -top-40 -right-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] opacity-20 mix-blend-multiply blur-xl filter'></div>
-          <div className='absolute -bottom-40 -left-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#10b981] to-[#0d9488] opacity-20 mix-blend-multiply blur-xl filter delay-1000'></div>
-          <div className='absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 transform animate-pulse rounded-full bg-gradient-to-r from-[#2563eb] to-[#10b981] opacity-10 mix-blend-multiply blur-xl filter delay-500'></div>
-        </div>
 
         <div className='relative z-10 mb-8 space-y-6 px-4 py-8'>
           {/* Course Hero Card */}

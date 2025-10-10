@@ -50,7 +50,6 @@ export default function AddPaymentMethodDialog({
                 size="sm"
                 disabled={saveCardDetailsMutation.status === "pending"}
                 variant="outline"
-                className="rounded-[8px] border border-[#e2e8f0] bg-[#ffffff] text-[#64748b] transition-colors hover:bg-[#e2e8f0] hover:text-[#1e293b]"
                 onClick={() => dispatch(closeModal())}
               >
                 Cancel
@@ -67,7 +66,6 @@ export default function AddPaymentMethodDialog({
                 !cardComplete
               }
               onClick={handleSubmitCard}
-              className="relative inline-flex h-10 items-center justify-center overflow-hidden rounded-[8px] bg-gradient-to-r from-[#f59e0b] to-[#d97706] font-medium text-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition duration-300 ease-out hover:scale-105 hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]"
             >
               {saveCardDetailsMutation.status === "pending" ? "Adding..." : "Add"}
             </Button>

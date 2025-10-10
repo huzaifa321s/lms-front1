@@ -65,7 +65,6 @@ export function AppSidebar({ ...props }) {
               !subscription?.subscriptionId && (
                 <Button
                   size='sm'
-                  className='mt-2 w-full bg-[#2563eb] text-[#e2e8f0] hover:bg-[#1d4ed8]'
                   onClick={() => {
                     if (subscription?.status === 'past_due' ||  subscription?.status === 'unpaid' || subscription?.status === 'incomplete') {
                       navigate({ to: '/student/failed-subscription' })

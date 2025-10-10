@@ -8,6 +8,7 @@ import {
   Plus,
   Settings,
   User,
+   GraduationCap 
 } from 'lucide-react'
 import { shallowEqual, useSelector } from 'react-redux'
 import { Button } from '@/components/ui/button'
@@ -40,39 +41,43 @@ const CountUp = lazy(() => import('react-countup'))
 
 function WelcomeBanner({ userName, creds }) {
   return (
-    <div className='relative mb-2 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 p-8 text-white shadow-lg'>
+     <div className="relative mb-4 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 p-8 text-white shadow-lg">
       {/* Floating Decorative Circles */}
-      <div className='absolute -top-16 -left-16 h-56 w-56 animate-[spin_25s_linear_infinite] rounded-full bg-blue-400/20 blur-3xl filter'></div>
-      <div className='absolute -right-16 -bottom-16 h-72 w-72 animate-[spin_30s_linear_infinite] rounded-full bg-blue-500/20 blur-3xl filter'></div>
+      <div className="absolute -top-16 -left-16 h-56 w-56 animate-[spin_25s_linear_infinite] rounded-full bg-blue-400/20 blur-3xl filter"></div>
+      <div className="absolute -right-16 -bottom-16 h-72 w-72 animate-[spin_30s_linear_infinite] rounded-full bg-blue-500/20 blur-3xl filter"></div>
 
-      <div className='relative z-10 flex flex-col items-center gap-6 md:flex-row md:justify-between'>
-        <div className='text-center md:text-left'>
-          <h1 className='mb-2 text-3xl font-bold md:text-4xl'>
-            Welcome {creds?.customerId ? 'back' : ''},{' '}
-            <span className='text-blue-200'>{userName}</span> 👩‍🏫
+      <div className="relative z-10 flex flex-col items-center gap-6 md:flex-row md:justify-between">
+        {/* Left Section */}
+        <div className="text-center md:text-left">
+          <h1 className="mb-2 flex items-center justify-center gap-2 text-3xl font-bold md:justify-start md:text-4xl">
+            <GraduationCap className="h-7 w-7 text-yellow-300 drop-shadow-sm" />
+            Welcome {creds?.customerId ? "back" : ""},{" "}
+            <span className="text-blue-200">{userName}</span> 👩‍🏫
           </h1>
-          <p className='max-w-lg text-lg text-blue-100'>
-            Manage your courses, track student progress, and share your
-            knowledge with learners worldwide.
+
+          <p className="max-w-lg text-lg text-blue-100 flex items-center justify-center gap-2 md:justify-start">
+            <BookOpen className="h-5 w-5 text-blue-200" />
+            Manage your courses, track student progress, and share your knowledge with learners worldwide.
           </p>
         </div>
-        <div className='flex gap-4'>
-          {/* Manage Courses Button */}
+
+        {/* Right Section – Buttons */}
+        <div className="flex flex-wrap justify-center gap-4 md:justify-end">
+          {/* Manage Courses */}
           <Button
-            size=''
-            className='flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg transition-all hover:from-blue-600 hover:to-blue-700'
+            size="sm"
           >
-            <BookOpen className='h-5 w-5' />
+            <BookOpen className="h-5 w-5" />
             Manage Courses
           </Button>
 
-          {/* Profile Button */}
+          {/* Profile */}
           <Button
-            size=''
-            variant='outline'
-            className='flex items-center gap-2 bg-white/20 transition-all'
+            size="sm"
+            variant="outline"
+            className="text-black"
           >
-            <User className='h-5 w-5' />
+            <User className="h-5 w-5" />
             My Profile
           </Button>
         </div>
@@ -528,7 +533,6 @@ export default function Dashboard() {
                 </CardContent>
                 <CardFooter className='flex items-center justify-between gap-3'>
                   <Button
-                    className='rounded-[8px] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] font-medium text-white transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]'
                     onClick={() =>
                       navigate({ to: '/teacher/courses/create_course' })
                     }
@@ -538,7 +542,6 @@ export default function Dashboard() {
                   </Button>
                   <Button
                     variant='outline'
-                    className='rounded-[8px] border-[#e2e8f0] text-[#2563eb] transition-all duration-300 hover:bg-[#2563eb]/10 hover:text-[#1d4ed8]'
                     onClick={() => navigate({ to: '/teacher/courses' })}
                   >
                     <BookOpen size={18} className='mr-2' />

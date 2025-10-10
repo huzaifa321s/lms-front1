@@ -1,5 +1,6 @@
-import { Suspense, useCallback, useEffect,useState } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
+import { format } from 'date-fns'
 import {
   queryOptions,
   useMutation,
@@ -12,18 +13,44 @@ import {
   useSearch,
   createFileRoute,
 } from '@tanstack/react-router'
-import { BookOpen, Users,UsersIcon } from 'lucide-react'
+import {
+  BookOpen,
+  Check,
+  Clock,
+  Delete,
+  Eye,
+  Search,
+  UserCircle2,
+  Users,
+  User,
+  Info,
+  TableOfContents,
+  File,
+} from 'lucide-react'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { handleCourseEnrollment } from '../../../shared/config/reducers/student/studentAuthSlice'
-import { Show } from '../../../shared/utils/Show'
 import {
-  checkSubscriptionStatus,
-  isActiveSubscription,
-} from '../../../shared/utils/helperFunction'
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from '@/components/ui/popover'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Skeleton } from '@/components/ui/skeleton'
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '@/components/ui/tooltip'
+import { Show } from '../../../shared/utils/Show'
 import {
   getDebounceInput,
   getRenderPaginationButtons,
@@ -32,48 +59,48 @@ import {
 
 const CoursesPageSkeleton = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 p-6 font-sans">
-      <div className="relative mx-auto max-w-7xl">
+    <div className='min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 p-6 font-sans'>
+      <div className='relative mx-auto max-w-7xl'>
         {/* Header Skeleton */}
-        <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-          <div className="space-y-3 animate-pulse">
-            <div className="h-4 w-24 rounded bg-slate-200"></div>
-            <div className="h-10 w-64 rounded bg-slate-200"></div>
-            <div className="h-5 w-80 rounded bg-slate-200"></div>
+        <div className='mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
+          <div className='animate-pulse space-y-3'>
+            <div className='h-4 w-24 rounded bg-slate-200'></div>
+            <div className='h-10 w-64 rounded bg-slate-200'></div>
+            <div className='h-5 w-80 rounded bg-slate-200'></div>
           </div>
-          <div className="flex items-center gap-3 animate-pulse">
-            <div className="h-10 w-64 rounded-lg bg-slate-200"></div>
-            <div className="h-10 w-20 rounded-lg bg-slate-200"></div>
+          <div className='flex animate-pulse items-center gap-3'>
+            <div className='h-10 w-64 rounded-lg bg-slate-200'></div>
+            <div className='h-10 w-20 rounded-lg bg-slate-200'></div>
           </div>
         </div>
 
         {/* Courses Grid Skeleton */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
           {[...Array(8)].map((_, i) => (
             <div
               key={i}
-              className="animate-pulse rounded-2xl border border-slate-200 bg-white shadow-md p-4"
+              className='animate-pulse rounded-2xl border border-slate-200 bg-white p-4 shadow-md'
             >
               {/* Image */}
-              <div className="h-44 w-full rounded-xl bg-slate-200"></div>
+              <div className='h-44 w-full rounded-xl bg-slate-200'></div>
 
               {/* Body */}
-              <div className="mt-4 space-y-3">
-                <div className="h-6 w-3/4 rounded bg-slate-200"></div>
-                <div className="h-4 w-full rounded bg-slate-200"></div>
-                <div className="h-4 w-1/2 rounded bg-slate-200"></div>
+              <div className='mt-4 space-y-3'>
+                <div className='h-6 w-3/4 rounded bg-slate-200'></div>
+                <div className='h-4 w-full rounded bg-slate-200'></div>
+                <div className='h-4 w-1/2 rounded bg-slate-200'></div>
 
                 {/* Mini Stats */}
-                <div className="mt-2 flex justify-between pt-2 border-t border-slate-100">
-                  <div className="h-3 w-10 rounded bg-slate-200"></div>
-                  <div className="h-3 w-10 rounded bg-slate-200"></div>
-                  <div className="h-3 w-16 rounded bg-slate-200"></div>
+                <div className='mt-2 flex justify-between border-t border-slate-100 pt-2'>
+                  <div className='h-3 w-10 rounded bg-slate-200'></div>
+                  <div className='h-3 w-10 rounded bg-slate-200'></div>
+                  <div className='h-3 w-16 rounded bg-slate-200'></div>
                 </div>
 
                 {/* Buttons */}
-                <div className="space-y-2 pt-2">
-                  <div className="h-10 w-full rounded-lg bg-slate-200"></div>
-                  <div className="h-10 w-full rounded-lg bg-slate-200"></div>
+                <div className='space-y-2 pt-2'>
+                  <div className='h-10 w-full rounded-lg bg-slate-200'></div>
+                  <div className='h-10 w-full rounded-lg bg-slate-200'></div>
                 </div>
               </div>
             </div>
@@ -81,10 +108,10 @@ const CoursesPageSkeleton = () => {
         </div>
 
         {/* Pagination Skeleton */}
-        <div className="mt-12 flex justify-center">
-          <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white p-2 shadow-md animate-pulse">
+        <div className='mt-12 flex justify-center'>
+          <div className='flex animate-pulse items-center gap-2 rounded-lg border border-slate-200 bg-white p-2 shadow-md'>
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-10 w-10 rounded-lg bg-slate-200"></div>
+              <div key={i} className='h-10 w-10 rounded-lg bg-slate-200'></div>
             ))}
           </div>
         </div>
@@ -108,13 +135,15 @@ const MESSAGES = {
 }
 
 // Query options for fetching courses
-export const coursesQueryOptions = ({ q, page, userID }) =>
+export const coursesQueryOptions = ({ q, page, userID, category, sort }) =>
   queryOptions({
-    queryKey: ['courses', q, page, userID],
+    queryKey: ['courses', q, page, userID, sort, category],
     queryFn: async () => {
       let queryStr = `page=${page}`
       if (q) queryStr += `&q=${q}`
       if (userID) queryStr += `&userID=${userID}`
+      if (sort) queryStr += `&sort=${sort}`
+      if (category) queryStr += `&category=${category}`
 
       const response = await axios.get(`/web/course/get?${queryStr}`)
       if (response.data.success) {
@@ -130,136 +159,72 @@ export const Route = createFileRoute('/student/courses/')({
   validateSearch: (search) => ({
     q: search.q || '',
     page: Number(search.page ?? 1),
+    sort: search?.sort ?? 'newest',
+    category: search?.category ?? 'All',
+    userID: search?.userID,
   }),
   component: () => (
-       <Suspense fallback={<CoursesPageSkeleton />}>
+    <Suspense fallback={<CoursesPageSkeleton />}>
       <RouteComponent />
     </Suspense>
   ),
 })
 
-export function showLoader() {
-  // agar already loader exist hai to dobara na banao
-  if (document.getElementById('custom-loader')) return
-
-  const loader = document.createElement('div')
-  loader.id = 'custom-loader'
-  loader.innerHTML = `
-    <style>
-      .custom-loader-container {
-        position: fixed;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-        background: transparent; /* no blur, clean bg */
-      }
-      .custom-spinner {
-        display: inline-block;
-        animation: spin 1s linear infinite;
-      }
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-    </style>
-
-    <div class="custom-loader-container">
-      <div class="custom-spinner">
-        <!-- Lucide Spinner Icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" 
-             width="64" height="64" 
-             viewBox="0 0 24 24" 
-             fill="none" stroke="currentColor" 
-             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-             class="lucide lucide-loader-2">
-          <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
-        </svg>
-      </div>
-    </div>
-  `
-
-  document.body.appendChild(loader)
-}
-
-function hideLoader() {
-  const loader = document.getElementById('custom-loader')
-  if (loader) {
-    loader.remove()
-  }
-}
-
-
-
-const MiniStats = ({ students = 1250, instructor }) => (
-  <div className='mt-2 flex justify-between text-xs text-slate-600'>
-    <div className='flex items-center gap-1'>
-      <Users className='h-3 w-3' />
-      <span>{students}</span>
-    </div>
-  
-    <div className='flex items-center gap-1'>
-      <UsersIcon className='h-3 w-3' />
-      <span>
-        {instructor?.firstName} {instructor?.lastName}
-      </span>
-    </div>
-  </div>
-)
-
 function RouteComponent() {
-    const dispatch = useDispatch()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const { q, page: currentPage } = useSearch({ from: '/student/courses/' })
+  const {
+    page: currentPage,
+    sort,
+    category,
+  } = useSearch({ from: '/student/courses/' })
   const [searchInput, setSearchInput] = useSearchInput('/student/courses/')
-  const credentials = useSelector((s) => s.studentAuth.credentials,shallowEqual)
-  const subscription = useSelector((s) => s.studentAuth.subscription,shallowEqual)
+  const credentials = useSelector(
+    (s) => s.studentAuth.credentials,
+    shallowEqual
+  )
+ 
   const isLoggedIn = useSelector((s) => !!s.studentAuth.token)
-  const [selectedEnrolledCourseID, setSelectedEnrolledCourseID] = useState('')
+  const [sortOrder, setSortOrder] = useState(sort)
+  const [selectedCategory, setSelectedCategory] = useState(category)
+  const delay = searchInput.length < 3 ? 400 : 800
+  const debouncedSearch = getDebounceInput(searchInput, delay)
 
-  const debouncedSearch = getDebounceInput(searchInput, 800)
+  const handlePageChange = async (page) => {
+    if (searchInput !== '') {
+      navigate({
+        to: `/student/courses`,
+        search: { page: page, input: searchInput },
+      })
+    } else {
+      navigate({
+        to: `/student/courses`,
+        search: { page: page, input: `` },
+      })
+    }
+    await queryClient.invalidateQueries(
+      coursesQueryOptions({ input: searchInput, page })
+    )
+  }
 
   // Query
-  const { data, isLoading } = useQuery(
-    {...coursesQueryOptions({
+  const { data, isLoading, fetchStatus } = useQuery({
+    ...coursesQueryOptions({
       q: debouncedSearch,
       page: currentPage,
       userID: credentials?._id,
-    }),suspense:true}
+      sort: sortOrder,
+      category: selectedCategory,
+    }),
+    suspense: true,
+  })
+  const { courses = [], totalPages = 1, enrolledCourses = [] } = data || {}
+
+  const paginationButtons = useMemo(
+    () => getRenderPaginationButtons(currentPage, totalPages, handlePageChange),
+    [currentPage, totalPages]
   )
 
-useEffect(() => {
-  const requestInterceptor = axios.interceptors.request.use(
-    function (config) {
-      showLoader()
-      return config
-    },
-    function (error) {
-      return Promise.reject(error)
-    }
-  )
-
-  const responseInterceptor = axios.interceptors.response.use(
-    function (response) {
-      hideLoader()
-      return response
-    },
-    function (error) {
-      hideLoader()
-      return Promise.reject(error)
-    }
-  )
-
-  // Cleanup interceptors when component unmounts
-  return () => {
-    axios.interceptors.request.eject(requestInterceptor)
-    axios.interceptors.response.eject(responseInterceptor)
-  }
-}, [])
-
-  
   // Prefetch next page for faster navigation
   useEffect(() => {
     if (currentPage < (data?.totalPages || 1)) {
@@ -273,8 +238,6 @@ useEffect(() => {
     }
   }, [currentPage, debouncedSearch, credentials?._id, data?.totalPages])
 
-  const { courses = [], totalPages = 1, enrolledCourses = [] } = data || {}
-
   // Navigation
   const handleNavigation = useCallback(
     ({ page = currentPage, query = searchInput } = {}) => {
@@ -286,58 +249,54 @@ useEffect(() => {
     [navigate, currentPage, searchInput]
   )
 
-  const router = useRouter()
 
-  // Enrollment mutation
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (courseId) => {
-      if (subscription && !isActiveSubscription(subscription)) {
-        const status = checkSubscriptionStatus(subscription)
-        if (status === 'past_due') {
-          toast.error(MESSAGES.subscriptionExpired)
-          navigate('/student/pay-invoice')
-          throw new Error('Subscription expired')
-        }
-        toast.error(MESSAGES.noSubscription)
-        navigate({ to: '/student/resubscription-plans' })
-        throw new Error('No active subscription')
-      }
-      if (credentials?.remainingEnrollmentCount === 0) {
-        toast.error(MESSAGES.enrollmentLimit)
-        throw new Error('Enrollment limit exceeded')
-      }
+  useEffect(() => {
+    navigate({
+      to: '/student/courses',
+      search: {
+        q: debouncedSearch,
+        category: selectedCategory,
+        sort: sortOrder,
+        page: 1,
+        userID: credentials?._id,
+      },
+      replace: true,
+    })
+  }, [selectedCategory, sortOrder])
 
-      const response = await axios.post('/student/course/enroll', { courseId })
-      if (response.data.success) {
-        const { remainingEnrollmentCount } = response.data.data
-        dispatch(
-          handleCourseEnrollment({ id: courseId, remainingEnrollmentCount })
-        )
-        toast.success(MESSAGES.enrolledSuccess)
-        return response.data
-      }
-      throw new Error(response.data.message || 'Enrollment failed')
+  const handleCategoryChange = (value) => {
+    setSelectedCategory(value)
+  }
+
+  const handleSortChange = (value) => {
+    setSortOrder(value)
+  }
+
+  const categories = [
+    { _id: '1', name: 'Web Development' },
+    { _id: '2', name: 'Data Science' },
+    { _id: '3', name: 'Graphic Design' },
+    { _id: '4', name: 'Digital Marketing' },
+    { _id: '5', name: 'Mobile App Development' },
+    { _id: '6', name: 'Cybersecurity' },
+    { _id: '7', name: 'Artificial Intelligence' },
+    { _id: '8', name: 'test course category' },
+    { _id: '9', name: 'Content Writing' },
+    { _id: '10', name: 'UI/UX Design' },
+  ]
+  const [courseID, setCourseID] = useState('')
+  const [courseFetch, setCourseFetch] = useState(false)
+
+  const { data: courseDetails, isLoading: courseLoading } = useQuery({
+    queryKey: ['course-details', courseID],
+    queryFn: async () => {
+      const res = await axios.get(`/web/course/get/details/${courseID}`)
+console.log('res',res)
+      return res.data.data
     },
-    onSuccess: async () => {
-      queryClient.invalidateQueries(
-        coursesQueryOptions({
-          q: debouncedSearch,
-          page: currentPage,
-          userID: credentials?._id,
-        })
-      )
-      await router.invalidate({ routeId: '/student/courses/' })
-      setSelectedEnrolledCourseID('')
-    },
+    enabled: courseFetch,
   })
 
-  const handleEnrollCourse = useCallback(
-    (courseId) => {
-      setSelectedEnrolledCourseID(courseId)
-      mutate(courseId)
-    },
-    [mutate]
-  )
   return (
     <div className='min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 p-6 font-sans'>
       <div className='relative mx-auto max-w-7xl'>
@@ -367,76 +326,78 @@ useEffect(() => {
             </p>
           </div>
           <div className='flex items-center gap-3'>
-            <div className='relative w-full max-w-sm'>
+            <div className='relative flex w-full max-w-sm items-center gap-1'>
+              <Button
+                onClick={() => handleNavigation()}
+                aria-label='Search'
+                variant='outline'
+                size='lg'
+              >
+                <Search />
+              </Button>
               <Input
                 type='text'
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleNavigation()}
                 placeholder='Search courses...'
-                className='w-full rounded-lg border-slate-200 bg-white py-2.5 pr-10 pl-10 text-slate-800 placeholder-slate-400 transition-all duration-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200'
+                className='w-full rounded-lg border-slate-200 bg-white py-2.5 text-slate-800 placeholder-slate-400 transition-all duration-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200'
                 aria-label='Search courses'
               />
-              <button
-                onClick={() => handleNavigation()}
-                className='absolute top-1/2 left-3 -translate-y-1/2 text-slate-600 transition-all duration-200 hover:text-blue-600'
-                aria-label='Search'
-              >
-                <svg
-                  className='h-5 w-5'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z'
-                  />
-                </svg>
-              </button>
+
               {searchInput && (
-                <button
+                <Button
                   onClick={() => {
                     setSearchInput('')
                     handleNavigation({ query: '' })
                   }}
-                  className='absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 transition-all duration-200 hover:text-red-500'
+                  variant='outline'
+                  className='text-red-500'
                   aria-label='Clear search'
                 >
-                  <svg
-                    className='h-4 w-4'
-                    fill='currentColor'
-                    viewBox='0 0 20 20'
-                  >
-                    <path
-                      fillRule='evenodd'
-                      d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z'
-                      clipRule='evenodd'
-                    />
-                  </svg>
-                </button>
+                  <Delete />
+                </Button>
               )}
             </div>
-            <Button
-              variant='outline'
-              className='rounded-lg border-slate-200 text-slate-600 transition-all duration-300 hover:bg-blue-50 hover:text-blue-600'
-              aria-label='Filter courses'
-            >
-              <svg
-                className='mr-2 h-4 w-4'
-                fill='currentColor'
-                viewBox='0 0 20 20'
+
+            {/* Filters Section */}
+            <div className='flex items-center gap-3'>
+              {/* Category Filter */}
+              <Select
+                value={selectedCategory}
+                onValueChange={(value) => {
+                  handleCategoryChange(value)
+                }}
               >
-                <path
-                  fillRule='evenodd'
-                  d='M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z'
-                  clipRule='evenodd'
-                />
-              </svg>
-              Filter
-            </Button>
+                <SelectTrigger className='w-40 border-slate-200 bg-white focus:ring-blue-200'>
+                  <SelectValue placeholder='Category' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='All'>All</SelectItem>
+                  {categories?.map((cat) => (
+                    <SelectItem key={cat._id} value={cat.name}>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Sort Filter */}
+              <Select
+                value={sortOrder}
+                onValueChange={(value) => {
+                  handleSortChange(value)
+                }}
+              >
+                <SelectTrigger className='w-36 border-slate-200 bg-white focus:ring-blue-200'>
+                  <SelectValue placeholder='Sort by' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='newest'>Newest</SelectItem>
+                  <SelectItem value='oldest'>Oldest</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
 
@@ -451,159 +412,162 @@ useEffect(() => {
 
                 const isEnrolled =
                   isLoggedIn && enrolledCourses?.includes(course._id)
-
                 return (
-              <Card
-  key={course._id}
-  className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md transition-all duration-500 hover:-translate-y-1 hover:shadow-xl focus-within:ring-2 focus-within:ring-blue-500"
-  role="article"
-  aria-label={`Course: ${course.name}`}
->
-  {/* Image Section */}
-  <div className="relative h-44 overflow-hidden">
-    <img
-      src={coverImageUrl}
-      alt={course.name || 'Course cover image'}
-      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-      loading="lazy"
-    />
-    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
+                  <Card
+                    key={course._id}
+                    className={`group relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md transition-all duration-500 focus-within:ring-2 focus-within:ring-blue-500 hover:-translate-y-1 hover:shadow-2xl ${fetchStatus === 'fetching' && 'bg-accent animate-pulse'}`}
+                    role='article'
+                    aria-label={`Course: ${course.name}`}
+                  >
+                    {/* Image Section */}
+                    <div className='relative h-52 overflow-hidden'>
+                      <img
+                        src={coverImageUrl}
+                        alt={course.name || 'Course cover image'}
+                        className='h-full w-full object-cover transition-transform duration-700 group-hover:scale-110'
+                        loading='lazy'
+                      />
+                      <div className='absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent' />
 
-    {/* Category Badge */}
-    <div
-      className="absolute top-3 left-3 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 px-3 py-1 text-xs font-semibold text-white shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-      title={`Category: ${course.category?.name || 'N/A'}`}
-      tabIndex={0}
-      aria-label={`Category: ${course.category?.name || 'N/A'}`}
-    >
-      {course.category?.name || 'N/A'}
-    </div>
+                      {/* Category Badge */}
+                      <div
+                        className='absolute top-3 left-3 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 px-3 py-1 text-xs font-semibold text-white shadow-md'
+                        title={`Category: ${course.category?.name || 'N/A'}`}
+                      >
+                        {course.category?.name || 'General'}
+                      </div>
 
-    {/* Enrolled Badge */}
-    {isEnrolled && (
-      <div
-        className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 px-3 py-1 text-xs font-semibold text-white shadow-md focus:outline-none focus:ring-2 focus:ring-green-400"
-        title="You are enrolled in this course"
-        tabIndex={0}
-        aria-label="Enrolled in this course"
-      >
-        <svg
-          className="h-3 w-3"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <path
-            fillRule="evenodd"
-            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 
-            01-1.414 0l-4-4a1 1 0 011.414-1.414L8 
-            12.586l7.293-7.293a1 1 0 011.414 
-            0z"
-            clipRule="evenodd"
-          />
-        </svg>
-        Enrolled
-      </div>
-    )}
-  </div>
+                      {/* Enrolled Badge */}
+                      {isEnrolled && (
+                        <div className='absolute top-3 right-3 flex items-center gap-1 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 px-3 py-1 text-xs font-semibold text-white shadow-md'>
+                          <Check size={15} />
+                          Enrolled
+                        </div>
+                      )}
+                    </div>
 
-  {/* Body */}
-  <div className="space-y-3 p-5">
-    {/* Title */}
-    <h3 className="line-clamp-2 text-lg font-bold text-slate-800 transition-colors duration-300 group-hover:text-blue-600">
-      {course.name}
-    </h3>
+                    {/* Body */}
+                    <CardContent className='space-y-3 p-4'>
+                      <h3 className='line-clamp-2 text-lg font-bold text-slate-800 transition-colors duration-300 group-hover:text-blue-600'>
+                        {course.name}
+                      </h3>
+                      <p className='line-clamp-2 text-sm text-slate-600'>
+                        {course.description}
+                      </p>
+                    </CardContent>
 
-    {/* Description */}
-    <p className="line-clamp-2 text-sm text-slate-600">{course.description}</p>
+                    {/* Footer */}
+                    <CardFooter className='flex flex-col gap-2 px-4 pb-4'>
+                      <div className='flex w-full items-center gap-2'>
+                        {/* View Button */}
+                        <Button
+                          onClick={() =>
+                            navigate({
+                              to: `/student/courses/${course._id}`,
+                              search: { userID: credentials?._id },
+                            })
+                          }
+                          className='w-1/2 bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md transition-all duration-300 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg'
+                        >
+                          <Eye className='mr-1 h-4 w-4' />
+                          View
+                        </Button>
 
-    {/* Stats */}
-    <div className="border-t border-slate-100 pt-2">
-      <MiniStats
-        students={course.enrolledStudents}
-        rating={course.rating}
-        instructor={course.instructor}
-      />
-    </div>
+                        {/* Popover with Tooltip */}
+                        <Popover>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  variant='outline'
+                                  onClick={() => {
+                                    ;(setCourseID(course._id),
+                                      setCourseFetch(true))
+                                  }}
+                                  className='w-1/2 border-blue-600 text-blue-600 hover:bg-blue-50'
+                                >
+                                  <Info className='mr-1 h-4 w-4' />
+                                  Details
+                                </Button>
+                              </PopoverTrigger>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>See quick course stats and instructor info</p>
+                            </TooltipContent>
+                          </Tooltip>
 
-    {/* Buttons */}
-    <div className="space-y-2 pt-2">
-      {isLoggedIn && !isEnrolled && (
-        <Button
-          disabled={isPending && selectedEnrolledCourseID === course._id}
-          onClick={() => handleEnrollCourse(course._id)}
-          className="w-full rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 py-2.5 font-semibold text-white shadow-sm transition-all duration-300 hover:from-amber-600 hover:to-amber-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-400"
-          aria-label={`Enroll in ${course.name}`}
-          aria-pressed={isEnrolled}
-          aria-busy={isPending && selectedEnrolledCourseID === course._id}
-        >
-          {isPending && selectedEnrolledCourseID === course._id ? (
-            <div className="flex items-center justify-center">
-              <div className="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white" />
-              Enrolling...
-            </div>
-          ) : (
-            <>
-              <BookOpen className="mr-2 h-4 w-4" aria-hidden="true" />
-              Enroll Now
-            </>
-          )}
-        </Button>
-      )}
+                          <PopoverContent
+                            side='top'
+                            align='center'
+                            className='w-80 space-y-3 p-4 text-sm'
+                          >
+                            {courseLoading ? (
+                              <Skeleton className='h-40 w-full' />
+                            ) : (
+                              <>
+                                <p className='scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent max-h-28 overflow-y-auto pr-1 text-sm leading-snug text-slate-700 sm:text-[15px]'>
+                                  {courseDetails?.description ||
+                                    'No description available.'}
+                                </p>
 
-      <Button
-        variant="outline"
-        disabled={isPending && selectedEnrolledCourseID === course._id}
-        onClick={() =>
-          navigate({
-            to: `/student/courses/${course._id}`,
-            search: { userID: credentials?._id },
-          })
-        }
-        className="w-full rounded-lg border-slate-200 text-slate-700 transition-all duration-300 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        aria-label={`View details of ${course.name}`}
-      >
-        <BookOpen className="mr-2 h-4 w-4" aria-hidden="true" />
-        View Details
-      </Button>
-    </div>
+                                <div className='space-y-2 border-t border-slate-200 pt-3'>
+                                  <div className='flex items-center gap-2 text-slate-700'>
+                                    <User className='h-4 w-4 text-blue-500' />
+                                    <span>
+                                      Instructor:{' '}
+                                      {courseDetails?.instructor?.firstName
+                                        ? `${courseDetails.instructor.firstName} ${courseDetails?.instructor.lastName || ''}`
+                                        : 'Unknown'}
+                                    </span>
+                                  </div>
 
-    {/* Live region for enrollment status updates */}
-    <div
-      aria-live="polite"
-      className="sr-only"
-      role="status"
-      aria-atomic="true"
-    >
-      {isPending && selectedEnrolledCourseID === course._id
-        ? `Enrolling in ${course.name}...`
-        : isEnrolled
-        ? `You are enrolled in ${course.name}`
-        : ''}
-    </div>
-  </div>
-</Card>
-
+                                  <div className='flex items-center gap-2 text-slate-700'>
+                                    <Users className='h-4 w-4 text-blue-500' />
+                                    <span>
+                                      {courseDetails?.enrolledCount || 0}{' '}
+                                      students enrolled
+                                    </span>
+                                  </div>
+                                  <div className='flex items-center gap-2 text-slate-700'>
+                                    <File className='h-4 w-4 text-blue-500' />
+                                    <span>
+                                      {courseDetails?.material?.length || 0}{' '}
+                                      Course Materials
+                                    </span>
+                                  </div>
+                                  {course.updatedAt && (
+                                    <div className='flex items-center gap-2 text-slate-700'>
+                                      <Clock className='h-4 w-4 text-blue-500' />
+                                      <span>
+                                        Updated{' '}
+                                        {format(courseDetails.updatedAt, 'PPP')}
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                              </>
+                            )}
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </CardFooter>
+                  </Card>
                 )
               })}
             </div>
           </Show.When>
           <Show.When isTrue={!isLoading && courses.length === 0}>
-         
-         
-              <div className='py-16 text-center'>
-                <div className='mx-auto w-fit rounded-full bg-slate-100 p-6 shadow-inner'>
-                  <BookOpen className='h-16 w-16 text-slate-300' />
-                </div>
-                <h3 className='mt-6 text-2xl font-bold text-slate-800'>
-                  {MESSAGES.noCourses}
-                </h3>
-                <p className='mx-auto mt-2 max-w-md text-lg text-slate-600'>
-                  {MESSAGES.noCoursesDesc}
-                </p>
+            <div className='py-16 text-center'>
+              <div className='mx-auto w-fit rounded-full bg-slate-100 p-6 shadow-inner'>
+                <BookOpen className='h-16 w-16 text-slate-300' />
               </div>
-          
+              <h3 className='mt-6 text-2xl font-bold text-slate-800'>
+                {MESSAGES.noCourses}
+              </h3>
+              <p className='mx-auto mt-2 max-w-md text-lg text-slate-600'>
+                {MESSAGES.noCoursesDesc}
+              </p>
+            </div>
           </Show.When>
         </Show>
 
@@ -616,7 +580,6 @@ useEffect(() => {
                   size='sm'
                   variant='ghost'
                   onClick={() => handleNavigation({ page: currentPage - 1 })}
-                  className='h-10 w-10 rounded-lg text-blue-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700'
                   aria-label='Previous page'
                 >
                   <svg
@@ -632,15 +595,12 @@ useEffect(() => {
                   </svg>
                 </Button>
               )}
-              {getRenderPaginationButtons(currentPage, totalPages, (page) =>
-                handleNavigation({ page })
-              )}
+              {paginationButtons}
               {currentPage < totalPages && (
                 <Button
                   size='sm'
                   variant='ghost'
                   onClick={() => handleNavigation({ page: currentPage + 1 })}
-                  className='h-10 w-10 rounded-lg text-blue-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700'
                   aria-label='Next page'
                 >
                   <svg

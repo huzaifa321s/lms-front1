@@ -119,7 +119,7 @@ export default function ProfileForm({ teacherCreds }) {
     <div className="container mx-auto px-4 py-12">
       {/* Header */}
       <header className="mb-12 text-center">
-        <h1 className="text-4xl font-extrabold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent mb-3">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent mb-3">
           Profile Settings
         </h1>
         <p className="text-[#64748b] text-lg max-w-2xl mx-auto">
@@ -273,7 +273,7 @@ export default function ProfileForm({ teacherCreds }) {
 
                 <Button
                   type="submit"
-                  className="w-full rounded-[8px] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white font-medium shadow-sm hover:scale-[1.01] transition-all duration-200"
+                  className="w-full"
                 >
                   {mutation.status === "pending"
                     ? "Updating..."
@@ -312,7 +312,6 @@ export default function ProfileForm({ teacherCreds }) {
                 variant="outline"
                 disabled={disabled1 || disabled2 || passBtnLoading}
                 onClick={() => postData(passwordObj, "updatePassword")}
-                className="rounded-[8px] border-[#e2e8f0] bg-white text-[#2563eb] hover:bg-[#2563eb]/10 hover:text-[#1d4ed8] transition-all duration-300"
               >
                 {passBtnLoading ? "Updating..." : "Update Password"}
               </Button>

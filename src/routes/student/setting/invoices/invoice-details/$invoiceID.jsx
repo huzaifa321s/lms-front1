@@ -66,7 +66,6 @@ function InvoiceDetails() {
               <Button
                 variant="ghost"
                 size="lg"
-                className="bg-[#ffffff] border border-[#e2e8f0] rounded-[8px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] text-[#2563eb] hover:bg-[#e2e8f0] hover:scale-105 transition-all duration-300"
                 onClick={() => window.history.back()}
               >
                 <ArrowLeft size={20} className="mr-2" />
@@ -81,7 +80,6 @@ function InvoiceDetails() {
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-gradient-to-r from-[#f59e0b] to-[#d97706] border-none text-white rounded-[8px] hover:shadow-[0_4px_6px_rgba(0,0,0,0.1)] hover:scale-105 transition-all duration-200"
               >
                 <Download size={16} className="mr-2" />
                 Download
@@ -89,7 +87,6 @@ function InvoiceDetails() {
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-gradient-to-r from-[#f59e0b] to-[#d97706] border-none text-white rounded-[8px] hover:shadow-[0_4px_6px_rgba(0,0,0,0.1)] hover:scale-105 transition-all duration-200"
               >
                 <PrinterIcon size={16} className="mr-2" />
                 Print
@@ -97,7 +94,6 @@ function InvoiceDetails() {
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-gradient-to-r from-[#f59e0b] to-[#d97706] border-none text-white rounded-[8px] hover:shadow-[0_4px_6px_rgba(0,0,0,0.1)] hover:scale-105 transition-all duration-200"
               >
                 <Mail size={16} className="mr-2" />
                 Email
@@ -383,16 +379,15 @@ function InvoiceDetails() {
             </p>
             <div className="flex justify-center gap-3">
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
-                className="bg-gradient-to-r from-[#f59e0b] to-[#d97706] border-none text-white rounded-[8px] hover:shadow-[0_4px_6px_rgba(0,0,0,0.1)] hover:scale-105 transition-all duration-200"
+
               >
                 Contact Support
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-gradient-to-r from-[#f59e0b] to-[#d97706] border-none text-white rounded-[8px] hover:shadow-[0_4px_6px_rgba(0,0,0,0.1)] hover:scale-105 transition-all duration-200"
               >
                 View FAQ
               </Button>

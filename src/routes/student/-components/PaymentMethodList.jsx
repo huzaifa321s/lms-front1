@@ -72,7 +72,6 @@ console.log('data ===>',data)
             variant="ghost"
             size="icon"
             onClick={() => paymentMethodsListFlag(false)}
-            className="text-slate-600 hover:text-blue-600 hover:bg-blue-50"
           >
             ✕
           </Button>
@@ -145,7 +144,6 @@ console.log('data ===>',data)
                 variant="outline"
                 size="sm"
                 onClick={() => dispatch(openModal({ type: 'add-payment-method' }))}
-                className="border-slate-200 text-slate-800 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300 "
               >
                 + Add Payment Method
               </Button>
@@ -155,7 +153,6 @@ console.log('data ===>',data)
 
         <div className="border-t border-slate-100 mt-6 pt-4 flex justify-end px-6">
           <Button
-            className="px-6 bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600 disabled:from-slate-300 disabled:to-slate-400 disabled:text-slate-600 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 disabled:scale-100 "
             disabled={
               paymentMethods.length < 1 || resubscribeMutation.status === 'pending'
             }

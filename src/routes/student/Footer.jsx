@@ -88,14 +88,12 @@ export const Footer = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="h-12 w-32 rounded-lg bg-black text-white hover:bg-slate-800"
               >
                 App Store
               </Button>
               <Button
                 variant="outline"
                 size="lg"
-                className="h-12 w-32 rounded-lg bg-green-600 text-white hover:bg-green-700"
               >
                 Play Store
               </Button>

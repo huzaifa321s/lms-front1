@@ -263,8 +263,8 @@ export default function LoginForm({ className, ...props }) {
               {/* Login Button - Student Theme */}
               <Button
                 type='submit'
-                className='mt-6 h-11 w-full rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 font-semibold text-white shadow-md transition-all duration-200 hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50'
                 disabled={isLoading}
+                className="w-full"
               >
                 {isLoading ? (
                   <span className='flex items-center gap-2'>

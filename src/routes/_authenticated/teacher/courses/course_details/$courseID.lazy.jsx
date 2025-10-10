@@ -193,7 +193,7 @@ console.log('fitleredStudents ====>',filteredStudents)
               <Button
                 size='sm'
                 variant='outline'
-                className='border-[#e2e8f0] text-[#10b981] hover:bg-[#e2e8f0] rounded-[8px]'
+                className="text-green-500"
                 onClick={handleEditClick}
               >
                 <Edit className='mr-2 h-4 w-4' />
@@ -201,8 +201,7 @@ console.log('fitleredStudents ====>',filteredStudents)
               </Button>
               <Button
                 size='sm'
-                variant='outline'
-                className='border-[#e2e8f0] text-[#ef4444] hover:bg-[#e2e8f0] rounded-[8px]'
+                variant='destructive'
                 onClick={handleDeleteClick}
               >
                 <Trash2 className='mr-2 h-4 w-4' />
@@ -210,8 +209,8 @@ console.log('fitleredStudents ====>',filteredStudents)
               </Button>
               <Button
                 size='sm'
+                className="text-black"
                 variant='outline'
-                className='border-[#e2e8f0] text-[#475569] hover:bg-[#e2e8f0] rounded-[8px] transition-all duration-300'
                 onClick={() => window.history.back()}
               >
                 <ArrowLeft className='mr-2 h-4 w-4' />
@@ -221,12 +220,7 @@ console.log('fitleredStudents ====>',filteredStudents)
           </div>
    
       </Header>
-      {/* Background glow effects */}
-      <div className='pointer-events-none absolute inset-0 overflow-hidden'>
-        <div className='absolute -top-40 -right-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] opacity-20 mix-blend-multiply blur-xl filter'></div>
-        <div className='absolute -bottom-40 -left-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#f59e0b] to-[#d97706] opacity-20 mix-blend-multiply blur-xl filter delay-1000'></div>
-        <div className='absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 transform animate-pulse rounded-full bg-gradient-to-r from-[#10b981] to-[#059669] opacity-10 mix-blend-multiply blur-xl filter delay-500'></div>
-      </div>
+
 
       {/* Header */}
    
@@ -427,7 +421,6 @@ console.log('fitleredStudents ====>',filteredStudents)
                       <Button
                         variant="outline"
                         size="sm"
-                        className="border-slate-200 text-blue-600 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 rounded-xl "
                         onClick={() => console.log("Download", m.media)}
                       >
                         <Download className="mr-2 h-4 w-4" />
@@ -482,7 +475,6 @@ console.log('fitleredStudents ====>',filteredStudents)
                   <Button
                     variant='outline'
                     size='sm'
-                    className='border-[#e2e8f0] text-[#2563eb] hover:bg-[#e2e8f0] rounded-[8px]'
                   >
                     <Filter className='mr-2 h-4 w-4' />
                     Filter

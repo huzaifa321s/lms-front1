@@ -140,7 +140,7 @@ export const NavbarRouteComponent = () => {
               <Button
                 size='sm'
                 onClick={() => navigate({ to: '/student/' })}
-                className='rounded-md bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow hover:from-amber-600 hover:to-amber-700'
+                
               >
                 <LayoutDashboard className='mr-2 h-4 w-4' />
                 Dashboard
@@ -244,7 +244,7 @@ export const NavbarRouteComponent = () => {
                         navigate({ to: '/student/' })
                         setOpen(false)
                       }}
-                      className='flex w-full items-center justify-start rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-3 py-2 text-white'
+                      
                     >
                       <LayoutDashboard className='mr-2 h-5 w-5' /> Dashboard
                     </Button>

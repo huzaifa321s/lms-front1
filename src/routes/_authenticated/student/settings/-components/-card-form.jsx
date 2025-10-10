@@ -94,7 +94,6 @@ const CardForm = ({ plan, setCardDetailsFlag }) => {
               <Button
                 variant="ghost"
                 onClick={() => setCardDetailsFlag(false)}
-                className="text-slate-600 hover:text-blue-600 hover:bg-blue-50"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -150,7 +149,6 @@ const CardForm = ({ plan, setCardDetailsFlag }) => {
           <div className="mt-6 text-right">
             <Button
               type="submit"
-              className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600 disabled:from-slate-300 disabled:to-slate-400 disabled:text-slate-600 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 disabled:scale-100 "
               disabled={!stripe || loading || !cardComplete || mutation.status === 'pending'}
               loading={mutation.status === 'pending'}
             >

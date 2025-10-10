@@ -54,10 +54,9 @@ export default function DeleteCategoryDialog1({
       className='text-xs font-semibold text-[#1e293b] sm:text-sm'
     >
       Please type{' '}
-      <button
+      <Button
         type='button'
         onClick={handleCopy}
-        className='inline-flex items-center gap-1 font-bold text-[#ef4444] hover:underline focus:outline-none'
       >
         'delete'
         {copied ? (
@@ -65,7 +64,7 @@ export default function DeleteCategoryDialog1({
         ) : (
           <ClipboardIcon className='h-3 w-3 text-gray-500' />
         )}
-      </button>{' '}
+      </Button>{' '}
       to confirm
     </Label>
               <div className='relative'>
@@ -102,7 +101,6 @@ export default function DeleteCategoryDialog1({
               size='sm'
               type={inputValue === 'delete' ? 'submit' : 'button'}
               variant='destructive'
-              className='transform rounded-[8px] bg-gradient-to-r from-[#ef4444] to-[#dc2626] text-[#ffffff]'
               disabled={
                 deleteBlogCategoryFirstMutation.status === 'pending' ||
                 (showInput && inputValue !== 'delete')

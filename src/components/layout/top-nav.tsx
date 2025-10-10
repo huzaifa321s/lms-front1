@@ -28,7 +28,7 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
             <Button
               size='icon'
               variant='outline'
-              className='rounded-[8px] border-[#475569] bg-[#0f172a] text-[#e2e8f0] shadow-none transition-all duration-300 hover:scale-[1.05] hover:border-[#2563eb] hover:bg-[#2563eb]/20 hover:text-[#bfdbfe]'
+              className='border-[#475569] bg-[#0f172a] text-[#e2e8f0] shadow-none transition-all duration-300 hover:scale-[1.05] hover:border-[#2563eb] hover:bg-[#2563eb]/20 hover:text-[#bfdbfe]'
             >
               <Menu />
             </Button>

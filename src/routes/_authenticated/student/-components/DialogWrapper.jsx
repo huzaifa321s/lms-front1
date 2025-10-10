@@ -516,13 +516,11 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
                 <Button
                   variant='ghost'
                   onClick={() => dispatch(closeModal())}
-                  className='rounded-[8px] text-[#64748b] transition-all duration-300 hover:bg-[#2563eb]/10 hover:text-[#1d4ed8]'
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleLoginRedirect}
-                  className='rounded-[8px] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] font-medium text-white transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]'
                 >
                   Login
                 </Button>
@@ -563,7 +561,6 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
                 <Button
                   size='sm'
                   variant='outline'
-                  className='rounded-full px-5 text-sm font-medium transition-colors duration-200 hover:bg-gray-100'
                   onClick={() => dispatch(closeModal())}
                 >
                   Cancel
@@ -572,7 +569,6 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
               <Button
                 size='sm'
                 variant='destructive'
-                className='rounded-full bg-red-500 px-5 text-sm font-medium transition-colors duration-200 hover:bg-red-600'
                 onClick={handleLogoutUser}
               >
                 <LogOutIcon /> Logout

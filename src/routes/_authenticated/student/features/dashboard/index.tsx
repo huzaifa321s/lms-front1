@@ -17,8 +17,8 @@ import {
   SubscriptIcon,
   LayoutDashboard,
   BarChart3,
-  Settings2,
   Puzzle,
+   Trophy,
   SettingsIcon,
 } from 'lucide-react'
 import { shallowEqual, useSelector } from 'react-redux'
@@ -132,35 +132,39 @@ MiniDonutChart.displayName = 'MiniDonutChart'
 
 function WelcomeBanner({ userName, creds }) {
   return (
-    <div className='relative mb-2 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 p-8 text-white shadow-lg'>
+     <div className="relative mb-2 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 p-8 text-white shadow-lg">
       {/* Floating Decorative Circles */}
-      <div className='absolute -top-16 -left-16 h-56 w-56 animate-[spin_25s_linear_infinite] rounded-full bg-blue-400/20 blur-3xl filter'></div>
-      <div className='absolute -right-16 -bottom-16 h-72 w-72 animate-[spin_30s_linear_infinite] rounded-full bg-blue-500/20 blur-3xl filter'></div>
+      <div className="absolute -top-16 -left-16 h-56 w-56 animate-[spin_25s_linear_infinite] rounded-full bg-blue-400/20 blur-3xl filter"></div>
+      <div className="absolute -right-16 -bottom-16 h-72 w-72 animate-[spin_30s_linear_infinite] rounded-full bg-blue-500/20 blur-3xl filter"></div>
 
-      <div className='relative z-10 flex flex-col items-center gap-6 md:flex-row md:justify-between'>
-        <div className='text-center md:text-left'>
-          <h1 className='mb-2 text-3xl font-bold md:text-4xl'>
-            Welcome {creds?.customerId ? 'back' : ''},{' '}
-            <span className='text-blue-200'>{userName}</span> 👋
+      <div className="relative z-10 flex flex-col items-center gap-6 md:flex-row md:justify-between">
+        {/* Text Section */}
+        <div className="text-center md:text-left">
+          <h1 className="mb-2 flex items-center justify-center gap-2 text-3xl font-bold md:justify-start md:text-4xl">
+            <Trophy className="h-7 w-7 text-yellow-300 drop-shadow-sm" />
+            Welcome {creds?.customerId ? "back" : ""},{" "}
+            <span className="text-blue-200">{userName}</span> 👋
           </h1>
-          <p className='max-w-lg text-lg text-blue-100'>
-            Track your learning progress, explore new courses, and unlock
-            premium features.
+          <p className="max-w-lg text-lg text-blue-100 flex items-center justify-center gap-2 md:justify-start">
+            <BookOpen className="h-5 w-5 text-blue-200" />
+            Track your learning progress, explore new courses, and unlock premium features.
           </p>
         </div>
-        <div className='flex gap-4'>
+
+        {/* Buttons Section */}
+        <div className="flex gap-4">
           {/* Settings Button */}
-          <Button className='flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg transition-all hover:from-blue-600 hover:to-blue-700'>
-            <Settings className='h-5 w-5' />
+          <Button >
+            <Settings className="h-5 w-5" />
             Settings
           </Button>
 
           {/* Profile Button */}
           <Button
-            variant='outline'
-            className='flex items-center gap-2 bg-white/20 transition-all'
+            variant="outline"
+           className="text-black"
           >
-            <User className='h-5 w-5' />
+            <User className="h-5 w-5" />
             My Profile
           </Button>
         </div>
@@ -408,7 +412,6 @@ export default function Dashboard() {
                     <Button
                       size='sm'
                       variant='outline'
-                      className='h-6 border-green-200 bg-transparent px-2 py-1 text-xs text-green-700 hover:bg-green-50'
                       onClick={handleViewTeachers}
                     >
                       <Eye /> View
@@ -581,7 +584,7 @@ export default function Dashboard() {
                     <Button
                       size='sm'
                       variant='outline'
-                      className='w-full border-blue-200 bg-transparent text-xs text-blue-700 hover:bg-blue-50'
+                      
                       onClick={handleViewSpending}
                     >
                       <Lock className='mr-1 h-3 w-3' />
@@ -630,7 +633,7 @@ export default function Dashboard() {
                   <Button
                     size='sm'
                     variant='outline'
-                    className='w-full border-green-200 bg-transparent text-xs text-green-700 hover:bg-green-50'
+                     className="w-full"
                     onClick={handleViewPaymentMethods}
                   >
                     {isSubscribed ? (
@@ -698,7 +701,7 @@ export default function Dashboard() {
                       <Button
                         size='sm'
                         variant='outline'
-                        className='mt-2 w-full border-yellow-200 bg-transparent text-xs text-yellow-700 hover:bg-yellow-50'
+                        className="w-full"
                         onClick={handleManagePlan}
                       >
                         <ShieldCheck className='mr-1 h-3 w-3' />
@@ -709,7 +712,7 @@ export default function Dashboard() {
                     <Button
                       size='sm'
                       variant='outline'
-                      className='w-full border-yellow-200 bg-transparent text-xs text-yellow-700 hover:bg-yellow-50'
+                        className="w-full"
                       onClick={handleManagePlan}
                     >
                       <Lock className='mr-1 h-3 w-3' />
@@ -855,7 +858,6 @@ export default function Dashboard() {
                     </div>
                     <Button
                       variant='outline'
-                      className='border-blue-200 text-blue-700 hover:bg-blue-50'
                       onClick={handleViewSpending}
                     >
                       <SubscriptIcon /> Subscribe Now

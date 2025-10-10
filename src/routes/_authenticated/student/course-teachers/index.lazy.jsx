@@ -97,7 +97,8 @@ function RouteComponent() {
     from: '/_authenticated/student/course-teachers/',
   })
   console.log('searchParams ===>', searchParams)
-  const debouncedSearch = getDebounceInput(searchInput, 800)
+  const delay = searchInput.length < 3 ? 400 : 800
+  const debouncedSearch = getDebounceInput(searchInput, delay)
   let currentPage = useSearch({
     from: '/_authenticated/student/course-teachers/',
     select: (search) => search.page,

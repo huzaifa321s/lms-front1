@@ -32,7 +32,7 @@ function InstructorsPage() {
         <Button
           size="sm"
           variant="outline"
-          className="absolute top-6 left-6 bg-white/20 z-20"
+          className="text-black"
           onClick={() => navigate({ to: '/' })}
         >
           ← Back
@@ -74,7 +74,6 @@ function InstructorsPage() {
             <Button
               variant="default"
               size="sm"
-              className="mt-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300"
             >
               View Profile
             </Button>
@@ -95,7 +94,6 @@ function InstructorsPage() {
         <Button
           size=""
           onClick={() =>navigate({to:'/teacher/register'})}
-          className="bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg font-bold hover:from-blue-600 hover:to-blue-700 transition-all"
         >
           Start Teaching Today
         </Button>

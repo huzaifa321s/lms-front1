@@ -7,7 +7,13 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 import { useSearch, createLazyFileRoute } from '@tanstack/react-router'
-import { BookOpen, LayoutDashboard, Puzzle, Search, Settings } from 'lucide-react'
+import {
+  BookOpen,
+  LayoutDashboard,
+  Puzzle,
+  Search,
+  Settings,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -45,13 +51,11 @@ const coursesQueryOptions = (deps) =>
     },
     placeholderData: (prev) => prev,
     staleTime: 1000 * 60 * 5,
-
   })
 
 export const Route = createLazyFileRoute(
   '/_authenticated/student/_subscribed/enrolledcourses/'
 )({
-  
   component: () => (
     <Suspense fallback={<SmallLoader />}>
       <RouteComponent />
@@ -77,7 +81,8 @@ function RouteComponent() {
   const [searchInput, setSearchInput] = useSearchInput(
     '/_authenticated/student/_subscribed/enrolledcourses/'
   )
-  const debouncedSearch = getDebounceInput(searchInput, 800)
+  const delay = searchInput.length < 3 ? 400 : 800
+  const debouncedSearch = getDebounceInput(searchInput, delay)
   const { data, fetchStatus, isFetching } = useQuery({
     ...coursesQueryOptions({ input: debouncedSearch, page: searchParams.page }),
     suspense: isFirstRender.current,
@@ -92,11 +97,12 @@ function RouteComponent() {
       isFirstRender.current = false
     }
   }, [])
+
   useEffect(() => {
     navigate({
       to: '/student/enrolledcourses',
       search: { input: debouncedSearch, page: 1 },
-      replace: true, // history clean
+      replace: true
     })
   }, [debouncedSearch])
 
@@ -118,6 +124,7 @@ function RouteComponent() {
       coursesQueryOptions({ input: searchInput, page })
     )
   }
+
   const queryPage = useSearch({
     select: (search) => search.page,
   })
@@ -151,34 +158,33 @@ function RouteComponent() {
   return (
     <>
       <Header>
-        <TopNav links={topNav}/>
-          <div className='ml-auto w-fit'>
-            <Show>
-              <Show.When isTrue={true}>
-                <Label className='flex items-center gap-2'>
-                  <Input
-                    size='sm'
-                    type='text'
-                    value={searchInput}
-                    className='grow border-slate-200 focus:border-blue-500 focus:ring-blue-500'
-                    placeholder='Search courses...'
-                    onChange={(e) => setSearchInput(e.target.value)}
-                  />
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={searchEnrolledCourses}
-                    loading={isFetching}
-                    disabled={isFetching}
-                    className='border-blue-500 text-blue-600 hover:bg-blue-50'
-                  >
-                    {!isFetching && <Search className='h-4 w-4' />}
-                  </Button>
-                </Label>
-              </Show.When>
-            </Show>
-          </div>
-
+        <TopNav links={topNav} />
+        <div className='ml-auto w-fit'>
+          <Show>
+            <Show.When isTrue={true}>
+              <Label className='flex items-center gap-2'>
+                <Input
+                  size='sm'
+                  type='text'
+                  value={searchInput}
+                  className='grow border-slate-200 focus:border-blue-500 focus:ring-blue-500'
+                  placeholder='Search courses...'
+                  onChange={(e) => setSearchInput(e.target.value)}
+                />
+                <Button
+                  variant='outline'
+                  size='sm'
+                  onClick={searchEnrolledCourses}
+                  loading={isFetching}
+                  disabled={isFetching}
+                  className='border-blue-500 text-blue-600 hover:bg-blue-50'
+                >
+                  {!isFetching && <Search className='h-4 w-4' />}
+                </Button>
+              </Label>
+            </Show.When>
+          </Show>
+        </div>
       </Header>
       <h1 className='mx-2 my-2 bg-clip-text text-2xl font-extrabold tracking-tight drop-shadow-lg md:text-3xl'>
         Enrolled Courses
@@ -197,6 +203,9 @@ function RouteComponent() {
                       title={course.name}
                       desc={course.description}
                       image={`${baseUrl}/cover-images/${course.coverImage}`}
+                      material={course.material.length}
+                      instructor={course.instructor}
+                      enrollmentDate={course.updatedAt}
                     />
                   )
                 })}
@@ -223,7 +232,6 @@ function RouteComponent() {
               <Button
                 size='sm'
                 onClick={() => handlePageChange(queryPage - 1)}
-                className='bg-blue-600 text-white hover:bg-blue-700'
               >
                 «
               </Button>
@@ -233,7 +241,6 @@ function RouteComponent() {
               <Button
                 size='sm'
                 onClick={() => handlePageChange(queryPage + 1)}
-                className='bg-blue-600 text-white hover:bg-blue-700'
               >
                 »
               </Button>
@@ -251,28 +258,27 @@ const topNav = [
     href: '/student',
     isActive: false,
     disabled: false,
-    icon:LayoutDashboard
+    icon: LayoutDashboard,
   },
   {
     title: 'Courses',
     href: '/student/enrolledcourses',
     isActive: true,
     disabled: false,
-    icon:BookOpen
+    icon: BookOpen,
   },
   {
     title: 'Quizzes (Dummy)',
     href: 'dashboard/products',
     isActive: false,
     disabled: true,
-    icon:Puzzle
-    
+    icon: Puzzle,
   },
   {
     title: 'Settings',
     href: '/student/settings',
     isActive: false,
     disabled: false,
-    icon:Settings
+    icon: Settings,
   },
 ]

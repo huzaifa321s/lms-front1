@@ -109,7 +109,6 @@ export function Plans({ mode, setThings}) {
               <CardFooter className="p-0 flex justify-center">
                 <Button
                   onClick={() => handleClick(s)}
-                  className="w-full rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold py-3 px-6 text-lg hover:from-blue-600 hover:to-indigo-600 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 flex items-center gap-2 justify-center "
                 >
                   <span>Buy Now</span>
                   <ArrowRight className="h-4 w-4" />

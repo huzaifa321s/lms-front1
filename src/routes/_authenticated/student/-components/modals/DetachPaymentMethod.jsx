@@ -26,7 +26,6 @@ export default function DetachPaymentMethodDialog({ confirmDetach, cardDetach })
                 size="sm"
                 disabled={cardDetach.status === "pending"}
                 variant="outline"
-                className="rounded-[8px] border border-[#e2e8f0] bg-[#ffffff] text-[#64748b] transition-colors hover:bg-[#e2e8f0] hover:text-[#1e293b]"
                 onClick={() => dispatch(closeModal())}
               >
                 Cancel
@@ -38,7 +37,6 @@ export default function DetachPaymentMethodDialog({ confirmDetach, cardDetach })
               onClick={() => cardDetach.mutate()}
               loading={cardDetach.status === "pending"}
               disabled={cardDetach.status === "pending"}
-              className="relative inline-flex h-10 items-center justify-center overflow-hidden rounded-[8px] bg-gradient-to-r from-[#ef4444] to-[#dc2626] font-medium text-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition duration-300 ease-out hover:scale-105 hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]"
             >
               {cardDetach.status === "pending" ? "Detaching..." : "Detach"}
             </Button>

@@ -87,19 +87,17 @@ const {navigate,dispatch} = useAppUtils();
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-black">
               <Button
                 variant="outline"
-                className="rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
                 onClick={() => navigate({ to: `/admin/blogs/edit/${blogDetails?._id}` })}
               >
-                <Edit3 className="h-4 w-4 mr-2 text-[#2563eb]" />
+                <Edit3 className="h-4 w-4 mr-2" />
                 Edit
               </Button>
 
               <Button
                 variant="destructive"
-                className="rounded-[8px] bg-[#ef4444] text-white hover:bg-[#dc2626] focus-visible:ring-2 focus-visible:ring-[#ef4444] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
                 onClick={() => dispatch(openModalAdmin({ type: 'delete-blog', props: { blogID: blogDetails?._id, redirect: '/admin/blogs' } }))}
               >
                 <Trash2 className="h-4 w-4 mr-2" />
@@ -108,7 +106,6 @@ const {navigate,dispatch} = useAppUtils();
              <Button
             
             variant="outline"
-            className="group rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300"
             onClick={() => window.history.back()}
           >
             <ArrowLeft className="h-5 w-5 text-[#2563eb] transition-transform duration-200 group-hover:-translate-x-1 group-hover:transform" />

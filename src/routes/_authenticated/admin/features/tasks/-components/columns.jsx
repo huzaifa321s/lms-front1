@@ -15,7 +15,7 @@ export const columns = [
     accessorKey: 'id',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Task" />
-    ),
+  ),
     cell: ({ row }) => (
       <div className="w-[60px] sm:w-[80px] truncate">
         {row.getValue('id')}

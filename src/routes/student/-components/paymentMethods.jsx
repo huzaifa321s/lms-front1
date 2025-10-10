@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useQueryClient } from "@tanstack/react-query"
+import { Delete } from "lucide-react"
 
 const PaymentMethods = ({
   paymentMethods,
@@ -78,7 +79,7 @@ const PaymentMethods = ({
                   <Button
                     size="sm"
                     variant="outline"
-                    className="!text-red-600 !border-red-200 hover:!bg-red-50 hover:!border-red-300 !w-9 !h-9 !p-0"
+                    className="text-red-500"
                     onClick={() => {
                       dispatch(
                         openModal({
@@ -91,15 +92,7 @@ const PaymentMethods = ({
                       )
                     }}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                  <Delete/>
                   </Button>
                 )}
               </div>

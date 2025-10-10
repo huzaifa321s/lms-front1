@@ -39,7 +39,6 @@ function CancelSubscriptionDialog({
                 variant="outline"
                 disabled={planCancel.status === "pending"}
                 onClick={closeModal}
-                className="rounded-[8px] border border-[#e2e8f0] bg-[#ffffff] text-[#64748b] transition-colors hover:bg-[#e2e8f0] hover:text-[#1e293b]"
               >
                 Go Back
               </Button>
@@ -51,7 +50,6 @@ function CancelSubscriptionDialog({
               loading={planCancel.status === "pending"}
               disabled={planCancel.status === "pending"}
               onClick={handleSubmitCancelation}
-              className="rounded-[8px] bg-gradient-to-r from-[#ef4444] to-[#dc2626] px-5 text-sm font-medium text-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-transform duration-200 hover:scale-[1.02] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]"
             >
               {planCancel.status === "pending" ? "Cancelling..." : "Cancel Your Plan"}
             </Button>

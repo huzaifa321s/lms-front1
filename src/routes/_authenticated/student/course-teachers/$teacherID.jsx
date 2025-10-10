@@ -126,7 +126,6 @@ export const Route = createFileRoute(
           <Button
             variant="outline"
             onClick={() => window.history.back()}
-            className="rounded-2xl border-[#2563eb] text-[#2563eb] hover:bg-[#2563eb]/10"
           >
             Back to Courses
           </Button>
@@ -153,7 +152,8 @@ function RouteComponent() {
   const [searchInput, setSearchInput] = useSearchInput(
     '/_authenticated/student/course-teachers/$teacherID'
   )
-  const debouncedSearch = getDebounceInput(searchInput, 800)
+ const delay = searchInput.length < 3 ? 400 : 800
+  const debouncedSearch = getDebounceInput(searchInput, delay)
 
   const { data, fetchStatus, isFetching } = useQuery({
     ...courseQueryOption({
@@ -224,7 +224,6 @@ function RouteComponent() {
             <Button
               variant="outline"
               onClick={() => window.history.back()}
-              className="rounded-2xl border-[#2563eb] text-[#2563eb] hover:bg-[#2563eb]/10"
             >
               Back to Courses
             </Button>
@@ -237,15 +236,15 @@ function RouteComponent() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] via-white to-[#f1f5f9]">
       <Header>
+        <div className="my-3 flex w-full items-center justify-between">
         <h1 className="w-full bg-clip-text text-xl font-extrabold tracking-tight  drop-shadow-lg md:text-2xl">
           Teacher Details
         </h1>
-        <div className="my-3 flex w-full items-center justify-between">
           <Button
             size="sm"
             variant="outline"
+            className="text-black"
             onClick={() => window.history.back()}
-            className="ml-auto transform border-0  text-black shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
           >
           <ArrowLeft/>
             Back
@@ -352,7 +351,6 @@ function RouteComponent() {
                     size="sm"
                     disabled={isFetching}
                     onClick={searchCourses}
-                    className="transform rounded-2xl border-0 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] px-4 py-2 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
                   >
                     {isFetching ? (
                       <Loader className="h-4 w-4 animate-spin" />

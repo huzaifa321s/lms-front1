@@ -76,12 +76,14 @@ function RouteComponent() {
   const [searchInput, setSearchInput] = useSearchInput(
     '/_authenticated/teacher/trainingwheelgame/'
   )
+  console.log('searcNput',searchInput)
   const isFirstRender = useRef(true)
   let currentPage = useSearch({
     from: '/_authenticated/teacher/trainingwheelgame/',
     select: (search) => search.page,
   })
-  const debouncedSearch = getDebounceInput(searchInput, 800)
+  const delay = searchInput.length < 3 ? 400 : 800
+  const debouncedSearch = getDebounceInput(searchInput, delay)
   const { data, fetchStatus, isFetching } = useQuery(
     gameQueryOptions({
       q: debouncedSearch,
@@ -124,6 +126,15 @@ function RouteComponent() {
     })
   }
 
+  
+  useEffect(() => {
+    navigate({
+        to: '/teacher/trainingwheelgame',
+      search: { q: debouncedSearch, page: 1 },
+      replace: 1
+    })
+  }, [debouncedSearch])
+
 return (
   <>
     {/* Header */}
@@ -156,8 +167,8 @@ return (
               />
               <Button
                 variant="outline"
+                className="text-black"
                 size="sm"
-                className="flex items-center gap-2 rounded-[8px] border-[#e2e8f0] bg-[#f8fafc] text-[#475569] transition-all duration-300 hover:bg-[#e2e8f0] hover:text-[#1e40af] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:opacity-50"
                 loading={isFetching}
                 disabled={isFetching}
                 onClick={searchQuestions}

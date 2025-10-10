@@ -142,7 +142,17 @@ export const columns = [
 ]
 
 export const invoicesSchema = [
-  { id: 'select', cell: ({ row }) => <p>{row.index + 1}</p> },
+columnHelper.display({
+  id: "serial",
+  header: "#",
+  cell: ({ row, table }) => {
+    console.log('table.getState().pagination ===>',table.getState().pagination)
+    const { pageIndex, pageSize } = table.getState().pagination
+    console.log('pageIndex ===>',pageIndex)
+    console.log('pageIndex * pageSize + row.index  + 1',pageIndex * pageSize + row.index + 1)
+    return <p>{ pageIndex * pageSize + row.index + 1}</p>
+  }
+}),
   {
     accessorKey: 'invoice_id',
     header: ({ column }) => (
@@ -223,7 +233,17 @@ export const invoicesSchema = [
 
 
 export const coursesSchemaStudent = [
-  { id: 'select', cell: ({ row }) => <p>{row.index + 1}</p> },
+columnHelper.display({
+  id: "serial",
+  header: "#",
+  cell: ({ row, table }) => {
+    console.log('table.getState().pagination ===>',table.getState().pagination)
+    const { pageIndex, pageSize } = table.getState().pagination
+    console.log('pageIndex ===>',pageIndex)
+    console.log('pageIndex * pageSize + row.index  + 1',pageIndex * pageSize + row.index + 1)
+    return <p>{ pageIndex * pageSize + row.index + 1}</p>
+  }
+}),
 
   columnHelper.accessor('name', {
     header: ({ column }) => (

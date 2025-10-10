@@ -163,13 +163,9 @@ export default function SignUpForm({ className, ...props }: SignUpFormProps) {
                       }}
                       ref={field.ref}
                     />
-                    <Button
-                      size='sm'
-                      type='button'
-                      variant='outline'
-                      className='pointer-events-none rounded-lg border-slate-200 bg-white px-4 py-2 text-sm text-slate-600 shadow-sm hover:border-blue-400 hover:bg-blue-50 hover:text-blue-600'
-                    >
-                      {selectedImage ? 'Change Photo' : 'Choose Photo'} <UserCircle/>
+                    <Button size='sm' type='button' variant='secondary'>
+                      {selectedImage ? 'Change Photo' : 'Choose Photo'}{' '}
+                      <UserCircle />
                     </Button>
                   </div>
                 </FormControl>
@@ -285,11 +281,7 @@ export default function SignUpForm({ className, ...props }: SignUpFormProps) {
 
         {/* Submit Button */}
         <div className='col-span-1 md:col-span-2'>
-          <Button
-            type='submit'
-            disabled={isLoading}
-            className='h-10 w-full rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 font-medium text-white shadow-sm transition-all duration-200 hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50'
-          >
+          <Button type='submit' disabled={isLoading} variant='' className="w-full">
             {isLoading ? 'Creating Account...' : 'Create Student Account'}
           </Button>
         </div>

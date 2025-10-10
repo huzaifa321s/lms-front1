@@ -42,33 +42,8 @@ export function TopCourses({ data }) {
   })
 
   return (
-  <div className="space-y-6 p-4 bg-gradient-to-b from-[#1e293b] to-[#0f172a] rounded-[12px] shadow-[0_6px_16px_rgba(0,0,0,0.3)]">
-      {/* Working On It Message */}
-      <div className="flex items-center justify-center py-3 px-4 bg-[#2563eb]/20 border border-[#2563eb]/50 rounded-[8px] text-[#bfdbfe] text-sm font-medium shadow-sm">
-        <span className="flex items-center gap-2">
-          <svg
-            className="w-5 h-5 animate-spin"
-            fill="none"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="#bfdbfe"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="#bfdbfe"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            />
-          </svg>
-          We are working on it!
-        </span>
-      </div>
+  <div className="space-y-6 rounded-[12px] ">
+
 
       {/* Table */}
       <div className="relative rounded-[12px] bg-white/95 backdrop-blur-sm border border-[#475569] shadow-[0_6px_16px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] transition-all duration-300 overflow-hidden">
@@ -125,7 +100,6 @@ export function TopCourses({ data }) {
         size="sm"
         variant="outline"
         onClick={() => navigate({to:"/admin/courses"})}
-        className="rounded-[8px] border-[#2563eb] bg-[#2563eb]/10 text-[#bfdbfe] hover:bg-[#2563eb]/20 hover:border-[#1d4ed8] hover:text-[#e2e8f0] font-semibold focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
       >
         View All Courses
       </Button>

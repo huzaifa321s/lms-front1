@@ -164,7 +164,7 @@ export const Quiz = () => {
 
             <Button
               onClick={restart}
-              className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:scale-105 hover:shadow-2xl text-white px-10 py-4 rounded-xl font-semibold text-lg transition-all duration-300"
+              
             >
               <RotateCcw className="w-5 h-5 mr-2" />
               Try Again
@@ -260,7 +260,7 @@ export const Quiz = () => {
             <Button
               onClick={next}
               disabled={!lock}
-              className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 disabled:from-slate-300 disabled:to-slate-400 text-white px-8 py-3 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 disabled:scale-100"
+              
             >
               {index === dummyMcqs.length - 1 ? (
                 <>

@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { Editor } from '@tinymce/tinymce-react'
+import { ArrowLeft, Delete } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -22,7 +23,6 @@ import {
 import { Header } from '../../../../../components/layout/header'
 import { useAppUtils } from '../../../../../hooks/useAppUtils'
 import { queryClient } from '../../../../../utils/globalVars'
-import { ArrowLeft } from 'lucide-react'
 
 const categoryQueryOptions = () =>
   queryOptions({
@@ -226,19 +226,21 @@ function RouteComponent() {
     setValidationErrors({})
   }, [])
 
+
+  
   return (
     <>
       <Header>
         <div className='my-2 flex w-full items-center justify-between'>
           <div className='bg-clip-text text-2xl font-bold'>Create New Blog</div>
-          <div className='flex items-center gap-3'>
+          <div className='flex items-center gap-3 text-black'>
             <Button
               size='sm'
-              className='rounded-[8px] bg-[#2563eb] text-white shadow-sm transition-all duration-300 hover:bg-[#1d4ed8] hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
               onClick={() => window.history.back()}
               disabled={isLoading}
+              variant="outline"
             >
-             <ArrowLeft/>
+              <ArrowLeft />
               Back
             </Button>
           </div>
@@ -252,7 +254,7 @@ function RouteComponent() {
             <div className='relative mb-8 text-center'>
               <div className='absolute inset-0 -z-10 rounded-[12px] bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5'></div>
               <h1 className='mb-2 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-3xl font-bold text-transparent'>
-                ✨ Create Your Blog Post
+                 Create Your Blog Post
               </h1>
               <div className='mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8]'></div>
             </div>
@@ -532,27 +534,15 @@ function RouteComponent() {
                       </div>
 
                       {cover && (
-                        <button
+                        <Button
                           onClick={() => {
                             setCover(null)
                             setBlogObj((prev) => ({ ...prev, image: null }))
                           }}
-                          className='rounded-full bg-[#ef4444] p-2 text-white shadow-sm transition-all duration-200 hover:bg-[#dc2626] hover:shadow-md'
+                          variant="destructive"
                         >
-                          <svg
-                            className='h-4 w-4'
-                            fill='none'
-                            stroke='currentColor'
-                            viewBox='0 0 24 24'
-                          >
-                            <path
-                              strokeLinecap='round'
-                              strokeLinejoin='round'
-                              strokeWidth={2}
-                              d='M6 18L18 6M6 6l12 12'
-                            />
-                          </svg>
-                        </button>
+                          <Delete/>
+                        </Button>
                       )}
                     </div>
                   </div>
@@ -569,7 +559,6 @@ function RouteComponent() {
                 variant='outline'
                 onClick={handleReset}
                 disabled={isLoading}
-                className='rounded-[8px] border-[#e2e8f0] bg-white text-[#475569] shadow-sm transition-all duration-300 hover:border-[#cbd5e1] hover:bg-[#f8fafc] hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
               >
                 🔄 Reset Form
               </Button>
@@ -579,7 +568,6 @@ function RouteComponent() {
                   variant='outline'
                   onClick={() => window.history.back()}
                   disabled={isLoading}
-                  className='rounded-[8px] border-[#e2e8f0] bg-white text-[#475569] shadow-sm transition-all duration-300 hover:border-[#cbd5e1] hover:bg-[#f8fafc] hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
                 >
                   ❌ Cancel
                 </Button>
@@ -588,7 +576,7 @@ function RouteComponent() {
                   onClick={handleSubmit}
                   disabled={isLoading}
                   laoding={isLoading}
-                  className='min-w-[150px] rounded-[8px] bg-[#2563eb] font-semibold text-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:bg-[#1d4ed8] hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
+                  
                 >
                   {isLoading ? <>✨ Creating...</> : '🚀 Create Blog'}
                 </Button>

@@ -173,7 +173,6 @@ export default function DeleteGameDialog({
                     handleSubmitDeleteGame()
                   }
                 }}
-                className='w-full rounded-[8px] bg-gradient-to-r from-[#ef4444]/10 to-[#dc2626]/10 text-[#ef4444] shadow-sm hover:shadow-md disabled:bg-[#e2e8f0] disabled:text-[#64748b] sm:w-auto'
               >
                 Delete
               </Button>

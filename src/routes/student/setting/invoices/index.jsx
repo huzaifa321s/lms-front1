@@ -134,13 +134,13 @@ function RouteComponent() {
 
         {/* Action Buttons */}
         <div className='flex flex-wrap gap-4 mb-8'>
-          <Button className='bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-0 shadow-lg hover:shadow-xl hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 rounded-2xl px-6 py-3'>
+          <Button >
             <Download className="w-4 h-4 mr-2" />
             Export All
           </Button>
           <Button 
             variant="outline" 
-            className='bg-white/50 border-white/30 backdrop-blur-sm hover:bg-white/70 transition-all duration-300 rounded-2xl px-6 py-3'
+          
           >
             <Filter className="w-4 h-4 mr-2" />
             Filter
@@ -186,7 +186,7 @@ function RouteComponent() {
                 <p className='text-gray-500 text-center max-w-md mb-6'>
                   You don't have any invoices yet. When you make purchases or payments, they will appear here.
                 </p>
-                <Button className='bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-0 shadow-lg hover:shadow-xl hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 rounded-2xl px-8 py-3'>
+                <Button >
                   <FileText className="w-4 h-4 mr-2" />
                   Create Invoice
                 </Button>

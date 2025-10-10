@@ -58,7 +58,6 @@ export default function EditCategoryDialog({
               <Button
                 size='sm'
                 variant='outline'
-                className='rounded-[8px] border border-[#e2e8f0] text-[#475569] shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-200 hover:border-[#cbd5e1] hover:bg-[#e2e8f0] hover:shadow-[0_6px_8px_rgba(0,0,0,0.1)]'
                 disabled={editCategoryMutation.status === 'pending'}
                 onClick={() => dispatch(closeModalAdmin())}
               >
@@ -69,7 +68,6 @@ export default function EditCategoryDialog({
             <Button
               size='sm'
               type='submit'
-              className='transform rounded-[8px] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-[#ffffff] shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:from-[#1d4ed8] hover:to-[#1e40af] hover:shadow-[0_6px_8px_rgba(0,0,0,0.1)] disabled:transform-none disabled:bg-[#e2e8f0] disabled:text-[#64748b]'
               onClick={handleSubmitEditCategory}
               disabled={editCategoryMutation.status === 'pending' || !inputValue}
             >

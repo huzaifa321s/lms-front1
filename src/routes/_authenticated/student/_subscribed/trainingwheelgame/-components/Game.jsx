@@ -266,7 +266,6 @@ const Game = ({ handleScoreCard, selectedLevel }) => {
                       <Show.When isTrue={showSubmitBtn}>
                         <Button
                           onClick={submit}
-                          className='bg-gradient-to-r from-[#10b981] to-[#059669] text-white border-0 shadow-lg hover:shadow-xl hover:from-[#10b981] hover:to-[#059669] transition-all duration-300 transform hover:scale-105 rounded-[8px] px-8 py-4 text-lg font-semibold '
                         >
                           <Award className="w-5 h-5 mr-2" />
                           Submit Result
@@ -275,7 +274,7 @@ const Game = ({ handleScoreCard, selectedLevel }) => {
                       <Show.Else>
                         <Button
                           onClick={validate}
-                          className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white border-0 shadow-lg hover:shadow-xl hover:from-[#2563eb] hover:to-[#1d4ed8] transition-all duration-300 transform hover:scale-105 rounded-[8px] px-8 py-4 text-lg font-semibold '
+                          variant="secondary"
                         >
                           <Zap className="w-5 h-5 mr-2" />
                           Next Question
@@ -332,7 +331,6 @@ const Game = ({ handleScoreCard, selectedLevel }) => {
             </p>
             <Button
               onClick={handleCloseIncorrectModal}
-              className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white border-0 shadow-lg hover:shadow-xl hover:from-[#2563eb] hover:to-[#1d4ed8] transition-all duration-300 transform hover:scale-105 rounded-[8px] px-8 py-4 text-lg font-semibold '
             >
               <Zap className="w-5 h-5 mr-2" />
               Continue Challenge

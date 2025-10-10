@@ -241,7 +241,7 @@ function App() {
             <div className='flex items-center gap-3'>
               <Button
                 variant='outline'
-                className='rounded-[8px] border-[#e2e8f0] px-4 py-2 font-medium text-[#2563eb] shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-[1.02] hover:bg-[#2563eb]/10 hover:text-[#1d4ed8]'
+                 className="text-black"
                 onClick={() => window.history.back()}
               >
                 <ArrowLeft/>
@@ -443,7 +443,6 @@ function App() {
               </div>
               <Button
                 variant='outline'
-                className='rounded-[8px] border-[#e2e8f0] px-4 py-2 font-medium text-[#2563eb] shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-[1.02] hover:bg-[#2563eb]/10 hover:text-[#1d4ed8]'
                 onClick={addMaterial}
               >
               <PlusCircle/>
@@ -482,7 +481,7 @@ function App() {
                 >
                   {i != 0 && <Button
                     variant='ghost'
-                    className='absolute top-2 right-2 rounded-full p-1 text-[#64748b] transition-colors duration-200 hover:bg-transparent hover:text-[#ef4444]'
+                    className="ml-auto w-fit"
                     onClick={() => removeMaterial(i)}
                   >
                   <Delete/>

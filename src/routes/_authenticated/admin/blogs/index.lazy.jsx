@@ -72,7 +72,8 @@ function RouteComponent() {
       from: '/_authenticated/admin/blogs/',
       select: (search) => search.page,
     })
-  const debouncedSearch = getDebounceInput(searchInput,800);
+const delay = searchInput.length < 3 ? 400 : 800
+  const debouncedSearch = getDebounceInput(searchInput, delay)
   
     let [paginationOptions, setPagination] = useState({
     pageIndex: 0,
@@ -116,7 +117,13 @@ function RouteComponent() {
     search: { q: searchInput, page: newPageIndex + 1 }, // URL 1-based
   })
 }
-
+    useEffect(() => {
+      navigate({
+        to: '/admin/blogs',
+        search: { q: debouncedSearch, page:1 },
+        replace: true
+      })
+    }, [debouncedSearch,1])
   return (
     <>
       <Header >
@@ -125,6 +132,7 @@ function RouteComponent() {
           <div className='flex items-center gap-4'>
             <Button
               size='sm'
+              className="rounded-[8px] bg-[#2563eb] text-white hover:bg-[#1d4ed8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
               onClick={() => navigate({ to: '/admin/blogs/create' })}
             >
               Create Blog

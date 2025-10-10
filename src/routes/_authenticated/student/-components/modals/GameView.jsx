@@ -187,7 +187,6 @@ export default function GameViewDialog({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="group w-full rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] shadow-sm transition-all duration-300 hover:border-[#cbd5e1] hover:bg-[#e2e8f0] hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 sm:w-auto"
                   onClick={closeModal}
                 >
                   <X className="mr-1 h-3 w-3 transition-transform duration-200 group-hover:rotate-90 sm:mr-2 sm:h-4 sm:w-4" />

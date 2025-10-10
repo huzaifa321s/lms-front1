@@ -112,14 +112,13 @@ function BlogEditPage() {
           <div className="text-2xl font-bold   bg-clip-text">
             Edit Blog
           </div>
-          <div className="flex gap-4 items-center">
+          <div className="flex gap-4 items-center text-black">
             <Button
               variant="outline"
               size="sm"
               onClick={() => window.history.back()}
-              className="rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
             >
-              <ChevronLeft className="h-5 w-5 mr-2 text-[#2563eb]" />
+              <ChevronLeft className="h-5 w-5 mr-2" />
               Back
             </Button>
           </div>
@@ -244,7 +243,7 @@ function BlogEditPage() {
                       setCover(defaultCover);
                       setBlogObj((prev) => ({ ...prev, image: null }));
                     }}
-                    className="mt-2 text-[#ef4444] hover:bg-[#fef2f2] hover:text-[#dc2626] transition-all duration-200"
+                    className="text-[#ef4444]"
                   >
                     <X className="h-4 w-4 mr-1" />
                     Remove Image
@@ -260,7 +259,6 @@ function BlogEditPage() {
             onClick={update}
             disabled={isLoading}
             loading={isLoading}
-            className="w-full md:w-auto rounded-[8px] bg-[#2563eb] text-white font-semibold py-3 px-6 shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:bg-[#1d4ed8] hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300 transform hover:scale-105"
           >
             
               <Save className="h-5 w-5 mr-2" />

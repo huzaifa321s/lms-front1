@@ -1,6 +1,6 @@
 // LazyDeleteBlogDialog.jsx
 import React, { useState } from 'react'
-import { Check, CheckCircle2, ClipboardIcon } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -11,6 +11,14 @@ import {
   DialogFooter,
   DialogClose,
 } from '@/components/ui/dialog'
+import {
+  Trash2,
+  AlertTriangle,
+  ClipboardIcon,
+  CheckCircle2,
+  Check,
+  XCircle,
+} from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
@@ -38,16 +46,24 @@ export default function DeleteBlogDialog({
       <form onSubmit={handleSubmitBlogDeletion}>
         <DialogContent className='rounded-[12px] border border-[#e2e8f0] bg-[#ffffff] p-6 shadow-[0_4px_6px_rgba(0,0,0,0.05)] sm:max-w-[425px]'>
           <DialogHeader>
-            <DialogTitle className='text-lg font-semibold text-[#dc2626]'>
+            <DialogTitle className='flex items-center gap-2 text-lg font-semibold text-[#dc2626]'>
+              <Trash2 className='h-5 w-5 text-[#dc2626]' />
               Delete Blog
             </DialogTitle>
-            <DialogDescription className='text-sm leading-relaxed text-[#64748b]'>
-              <span className='text-xl font-bold text-[#1e293b]'>
-                Are you sure you want to delete this blog?
-              </span>
-              <br />
-              This action cannot be undone.
+
+            <DialogDescription className='mt-2 text-sm leading-relaxed text-[#64748b]'>
+              <div className='flex items-start gap-2'>
+                <AlertTriangle className='mt-[2px] h-5 w-5 text-[#facc15]' />
+                <div>
+                  <span className='text-xl font-bold text-[#1e293b]'>
+                    Are you sure you want to delete this blog?
+                  </span>
+                  <br />
+                  This action cannot be undone.
+                </div>
+              </div>
             </DialogDescription>
+
             {showInput && (
               <div className='mt-4 space-y-2'>
                 <Label
@@ -55,10 +71,10 @@ export default function DeleteBlogDialog({
                   className='text-xs font-semibold text-[#1e293b] sm:text-sm'
                 >
                   Please type{' '}
-                  <button
+                  <Button
                     type='button'
                     onClick={handleCopy}
-                    className='inline-flex items-center gap-1 font-bold text-[#ef4444] hover:underline focus:outline-none'
+                    variant=""
                   >
                     'delete'
                     {copied ? (
@@ -66,9 +82,10 @@ export default function DeleteBlogDialog({
                     ) : (
                       <ClipboardIcon className='h-3 w-3 text-gray-500' />
                     )}
-                  </button>{' '}
+                  </Button>{' '}
                   to confirm
                 </Label>
+
                 <div className='relative'>
                   <Input
                     id='deleteInput'
@@ -93,10 +110,10 @@ export default function DeleteBlogDialog({
               <Button
                 size='sm'
                 variant='outline'
-                className='rounded-[8px] border border-[#e2e8f0] text-[#475569] shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-200 hover:border-[#cbd5e1] hover:bg-[#e2e8f0] hover:shadow-[0_6px_8px_rgba(0,0,0,0.1)]'
                 disabled={deleteBlogMutation.isPending}
                 onClick={() => dispatch(closeModalAdmin())}
               >
+                <XCircle className='h-4 w-4 text-[#64748b]' />
                 Cancel
               </Button>
             </DialogClose>
@@ -105,7 +122,6 @@ export default function DeleteBlogDialog({
               size='sm'
               type={inputValue === 'delete' ? 'submit' : 'button'}
               variant='destructive'
-              className='transform rounded-[8px] bg-gradient-to-r from-[#ef4444] to-[#dc2626] text-[#ffffff] shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:from-[#dc2626] hover:to-[#b91c1c] hover:shadow-[0_6px_8px_rgba(0,0,0,0.1)] disabled:transform-none disabled:bg-[#e2e8f0] disabled:text-[#64748b]'
               disabled={
                 deleteBlogMutation.isPending ||
                 (showInput && inputValue !== 'delete')
@@ -118,13 +134,8 @@ export default function DeleteBlogDialog({
                 }
               }}
             >
-              {deleteBlogMutation.isPending ? (
-                 
-                  "Deleting..."
-
-              ) : (
-                'Delete'
-              )}
+              <Trash2 className='h-4 w-4 text-white' />
+              {deleteBlogMutation.isPending ? 'Deleting...' : 'Delete'}
             </Button>
           </DialogFooter>
         </DialogContent>

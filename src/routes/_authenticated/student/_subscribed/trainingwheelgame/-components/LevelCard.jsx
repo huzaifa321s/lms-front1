@@ -90,13 +90,7 @@ export default function LevelCard({ level, setStep, selectedLevel }) {
               if (selectedLevel === level.title) setStep("game")
             }}
             disabled={selectedLevel !== level.title}
-            className={`relative inline-flex h-11 items-center justify-center rounded-[8px] 
-              font-medium text-white transition-all duration-300 w-full 
-              ${
-                selectedLevel === level.title
-                  ? `bg-gradient-to-r ${themeColors.gradient} hover:scale-[1.03] hover:shadow-lg border-0`
-                  : "bg-[#f1f5f9] text-[#475569] cursor-not-allowed opacity-70 hover:bg-[#e2e8f0]"
-              }`}
+            className="w-full"
           >
             <span className="flex items-center gap-2">
               Let’s Begin

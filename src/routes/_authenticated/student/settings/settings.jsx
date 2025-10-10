@@ -23,15 +23,16 @@ export default function Settings() {
       {/* ===== Top Heading ===== */}
       <Header>
         <TopNav links={topNav} />
-        <div className='absolute right-0 flex items-center gap-1 px-5'>
+        
           <Button
             size='sm'
             variant='outline'
+            className="ml-auto text-black"
             onClick={() => window.history.back()}
           >
             <ArrowLeft />
           </Button>
-        </div>
+        
       </Header>
       <Main fixed>
         {/* Header Section */}

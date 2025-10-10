@@ -58,11 +58,11 @@ const studentsQueryOption = (params) =>
 export const Route = createLazyFileRoute(
   '/_authenticated/teacher/courses/course_students/$courseId'
 )({
-  validateSearch: (search) => {
-    return { q: search.q || '',page:Number(search.page ?? 1) }
+   validateSearch: (search) => {
+    return { q: search.q || '', page: Number(search.page ?? 1) }
   },
   loaderDeps: ({ search }) => {
-    return { q: search.q ,page:search.page}
+    return { q: search.q, page: search.page }
   },
   loader: (params) => queryClient.ensureQueryData(studentsQueryOption(params)),
   component: RouteComponent,
@@ -80,7 +80,8 @@ function RouteComponent() {
         from: '/_authenticated/teacher/courses/course_students/$courseId',
         select: (search) => search.page,
       })
-  const debouncedSearch = getDebounceInput(searchInput,800)
+ const delay = searchInput.length < 3 ? 400 : 800
+  const debouncedSearch = getDebounceInput(searchInput, delay)
   const isFirstRender = useRef(true);
   const params = {
     deps: { q: debouncedSearch ,page:currentPage},
@@ -99,6 +100,14 @@ function RouteComponent() {
   const students = data?.students;
   const totalPages = data?.totalPages;
   const navigate = useNavigate()
+
+  useEffect(() => {
+    navigate({
+       to: `/teacher/courses/course_students/${courseId}`,
+      search: { q: debouncedSearch, page:1},
+      replace: true
+    })
+  }, [debouncedSearch])
 
   // Search & Pagination
   const searchStudents = async () => {
@@ -148,7 +157,7 @@ function RouteComponent() {
               <Button
                 size='sm'
                 variant='outline'
-                className='rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:text-[#475569] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:opacity-50'
+                 className="text-black"
                 onClick={searchStudents}
                 loading={isFetching}
                 disabled={isFetching}
@@ -161,7 +170,7 @@ function RouteComponent() {
               <Button
                 size='sm'
                 variant='outline'
-                className='rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:text-[#475569] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
+                className="text-black"
                 onClick={() => window.history.back()}
               >
               <ArrowLeft/>

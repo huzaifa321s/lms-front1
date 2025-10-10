@@ -177,8 +177,8 @@ function RouteComponent() {
             <div className="flex items-center gap-3">
                 <Button
                 size='sm'
+                className="text-black"
                 variant='outline'
-                className='border-[#e2e8f0] text-[#475569] hover:bg-[#e2e8f0] rounded-[8px] transition-all duration-300'
                 onClick={() => window.history.back()}
               >
                 <ArrowLeft className='mr-2 h-4 w-4' />
@@ -188,14 +188,7 @@ function RouteComponent() {
           </div>
       </Header>
        <div className="min-h-screen font-sans bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#f1f5f9]">
-      {/* Background glow effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-[#f59e0b] to-[#d97706] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-[#10b981] to-[#059669] rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-500"></div>
-      </div>
 
-      {/* Header */}
     
 
       {/* Main Content */}
@@ -315,13 +308,12 @@ function RouteComponent() {
                   }
                   className="flex h-10 w-20 rounded-[8px] border border-[#e2e8f0] bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-[#94a3b8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 />
-                <button
-                  className="inline-flex items-center justify-center whitespace-nowrap rounded-[8px] text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-[#e2e8f0] bg-[#f1f5f9] hover:bg-[#e2e8f0] hover:text-[#475569] h-9 px-3 py-2"
+                <Button
                   onClick={addMaterial}
                 >
                   <PlusCircleIcon/>
                   Add
-                </button>
+                </Button>
               </div>
             </div>
             <div className="space-y-6">
@@ -351,12 +343,12 @@ function RouteComponent() {
                   className="bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-6 rounded-[12px] border border-[#e2e8f0] shadow-sm relative group"
                 >
                   {courseObj.material.length !== 1 && (
-                    <button
-                      className="absolute top-2 right-2 p-1 text-[#94a3b8] hover:bg-transparent hover:text-[#ef4444] transition-colors duration-200 rounded-full"
+                    <Button
+                  variant="destructive"
                       onClick={() => removeMaterial(index)}
                     >
                  <Delete/>
-                    </button>
+                    </Button>
                   )}
                   <div className="space-y-4">
                     <div>
@@ -428,14 +420,14 @@ function RouteComponent() {
               ))}
             </div>
             <div className="mt-6">
-              <button
+              <Button
                 className="inline-flex items-center justify-center whitespace-nowrap rounded-[8px] text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 px-3 py-2 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] hover:from-[#1d4ed8] hover:to-[#1e40af] text-white shadow-lg"
                 onClick={create}
                 disabled={isCreateButtonDisabled()}
               >
             <Plus/>
                 Create Course
-              </button>
+              </Button>
             </div>
           </div>
         </div>

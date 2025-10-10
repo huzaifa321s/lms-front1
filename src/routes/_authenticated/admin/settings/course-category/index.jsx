@@ -61,7 +61,8 @@ export const Route = createFileRoute(
     '/_authenticated/admin/settings/course-category/'
   )
   const isFirstRender = useRef(true)
-  const debouncedSearch = getDebounceInput(searchInput,800)
+ const delay = searchInput.length < 3 ? 400 : 800
+  const debouncedSearch = getDebounceInput(searchInput, delay)
   let currentPage = useSearch({
         from: '/_authenticated/admin/settings/course-category/',
         select: (search) => search.page,
@@ -100,7 +101,13 @@ export const Route = createFileRoute(
     pageSize: 10,
   })
   
-  
+      useEffect(() => {
+      navigate({
+       to: '/admin/settings/course-category',
+        search: { q: debouncedSearch, page:1 },
+        replace: true
+      })
+    }, [debouncedSearch,1])
 
   const handlePagination = (newPageIndex) => {
   const newPagination = { ...paginationOptions, pageIndex: newPageIndex }
@@ -124,7 +131,6 @@ export const Route = createFileRoute(
               })
             )
           }
-          className="rounded-[8px] bg-[#2563eb] text-white hover:bg-[#1d4ed8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
         >
        <Plus/>   Add Category
         </Button>
@@ -144,7 +150,6 @@ export const Route = createFileRoute(
                 variant="outline"
                 onClick={searchCategories}
                 disabled={isFetching}
-                className="rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
               >
                 {isFetching ? (
                   <Loader className="h-4 w-4 animate-spin text-[#2563eb]" />

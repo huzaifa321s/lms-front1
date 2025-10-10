@@ -126,10 +126,9 @@ export default function DeleteCourseDialog({
       className='text-xs font-semibold text-[#1e293b] sm:text-sm'
     >
       Please type{' '}
-      <button
+      <Button
         type='button'
         onClick={handleCopy}
-        className='inline-flex items-center gap-1 font-bold text-[#ef4444] hover:underline focus:outline-none'
       >
         'delete'
         {copied ? (
@@ -137,7 +136,7 @@ export default function DeleteCourseDialog({
         ) : (
           <ClipboardIcon className='h-3 w-3 text-gray-500' />
         )}
-      </button>{' '}
+      </Button>{' '}
       to confirm
     </Label>
                 <div className='relative'>
@@ -167,7 +166,6 @@ export default function DeleteCourseDialog({
                   size='sm'
                   variant='outline'
                   onClick={closeModalTeacher}
-                  className='w-full rounded-[8px] border border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] shadow-sm transition-all duration-200 hover:border-[#cbd5e1] hover:bg-[#e2e8f0] hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 sm:w-auto'
                 >
                   Cancel
                 </Button>

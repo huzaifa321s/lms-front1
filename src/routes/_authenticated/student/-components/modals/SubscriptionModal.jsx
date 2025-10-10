@@ -53,7 +53,6 @@ export default function SubscriptionDialog({
                   closeModal()
                   navigate({ to: '/student/' })
                 }}
-                className='rounded-[8px] border border-[#e2e8f0] bg-[#ffffff] text-[#64748b] transition-colors hover:bg-[#e2e8f0] hover:text-[#1e293b]'
               >
                 Cancel
               </Button>
@@ -64,7 +63,7 @@ export default function SubscriptionDialog({
               loading={planUpdate.status === 'pending'}
               disabled={planUpdate.status === 'pending'}
               onClick={handleGoToSubscription}
-              className='rounded-[8px] bg-gradient-to-r from-[#10b981] to-[#059669] px-5 text-sm font-medium text-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-transform duration-200 hover:scale-[1.02] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]'
+              
             >
               {planUpdate.status === 'pending' ? 'Subscribing...' : 'Subscribe'}
             </Button>

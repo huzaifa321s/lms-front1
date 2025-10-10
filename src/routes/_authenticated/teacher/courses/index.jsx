@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import axios from 'axios'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import { createFileRoute, useSearch } from '@tanstack/react-router'
@@ -70,7 +70,8 @@ function RouteComponent() {
   const [searchInput, setSearchInput] = useSearchInput(
     '/_authenticated/teacher/courses/'
   )
-  const debouncedSearch = getDebounceInput(searchInput, 800)
+  const delay = searchInput.length < 3 ? 400 : 800
+  const debouncedSearch = getDebounceInput(searchInput, delay)
   const { data, fetchStatus, isFetching } = useQuery({
     ...courseQueryOptions({
       input: debouncedSearch,
@@ -119,6 +120,13 @@ function RouteComponent() {
     () => getRenderPaginationButtons(queryPage, pages, handlePageChange),
     [queryPage, pages]
   )
+    useEffect(() => {
+      navigate({
+        to: '/teacher/courses/',
+        search: { input: debouncedSearch, page:1 },
+        replace: true
+      })
+    }, [debouncedSearch,1])
 
   return (
  <>
@@ -159,7 +167,6 @@ function RouteComponent() {
                 type="submit"
                 variant="outline"
                 size="sm"
-                className="rounded-[8px] border-[#e2e8f0] text-[#2563eb] transition-all duration-300 hover:bg-[#2563eb]/10 hover:text-[#1d4ed8]"
                 disabled={isFetching}
               >
                 {!isFetching && <Search size={18} />}
@@ -227,7 +234,7 @@ function RouteComponent() {
         {queryPage > 1 && (
           <Button
             size="sm"
-            className="rounded-[8px] border-[#e2e8f0] bg-white/95 text-[#2563eb] shadow-[0_4px_6px_rgba(0,0,0,0.05)] backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:bg-[#2563eb]/10 hover:text-[#1d4ed8]"
+            
             onClick={() => handlePageChange(queryPage - 1)}
           >
             «
@@ -237,7 +244,7 @@ function RouteComponent() {
         {queryPage < pages && (
           <Button
             size="sm"
-            className="rounded-[8px] border-[#e2e8f0] bg-white/95 text-[#2563eb] shadow-[0_4px_6px_rgba(0,0,0,0.05)] backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:bg-[#2563eb]/10 hover:text-[#1d4ed8]"
+            
             onClick={() => handlePageChange(queryPage + 1)}
           >
             »

@@ -195,8 +195,8 @@ function RouteComponent() {
           </div>
           <Button
             variant='outline'
-            className='rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] shadow-lg transition-all duration-300 hover:bg-[#e2e8f0] hover:text-[#475569] hover:shadow-[#cbd5e1]/50 focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
             onClick={() => window.history.back()}
+            className="text-black"
           >
             <ArrowLeft className='mr-2 h-4 w-4' />
             Back
@@ -348,7 +348,6 @@ function RouteComponent() {
               <div className='flex gap-2'>
                 <Button
                   size='lg'
-                  className='rounded-[8px] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white shadow-lg transition-all duration-300 hover:from-[#1d4ed8] hover:to-[#1e40af] hover:shadow-[#cbd5e1]/50 disabled:cursor-not-allowed disabled:opacity-50'
                   onClick={() => addQuestion('add')}
                   loading={isLoading}
                   disabled={isAddButtonDisabled() || isLoading}
@@ -358,7 +357,6 @@ function RouteComponent() {
                 <Button
                   size='lg'
                   variant='secondary'
-                  className='rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] shadow-lg transition-all duration-300 hover:bg-[#e2e8f0] hover:text-[#475569] hover:shadow-[#cbd5e1]/50 focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
                   onClick={() => addQuestion('add-and-new')}
                   loading={isAddNewButtonLoading}
                   disabled={isAddButtonDisabled() || isAddNewButtonLoading}

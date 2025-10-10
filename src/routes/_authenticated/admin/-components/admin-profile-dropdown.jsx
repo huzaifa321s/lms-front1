@@ -37,8 +37,8 @@ export default function ProfileDropdown() {
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
-            variant='ghost'
-            className='relative h-10 rounded-full border border-[#e2e8f0] bg-gradient-to-r from-[#2563eb]/10 to-[#1d4ed8]/10 px-4 shadow-md transition-all duration-300 hover:scale-105 hover:from-[#2563eb]/20 hover:to-[#1d4ed8]/20'
+            variant='outline'
+            
             size='sm'
           >
             <Avatar className='h-8 w-8'>

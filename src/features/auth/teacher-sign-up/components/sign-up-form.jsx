@@ -147,7 +147,7 @@ export function SignUpForm({ className, ...props }) {
                     size="sm"
                     type="button"
                     variant="outline"
-                    className="rounded-[8px] border-[#e2e8f0] bg-white hover:bg-[#2563eb]/10 hover:text-[#2563eb] transition-all duration-300"
+                    
                   >
                     <Input
                       type="file"
@@ -282,7 +282,7 @@ export function SignUpForm({ className, ...props }) {
 
           {/* Submit Button */}
           <Button
-            className="mt-4 rounded-[8px] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white font-medium transition-all duration-300 hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)] hover:scale-[1.02] disabled:bg-[#e2e8f0] disabled:text-[#64748b]"
+            
             disabled={isLoading}
             loading={isLoading}
           >

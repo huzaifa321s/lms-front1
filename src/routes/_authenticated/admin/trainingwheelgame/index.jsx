@@ -70,13 +70,14 @@ function RouteComponent() {
       from: '/_authenticated/admin/trainingwheelgame/',
       select: (search) => search.page,
     })
-  const debouncedSearch = getDebounceInput(searchInput,800)
+  const delay = searchInput.length < 3 ? 400 : 800
+  const debouncedSearch = getDebounceInput(searchInput, delay)
   console.log('debouncedSearch ====>',debouncedSearch)
   const isFirstRender = useRef(true)
   const { data, fetchStatus, isFetching } = useQuery(
     gamesQueryOptions({
       q: debouncedSearch,
-      suspense: isFirstRender.current, // true only first render
+      suspense: isFirstRender.current,
       page:currentPage
     })
   )
@@ -99,7 +100,13 @@ function RouteComponent() {
     }
   };
 
-
+  useEffect(() => {
+      navigate({
+        to: `/admin/trainingwheelgame`,
+        search: { q: debouncedSearch, page:1 },
+        replace: true
+      })
+    }, [debouncedSearch,1])
   
     let [paginationOptions, setPagination] = useState({
     pageIndex: 0,
@@ -149,7 +156,6 @@ function RouteComponent() {
                     size="sm"
                     onClick={searchQuestions}
                     disabled={isFetching}
-                    className="rounded-[8px] border-[#e2e8f0] bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:border-[#cbd5e1] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300"
                   >
                     {isFetching ? (
                       <Loader className="h-4 w-4 animate-spin text-[#2563eb]" />
