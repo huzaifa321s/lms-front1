@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import {
   QueryClient,
@@ -32,6 +32,7 @@ import {
 } from '../../../../utils/globalFunctions'
 import { studentsSchema } from '../layout/data/-schemas/studentsSchema'
 import StudentsMetrics from './-components/StudentsMetrics'
+import SearchInput from '../../student/-components/SearchInput'
 
 const DataTable = lazy(
   () => import('../../student/features/tasks/-components/student-data-table')
@@ -133,17 +134,7 @@ function RouteComponent() {
   const totalPages = data?.totalPages
 
   const { navigate } = useAppUtils()
-  const searchStudents = async () => {
-    if (searchInput.trim() !== '') {
-      navigate({ to: '/admin/students/', search: { q: debouncedSearch } })
-      await queryClient.invalidateQueries(
-        studentsQueryOptions({ q: searchInput })
-      )
-    } else {
-      navigate({ to: '/admin/students', search: { q: '' } })
-      // await queryClient.invalidateQueries(studentsQueryOptions({ q: '' }))
-    }
-  }
+
 
   let [paginationOptions, setPagination] = useState({
     pageIndex: 0,
@@ -158,6 +149,20 @@ function RouteComponent() {
       search: { q: searchInput, page: newPageIndex + 1 }, // URL 1-based
     })
   }
+
+    const handleSearchSubmit = useCallback(
+      (e) => {
+        e.preventDefault()
+        const formData = new FormData(e.target)
+        const input = formData.get('search')?.toString() || ''
+        setSearchInput(input) // Update state
+        navigate({
+        to: '/admin/students',
+          search: { page: 1, q: debouncedSearch },
+        })
+      },
+      [navigate, setSearchInput]
+    )
 
   return (
     <>
@@ -181,43 +186,14 @@ function RouteComponent() {
           <h2 className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-lg font-bold text-transparent'>
             Students
           </h2>
-          <div className='flex items-center gap-1'>
-            <Label>
-              <Input
-                type='text'
-                className='grow rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] transition-all duration-300 placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
-                size='sm'
-                placeholder='Search Students'
-                value={searchInput || ''}
-                onChange={(e) => {
-                  setSearchInput(e.target.value)
-                  navigate({
-                    to: '/admin/students',
-                    search: { q: debouncedSearch },
-                  })
-                }}
-              />
-              <Button
-                variant='outline'
-                size='sm'
-                onClick={searchStudents}
-              >
-                {isFetching ? (
-                  <Loader className='h-4 w-4 animate-spin text-[#2563eb]' />
-                ) : (
-                  <Search className='h-4 w-4 text-[#2563eb]' />
-                )}
-              </Button>
-            </Label>
-            <Button
-              size='xs'
-              onClick={() => exportToCSV(data)}
-              variant='outline'
-            >
-              <Download className='h-4 w-4 text-[#2563eb]' />
-              Export CSV
-            </Button>
-          </div>
+            <SearchInput
+                      placeholder={'Search students...'}
+                      value={searchInput}
+                      onSubmit={handleSearchSubmit}
+                      onChange={(e) => setSearchInput(e.target.value)}
+                      isFetching={isFetching}
+                    />
+   
         </div>
         <Suspense fallback={<DataTableSkeleton />}>
           <DataTable
@@ -230,6 +206,8 @@ function RouteComponent() {
             setSearchInput={setSearchInput}
             handlePagination={handlePagination}
             paginationOptions={paginationOptions}
+            hiddenColumnsOnMobile={['serial', 'bio','plan','phone','profile']}
+
           />
         </Suspense>
       </Main>

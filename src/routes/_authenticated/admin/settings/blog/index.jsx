@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useSearch } from '@tanstack/react-router'
 import { Loader, Plus, Search } from 'lucide-react'
@@ -13,6 +13,7 @@ import {
   getDebounceInput,
   useSearchInput,
 } from '../../../../../utils/globalFunctions'
+import SearchInput from '../../../student/-components/SearchInput.jsx'
 import ContentSection from '../../../student/settings/-components/content-section'
 import { blogCategoriesSchema } from '../../layout/data/-schemas/blogCategoriesSchema'
 import { blogCategoryQueryOptions } from '../index.jsx'
@@ -84,6 +85,19 @@ export function SettingsBlogCategory() {
     })
   }
 
+  const handleSearchSubmit = useCallback(
+    (e) => {
+      e.preventDefault()
+      const formData = new FormData(e.target)
+      const input = formData.get('search')?.toString() || ''
+      setSearchInput(input) // Update state
+      navigate({
+        to: '/admin/settings',
+        search: { page: 1, q: debouncedSearch },
+      })
+    },
+    [navigate, setSearchInput]
+  )
   return (
     <>
       <ContentSection title='Blog Categories' className='bg-[#f8fafc]'>
@@ -101,33 +115,13 @@ export function SettingsBlogCategory() {
           >
             <Plus /> Add Category
           </Button>
-          <Show>
-            <Show.When isTrue={true}>
-              <Label>
-                <Input
-                  size='sm'
-                  type='text'
-                  className='grow rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] transition-all duration-300 placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
-                  placeholder='Search Categories'
-                  value={searchInput || ''}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                />
-                <Button
-                  size='sm'
-                  variant='outline'
-                  onClick={searchCategories}
-                  disabled={isFetching}
-                  
-                >
-                  {isFetching ? (
-                    <Loader className='h-4 w-4 animate-spin text-[#2563eb]' />
-                  ) : (
-                    <Search className='h-4 w-4 text-[#2563eb]' />
-                  )}
-                </Button>
-              </Label>
-            </Show.When>
-          </Show>
+          <SearchInput
+            placeholder={'Search categories...'}
+            value={searchInput}
+            onSubmit={handleSearchSubmit}
+            onChange={(e) => setSearchInput(e.target.value)}
+            isFetching={isFetching}
+          />
         </div>
         <Suspense fallback={<DataTableSkeleton />}>
           <DataTable
@@ -141,6 +135,8 @@ export function SettingsBlogCategory() {
             paginationOptions={paginationOptions}
             setPagination={setPagination}
             handlePagination={handlePagination}
+            hiddenColumnsOnMobile={['serial']}
+
           />
         </Suspense>
       </ContentSection>

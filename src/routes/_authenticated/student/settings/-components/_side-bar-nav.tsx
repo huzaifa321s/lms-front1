@@ -12,7 +12,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useDispatch } from 'react-redux'
-import {addTitle} from '../../../../../shared/config/reducers/animateBgSlice'
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
   items: {
@@ -72,7 +71,6 @@ export default function SidebarNav({
             <Link
               key={item.href}
               to={item.href}
-              onClick={() => dispatch(addTitle({title:`Settings-${item.title}`}))}
               className={cn(
                 buttonVariants({ variant: 'ghost' }),
                 pathname === item.href

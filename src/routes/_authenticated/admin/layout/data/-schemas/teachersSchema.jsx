@@ -42,6 +42,7 @@ export const teachersSchema = [
     cell: (info) => <p>{info.getValue()}</p>,
   }),
   columnHelper.accessor('createdAt', {
+    id:'createdAt',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Joining Date' />
     ),

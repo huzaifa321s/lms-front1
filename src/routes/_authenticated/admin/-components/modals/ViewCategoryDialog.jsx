@@ -1,28 +1,37 @@
 import React from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
 import { format } from 'date-fns'
-import { Skeleton } from '@/components/ui/skeleton'
 import { BookOpen, Newspaper } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog'
+import { Skeleton } from '@/components/ui/skeleton'
+
 function getCategoryTitle(dialogType) {
   switch (dialogType) {
     case 'blog-category-view-modal':
     case 'add-blog-category-modal':
       return 'Blog Category'
-      
+
     case 'course-category-view-modal':
     case 'add-course-category':
       return 'Course Category'
-      
+
     case 'view-game-category-modal':
     case 'add-game-category':
       return 'Game Category'
-      
+
     default:
       return 'Category'
   }
 }
-
 
 export default function ViewCategoryDialog({
   dialogOpen,
@@ -34,7 +43,7 @@ export default function ViewCategoryDialog({
   blogCategoryIsFetching,
   closeModalAdmin,
 }) {
-    const getCategoryIcon = () => {
+  const getCategoryIcon = () => {
     switch (dialogType) {
       case 'add-blog-category-modal':
         return <Newspaper className='h-7 w-7' />
@@ -48,90 +57,127 @@ export default function ViewCategoryDialog({
   }
 
   return (
-    <Dialog open={dialogOpen} onOpenChange={closeModalAdmin} modal>
-      <DialogContent className='mx-2 w-full rounded-lg sm:max-w-lg'>
+    <Dialog open={dialogOpen} onOpenChange={closeModalAdmin}>
+      <DialogContent className='sm:max-w-lg'>
         <DialogHeader>
-          <DialogTitle className='mb-3 flex items-start gap-3'>
-            <div className='rounded-lg p-3'>{getCategoryIcon(dialogType)}</div>
+          <div className='flex items-start gap-3'>
+            <div className='bg-primary/10 text-primary rounded-md p-2'>
+              {getCategoryIcon(dialogType)}
+            </div>
             <div className='flex-1'>
-              <h2 className='text-2xl font-bold'>{blogCategoryData?.name || 'Category Details'}</h2>
-              <p className='text-muted-foreground'>{getCategoryTitle(dialogType)}</p>
+              <DialogTitle className='text-xl font-semibold'>
+                {blogCategoryData?.name || 'Category Details'}
+              </DialogTitle>
+              <DialogDescription>
+                {getCategoryTitle(dialogType)}
+              </DialogDescription>
             </div>
             {blogCategoryData && (
-              <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${blogCategoryData?.active ? 'border-green-200 bg-green-100 text-green-800' : 'border-red-200 bg-red-100 text-red-800'}`}>
-                <div className={`h-1.5 w-1.5 rounded-full ${blogCategoryData?.active ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                {blogCategoryData?.active ? 'Active' : 'Inactive'}
-              </span>
+              <Badge
+                variant={blogCategoryData.active ? 'default' : 'destructive'}
+                className='flex items-center gap-1.5 text-xs font-semibold'
+              >
+                <div
+                  className={`h-1.5 w-1.5 rounded-full ${
+                    blogCategoryData.active ? 'bg-green-500' : 'bg-red-500'
+                  }`}
+                ></div>
+                {blogCategoryData.active ? 'Active' : 'Inactive'}
+              </Badge>
             )}
-          </DialogTitle>
-          <DialogDescription>View details and stats for this category</DialogDescription>
+          </div>
         </DialogHeader>
 
-        <div>
-          {blogCategoryIsError && (
-            <div className='mb-4 rounded-lg border border-red-200 bg-red-100 p-3 text-red-800'>
-              <p className='font-semibold'>Error Loading Category</p>
-              <p className='mt-1 text-sm'>{blogCategoryError.message}</p>
+        {/* Error state */}
+        {blogCategoryIsError && (
+          <div className='bg-destructive/10 text-destructive flex items-start gap-3 rounded-md p-3'>
+            <AlertCircle className='h-5 w-5 shrink-0' />
+            <div>
+              <p className='font-medium'>Error Loading Category</p>
+              <p className='text-sm'>{blogCategoryError.message}</p>
             </div>
-          )}
+          </div>
+        )}
 
-          {blogCategoryFetchStatus === 'paused' && (
-            <div className='mb-4 rounded-lg border border-yellow-200 bg-yellow-100 p-3 text-yellow-800'>
-              <p className='font-semibold'>Connection Issue</p>
-              <p className='mt-1 text-sm'>No internet connection available</p>
+        {/* Paused state */}
+        {blogCategoryFetchStatus === 'paused' && (
+          <div className='flex items-start gap-3 rounded-md bg-yellow-100/60 p-3 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-500'>
+            <WifiOff className='h-5 w-5 shrink-0' />
+            <div>
+              <p className='font-medium'>Connection Issue</p>
+              <p className='text-sm'>No internet connection available</p>
             </div>
-          )}
+          </div>
+        )}
 
-          {(blogCategoryFetchStatus === 'fetching' || blogCategoryIsFetching || (!blogCategoryData && blogCategoryFetchStatus !== 'paused')) && !blogCategoryIsError ? (
-            <div className='space-y-4'>
-              <div className='grid grid-cols-1 gap-4'>
-                <Skeleton className='h-5 w-24 rounded-md' />
-                <Skeleton className='h-20 w-full rounded-md' />
+        {/* Loading skeletons */}
+        {blogCategoryIsFetching && (
+          <div className='space-y-4'>
+            <div className='space-y-2'>
+              <Skeleton className='h-5 w-28 rounded-md' />
+              <Skeleton className='h-16 w-full rounded-md' />
+            </div>
+          </div>
+        )}
+
+        {/* Actual content */}
+        {!blogCategoryIsFetching && blogCategoryData && (
+          <div className='space-y-4'>
+            {/* Timeline Card */}
+            <div className='border-border bg-muted/30 rounded-md border p-4'>
+              <h3 className='text-base font-semibold'>Timeline Information</h3>
+              <div className='text-muted-foreground mt-2 space-y-1 text-sm'>
+                <p>
+                  <span className='text-foreground font-medium'>Created:</span>{' '}
+                  {format(new Date(blogCategoryData.createdAt), 'PPP HH:mm:ss')}
+                </p>
+                {blogCategoryData.updatedAt && (
+                  <p>
+                    <span className='text-foreground font-medium'>
+                      Updated:
+                    </span>{' '}
+                    {format(
+                      new Date(blogCategoryData.updatedAt),
+                      'PPP HH:mm:ss'
+                    )}
+                  </p>
+                )}
               </div>
             </div>
-          ) : (
-            blogCategoryData && (
-              <div className='space-y-4'>
-                <div className='grid grid-cols-1 gap-4'>
-                  {/* Date Information Card */}
-                  <div className='rounded-lg border p-4'>
-                    <h3 className='text-base font-semibold'>Timeline Information</h3>
-                    <div className='mt-2 space-y-1'>
-                      <p className='text-muted-foreground text-sm'>
-                        <span className='font-medium'>Created:</span> {format(new Date(blogCategoryData.createdAt), 'PPP HH:mm:ss')}
-                      </p>
-                      {blogCategoryData?.updatedAt && (
-                        <p className='text-muted-foreground text-sm'>
-                          <span className='font-medium'>Updated:</span> {format(new Date(blogCategoryData.updatedAt), 'PPP HH:mm:ss')}
-                        </p>
-                      )}
-                    </div>
-                  </div>
 
-                  {/* Content Statistics Card */}
-                  <div className='rounded-lg border p-4'>
-                    <div className='flex items-center justify-between'>
-                      <div>
-                        <h3 className='text-base font-semibold'>Content Statistics</h3>
-                        <p className='text-muted-foreground text-sm'>
-                          Total {dialogType.includes('game') ? 'Games' : dialogType.includes('course') ? 'Courses' : 'Blogs'} in Category
-                        </p>
-                      </div>
-                      <div className='text-right'>
-                        <div className='text-3xl font-bold'>{blogCategoryData?.total || 0}</div>
-                        <div className='text-muted-foreground text-sm'>Items</div>
-                      </div>
-                    </div>
+            {/* Stats Card */}
+            <div className='border-border bg-muted/30 rounded-md border p-4'>
+              <div className='flex items-center justify-between'>
+                <div>
+                  <h3 className='text-base font-semibold'>
+                    Content Statistics
+                  </h3>
+                  <p className='text-muted-foreground text-sm'>
+                    Total{' '}
+                    {dialogType.includes('game')
+                      ? 'Games'
+                      : dialogType.includes('course')
+                        ? 'Courses'
+                        : 'Blogs'}{' '}
+                    in Category
+                  </p>
+                </div>
+                <div className='text-right'>
+                  <div className='text-foreground text-3xl font-bold'>
+                    {blogCategoryData.total || 0}
                   </div>
+                  <div className='text-muted-foreground text-sm'>Items</div>
                 </div>
               </div>
-            )
-          )}
-        </div>
+            </div>
+          </div>
+        )}
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button size='sm' variant='outline' onClick={closeModalAdmin}>Close</Button>
+            <Button variant='outline' size='sm' onClick={closeModalAdmin}>
+              Close
+            </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

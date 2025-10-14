@@ -40,6 +40,7 @@ export const studentsSchema = [
     cell:(info) => <p>{info.getValue()}</p>
   }),
   columnHelper.accessor('plan',{
+    id:'plan',
     header:({column}) => <DataTableColumnHeader column={column} title="Subscription"/>,
     cell:(info) =><Badge
     size="xs"

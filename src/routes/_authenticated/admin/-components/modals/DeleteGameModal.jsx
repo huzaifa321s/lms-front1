@@ -127,10 +127,10 @@ export default function DeleteGameDialog({ dialogOpen, closeModalAdmin, modalDat
                     setShowInput((prev) => !prev)
                   }
                 }}
-                loading={deleteGameMutation.status === 'pending'}
+                loading={deleteGameMutation.isPending}
                 className="order-1 w-full min-w-[140px] sm:order-2 sm:w-auto"
               >
-                {deleteGameMutation.status === 'pending'
+                {deleteGameMutation.isPending
                   ? 'Deleting...'
                   : !showInput
                   ? 'Delete Game'

@@ -204,14 +204,6 @@ function RouteComponent() {
         </div>
       </Header>
        <div className='relative min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#f1f5f9] font-sans'>
-      {/* Background Glow */}
-      <div className='pointer-events-none absolute inset-0 overflow-hidden'>
-        <div className='absolute -top-40 -right-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] opacity-20 mix-blend-multiply blur-xl filter'></div>
-        <div className='absolute -bottom-40 -left-40 h-80 w-80 animate-pulse rounded-full bg-gradient-to-r from-[#f59e0b] to-[#d97706] opacity-20 mix-blend-multiply blur-xl filter delay-1000'></div>
-        <div className='absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 transform animate-pulse rounded-full bg-gradient-to-r from-[#10b981] to-[#059669] opacity-10 mix-blend-multiply blur-xl filter delay-500'></div>
-      </div>
-
-    
 
       <Main className='px-4 py-8'>
         <Card className='relative overflow-hidden rounded-[12px] border border-[#e2e8f0] bg-white p-6 shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-500 hover:shadow-lg hover:shadow-[#cbd5e1]/20'>

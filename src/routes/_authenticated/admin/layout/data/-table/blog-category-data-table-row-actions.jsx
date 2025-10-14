@@ -1,6 +1,5 @@
-
-import {  useSearch } from '@tanstack/react-router'
-import {  EditIcon, Eye, MoreHorizontal, Trash } from 'lucide-react'
+import { useSearch } from '@tanstack/react-router'
+import { EditIcon, Eye, MoreHorizontal, Trash } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,9 +10,8 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { openModalAdmin } from '../../../../../../shared/config/reducers/admin/DialogSlice'
 import { BlogCategoriesSchema } from '../-schemas/blogCategoriesSchema'
-
+import { openModalAdmin } from '../../../../../../shared/config/reducers/admin/DialogSlice'
 
 export function BlogCategoryDataTableRowActions({ row }) {
   const category = BlogCategoriesSchema.parse(row.original)
@@ -24,16 +22,21 @@ export function BlogCategoryDataTableRowActions({ row }) {
   const dispatch = useDispatch()
 
   return (
-    <div className="flex items-center">
-    <Button size="xs" variant="outline"  onClick={() =>
-              dispatch(
-                openModalAdmin({
-                  type: 'blog-category-view-modal',
-                  props: { categoryID: category._id },
-                })
-              )
-            }>
-              <Eye/> View</Button>
+    <div className='flex items-center'>
+      <Button
+        size='xs'
+        variant='outline'
+        onClick={() =>
+          dispatch(
+            openModalAdmin({
+              type: 'blog-category-view-modal',
+              props: { categoryID: category._id },
+            })
+          )
+        }
+      >
+        <Eye /> View
+      </Button>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
@@ -45,7 +48,6 @@ export function BlogCategoryDataTableRowActions({ row }) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
-      
           <DropdownMenuItem
             onClick={() =>
               dispatch(
@@ -55,6 +57,8 @@ export function BlogCategoryDataTableRowActions({ row }) {
                 })
               )
             }
+                    className="focus:bg-emerald-100 text-emerald-600 focus:text-emerald-800 cursor-pointer"
+
           >
             Edit
             <DropdownMenuShortcut>
@@ -67,10 +71,12 @@ export function BlogCategoryDataTableRowActions({ row }) {
               dispatch(
                 openModalAdmin({
                   type: 'delete-blog-category',
-                  props: { searchInput ,category},
+                  props: { searchInput, category },
                 })
               )
             }
+                    className="focus:bg-red-100 text-red-600 focus:text-red-800 cursor-pointer"
+
           >
             Delete
             <DropdownMenuShortcut>

@@ -1,30 +1,26 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import {
   QueryClient,
   queryOptions,
   useQuery,
-  useQueryClient,
 } from '@tanstack/react-query'
 import { useSearch, createLazyFileRoute } from '@tanstack/react-router'
-import { Loader, Search } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
+import SearchInput from '../-components/SearchInput'
+import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
 import { useAppUtils } from '../../../../hooks/useAppUtils'
-import { Show } from '../../../../shared/utils/Show'
 import {
   getDebounceInput,
   useSearchInput,
 } from '../../../../utils/globalFunctions'
 import { SmallLoader } from '../../teacher/-layout/data/components/teacher-authenticated-layout'
 import { teachersSchemaStudentPanel } from '../features/tasks/-components/columns'
-import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
-const DataTable = lazy(() => import("../features/tasks/-components/student-data-table"))
 
-
+const DataTable = lazy(
+  () => import('../features/tasks/-components/student-data-table')
+)
 
 const queryClient = new QueryClient()
 
@@ -36,12 +32,10 @@ const teachersQueryOptions = (deps) =>
         console.log('deps ===>', deps)
         const pageNumber = deps.page
         const searchQuery = deps.q
-        console.log('deps.q ===>', deps.q)
         let queryStr = `page=${pageNumber}`
         if (searchQuery) {
           queryStr += `&q=${searchQuery}`
         }
-        console.log('queryStr ===>', queryStr)
         let response = await axios.get(
           `/student/course/get-teachers?teacherIDs=${deps.courseTeachers}&page=${deps.page}&q=${deps.q}`
         )
@@ -87,8 +81,7 @@ export const Route = createLazyFileRoute(
 })
 
 function RouteComponent() {
-  const { router, navigate } = useAppUtils()
-  const queryClient = useQueryClient()
+  const { navigate } = useAppUtils()
   const isFirstRender = useRef(true)
   const [searchInput, setSearchInput] = useSearchInput(
     '/_authenticated/student/course-teachers/'
@@ -96,7 +89,6 @@ function RouteComponent() {
   const searchParams = useSearch({
     from: '/_authenticated/student/course-teachers/',
   })
-  console.log('searchParams ===>', searchParams)
   const delay = searchInput.length < 3 ? 400 : 800
   const debouncedSearch = getDebounceInput(searchInput, delay)
   let currentPage = useSearch({
@@ -120,19 +112,6 @@ function RouteComponent() {
     }
   }, [])
 
-  const searchTeachers = async () => {
-    console.log('searchInput ===>', searchInput)
-    await queryClient.invalidateQueries(
-      teachersQueryOptions({ q: searchInput })
-    )
-    if (searchInput !== '') {
-      navigate({ to: '/student/course-teachers/', search: { q: searchInput } })
-    } else {
-      navigate({ to: '/student/course-teachers/', search: { q: '' } })
-    }
-    router.invalidate()
-  }
-
   let [paginationOptions, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
@@ -147,58 +126,49 @@ function RouteComponent() {
     })
   }
 
+  const handleSearchSubmit = useCallback(
+    (e) => {
+      e.preventDefault()
+      const formData = new FormData(e.target)
+      const input = formData.get('search')?.toString() || ''
+      setSearchInput(input)
+      navigate({
+        to: '/admin/students',
+        search: { page: 1, input: debouncedSearch },
+      })
+    },
+    [navigate, setSearchInput]
+  )
+
   return (
     <>
-      <Header>
+      <Header className="flex items-center justify-between">
         <h1 className='w-full bg-clip-text text-xl font-extrabold tracking-tight drop-shadow-lg md:text-2xl'>
           My Teachers
         </h1>
-        <div className='my-2 flex w-full justify-between'>
-          <div className='ml-auto'>
-            <Show>
-              <Show.When isTrue={true}>
-                <Label>
-                  <Input
-                    type='text'
-                    className='grow'
-                    size='sm'
-                    placeholder='Search Teachers'
-                    value={searchInput || ''}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                  />
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={searchTeachers}
-                    disabled={isFetching}
-                    className='text-black'
-                  >
-                    {isFetching ? (
-                      <Loader className='animate animate-spin' />
-                    ) : (
-                      <Search />
-                    )}
-                  </Button>
-                </Label>
-              </Show.When>
-            </Show>
-          </div>
-        </div>
+          <SearchInput
+            placeholder={'Search teachers...'}
+            value={searchInput}
+            onSubmit={handleSearchSubmit}
+            onChange={(e) => setSearchInput(e.target.value)}
+            isFetching={isFetching}
+          />
       </Header>
       <Main>
-            <Suspense fallback={<DataTableSkeleton />}>
-        <DataTable
-          data={teachers?.length ? teachers : []}
-          columns={teachersSchemaStudentPanel}
-          fetchStatus={fetchStatus}
-          isFetching={isFetching}
-          totalPages={totalPages}
-          searchInput={searchInput}
-          setSearchInput={setSearchInput}
-          handlePagination={handlePagination}
-          pagination={true}
-          paginationOptions={paginationOptions}
-        />
+        <Suspense fallback={<DataTableSkeleton />}>
+          <DataTable
+            data={teachers?.length ? teachers : []}
+            columns={teachersSchemaStudentPanel}
+            fetchStatus={fetchStatus}
+            isFetching={isFetching}
+            totalPages={totalPages}
+            searchInput={searchInput}
+            setSearchInput={setSearchInput}
+            handlePagination={handlePagination}
+            pagination={true}
+            paginationOptions={paginationOptions}
+            hiddenColumnsOnMobile={['serial', 'profile','bio','createdAt','courses']}
+          />
         </Suspense>
       </Main>
     </>

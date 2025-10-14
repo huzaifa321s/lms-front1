@@ -1,5 +1,13 @@
 import React, { useState } from 'react'
-import { Check, CheckCircle2, ClipboardIcon, Trash } from 'lucide-react'
+import {
+  Check,
+  CheckCircle2,
+  ClipboardIcon,
+  Info,
+  Trash,
+  Trash2,
+  TriangleAlert,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -18,10 +26,10 @@ export default function DeleteCourseDialog({
   closeModalTeacher,
   handleSubmitDeletion,
   modalData,
+  isLoading,
 }) {
   const [showInput, setShowInput] = React.useState(false)
   const [inputValue, setInputValue] = React.useState('')
-  console.log('modalData course', modalData)
   const [copied, setCopied] = useState(false)
 
   const handleCopy = () => {
@@ -49,20 +57,7 @@ export default function DeleteCourseDialog({
             <DialogHeader className='p-4 sm:p-6'>
               <div className='flex items-center space-x-2 sm:space-x-3'>
                 <div className='rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] p-1.5 sm:p-2'>
-                  {/* Warning Icon */}
-                  <svg
-                    className='h-5 w-5 text-white sm:h-6 sm:w-6'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z'
-                    />
-                  </svg>
+                  <TriangleAlert className='text-white' />
                 </div>
                 <DialogTitle className='text-base font-bold text-[#1e293b] sm:text-lg md:text-xl'>
                   Delete Course
@@ -71,19 +66,7 @@ export default function DeleteCourseDialog({
 
               <DialogDescription className='mt-3 space-y-3 text-center sm:mt-4 sm:space-y-4'>
                 <div className='mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-[#e2e8f0] bg-gradient-to-br from-[#ef4444]/10 to-[#dc2626]/10 shadow-md sm:h-16 sm:w-16'>
-                  <svg
-                    className='h-6 w-6 text-[#ef4444] sm:h-8 sm:w-8'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16'
-                    />
-                  </svg>
+                  <Trash2 className='h-6 w-6 text-red-500 sm:h-8 sm:w-8' />
                 </div>
 
                 <div className='space-y-1 sm:space-y-2'>
@@ -121,24 +104,21 @@ export default function DeleteCourseDialog({
 
             {showInput && (
               <div className='space-y-3 p-4 pt-0 sm:space-y-4 sm:p-6'>
-                     <Label
-      htmlFor='deleteInput'
-      className='text-xs font-semibold text-[#1e293b] sm:text-sm'
-    >
-      Please type{' '}
-      <Button
-        type='button'
-        onClick={handleCopy}
-      >
-        'delete'
-        {copied ? (
-          <Check className='h-3 w-3 text-green-500' />
-        ) : (
-          <ClipboardIcon className='h-3 w-3 text-gray-500' />
-        )}
-      </Button>{' '}
-      to confirm
-    </Label>
+                <Label
+                  htmlFor='deleteInput'
+                  className='text-xs font-semibold text-[#1e293b] sm:text-sm'
+                >
+                  Please type{' '}
+                  <Button type='button' onClick={handleCopy}>
+                    'delete'
+                    {copied ? (
+                      <Check className='h-3 w-3 text-green-500' />
+                    ) : (
+                      <ClipboardIcon className='h-3 w-3 text-gray-500' />
+                    )}
+                  </Button>{' '}
+                  to confirm
+                </Label>
                 <div className='relative'>
                   <Input
                     id='deleteInput'
@@ -162,11 +142,7 @@ export default function DeleteCourseDialog({
 
             <DialogFooter className='flex flex-col gap-2 p-4 pt-0 sm:flex-row sm:gap-3 sm:p-6'>
               <DialogClose asChild>
-                <Button
-                  size='sm'
-                  variant='outline'
-                  onClick={closeModalTeacher}
-                >
+                <Button size='sm' variant='outline' onClick={closeModalTeacher}>
                   Cancel
                 </Button>
               </DialogClose>
@@ -179,13 +155,13 @@ export default function DeleteCourseDialog({
                     handleSubmitDeletion()
                   }
                 }}
-                type='submit'
+                type={inputValue === 'delete' ? 'submit' : 'button'}
                 variant='destructive'
-                disabled={showInput && inputValue !== 'delete'}
-                className='flex w-full items-center justify-center space-x-1 rounded-[8px] bg-gradient-to-r from-[#ef4444]/10 to-[#dc2626]/10 text-[#ef4444] shadow-sm transition-all duration-200 hover:from-[#ef4444]/20 hover:to-[#dc2626]/20 hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#ef4444] disabled:cursor-not-allowed disabled:bg-[#e2e8f0] disabled:text-[#64748b] sm:w-auto sm:space-x-2'
+                disabled={(showInput && inputValue !== 'delete') || isLoading}
+                loading={isLoading}
               >
-           <Trash/>
-                <span>Delete</span>
+                <Trash />
+                <span>{isLoading ? 'Deleting...' : "Delete"}</span>
               </Button>
             </DialogFooter>
           </div>

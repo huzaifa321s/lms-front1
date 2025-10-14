@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import {
   QueryClient,
@@ -19,6 +19,7 @@ import {
   getDebounceInput,
   useSearchInput,
 } from '../../../../../utils/globalFunctions'
+import SearchInput from '../../../student/-components/SearchInput'
 import ContentSection from '../../../student/settings/-components/content-section'
 import { gameCategoriesSchema } from '../../layout/data/-schemas/gameCategoriesSchema'
 
@@ -135,6 +136,19 @@ function RouteComponent() {
     })
   }, [debouncedSearch, 1])
 
+  const handleSearchSubmit = useCallback(
+    (e) => {
+      e.preventDefault()
+      const formData = new FormData(e.target)
+      const input = formData.get('search')?.toString() || ''
+      setSearchInput(input) // Update state
+      navigate({
+        to: '/admin/settings/game-category',
+        search: { page: 1, q: debouncedSearch },
+      })
+    },
+    [navigate, setSearchInput]
+  )
   return (
     <ContentSection title='Game Categories'>
       <div className='my-2 flex items-center justify-between'>
@@ -151,32 +165,13 @@ function RouteComponent() {
         >
           <Plus /> Add Category
         </Button>
-        <Show>
-          <Show.When isTrue={true}>
-            <Label className='flex items-center gap-2'>
-              <Input
-                type='text'
-                size='sm'
-                className='grow rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] transition-all duration-300 placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
-                placeholder='Search Categories'
-                value={searchInput || ''}
-                onChange={(e) => setSearchInput(e.target.value)}
-              />
-              <Button
-                size='sm'
-                variant='outline'
-                onClick={searchCategories}
-                disabled={isFetching}
-              >
-                {isFetching ? (
-                  <Loader className='h-4 w-4 animate-spin text-[#2563eb]' />
-                ) : (
-                  <Search className='h-4 w-4 text-[#2563eb]' />
-                )}
-              </Button>
-            </Label>
-          </Show.When>
-        </Show>
+        <SearchInput
+          placeholder={'Search categories...'}
+          value={searchInput}
+          onSubmit={handleSearchSubmit}
+          onChange={(e) => setSearchInput(e.target.value)}
+          isFetching={isFetching}
+        />
       </div>
       <Suspense fallback={<DataTableSkeleton />}>
         <DataTable
@@ -191,6 +186,7 @@ function RouteComponent() {
           handlePagination={handlePagination}
           fetchStatus={fetchStatus}
           isFetching={isFetching}
+          hiddenColumnsOnMobile={['serial']}
         />
       </Suspense>
     </ContentSection>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Check, CheckCircle2, ClipboardIcon } from 'lucide-react'
+import { AlertTriangle, Check, CheckCircle2, ClipboardIcon, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -51,19 +51,7 @@ export default function DeleteGameDialog({
             <DialogHeader className='p-4 sm:p-6'>
               <div className='flex items-center space-x-3'>
                 <div className='rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] p-2'>
-                  <svg
-                    className='h-6 w-6 text-white'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z'
-                    />
-                  </svg>
+                  <AlertTriangle className="h-6 w-6 text-white" />
                 </div>
                 <DialogTitle className='text-base font-bold text-[#1e293b] sm:text-lg md:text-xl'>
                   Delete Game
@@ -72,19 +60,7 @@ export default function DeleteGameDialog({
 
               <DialogDescription className='mt-4 space-y-4 text-center'>
                 <div className='mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[#e2e8f0] bg-gradient-to-br from-[#ef4444]/10 to-[#dc2626]/10 shadow-md'>
-                  <svg
-                    className='h-8 w-8 text-[#ef4444]'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16'
-                    />
-                  </svg>
+                 <Trash2 className="h-8 w-8 text-[#ef4444]" />
                 </div>
 
                 <span className='block text-lg font-bold text-[#1e293b] sm:text-xl'>

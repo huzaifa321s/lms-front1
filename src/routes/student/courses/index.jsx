@@ -1,12 +1,7 @@
 import { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
 import { format } from 'date-fns'
-import {
-  queryOptions,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query'
+import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   useNavigate,
   useRouter,
@@ -26,11 +21,22 @@ import {
   Info,
   TableOfContents,
   File,
+  ChevronLeft,
+  ChevronRight,
+  Clock11,
 } from 'lucide-react'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { toast } from 'sonner'
+// Badges (for category / enrolled)
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
+// Collapsible (for Materials)
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from '@/components/ui/collapsible'
 import { Input } from '@/components/ui/input'
 import {
   Popover,
@@ -44,7 +50,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+// Separator (to divide sections)
+import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
+// Tabs
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import {
   Tooltip,
   TooltipTrigger,
@@ -56,6 +66,7 @@ import {
   getRenderPaginationButtons,
   useSearchInput,
 } from '../../../utils/globalFunctions'
+import Pagination from '../../_authenticated/student/-components/Pagination'
 
 const CoursesPageSkeleton = () => {
   return (
@@ -152,6 +163,7 @@ export const coursesQueryOptions = ({ q, page, userID, category, sort }) =>
       throw new Error(response.data.message || 'Failed to fetch courses')
     },
     placeholderData: (prev) => prev,
+    keepPreviousData: true,
   })
 
 // Route definition WITHOUT loader
@@ -183,7 +195,7 @@ function RouteComponent() {
     (s) => s.studentAuth.credentials,
     shallowEqual
   )
- 
+
   const isLoggedIn = useSelector((s) => !!s.studentAuth.token)
   const [sortOrder, setSortOrder] = useState(sort)
   const [selectedCategory, setSelectedCategory] = useState(category)
@@ -249,7 +261,6 @@ function RouteComponent() {
     [navigate, currentPage, searchInput]
   )
 
-
   useEffect(() => {
     navigate({
       to: '/student/courses',
@@ -291,10 +302,14 @@ function RouteComponent() {
     queryKey: ['course-details', courseID],
     queryFn: async () => {
       const res = await axios.get(`/web/course/get/details/${courseID}`)
-console.log('res',res)
       return res.data.data
     },
-    enabled: courseFetch,
+    enabled: !!courseFetch && !!courseID,
+    keepPreviousData: false,
+    placeholderData: undefined,
+    staleTime: 0,
+    cacheTime: 0,
+    retry: false,
   })
 
   return (
@@ -325,15 +340,17 @@ console.log('res',res)
               Explore courses tailored for your learning journey
             </p>
           </div>
-          <div className='flex items-center gap-3'>
-            <div className='relative flex w-full max-w-sm items-center gap-1'>
+          <div className='flex items-center gap-4'>
+            {/* Search Bar */}
+            <div className='relative flex w-full max-w-md items-center gap-2 rounded-xl border border-slate-200/50 bg-white/90 p-1.5 shadow-md backdrop-blur-sm transition-all duration-300 hover:shadow-lg'>
               <Button
                 onClick={() => handleNavigation()}
                 aria-label='Search'
                 variant='outline'
-                size='lg'
+                size='sm'
+                className='rounded-lg border-slate-200 bg-white/50 text-slate-800 transition-all duration-300 hover:scale-105 hover:bg-blue-50'
               >
-                <Search />
+                <Search className='h-5 w-5' />
               </Button>
               <Input
                 type='text'
@@ -341,10 +358,9 @@ console.log('res',res)
                 onChange={(e) => setSearchInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleNavigation()}
                 placeholder='Search courses...'
-                className='w-full rounded-lg border-slate-200 bg-white py-2.5 text-slate-800 placeholder-slate-400 transition-all duration-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200'
+                className='w-full rounded-lg border-slate-200 bg-transparent py-3 text-sm font-medium text-slate-800 placeholder-slate-400 transition-all duration-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200/50'
                 aria-label='Search courses'
               />
-
               {searchInput && (
                 <Button
                   onClick={() => {
@@ -352,10 +368,10 @@ console.log('res',res)
                     handleNavigation({ query: '' })
                   }}
                   variant='outline'
-                  className='text-red-500'
+                  className='rounded-lg border-slate-200 text-red-500 transition-all duration-300 hover:scale-105 hover:bg-red-50'
                   aria-label='Clear search'
                 >
-                  <Delete />
+                  <Delete className='h-5 w-5' />
                 </Button>
               )}
             </div>
@@ -369,13 +385,25 @@ console.log('res',res)
                   handleCategoryChange(value)
                 }}
               >
-                <SelectTrigger className='w-40 border-slate-200 bg-white focus:ring-blue-200'>
+                <SelectTrigger
+                  className='w-44 rounded-xl border-slate-200 bg-white/90 py-3 text-sm font-medium text-slate-800 shadow-md backdrop-blur-sm transition-all duration-300 hover:bg-blue-50 focus:ring-2 focus:ring-blue-200/50'
+                  onClick={() => console.log('select triggered')}
+                >
                   <SelectValue placeholder='Category' />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='All'>All</SelectItem>
+                <SelectContent className='rounded-xl border border-slate-200/50 bg-white/95 shadow-lg backdrop-blur-md'>
+                  <SelectItem
+                    value='All'
+                    className='text-sm text-slate-700 hover:bg-blue-50'
+                  >
+                    All
+                  </SelectItem>
                   {categories?.map((cat) => (
-                    <SelectItem key={cat._id} value={cat.name}>
+                    <SelectItem
+                      key={cat._id}
+                      value={cat.name}
+                      className='text-sm text-slate-700 hover:bg-blue-50'
+                    >
                       {cat.name}
                     </SelectItem>
                   ))}
@@ -389,12 +417,22 @@ console.log('res',res)
                   handleSortChange(value)
                 }}
               >
-                <SelectTrigger className='w-36 border-slate-200 bg-white focus:ring-blue-200'>
+                <SelectTrigger className='w-40 rounded-xl border-slate-200 bg-white/90 py-3 text-sm font-medium text-slate-800 shadow-md backdrop-blur-sm transition-all duration-300 hover:bg-blue-50 focus:ring-2 focus:ring-blue-200/50'>
                   <SelectValue placeholder='Sort by' />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='newest'>Newest</SelectItem>
-                  <SelectItem value='oldest'>Oldest</SelectItem>
+                <SelectContent className='rounded-xl border border-slate-200/50 bg-white/95 shadow-lg backdrop-blur-md'>
+                  <SelectItem
+                    value='newest'
+                    className='text-sm text-slate-700 hover:bg-blue-50'
+                  >
+                    Newest
+                  </SelectItem>
+                  <SelectItem
+                    value='oldest'
+                    className='text-sm text-slate-700 hover:bg-blue-50'
+                  >
+                    Oldest
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -415,50 +453,50 @@ console.log('res',res)
                 return (
                   <Card
                     key={course._id}
-                    className={`group relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md transition-all duration-500 focus-within:ring-2 focus-within:ring-blue-500 hover:-translate-y-1 hover:shadow-2xl ${fetchStatus === 'fetching' && 'bg-accent animate-pulse'}`}
+                    className={`group relative overflow-hidden rounded-3xl border border-slate-200/50 bg-white/90 shadow-lg backdrop-blur-sm transition-all duration-500 focus-within:ring-4 focus-within:ring-blue-500/50 hover:-translate-y-2 hover:bg-white/95 hover:shadow-2xl ${fetchStatus === 'fetching' && 'bg-accent/50 animate-pulse'}`}
                     role='article'
                     aria-label={`Course: ${course.name}`}
                   >
                     {/* Image Section */}
-                    <div className='relative h-52 overflow-hidden'>
+                    <div className='relative h-56 overflow-hidden'>
                       <img
                         src={coverImageUrl}
                         alt={course.name || 'Course cover image'}
-                        className='h-full w-full object-cover transition-transform duration-700 group-hover:scale-110'
+                        className='h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105'
                         loading='lazy'
                       />
-                      <div className='absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent' />
+                      <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent transition-opacity duration-500 group-hover:from-black/70' />
 
                       {/* Category Badge */}
-                      <div
-                        className='absolute top-3 left-3 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 px-3 py-1 text-xs font-semibold text-white shadow-md'
-                        title={`Category: ${course.category?.name || 'N/A'}`}
+                      <Badge
+                        className='absolute top-4 left-4 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-1.5 text-xs font-semibold text-white shadow-md ring-1 ring-white/20 transition-all duration-300 group-hover:scale-105'
+                        title={`Category: ${course.category?.name || 'General'}`}
                       >
                         {course.category?.name || 'General'}
-                      </div>
+                      </Badge>
 
                       {/* Enrolled Badge */}
                       {isEnrolled && (
-                        <div className='absolute top-3 right-3 flex items-center gap-1 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 px-3 py-1 text-xs font-semibold text-white shadow-md'>
-                          <Check size={15} />
+                        <Badge className='absolute top-4 right-4 flex items-center gap-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 px-4 py-1.5 text-xs font-semibold text-white shadow-md ring-1 ring-white/20 transition-all duration-300 group-hover:scale-105'>
+                          <Check size={16} />
                           Enrolled
-                        </div>
+                        </Badge>
                       )}
                     </div>
 
                     {/* Body */}
-                    <CardContent className='space-y-3 p-4'>
-                      <h3 className='line-clamp-2 text-lg font-bold text-slate-800 transition-colors duration-300 group-hover:text-blue-600'>
+                    <CardContent className='space-y-4 p-5'>
+                      <h3 className='line-clamp-2 text-xl font-semibold text-slate-800 transition-colors duration-300 group-hover:text-blue-600'>
                         {course.name}
                       </h3>
-                      <p className='line-clamp-2 text-sm text-slate-600'>
+                      <p className='line-clamp-2 text-sm leading-relaxed text-slate-600'>
                         {course.description}
                       </p>
                     </CardContent>
 
                     {/* Footer */}
-                    <CardFooter className='flex flex-col gap-2 px-4 pb-4'>
-                      <div className='flex w-full items-center gap-2'>
+                    <CardFooter className='flex flex-col gap-3 px-5 pb-5'>
+                      <div className='flex w-full items-center gap-3'>
                         {/* View Button */}
                         <Button
                           onClick={() =>
@@ -467,83 +505,168 @@ console.log('res',res)
                               search: { userID: credentials?._id },
                             })
                           }
-                          className='w-1/2 bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md transition-all duration-300 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg'
+                          className='w-1/2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 py-2.5 font-medium text-white shadow-md transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-800 hover:shadow-xl'
                         >
-                          <Eye className='mr-1 h-4 w-4' />
+                          <Eye className='mr-1.5 h-4 w-4' />
                           View
                         </Button>
 
-                        {/* Popover with Tooltip */}
-                        <Popover>
+                        {/* Popover with structured content */}
+                        <Popover
+                          onOpenChange={(open) => {
+                            if (!open) {
+                              queryClient.removeQueries({
+                                queryKey: ['course-details', courseID],
+                              })
+                              setCourseFetch(false)
+                              setCourseID('')
+                            }
+                          }}
+                        >
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <PopoverTrigger asChild>
                                 <Button
                                   variant='outline'
                                   onClick={() => {
-                                    ;(setCourseID(course._id),
-                                      setCourseFetch(true))
+                                    setCourseID(course._id)
+                                    setCourseFetch(true)
                                   }}
-                                  className='w-1/2 border-blue-600 text-blue-600 hover:bg-blue-50'
+                                  className='w-1/2 rounded-xl border-blue-600 bg-blue-50/30 py-2.5 font-medium text-blue-600 transition-all duration-300 hover:scale-105 hover:bg-blue-50'
                                 >
-                                  <Info className='mr-1 h-4 w-4' />
+                                  <Info className='mr-1.5 h-4 w-4' />
                                   Details
                                 </Button>
                               </PopoverTrigger>
                             </TooltipTrigger>
-                            <TooltipContent>
-                              <p>See quick course stats and instructor info</p>
+                            <TooltipContent className='rounded-lg bg-blue-600 p-2 text-sm text-white'>
+                              Quick course stats and instructor info
                             </TooltipContent>
                           </Tooltip>
 
                           <PopoverContent
                             side='top'
                             align='center'
-                            className='w-80 space-y-3 p-4 text-sm'
+                            className='w-80 space-y-4 rounded-2xl border border-slate-200/50 bg-white/95 p-5 text-sm shadow-xl backdrop-blur-md transition-all duration-300'
                           >
                             {courseLoading ? (
-                              <Skeleton className='h-40 w-full' />
+                              <div className='h-64 w-full animate-pulse rounded-lg bg-slate-200/50' />
                             ) : (
                               <>
-                                <p className='scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent max-h-28 overflow-y-auto pr-1 text-sm leading-snug text-slate-700 sm:text-[15px]'>
-                                  {courseDetails?.description ||
-                                    'No description available.'}
-                                </p>
+                                {/* Tabs for structured info */}
+                                <Tabs
+                                  defaultValue='overview'
+                                  className='space-y-3'
+                                >
+                                  <TabsList className='grid w-full grid-cols-3'>
+                                    <TabsTrigger value='overview'>
+                                      Overview
+                                    </TabsTrigger>
+                                    <TabsTrigger value='materials'>
+                                      Materials
+                                    </TabsTrigger>
+                                    <TabsTrigger value='instructor'>
+                                      Instructor
+                                    </TabsTrigger>
+                                  </TabsList>
 
-                                <div className='space-y-2 border-t border-slate-200 pt-3'>
-                                  <div className='flex items-center gap-2 text-slate-700'>
-                                    <User className='h-4 w-4 text-blue-500' />
-                                    <span>
-                                      Instructor:{' '}
-                                      {courseDetails?.instructor?.firstName
-                                        ? `${courseDetails.instructor.firstName} ${courseDetails?.instructor.lastName || ''}`
-                                        : 'Unknown'}
-                                    </span>
-                                  </div>
+                                  {/* Overview */}
+                                  <TabsContent
+                                    value='overview'
+                                    className='scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-transparent max-h-36 space-y-2 overflow-y-auto'
+                                  >
+                                    <p className='text-slate-700'>
+                                      {courseDetails?.description ||
+                                        'No description available.'}
+                                    </p>
+                                    <div className='space-y-2 border-t border-slate-200/50 pt-2'>
+                                      <div className='flex items-center gap-2 text-slate-700'>
+                                        <Users className='h-4 w-4 text-blue-500' />
+                                        <span>
+                                          {courseDetails?.enrolledCount || 0}{' '}
+                                          students enrolled
+                                        </span>
+                                      </div>
+                                      {courseDetails?.updatedAt && (
+                                        <div className='flex items-center gap-2 text-slate-700'>
+                                          <Clock className='h-4 w-4 text-blue-500' />
+                                          <span>
+                                            Updated{' '}
+                                            {format(
+                                              courseDetails.updatedAt,
+                                              'PPP'
+                                            )}
+                                          </span>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </TabsContent>
 
-                                  <div className='flex items-center gap-2 text-slate-700'>
-                                    <Users className='h-4 w-4 text-blue-500' />
-                                    <span>
-                                      {courseDetails?.enrolledCount || 0}{' '}
-                                      students enrolled
-                                    </span>
-                                  </div>
-                                  <div className='flex items-center gap-2 text-slate-700'>
-                                    <File className='h-4 w-4 text-blue-500' />
-                                    <span>
-                                      {courseDetails?.material?.length || 0}{' '}
-                                      Course Materials
-                                    </span>
-                                  </div>
-                                  {course.updatedAt && (
+                                  {/* Materials */}
+                                  <TabsContent
+                                    value='materials'
+                                    className='scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-transparent max-h-36 overflow-y-auto'
+                                  >
+                                    {courseDetails?.material?.length ? (
+                                      <Collapsible>
+                                        <CollapsibleTrigger className='w-full rounded-lg bg-blue-50 px-3 py-2 text-left font-medium transition hover:bg-blue-100'>
+                                          Show Materials
+                                        </CollapsibleTrigger>
+                                        <CollapsibleContent className='scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-transparent max-h-32 space-y-1 overflow-y-auto px-2 py-2'>
+                                          {courseDetails.material.map((mat) => (
+                                            <p
+                                              key={mat._id}
+                                              className='rounded bg-[whitesmoke] px-2 py-1 text-sm text-slate-700'
+                                            >
+                                              {mat.title}
+                                            </p>
+                                          ))}
+                                        </CollapsibleContent>
+                                      </Collapsible>
+                                    ) : (
+                                      <p className='text-slate-500'>
+                                        No materials available.
+                                      </p>
+                                    )}
+                                  </TabsContent>
+
+                                  {/* Instructor */}
+                                  <TabsContent
+                                    value='instructor'
+                                    className='scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-transparent max-h-36 space-y-2 overflow-y-auto'
+                                  >
                                     <div className='flex items-center gap-2 text-slate-700'>
-                                      <Clock className='h-4 w-4 text-blue-500' />
+                                      <User className='h-4 w-4 text-blue-500' />
                                       <span>
-                                        Updated{' '}
-                                        {format(courseDetails.updatedAt, 'PPP')}
+                                        {courseDetails?.instructor?.firstName
+                                          ? `${courseDetails.instructor.firstName} ${courseDetails?.instructor.lastName || ''}`
+                                          : 'Unknown Instructor'}
                                       </span>
                                     </div>
-                                  )}
+                                    {courseDetails?.instructor?.bio && (
+                                      <p className='text-sm text-slate-600'>
+                                        {courseDetails.instructor.bio}
+                                      </p>
+                                    )}
+                                  </TabsContent>
+                                </Tabs>
+
+                                <Separator className='my-2' />
+
+                                {/* Quick Actions */}
+                                <div className='flex gap-2'>
+                                  <Button
+                                    size='sm'
+                                    className='flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800'
+                                    onClick={() =>
+                                      navigate({
+                                        to: `/student/courses/${course._id}`,
+                                      })
+                                    }
+                                  >
+                                    <Eye className='mr-1 h-4 w-4' />
+                                    View Course
+                                  </Button>
                                 </div>
                               </>
                             )}
@@ -572,53 +695,12 @@ console.log('res',res)
         </Show>
 
         {/* Pagination */}
-        {totalPages > 1 && (
-          <div className='mt-12 flex justify-center'>
-            <div className='flex items-center gap-2 rounded-lg border border-slate-200 bg-white p-2 shadow-md'>
-              {currentPage > 1 && (
-                <Button
-                  size='sm'
-                  variant='ghost'
-                  onClick={() => handleNavigation({ page: currentPage - 1 })}
-                  aria-label='Previous page'
-                >
-                  <svg
-                    className='h-4 w-4'
-                    fill='currentColor'
-                    viewBox='0 0 20 20'
-                  >
-                    <path
-                      fillRule='evenodd'
-                      d='M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z'
-                      clipRule='evenodd'
-                    />
-                  </svg>
-                </Button>
-              )}
-              {paginationButtons}
-              {currentPage < totalPages && (
-                <Button
-                  size='sm'
-                  variant='ghost'
-                  onClick={() => handleNavigation({ page: currentPage + 1 })}
-                  aria-label='Next page'
-                >
-                  <svg
-                    className='h-4 w-4'
-                    fill='currentColor'
-                    viewBox='0 0 20 20'
-                  >
-                    <path
-                      fillRule='evenodd'
-                      d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z'
-                      clipRule='evenodd'
-                    />
-                  </svg>
-                </Button>
-              )}
-            </div>
-          </div>
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handleNavigation}
+          paginationButtons={paginationButtons}
+        />
       </div>
     </div>
   )

@@ -10,7 +10,7 @@ import { objectToFormData } from '../../../../../shared/utils/helperFunction';
 import { getTeacherCreds } from '../../-utils/helperFunctions';
 import { Header } from '@/components/layout/header';
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Book, Delete, Image, NotebookText, Plus, PlusCircleIcon } from 'lucide-react';
+import { ArrowLeft, Book, BookOpen, Delete, Image, NotebookText, Plus, PlusCircleIcon } from 'lucide-react';
 
 const queryClient = new QueryClient();
 
@@ -319,21 +319,7 @@ function RouteComponent() {
             <div className="space-y-6">
               {courseObj.material.length === 0 && (
                 <div className="text-center py-8 text-[#64748b]">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="48"
-                    height="48"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="w-12 h-12 mx-auto mb-3 text-[#94a3b8]"
-                  >
-                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                  </svg>
+                <BookOpen className="w-12 h-12 mx-auto mb-3 text-[#94a3b8]" />
                   <p>No materials added yet. Click "Add Material" to get started.</p>
                 </div>
               )}

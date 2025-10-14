@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -8,9 +9,9 @@ import {
   DialogFooter,
   DialogClose,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Loader } from 'lucide-react'
 
 export default function EditCategoryDialog({
   dialogType,
@@ -21,11 +22,25 @@ export default function EditCategoryDialog({
   dispatch,
   closeModalAdmin,
 }) {
+  const inputRef = useRef(null)
+
+  // focus without selecting
+  useEffect(() => {
+    if (inputRef.current) {
+      const el = inputRef.current
+      el.focus({ preventScroll: true })
+      el.setSelectionRange(el.value.length, el.value.length) // move cursor to end
+    }
+  }, [])
+
   return (
     <Dialog open onOpenChange={() => dispatch(closeModalAdmin())}>
       <form onSubmit={handleSubmitEditCategory}>
-        <DialogContent className='w-full rounded-[12px] border border-[#e2e8f0] bg-[#ffffff] p-6 shadow-[0_4px_6px_rgba(0,0,0,0.05)] sm:max-w-md'>
-          {/* Header */}
+        <DialogContent
+          className='w-full rounded-[12px] border border-[#e2e8f0] bg-white p-6 shadow-[0_4px_6px_rgba(0,0,0,0.05)] sm:max-w-md'
+          // ⬇️ Disable Radix's auto-focus behavior
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
           <DialogHeader className='space-y-2'>
             <DialogTitle className='text-lg font-semibold text-[#1e293b]'>
               Edit Category
@@ -35,7 +50,6 @@ export default function EditCategoryDialog({
             </DialogDescription>
           </DialogHeader>
 
-          {/* Input */}
           <div className='mt-4 space-y-2'>
             <Label
               htmlFor='category'
@@ -43,7 +57,9 @@ export default function EditCategoryDialog({
             >
               Category Name
             </Label>
+
             <Input
+              ref={inputRef}
               id='category'
               value={inputValue}
               placeholder='Enter category name...'
@@ -52,12 +68,12 @@ export default function EditCategoryDialog({
             />
           </div>
 
-          {/* Footer */}
           <DialogFooter className='mt-6 flex justify-end space-x-3'>
             <DialogClose asChild>
               <Button
                 size='sm'
                 variant='outline'
+                type='button'
                 disabled={editCategoryMutation.status === 'pending'}
                 onClick={() => dispatch(closeModalAdmin())}
               >
@@ -65,39 +81,7 @@ export default function EditCategoryDialog({
               </Button>
             </DialogClose>
 
-            <Button
-              size='sm'
-              type='submit'
-              onClick={handleSubmitEditCategory}
-              disabled={editCategoryMutation.status === 'pending' || !inputValue}
-            >
-              {editCategoryMutation.status === 'pending' ? (
-                <span className='flex items-center gap-2'>
-                  <svg
-                    className='h-4 w-4 animate-spin'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                  >
-                    <circle
-                      className='opacity-25'
-                      cx='12'
-                      cy='12'
-                      r='10'
-                      stroke='currentColor'
-                      strokeWidth='4'
-                    ></circle>
-                    <path
-                      className='opacity-75'
-                      fill='currentColor'
-                      d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
-                    ></path>
-                  </svg>
-                  Saving...
-                </span>
-              ) : (
-                'Save Changes'
-              )}
-            </Button>
+          <Button loading={editCategoryMutation.status === 'pending'} size='sm' type='submit' onClick={handleSubmitEditCategory} disabled={ editCategoryMutation.status === 'pending' || !inputValue } > {editCategoryMutation.status === 'pending' ?( "Saving...") : ( 'Save Changes' )} </Button>
           </DialogFooter>
         </DialogContent>
       </form>

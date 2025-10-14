@@ -1,8 +1,7 @@
-import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
+import { Eye } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { TeachersSchema } from '../data/schema'
-import { Eye } from 'lucide-react'
 
 export function CourseTeachersDataTableRowActions({ row }) {
   const teacher = TeachersSchema.parse(row.original)
@@ -17,7 +16,7 @@ export function CourseTeachersDataTableRowActions({ row }) {
           navigate({ to: `/student/course-teachers/${teacher._id}` })
         }
       >
-       <Eye/> View Details
+        <Eye /> View Details
       </Button>
     </>
   )

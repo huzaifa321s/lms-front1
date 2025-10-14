@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useMemo, useRef } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 import axios from 'axios'
 import {
   QueryClient,
@@ -14,11 +14,10 @@ import {
   Search,
   Settings,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Header } from '@/components/layout/header'
 import { TopNav } from '@/components/layout/top-nav'
+import Pagination from '../../-components/Pagination'
+import SearchInput from '../../-components/SearchInput'
 import { useAppUtils } from '../../../../../hooks/useAppUtils'
 import { Show } from '../../../../../shared/utils/Show'
 import {
@@ -28,6 +27,8 @@ import {
 } from '../../../../../utils/globalFunctions'
 import { SmallLoader } from '../../../teacher/-layout/data/components/teacher-authenticated-layout'
 import { CardDemo } from './-components/_Course_Card'
+
+
 
 const queryClient = new QueryClient()
 const coursesQueryOptions = (deps) =>
@@ -77,7 +78,6 @@ function RouteComponent() {
   const searchParams = useSearch({
     from: '/_authenticated/student/_subscribed/enrolledcourses/',
   })
-  console.log('searchParams ===>', searchParams)
   const [searchInput, setSearchInput] = useSearchInput(
     '/_authenticated/student/_subscribed/enrolledcourses/'
   )
@@ -88,7 +88,6 @@ function RouteComponent() {
     suspense: isFirstRender.current,
     placeholderData: (prev) => prev,
   })
-  console.log('data ===>', data)
   const courses = data?.courses
   const pages = data?.pages
 
@@ -102,7 +101,7 @@ function RouteComponent() {
     navigate({
       to: '/student/enrolledcourses',
       search: { input: debouncedSearch, page: 1 },
-      replace: true
+      replace: true,
     })
   }, [debouncedSearch])
 
@@ -133,25 +132,19 @@ function RouteComponent() {
     [queryPage, pages]
   )
 
-  console.log('queryPage ===>', queryPage)
-
-  const searchEnrolledCourses = async () => {
-    if (searchInput !== '') {
+  const handleSearchSubmit = useCallback(
+    (e) => {
+      e.preventDefault()
+      const formData = new FormData(e.target)
+      const input = formData.get('search')?.toString() || ''
+      setSearchInput(input) // Update state
       navigate({
         to: `/student/enrolledcourses`,
-        search: { input: searchInput, page: 1 },
+        search: { page: 1, input: debouncedSearch },
       })
-    } else {
-      navigate({
-        to: `/student/enrolledcourses`,
-        search: { input: '', page: queryPage },
-      })
-    }
-    await queryClient.invalidateQueries({
-      input: searchInput,
-      page: searchParams.page,
-    })
-  }
+    },
+    [navigate, setSearchInput]
+  )
 
   const baseUrl = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses`
 
@@ -160,30 +153,13 @@ function RouteComponent() {
       <Header>
         <TopNav links={topNav} />
         <div className='ml-auto w-fit'>
-          <Show>
-            <Show.When isTrue={true}>
-              <Label className='flex items-center gap-2'>
-                <Input
-                  size='sm'
-                  type='text'
-                  value={searchInput}
-                  className='grow border-slate-200 focus:border-blue-500 focus:ring-blue-500'
-                  placeholder='Search courses...'
-                  onChange={(e) => setSearchInput(e.target.value)}
-                />
-                <Button
-                  variant='outline'
-                  size='sm'
-                  onClick={searchEnrolledCourses}
-                  loading={isFetching}
-                  disabled={isFetching}
-                  className='border-blue-500 text-blue-600 hover:bg-blue-50'
-                >
-                  {!isFetching && <Search className='h-4 w-4' />}
-                </Button>
-              </Label>
-            </Show.When>
-          </Show>
+          <SearchInput
+            placeholder={'Search courses...'}
+            value={searchInput}
+            onSubmit={handleSearchSubmit}
+            onChange={(e) => setSearchInput(e.target.value)}
+            isFetching={isFetching}
+          />
         </div>
       </Header>
       <h1 className='mx-2 my-2 bg-clip-text text-2xl font-extrabold tracking-tight drop-shadow-lg md:text-3xl'>
@@ -195,6 +171,7 @@ function RouteComponent() {
             <Show>
               <Show.When isTrue={courses && courses.length > 0}>
                 {courses.map((course, index) => {
+                  console.log('course',course)
                   return (
                     <CardDemo
                       key={course._id || index}
@@ -206,6 +183,7 @@ function RouteComponent() {
                       material={course.material.length}
                       instructor={course.instructor}
                       enrollmentDate={course.updatedAt}
+                      materials={course.material}
                     />
                   )
                 })}
@@ -227,25 +205,12 @@ function RouteComponent() {
         </div>
 
         <div className='fixed bottom-20 left-1/2 -translate-x-1/2 transform'>
-          <div className='flex items-center gap-2 rounded-lg border border-slate-200 bg-white/80 p-2 shadow-lg backdrop-blur-sm'>
-            {queryPage > 1 && (
-              <Button
-                size='sm'
-                onClick={() => handlePageChange(queryPage - 1)}
-              >
-                «
-              </Button>
-            )}
-            {paginationButtons}
-            {queryPage < pages && (
-              <Button
-                size='sm'
-                onClick={() => handlePageChange(queryPage + 1)}
-              >
-                »
-              </Button>
-            )}
-          </div>
+          <Pagination
+            currentPage={queryPage}
+            totalPages={pages}
+            onPageChange={handlePageChange}
+            paginationButtons={paginationButtons}
+          />
         </div>
       </div>
     </>

@@ -474,7 +474,7 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
           <DialogSkeleton
             onClose={() => dispatch(closeModal())}
             maxWidth='sm'
-            h='md'
+            h='xl'
           />
         }
       >

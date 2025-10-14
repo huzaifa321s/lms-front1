@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { QueryClient, queryOptions, useQuery } from '@tanstack/react-query'
 import { useSearch, createLazyFileRoute } from '@tanstack/react-router'
@@ -15,6 +15,7 @@ import {
   getDebounceInput,
   useSearchInput,
 } from '../../../../utils/globalFunctions'
+import SearchInput from '../../student/-components/SearchInput'
 import { coursesSchema } from '../layout/data/-schemas/coursesSchema'
 import CoursesSummary from './-components/CoursesSummary'
 
@@ -146,6 +147,20 @@ function RouteComponent() {
     })
   }, [debouncedSearch, 1])
 
+  const handleSearchSubmit = useCallback(
+    (e) => {
+      e.preventDefault()
+      const formData = new FormData(e.target)
+      const input = formData.get('search')?.toString() || ''
+      setSearchInput(input)
+      navigate({
+        to: '/admin/courses/',
+        search: { page: 1, q: debouncedSearch },
+      })
+    },
+    [navigate, setSearchInput]
+  )
+
   return (
     <>
       <Header>
@@ -167,30 +182,13 @@ function RouteComponent() {
           <h2 className='mb-4 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-lg font-bold text-transparent'>
             Courses
           </h2>
-          <div className='flex items-center gap-2'>
-            <Label>
-              <Input
-                size='sm'
-                type='text'
-                placeholder='Search Courses'
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className='rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] transition-all duration-300 placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
-              />
-              <Button
-                variant='outline'
-                size='sm'
-                onClick={searchCourses}
-                disabled={isFetching}
-              >
-                {isFetching ? (
-                  <Loader className='h-4 w-4 animate-spin text-[#2563eb]' />
-                ) : (
-                  <Search className='h-4 w-4 text-[#2563eb]' />
-                )}
-              </Button>
-            </Label>
-          </div>
+          <SearchInput
+            placeholder={'Search courses...'}
+            value={searchInput}
+            onSubmit={handleSearchSubmit}
+            onChange={(e) => setSearchInput(e.target.value)}
+            isFetching={isFetching}
+          />
         </div>
         <Suspense fallback={<DataTableSkeleton />}>
           <DataTable
@@ -204,6 +202,7 @@ function RouteComponent() {
             handlePagination={handlePagination}
             totalPages={totalPages}
             paginationOptions={paginationOptions}
+            hiddenColumnsOnMobile={['serial','createdAt','description','category.name']}
           />
         </Suspense>
       </Main>

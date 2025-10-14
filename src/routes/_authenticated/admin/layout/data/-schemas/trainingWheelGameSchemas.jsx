@@ -10,10 +10,7 @@ columnHelper.display({
   id: "serial",
   header: "#",
   cell: ({ row, table }) => {
-    console.log('table.getState().pagination ===>',table.getState().pagination)
     const { pageIndex, pageSize } = table.getState().pagination
-    console.log('pageIndex ===>',pageIndex)
-    console.log('pageIndex * pageSize + row.index  + 1',pageIndex * pageSize + row.index + 1)
     return <p>{ pageIndex * pageSize + row.index + 1}</p>
   }
 }),,
@@ -30,6 +27,7 @@ columnHelper.display({
     cell: (info) => <p>{info.getValue()}</p>,
   }),
   columnHelper.accessor('difficulties', {
+    id:'difficulties',
     header: ({ column }) => (
       <DataTableColumnHeader className="w-fit" column={column} title='Difficulty Levels' />
     ),

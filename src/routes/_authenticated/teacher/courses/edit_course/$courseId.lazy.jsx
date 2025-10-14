@@ -8,7 +8,7 @@ import {
 import { useParams, createLazyFileRoute } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
+import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -21,7 +21,7 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { objectToFormData } from '../../../../../shared/utils/helperFunction'
 import { Header } from '@/components/layout/header';
-import { ArrowLeft, Delete, Notebook, PlusCircle, Save } from 'lucide-react'
+import { ArrowLeft, BookCopy, BookMarked, BookOpen, Delete, Notebook, PlusCircle, Save } from 'lucide-react'
 
 // Recreating components from shadcn/ui and icons from lucide-react with Tailwind CSS and inline SVGs.
 
@@ -280,20 +280,7 @@ function App() {
         <Card className='relative overflow-hidden rounded-[8px] border border-[#e2e8f0] bg-white/95 shadow-[0_4px_6px_rgba(0,0,0,0.05)] backdrop-blur-sm transition-all duration-300 hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]'>
           <CardHeader>
             <div className='flex items-center gap-3'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width='28'
-                height='28'
-                viewBox='0 0 24 24'
-                fill='none'
-                stroke='#2563eb'
-                strokeWidth='2'
-                strokeLinecap='round'
-                strokeLinejoin='round'
-              >
-                <path d='M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z' />
-                <path d='M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z' />
-              </svg>
+             <BookOpen className="h-7 w-7 text-[#2563eb]" />
               <h2 className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-2xl font-bold text-transparent'>
                 Course Details
               </h2>
@@ -318,28 +305,7 @@ function App() {
                       loading="lazy"
                     />
                     <div className='absolute inset-0 flex items-center justify-center bg-[#2563eb]/40 opacity-0 transition-opacity duration-300 group-hover/image:opacity-100'>
-                      <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        width='32'
-                        height='32'
-                        viewBox='0 0 24 24'
-                        fill='none'
-                        stroke='white'
-                        strokeWidth='2'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      >
-                        <rect
-                          width='18'
-                          height='18'
-                          x='3'
-                          y='3'
-                          rx='2'
-                          ry='2'
-                        />
-                        <circle cx='9' cy='9' r='2' />
-                        <path d='m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21' />
-                      </svg>
+                     <BookOpen className="h-7 w-7 text-[#2563eb]" />
                     </div>
                     <input
                       id='coverImage'
@@ -400,7 +366,7 @@ function App() {
                       value={courseObj.category}
                       onValueChange={handleCategoryChange}
                     >
-                      {console.log('courseObj ==>', courseObj)}
+                      
                       <SelectTrigger className='mt-1 h-10 w-full max-w-md rounded-[8px] border-[#e2e8f0] text-[#1e293b] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'>
                         <SelectValue placeholder='Select a category' />
                       </SelectTrigger>
@@ -424,19 +390,7 @@ function App() {
           <CardHeader>
             <div className='flex items-center justify-between'>
               <div className='flex items-center gap-3'>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  width='28'
-                  height='28'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  stroke='#2563eb'
-                  strokeWidth='2'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                >
-                  <path d='M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20' />
-                </svg>
+              <BookMarked className="h-7 w-7 text-[#2563eb]" />
                 <h2 className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-2xl font-bold text-transparent'>
                   Course Materials ({courseObj.material.length})
                 </h2>
@@ -454,21 +408,7 @@ function App() {
             <div className='space-y-6'>
               {courseObj.material.length === 0 && (
                 <div className='py-8 text-center text-[#64748b]'>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    width='48'
-                    height='48'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='#64748b'
-                    strokeWidth='2'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    className='mx-auto mb-3 h-12 w-12'
-                  >
-                    <path d='M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z' />
-                    <path d='M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z' />
-                  </svg>
+                  <BookCopy className="mx-auto mb-3 h-12 w-12 text-[#64748b]" />
                   <p>
                     No materials added yet. Click "Add Material" to get started.
                   </p>

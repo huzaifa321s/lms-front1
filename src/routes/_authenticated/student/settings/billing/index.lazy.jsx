@@ -1,7 +1,7 @@
 import { lazy, Suspense, useState } from 'react'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { Plus , Coins, Medal, Gem, Crown, CalendarClock } from 'lucide-react'
+import { Plus, Coins, Medal, Gem, Crown, CalendarClock } from 'lucide-react'
 import { shallowEqual, useSelector } from 'react-redux'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
@@ -191,7 +191,7 @@ function Billing() {
                             })
                           )
                         }
-                     variant="destructive"   
+                        variant='destructive'
                       >
                         Cancel Subscription
                       </Button>
@@ -213,7 +213,7 @@ function Billing() {
                             search: { redirect: '/student/settings/billing' },
                           })
                         }
-                        className='mt-6 '
+                        className='mt-6'
                       >
                         Resubscribe
                       </Button>
@@ -241,7 +241,7 @@ function Billing() {
                             )
                           }
                         }}
-                        className='mt-6 '
+                        className='mt-6'
                       >
                         Complete Payment
                       </Button>
@@ -292,208 +292,249 @@ function Billing() {
           {subscription?.subscriptionId && (
             <>
               {/* Available Plans */}
-             <div className='group relative rounded-xl border border-slate-200/50 bg-white/95 p-6 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl'>
-      <div className='pointer-events-none absolute -inset-1 rounded-xl bg-gradient-to-r from-blue-200/10 via-slate-200/10 to-blue-200/10 opacity-0 blur-lg transition-opacity duration-300 group-hover:opacity-100' />
+              <div className='group relative rounded-xl border border-slate-200/50 bg-white/95 p-6 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl'>
+                <div className='pointer-events-none absolute -inset-1 rounded-xl bg-gradient-to-r from-blue-200/10 via-slate-200/10 to-blue-200/10 opacity-0 blur-lg transition-opacity duration-300 group-hover:opacity-100' />
 
-      <div className='relative'>
-        <h2 className='mb-4 flex items-center gap-2 text-xl font-bold text-slate-700 sm:text-2xl'>
-          <Crown className='h-6 w-6 text-blue-600' />
-          Available Plans
-        </h2>
+                <div className='relative'>
+                  <h2 className='mb-4 flex items-center gap-2 text-xl font-bold text-slate-700 sm:text-2xl'>
+                    <Crown className='h-6 w-6 text-blue-600' />
+                    Available Plans
+                  </h2>
 
-        {subscription?.status === "pending" ? (
-          <div className='py-8 text-center text-slate-500'>
-            <p className='font-medium'>Your subscription is pending.</p>
-            <p className='text-sm'>
-              Please complete payment or add a payment method to continue.
-            </p>
-          </div>
-        ) : (
-          <Tabs value={tabValue} onValueChange={handleTabsValueChange} className='w-full'>
-            <TabsList className='mb-6 grid grid-cols-2 rounded-xl border border-slate-200/30 bg-gradient-to-r from-slate-50/80 to-blue-50/50 p-1 md:grid-cols-4'>
-              {plans.map((p, i) =>
-                p !== subscription?.name?.toLowerCase() && (
-                  <TabsTrigger
-                    value={p}
-                    key={i}
-                    className='flex items-center justify-center gap-1 rounded-lg font-medium capitalize transition-all duration-200 data-[state=active]:border data-[state=active]:border-blue-200/50 data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-md'
-                  >
-                    {p === "daily" && <CalendarClock className='h-4 w-4 text-blue-500' />}
-                    {p === "bronze" && <Coins className='h-4 w-4 text-amber-600' />}
-                    {p === "silver" && <Medal className='h-4 w-4 text-gray-400' />}
-                    {p === "gold" && <Gem className='h-4 w-4 text-yellow-500' />}
-                    {p}
-                  </TabsTrigger>
-                )
-              )}
-            </TabsList>
-
-            {/* DAILY PLAN */}
-            <TabsContent value='daily'>
-              {subscription?.name !== "Daily" && (
-                <div className='rounded-xl border border-blue-200/30 bg-gradient-to-br from-blue-50/30 to-slate-50/30 p-6'>
-                  <div className='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
-                    <div className='space-y-4'>
-                      <h3 className='flex items-center gap-2 text-lg font-bold text-blue-600 sm:text-xl'>
-                        <CalendarClock className='h-5 w-5 text-blue-500' /> $10 per day
-                      </h3>
-                      <ul className='space-y-2 text-slate-600'>
-                        <li className='flex items-center gap-2 text-sm sm:text-base'>
-                          <div className='h-2 w-2 rounded-full bg-blue-400'></div> Access to 1 course
-                        </li>
-                        <li className='flex items-center gap-2 text-sm sm:text-base'>
-                          <div className='h-2 w-2 rounded-full bg-blue-400'></div> Basic support
-                        </li>
-                        <li className='flex items-center gap-2 text-sm sm:text-base'>
-                          <div className='h-2 w-2 rounded-full bg-blue-400'></div> Limited features
-                        </li>
-                      </ul>
+                  {subscription?.status === 'pending' ? (
+                    <div className='py-8 text-center text-slate-500'>
+                      <p className='font-medium'>
+                        Your subscription is pending.
+                      </p>
+                      <p className='text-sm'>
+                        Please complete payment or add a payment method to
+                        continue.
+                      </p>
                     </div>
-                    <Button
-                      variant='outline'
-                      size='sm'
-                      onClick={() =>
-                        dispatch(
-                          openModal({
-                            type: "update-subscription-modal",
-                            props: { selectedPlan: "Daily", currentPlan: subscription },
-                          })
-                        )
-                      }
-                      
+                  ) : (
+                    <Tabs
+                      value={tabValue}
+                      onValueChange={handleTabsValueChange}
+                      className='w-full'
                     >
-                      Update to Daily Plan
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </TabsContent>
+                      <TabsList className='mb-6 grid grid-cols-2 rounded-xl border border-slate-200/30 bg-gradient-to-r from-slate-50/80 to-blue-50/50 p-1 md:grid-cols-4'>
+                        {plans.map(
+                          (p, i) =>
+                            p !== subscription?.name?.toLowerCase() && (
+                              <TabsTrigger
+                                value={p}
+                                key={i}
+                                className='flex items-center justify-center gap-1 rounded-lg font-medium capitalize transition-all duration-200 data-[state=active]:border data-[state=active]:border-blue-200/50 data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-md'
+                              >
+                                {p === 'daily' && (
+                                  <CalendarClock className='h-4 w-4 text-blue-500' />
+                                )}
+                                {p === 'bronze' && (
+                                  <Coins className='h-4 w-4 text-amber-600' />
+                                )}
+                                {p === 'silver' && (
+                                  <Medal className='h-4 w-4 text-gray-400' />
+                                )}
+                                {p === 'gold' && (
+                                  <Gem className='h-4 w-4 text-yellow-500' />
+                                )}
+                                {p}
+                              </TabsTrigger>
+                            )
+                        )}
+                      </TabsList>
 
-            {/* BRONZE PLAN */}
-            <TabsContent value='bronze'>
-              {subscription?.name !== "Bronze" && (
-                <div className='rounded-xl border border-blue-200/30 bg-gradient-to-br from-blue-50/30 to-slate-50/30 p-6'>
-                  <div className='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
-                    <div className='space-y-4'>
-                      <h3 className='flex items-center gap-2 text-lg font-bold text-blue-600 sm:text-xl'>
-                        <Coins className='h-5 w-5 text-amber-600' /> $170 per month
-                      </h3>
-                      <ul className='space-y-2 text-slate-600'>
-                        <li className='flex items-center gap-2 text-sm sm:text-base'>
-                          <div className='h-2 w-2 rounded-full bg-blue-400'></div> Can buy 4 courses
-                        </li>
-                        <li className='flex items-center gap-2 text-sm sm:text-base'>
-                          <div className='h-2 w-2 rounded-full bg-blue-400'></div> Limited support
-                        </li>
-                        <li className='flex items-center gap-2 text-sm sm:text-base'>
-                          <div className='h-2 w-2 rounded-full bg-blue-400'></div> Basic features
-                        </li>
-                      </ul>
-                    </div>
-                    <Button
-                      variant='outline'
-                      size='sm'
-                      onClick={() =>
-                        dispatch(
-                          openModal({
-                            type: "update-subscription-modal",
-                            props: { selectedPlan: "Bronze", currentPlan: subscription },
-                          })
-                        )
-                      }
-                      
-                    >
-                      Update to Bronze Plan
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </TabsContent>
+                      {/* DAILY PLAN */}
+                      <TabsContent value='daily'>
+                        {subscription?.name !== 'Daily' && (
+                          <div className='rounded-xl border border-blue-200/30 bg-gradient-to-br from-blue-50/30 to-slate-50/30 p-6'>
+                            <div className='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
+                              <div className='space-y-4'>
+                                <h3 className='flex items-center gap-2 text-lg font-bold text-blue-600 sm:text-xl'>
+                                  <CalendarClock className='h-5 w-5 text-blue-500' />{' '}
+                                  $10 per day
+                                </h3>
+                                <ul className='space-y-2 text-slate-600'>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>{' '}
+                                    Access to 1 course
+                                  </li>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>{' '}
+                                    Basic support
+                                  </li>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>{' '}
+                                    Limited features
+                                  </li>
+                                </ul>
+                              </div>
+                              <Button
+                                variant='outline'
+                                size='sm'
+                                onClick={() =>
+                                  dispatch(
+                                    openModal({
+                                      type: 'update-subscription-modal',
+                                      props: {
+                                        selectedPlan: 'Daily',
+                                        currentPlan: subscription,
+                                      },
+                                    })
+                                  )
+                                }
+                              >
+                                Update to Daily Plan
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </TabsContent>
 
-            {/* SILVER PLAN */}
-            <TabsContent value='silver'>
-              {subscription?.name !== "Silver" && (
-                <div className='rounded-xl border border-blue-200/30 bg-gradient-to-br from-blue-50/30 to-slate-50/30 p-6'>
-                  <div className='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
-                    <div className='space-y-4'>
-                      <h3 className='flex items-center gap-2 text-lg font-bold text-blue-600 sm:text-xl'>
-                        <Medal className='h-5 w-5 text-gray-500' /> $300 per month
-                      </h3>
-                      <ul className='space-y-2 text-slate-600'>
-                        <li className='flex items-center gap-2 text-sm sm:text-base'>
-                          <div className='h-2 w-2 rounded-full bg-blue-400'></div> Can buy 8 courses
-                        </li>
-                        <li className='flex items-center gap-2 text-sm sm:text-base'>
-                          <div className='h-2 w-2 rounded-full bg-blue-400'></div> Priority support
-                        </li>
-                        <li className='flex items-center gap-2 text-sm sm:text-base'>
-                          <div className='h-2 w-2 rounded-full bg-blue-400'></div> Advanced features
-                        </li>
-                      </ul>
-                    </div>
-                    <Button
-                      variant='outline'
-                      size='sm'
-                      onClick={() =>
-                        dispatch(
-                          openModal({
-                            type: "update-subscription-modal",
-                            props: { selectedPlan: "Silver", currentPlan: subscription },
-                          })
-                        )
-                      }
-                      
-                    >
-                      Update to Silver Plan
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </TabsContent>
+                      {/* BRONZE PLAN */}
+                      <TabsContent value='bronze'>
+                        {subscription?.name !== 'Bronze' && (
+                          <div className='rounded-xl border border-blue-200/30 bg-gradient-to-br from-blue-50/30 to-slate-50/30 p-6'>
+                            <div className='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
+                              <div className='space-y-4'>
+                                <h3 className='flex items-center gap-2 text-lg font-bold text-blue-600 sm:text-xl'>
+                                  <Coins className='h-5 w-5 text-amber-600' />{' '}
+                                  $170 per month
+                                </h3>
+                                <ul className='space-y-2 text-slate-600'>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>{' '}
+                                    Can buy 4 courses
+                                  </li>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>{' '}
+                                    Limited support
+                                  </li>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>{' '}
+                                    Basic features
+                                  </li>
+                                </ul>
+                              </div>
+                              <Button
+                                variant='outline'
+                                size='sm'
+                                onClick={() =>
+                                  dispatch(
+                                    openModal({
+                                      type: 'update-subscription-modal',
+                                      props: {
+                                        selectedPlan: 'Bronze',
+                                        currentPlan: subscription,
+                                      },
+                                    })
+                                  )
+                                }
+                              >
+                                Update to Bronze Plan
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </TabsContent>
 
-            {/* GOLD PLAN */}
-            <TabsContent value='gold'>
-              {subscription?.name !== "Gold" && (
-                <div className='rounded-xl border border-blue-200/30 bg-gradient-to-br from-blue-50/30 to-slate-50/30 p-6'>
-                  <div className='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
-                    <div className='space-y-4'>
-                      <h3 className='flex items-center gap-2 text-lg font-bold text-blue-600 sm:text-xl'>
-                        <Gem className='h-5 w-5 text-yellow-500' /> $500 per month
-                      </h3>
-                      <ul className='space-y-2 text-slate-600'>
-                        <li className='flex items-center gap-2 text-sm sm:text-base'>
-                          <div className='h-2 w-2 rounded-full bg-blue-400'></div> Unlimited courses
-                        </li>
-                        <li className='flex items-center gap-2 text-sm sm:text-base'>
-                          <div className='h-2 w-2 rounded-full bg-blue-400'></div> 24/7 premium support
-                        </li>
-                        <li className='flex items-center gap-2 text-sm sm:text-base'>
-                          <div className='h-2 w-2 rounded-full bg-blue-400'></div> All features unlocked
-                        </li>
-                      </ul>
-                    </div>
-                    <Button
-                      variant='outline'
-                      size='sm'
-                      onClick={() =>
-                        dispatch(
-                          openModal({
-                            type: "update-subscription-modal",
-                            props: { selectedPlan: "Gold", currentPlan: subscription },
-                          })
-                        )
-                      }
-                    >
-                      Update to Gold Plan
-                    </Button>
-                  </div>
+                      {/* SILVER PLAN */}
+                      <TabsContent value='silver'>
+                        {subscription?.name !== 'Silver' && (
+                          <div className='rounded-xl border border-blue-200/30 bg-gradient-to-br from-blue-50/30 to-slate-50/30 p-6'>
+                            <div className='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
+                              <div className='space-y-4'>
+                                <h3 className='flex items-center gap-2 text-lg font-bold text-blue-600 sm:text-xl'>
+                                  <Medal className='h-5 w-5 text-gray-500' />{' '}
+                                  $300 per month
+                                </h3>
+                                <ul className='space-y-2 text-slate-600'>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>{' '}
+                                    Can buy 8 courses
+                                  </li>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>{' '}
+                                    Priority support
+                                  </li>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>{' '}
+                                    Advanced features
+                                  </li>
+                                </ul>
+                              </div>
+                              <Button
+                                variant='outline'
+                                size='sm'
+                                onClick={() =>
+                                  dispatch(
+                                    openModal({
+                                      type: 'update-subscription-modal',
+                                      props: {
+                                        selectedPlan: 'Silver',
+                                        currentPlan: subscription,
+                                      },
+                                    })
+                                  )
+                                }
+                              >
+                                Update to Silver Plan
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </TabsContent>
+
+                      {/* GOLD PLAN */}
+                      <TabsContent value='gold'>
+                        {subscription?.name !== 'Gold' && (
+                          <div className='rounded-xl border border-blue-200/30 bg-gradient-to-br from-blue-50/30 to-slate-50/30 p-6'>
+                            <div className='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
+                              <div className='space-y-4'>
+                                <h3 className='flex items-center gap-2 text-lg font-bold text-blue-600 sm:text-xl'>
+                                  <Gem className='h-5 w-5 text-yellow-500' />{' '}
+                                  $500 per month
+                                </h3>
+                                <ul className='space-y-2 text-slate-600'>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>{' '}
+                                    Unlimited courses
+                                  </li>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>{' '}
+                                    24/7 premium support
+                                  </li>
+                                  <li className='flex items-center gap-2 text-sm sm:text-base'>
+                                    <div className='h-2 w-2 rounded-full bg-blue-400'></div>{' '}
+                                    All features unlocked
+                                  </li>
+                                </ul>
+                              </div>
+                              <Button
+                                variant='outline'
+                                size='sm'
+                                onClick={() =>
+                                  dispatch(
+                                    openModal({
+                                      type: 'update-subscription-modal',
+                                      props: {
+                                        selectedPlan: 'Gold',
+                                        currentPlan: subscription,
+                                      },
+                                    })
+                                  )
+                                }
+                              >
+                                Update to Gold Plan
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </TabsContent>
+                    </Tabs>
+                  )}
                 </div>
-              )}
-            </TabsContent>
-          </Tabs>
-        )}
-      </div>
-    </div>
+              </div>
 
               {/* Payment Methods */}
               <div className='group relative rounded-xl border border-slate-200/50 bg-white/95 p-6 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl'>

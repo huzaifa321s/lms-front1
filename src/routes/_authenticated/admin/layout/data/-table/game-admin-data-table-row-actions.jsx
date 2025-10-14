@@ -1,6 +1,5 @@
-
 import { useNavigate, useSearch } from '@tanstack/react-router'
-import {  EditIcon, Eye, MoreHorizontal, Trash } from 'lucide-react'
+import { EditIcon, Eye, MoreHorizontal, Trash } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { Button } from '@/components/ui/button'
 import {
@@ -37,7 +36,7 @@ export function DataTableRowActionsAdmin({ row }) {
           )
         }
       >
-        <Eye/>
+        <Eye />
         View
       </Button>
       <DropdownMenu modal={false}>
@@ -55,6 +54,7 @@ export function DataTableRowActionsAdmin({ row }) {
             onClick={() =>
               navigate({ to: `/admin/trainingwheelgame/edit/${game._id}` })
             }
+            className='cursor-pointer text-emerald-600 focus:bg-emerald-100 focus:text-emerald-800'
           >
             Edit
             <DropdownMenuShortcut>
@@ -71,6 +71,7 @@ export function DataTableRowActionsAdmin({ row }) {
                 })
               )
             }
+            className='cursor-pointer text-red-600 focus:bg-red-100 focus:text-red-800'
           >
             Delete
             <DropdownMenuShortcut>

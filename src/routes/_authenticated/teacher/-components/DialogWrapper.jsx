@@ -1,6 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { useDispatch } from 'react-redux'
 import { toast } from 'sonner'
@@ -94,8 +94,11 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
     setDialogType(modalType)
   }, [modalData, modalType])
 
-  const handleSubmitDeletion = async () => {
-    await deleteCourse()
+  const deletecourseMutation = useMutation({mutationFn:deleteCourse});
+  
+
+  const handleSubmitDeletion =  () => {
+     deletecourseMutation.mutate()
   }
 
   const handleSubmitDeleteGame = async () => {
@@ -123,6 +126,7 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
             page: modalData?.page,
             index: modalData?.index,
           }}
+          isLoading={deletecourseMutation.isPending}
         />
       </Suspense>
       <Suspense

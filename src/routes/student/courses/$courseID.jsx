@@ -30,6 +30,7 @@ import {
   FileText,
   ArrowLeft,
   LogIn,
+  CalendarDays,
 } from 'lucide-react'
 import { shallowEqual, useSelector } from 'react-redux'
 import { toast } from 'sonner'
@@ -284,8 +285,8 @@ function RouteComponent() {
                   </div>
                 )}
               </div>
-              <h1 className='text-white text-lg font-bold'>{course.name}</h1>
-              <p className='text-white font-medium'>{course.description}</p>
+              <h1 className='text-lg font-bold text-white'>{course.name}</h1>
+              <p className='font-medium text-white'>{course.description}</p>
               <div className='course-info'>
                 <div className='course-info-item'>
                   <Users className='h-4 w-4' />
@@ -328,15 +329,9 @@ function RouteComponent() {
               className='tabs-container'
             >
               <TabsList className='bg-gray-300'>
-                <TabsTrigger value='overview' >
-                  Overview
-                </TabsTrigger>
-                <TabsTrigger value='materials'>
-                  Materials
-                </TabsTrigger>
-                <TabsTrigger value='instructor'>
-                  Instructor
-                </TabsTrigger>
+                <TabsTrigger value='overview'>Overview</TabsTrigger>
+                <TabsTrigger value='materials'>Materials</TabsTrigger>
+                <TabsTrigger value='instructor'>Instructor</TabsTrigger>
               </TabsList>
 
               <TabsContent value='overview' className='space-y-6'>
@@ -375,13 +370,14 @@ function RouteComponent() {
                 </Card>
               </TabsContent>
 
-              <TabsContent value='materials' className='accordion-container'>
+              <TabsContent value='materials' className='space-y-4'>
+                {/* Not Logged In */}
                 {!isLoggedIn ? (
-                  <div className='locked-section'>
-                    <Lock className='mx-auto mb-3 h-8 w-8 text-slate-500' />
-                    <p className='text-lg font-semibold text-slate-700'>
+                  <Card className='flex flex-col items-center justify-center py-10 text-center shadow-sm'>
+                    <Lock className='text-muted-foreground mb-3 h-8 w-8' />
+                    <CardTitle className='text-lg font-semibold text-slate-700'>
                       Please login to view materials
-                    </p>
+                    </CardTitle>
                     <Button
                       onClick={() =>
                         navigate({
@@ -392,204 +388,212 @@ function RouteComponent() {
                           },
                         })
                       }
-                      className='mt-4 bg-blue-600 text-white'
+                      className='mt-4 bg-blue-600 text-white hover:bg-blue-700'
                     >
-                      <LogIn /> Login
+                      <LogIn className='mr-2 h-4 w-4' /> Login
                     </Button>
-                  </div>
+                  </Card>
                 ) : (
-                  <Accordion type='multiple' className='accordion-container'>
-                    {course.material?.map((material, index) => (
-                      <AccordionItem
-                        key={material._id}
-                        value={`material-${material._id}`}
-                        className='accordion-item'
-                      >
-                        <AccordionTrigger className='accordion-trigger'>
-                          <div className='material-header'>
-                            <div className='flex items-center gap-4'>
-                              <div className='material-number'>{index + 1}</div>
-                              <div className='text-left'>
-                                <h3 className='material-title'>
-                                  {material.title}
-                                </h3>
-                                <p className='material-desc'>
-                                  {material.description}
-                                </p>
-                              </div>
-                            </div>
-                            {!isEnrolled && (
-                              <div className='material-locked'>
-                                <Lock className='h-4 w-4 text-red-500' />
-                                <span>Locked</span>
-                              </div>
-                            )}
-                          </div>
-                        </AccordionTrigger>
-
-                        <AccordionContent className='px-6 pb-6'>
-                          <div
-                            className={
-                              isEnrolled
-                                ? 'material-card'
-                                : 'material-card-locked'
-                            }
+                  <>
+                    {/* Accordion for Materials */}
+                    {course.material?.length > 0 ? (
+                      <Accordion type='multiple' className='space-y-3'>
+                        {course.material.map((material, index) => (
+                          <AccordionItem
+                            key={material._id}
+                            value={`material-${material._id}`}
+                            className='rounded-lg border shadow-sm'
                           >
-                            <div className='flex flex-wrap items-center justify-between gap-4'>
-                              <div className='material-info'>
-                                <div
-                                  className={`material-icon ${isEnrolled ? 'bg-blue-600' : 'bg-slate-400'}`}
-                                >
-                                  {getMediaIcon(material.type)}
+                            <AccordionTrigger className='hover:bg-muted/40 px-4 py-3'>
+                              <div className='flex w-full items-center justify-between'>
+                                <div className='flex items-center gap-4'>
+                                  <div className='bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium'>
+                                    {index + 1}
+                                  </div>
+                                  <div className='text-left'>
+                                    <h3 className='font-semibold text-slate-800'>
+                                      {material.title}
+                                    </h3>
+                                    <p className='line-clamp-1 text-sm text-slate-500'>
+                                      {material.description}
+                                    </p>
+                                  </div>
                                 </div>
-                                <div>
-                                  <h4 className='material-title'>
-                                    {material.title}
-                                  </h4>
-                                  <p className='mt-1 line-clamp-2 text-sm text-slate-600'>
-                                    {material.description}
-                                  </p>
-                                  <div className='mt-2 flex items-center gap-2'>
-                                    <span className='material-type'>
+                                {!isEnrolled && (
+                                  <div className='flex items-center gap-1 text-sm text-red-500'>
+                                    <Lock className='h-4 w-4' />
+                                    Locked
+                                  </div>
+                                )}
+                              </div>
+                            </AccordionTrigger>
+
+                            <AccordionContent className='px-5 pb-5'>
+                              <Card
+                                className={
+                                  ('border-none shadow-none transition-all duration-200',
+                                  !isEnrolled && 'opacity-60 grayscale')
+                                }
+                              >
+                                <CardHeader className='flex flex-row items-center justify-between pb-2'>
+                                  <div>
+                                    <CardTitle className='text-base font-semibold'>
+                                      {material.title}
+                                    </CardTitle>
+                                    <p className='text-muted-foreground text-sm'>
                                       {material.type.charAt(0).toUpperCase() +
                                         material.type.slice(1)}
-                                    </span>
-                                    {!isEnrolled && (
-                                      <span className='material-locked-badge'>
-                                        Enrollment Required
-                                      </span>
+                                    </p>
+                                  </div>
+                                  {isEnrolled ? (
+                                    <Button
+                                      variant='outline'
+                                      size='sm'
+                                      onClick={() =>
+                                        setOpenMaterial((prev) =>
+                                          prev === material._id
+                                            ? null
+                                            : material._id
+                                        )
+                                      }
+                                    >
+                                      <Play className='mr-2 h-3 w-3' />
+                                      {openMaterial === material._id
+                                        ? 'Hide Material'
+                                        : 'Access Material'}
+                                    </Button>
+                                  ) : (
+                                    <div className='text-muted-foreground flex items-center gap-2 text-sm'>
+                                      <Lock className='h-4 w-4' /> Locked
+                                    </div>
+                                  )}
+                                </CardHeader>
+
+                                <CardContent>
+                                  {/* Description Always Visible */}
+                                  <p className='mb-3 text-sm text-slate-600'>
+                                    {material.description}
+                                  </p>
+
+                                  {!isEnrolled && (
+                                    <Alert
+                                      variant='destructive'
+                                      className='mt-2'
+                                    >
+                                      <Lock className='h-4 w-4' />
+                                      <AlertDescription className='text-sm'>
+                                        You need to enroll in this course to
+                                        access this material.
+                                      </AlertDescription>
+                                    </Alert>
+                                  )}
+
+                                  {isEnrolled &&
+                                    openMaterial === material._id && (
+                                      <div className='mt-3'>
+                                        {material.type === 'application' && (
+                                          <iframe
+                                            src={`${baseMaterialUrl}${material.media}`}
+                                            className='h-80 w-full rounded-md border'
+                                            title='PDF Viewer'
+                                          />
+                                        )}
+
+                                        {material.type === 'video' && (
+                                          <video
+                                            src={`${baseMaterialUrl}${material.media}`}
+                                            controls
+                                            className='h-80 w-full rounded-lg'
+                                          />
+                                        )}
+
+                                        {material.media.match(
+                                          /\.(png|jpg|jpeg|webp)$/i
+                                        ) && (
+                                          <img
+                                            src={`${baseMaterialUrl}${material.media}`}
+                                            alt={material.title}
+                                            className='h-80 w-full rounded-lg object-contain'
+                                          />
+                                        )}
+                                      </div>
                                     )}
-                                  </div>
-                                </div>
-                              </div>
-                              <div>
-                                {!isEnrolled ? (
-                                  <div className='flex items-center gap-2 text-slate-400'>
-                                    <Lock className='h-4 w-4' />
-                                    <span className='text-sm font-medium'>
-                                      Locked
-                                    </span>
-                                  </div>
-                                ) : (
-                                  <Button
-                                    size='sm'
-                                    onClick={() =>
-                                      setOpenMaterial((prev) =>
-                                        prev === material._id
-                                          ? null
-                                          : material._id
-                                      )
-                                    }
-                                    className='material-action'
-                                  >
-                                    <Play className='h-3 w-3' />
-                                    {openMaterial === material._id
-                                      ? 'Hide Material'
-                                      : 'Access Material'}
-                                  </Button>
-                                )}
-                              </div>
-                            </div>
-                            {!isEnrolled && (
-                              <div className='material-alert'>
-                                <p className='text-sm font-medium text-red-600'>
-                                  <Lock className='mr-2 inline h-4 w-4' />
-                                  You need to enroll in this course to access
-                                  the material content and media files.
-                                </p>
-                              </div>
-                            )}
-                            {isEnrolled && openMaterial === material._id && (
-                              <div className='material-content'>
-                                {material.type === 'application' && (
-                                  <iframe
-                                    src={`${baseMaterialUrl}${material.media}`}
-                                    className='h-80 w-full'
-                                    title='PDF Viewer'
-                                  />
-                                )}
-                                {material.type === 'video' && (
-                                  <video
-                                    src={`${baseMaterialUrl}${material.media}`}
-                                    controls
-                                    className='h-80 w-full rounded-lg'
-                                  />
-                                )}
-                                {material.media.match(/\.(mp4|webm)$/i) && (
-                                  <img
-                                    src={`${baseMaterialUrl}${material.media}`}
-                                    alt={material.title}
-                                    className='h-80 w-full rounded-lg object-contain'
-                                  />
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                    {course.material?.length === 0 && (
-                      <div className='no-materials'>
-                        <div className='no-materials-icon'>
-                          <BookOpen className='h-8 w-8 text-[#94a3b8]' />
-                        </div>
-                        <h3 className='mb-2 text-lg font-semibold text-[#64748b]'>
+                                </CardContent>
+                              </Card>
+                            </AccordionContent>
+                          </AccordionItem>
+                        ))}
+                      </Accordion>
+                    ) : (
+                      <Card className='flex flex-col items-center justify-center py-10 text-center'>
+                        <BookOpen className='text-muted-foreground mb-3 h-8 w-8' />
+                        <CardTitle className='text-lg font-semibold text-slate-700'>
                           No Materials Available
-                        </h3>
-                        <p className='max-w-md text-center text-sm text-[#94a3b8]'>
-                          This course doesn't have any materials yet. Check back
+                        </CardTitle>
+                        <p className='max-w-md text-sm text-slate-500'>
+                          This course doesn’t have any materials yet. Check back
                           later or contact the instructor for more information.
                         </p>
-                      </div>
+                      </Card>
                     )}
-                  </Accordion>
+                  </>
                 )}
               </TabsContent>
 
               <TabsContent value='instructor' className='space-y-6'>
-                <Card className='card-rounded'>
-                  <CardContent className='card-content p-8'>
-                    <div className='instructor-card'>
-                      <Avatar className='instructor-avatar'>
-                        <AvatarImage
-                          src={course.instructor.profile || '/placeholder.svg'}
-                        />
-                        <AvatarFallback className='instructor-fallback'>
-                          {course.instructor.firstName.charAt(0) +
-                            course.instructor.lastName.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className='flex-1 space-y-6'>
-                        <div>
-                          <h3 className='instructor-name'>
-                            {course.instructor.firstName +
-                              ' ' +
-                              course.instructor.lastName}
-                          </h3>
-                          <p className='instructor-bio'>
-                            {course.instructor.bio || 'No bio available.'}
-                          </p>
-                        </div>
-                        <div className='instructor-stats'>
-                          <div className='instructor-stat instructor-stat-blue'>
-                            <div className='text-2xl font-bold text-[#2563eb]'>
-                              {format(course.instructor.createdAt, 'PPP')}
-                            </div>
-                            <div className='stat-label'>Date Joined</div>
-                          </div>
-                          <div className='instructor-stat instructor-stat-green'>
-                            <div className='text-2xl font-bold text-[#10b981]'>
-                              {course.instructor.students?.length || 0}
-                            </div>
-                            <div className='stat-label'>Total Students</div>
-                          </div>
-                          <div className='instructor-stat instructor-stat-amber'>
-                            <div className='text-2xl font-bold text-[#f59e0b]'>
-                              {course.instructor.courses?.length || 0}
-                            </div>
-                            <div className='stat-label'>Courses Created</div>
-                          </div>
-                        </div>
+                <Card className='border-muted hover:border-primary/30 rounded-2xl border shadow-sm transition-all hover:shadow-md'>
+                  <CardHeader className='border-muted/50 flex items-center gap-4 border-b pb-6'>
+                    <Avatar className='border-primary/30 h-20 w-20 border-2 shadow-sm'>
+                      <AvatarImage
+                        src={course.instructor.profile || '/placeholder.svg'}
+                        alt={course.instructor.firstName}
+                      />
+                      <AvatarFallback className='bg-primary/10 text-primary text-lg font-semibold'>
+                        {course.instructor.firstName.charAt(0) +
+                          course.instructor.lastName.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+
+                    <div>
+                      <CardTitle className='text-foreground text-2xl font-semibold'>
+                        {course.instructor.firstName +
+                          ' ' +
+                          course.instructor.lastName}
+                      </CardTitle>
+                      <p className='text-muted-foreground mt-1 text-sm'>
+                        {course.instructor.bio || 'No bio available.'}
+                      </p>
+                    </div>
+                  </CardHeader>
+
+                  <CardContent className='grid grid-cols-1 gap-6 p-6 sm:grid-cols-3'>
+                    <div className='flex flex-col items-center justify-center rounded-xl bg-blue-50 p-4 text-center shadow-sm transition-all hover:shadow-md'>
+                      <CalendarDays className='mb-2 h-6 w-6 text-blue-600' />
+                      <div className='text-2xl font-bold text-blue-700'>
+                        {format(course.instructor.createdAt, 'PPP')}
+                      </div>
+                      <div className='mt-1 text-sm font-medium text-blue-600'>
+                        Date Joined
+                      </div>
+                    </div>
+
+                    <div className='flex flex-col items-center justify-center rounded-xl bg-green-50 p-4 text-center shadow-sm transition-all hover:shadow-md'>
+                      <Users className='mb-2 h-6 w-6 text-green-600' />
+                      <div className='text-2xl font-bold text-green-700'>
+                        {course.instructor.students?.length || 0}
+                      </div>
+                      <div className='mt-1 text-sm font-medium text-green-600'>
+                        Total Students
+                      </div>
+                    </div>
+
+                    <div className='flex flex-col items-center justify-center rounded-xl bg-amber-50 p-4 text-center shadow-sm transition-all hover:shadow-md'>
+                      <BookOpen className='mb-2 h-6 w-6 text-amber-600' />
+                      <div className='text-2xl font-bold text-amber-700'>
+                        {course.instructor.courses?.length || 0}
+                      </div>
+                      <div className='mt-1 text-sm font-medium text-amber-600'>
+                        Courses Created
                       </div>
                     </div>
                   </CardContent>

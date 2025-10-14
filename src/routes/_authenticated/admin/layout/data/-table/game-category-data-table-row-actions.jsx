@@ -34,7 +34,8 @@ export function GameCategoryDataTableRowActions({ row }) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
-          <DropdownMenuItem onClick={() => dispatch(openModalAdmin({type:'game-category-edit-modal',props:{category,inputValue:category.name,searchInput:searchParams.q}}))}>
+          <DropdownMenuItem onClick={() => dispatch(openModalAdmin({type:'game-category-edit-modal',props:{category,inputValue:category.name,searchInput:searchParams.q}}))}         className="focus:bg-emerald-100 text-emerald-600 focus:text-emerald-800 cursor-pointer"
+>
             Edit
             <DropdownMenuShortcut>
               <EditIcon />
@@ -42,7 +43,8 @@ export function GameCategoryDataTableRowActions({ row }) {
           </DropdownMenuItem>
          
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => dispatch(openModalAdmin({type:'game-category-delete-modal',props:{category:category,searchInput:searchParams.q}}))}>
+          <DropdownMenuItem onClick={() => dispatch(openModalAdmin({type:'game-category-delete-modal',props:{category:category,searchInput:searchParams.q}}))}         className="focus:bg-red-100 text-red-600 focus:text-red-800 cursor-pointer"
+>
             Delete
             <DropdownMenuShortcut>
               <Trash size={16} />

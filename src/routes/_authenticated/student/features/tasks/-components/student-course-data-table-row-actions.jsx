@@ -1,7 +1,7 @@
 import { useNavigate } from '@tanstack/react-router'
+import { Eye } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CoursesSchema } from '../../../../admin/layout/data/-schemas/coursesSchema'
-import { Eye } from 'lucide-react'
 
 export function CoursesDataTableRowActionsStudent({ row }) {
   const course = CoursesSchema.parse(row.original)
@@ -16,7 +16,7 @@ export function CoursesDataTableRowActionsStudent({ row }) {
         size='xs'
         variant='outline'
       >
-     <Eye/> View Details
+        <Eye /> View Details
       </Button>
     </>
   )

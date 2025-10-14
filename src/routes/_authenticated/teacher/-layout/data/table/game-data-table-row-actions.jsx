@@ -53,6 +53,7 @@ export function DataTableRowActions({ row }) {
             onClick={() =>
               navigate({ to: `/teacher/trainingwheelgame/edit/${game._id}` })
             }
+             className="focus:bg-emerald-100 text-emerald-600 focus:text-emerald-800 cursor-pointer"
           >
             Edit
             <DropdownMenuShortcut>
@@ -73,6 +74,8 @@ export function DataTableRowActions({ row }) {
                 })
               )
             }
+                    className="focus:bg-red-100 text-red-600 focus:text-red-800 cursor-pointer"
+
           >
             Delete
             <DropdownMenuShortcut>

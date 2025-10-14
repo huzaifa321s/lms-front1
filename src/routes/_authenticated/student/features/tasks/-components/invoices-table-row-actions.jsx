@@ -1,4 +1,5 @@
 import { useNavigate } from '@tanstack/react-router'
+import { MoreHorizontal, Trash } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -8,19 +9,25 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Schema } from '../data/schema'
-import { MoreHorizontal, Trash } from 'lucide-react'
-
 
 export function InvoicesDataTableRowActions({ row }) {
   const invoice = Schema.parse(row.original)
   const navigate = useNavigate()
 
-
   return (
     <>
+      <Button
+        size='xs'
+        variant='outline'
+        onClick={() =>
+          navigate({
+            to: `/student/setting/invoices/invoice-details/${invoice.invoice_id}`,
+          })
+        }
+      >
+        View Detials
+      </Button>
 
-    <Button size="xs" variant="outline" onClick={() => navigate({to:`/student/setting/invoices/invoice-details/${invoice.invoice_id}` })}>View Detials</Button>
- 
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
