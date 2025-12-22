@@ -7,9 +7,9 @@ import { Button } from '@/components/ui/button'
 import { Header } from '@/components/layout/header'
 import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
 import {
-  getDebounceInput,
+  useDebounceInput,
   useSearchInput,
-} from '../../../../utils/globalFunctions'
+} from '@/utils/globalFunctions'
 import SearchInput from '../../student/-components/SearchInput'
 import { trainingWheelGamesSchemaAdmin } from '../layout/data/-schemas/trainingWheelGameSchemas'
 
@@ -58,7 +58,8 @@ export const Route = createFileRoute(
   loaderDeps: ({ search }) => {
     return { q: search.q, page: search.page }
   },
-  loader: ({ deps }) => queryClient.ensureQueryData(gamesQueryOptions(deps)),
+  loader: ({ deps, context }) =>
+    context.queryClient.ensureQueryData(gamesQueryOptions(deps)),
   component: RouteComponent,
 })
 
@@ -72,7 +73,7 @@ function RouteComponent() {
     select: (search) => search.page,
   })
   const delay = searchInput.length < 3 ? 400 : 800
-  const debouncedSearch = getDebounceInput(searchInput, delay)
+  const debouncedSearch = useDebounceInput(searchInput, delay)
   const isFirstRender = useRef(true)
   const { data, fetchStatus, isFetching } = useQuery(
     gamesQueryOptions({

@@ -20,15 +20,15 @@ import { enrolledCoursesSchema } from '../../-layout/data/schemas/enrolledCourse
 const DataTable = lazy(() => import("../../../student/features/tasks/-components/student-data-table"))
 
 
-import { getDebounceInput, useSearchInput } from '../../../../../utils/globalFunctions'
+import { useDebounceInput, useSearchInput } from '@/utils/globalFunctions'
 import { DataTableSkeleton } from '../../../../-components/DataTableSkeleton'
 
 const queryClient = new QueryClient()
 const studentsQueryOption = (params) =>
   queryOptions({
-    queryKey: ['get-course-students', params.params.courseId, params.deps.q,params.deps.page],
+    queryKey: ['get-course-students', params.params.courseId, params.deps.q, params.deps.page],
     queryFn: async () => {
-      console.log('params ===>',params)
+      console.log('params ===>', params)
       const pageNumber = params.deps.page
       const searchQuery = params.deps.q
       let queryStr = `page=${pageNumber}`
@@ -58,13 +58,13 @@ const studentsQueryOption = (params) =>
 export const Route = createLazyFileRoute(
   '/_authenticated/teacher/courses/course_students/$courseId'
 )({
-   validateSearch: (search) => {
+  validateSearch: (search) => {
     return { q: search.q || '', page: Number(search.page ?? 1) }
   },
   loaderDeps: ({ search }) => {
     return { q: search.q, page: search.page }
   },
-  loader: (params) => queryClient.ensureQueryData(studentsQueryOption(params)),
+  loader: (params) => params.context.queryClient.ensureQueryData(studentsQueryOption(params)),
   component: RouteComponent,
 })
 
@@ -77,22 +77,22 @@ function RouteComponent() {
     '/_authenticated/teacher/courses/course_students/$courseId'
   )
   let currentPage = useSearch({
-        from: '/_authenticated/teacher/courses/course_students/$courseId',
-        select: (search) => search.page,
-      })
- const delay = searchInput.length < 3 ? 400 : 800
-  const debouncedSearch = getDebounceInput(searchInput, delay)
+    from: '/_authenticated/teacher/courses/course_students/$courseId',
+    select: (search) => search.page,
+  })
+  const delay = searchInput.length < 3 ? 400 : 800
+  const debouncedSearch = useDebounceInput(searchInput, delay)
   const isFirstRender = useRef(true);
   const params = {
-    deps: { q: debouncedSearch ,page:currentPage},
+    deps: { q: debouncedSearch, page: currentPage },
     params: { courseId: courseId },
-    
+
   }
 
   const { data, fetchStatus, isFetching } = useQuery(
-    {...studentsQueryOption(params),suspense:isFirstRender.current}
+    { ...studentsQueryOption(params), suspense: isFirstRender.current }
   )
-    useEffect(() => {
+  useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false
     }
@@ -103,8 +103,8 @@ function RouteComponent() {
 
   useEffect(() => {
     navigate({
-       to: `/teacher/courses/course_students/${courseId}`,
-      search: { q: debouncedSearch, page:1},
+      to: `/teacher/courses/course_students/${courseId}`,
+      search: { q: debouncedSearch, page: 1 },
       replace: true
     })
   }, [debouncedSearch])
@@ -125,18 +125,18 @@ function RouteComponent() {
   }
 
 
-    
-      let [paginationOptions, setPagination] = useState({
-      pageIndex: 0,
-      pageSize: 10,
-    })
-  
-    const handlePagination = (newPageIndex) => {
+
+  let [paginationOptions, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
+  const handlePagination = (newPageIndex) => {
     const newPagination = { ...paginationOptions, pageIndex: newPageIndex }
-    setPagination(newPagination) 
+    setPagination(newPagination)
     navigate({
       to: `/teacher/courses/course_students/${courseId}`,
-      search: { q: searchInput, page: newPageIndex + 1 }, 
+      search: { q: searchInput, page: newPageIndex + 1 },
     })
   }
   return (
@@ -157,13 +157,13 @@ function RouteComponent() {
               <Button
                 size='sm'
                 variant='outline'
-                 className="text-black"
+                className="text-black"
                 onClick={searchStudents}
                 loading={isFetching}
                 disabled={isFetching}
               >
                 {!isFetching && (
-                 <Search/>
+                  <Search />
                 )}
                 Search
               </Button>
@@ -173,7 +173,7 @@ function RouteComponent() {
                 className="text-black"
                 onClick={() => window.history.back()}
               >
-              <ArrowLeft/>
+                <ArrowLeft />
                 Back
               </Button>
             </Label>
@@ -181,22 +181,22 @@ function RouteComponent() {
         </div>
       </Header>
       <div className="px-4 py-8">
-          <Suspense fallback={<DataTableSkeleton />}>
-        <DataTable
-          data={students}
-          columns={enrolledCoursesSchema}
-          fetchStatus={fetchStatus}
-          totalPages={totalPages}
-          pagination={true}
-          searchInput={searchInput}
-          setSearchInput={setSearchInput}
-          handlePagination={handlePagination}
-          paginationOptions={paginationOptions}
-          className="rounded-[12px] border border-[#e2e8f0] bg-white shadow-[0_4px_6px_rgba(0,0,0,0.05)]"
-          headerClassName="bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] text-[#1e293b] font-semibold"
-          rowClassName="hover:bg-gradient-to-r hover:from-[#f8fafc] hover:to-[#f1f5f9] text-[#64748b]"
-          paginationClassName="border-t border-[#e2e8f0] bg-white text-[#64748b]"
-        />
+        <Suspense fallback={<DataTableSkeleton />}>
+          <DataTable
+            data={students}
+            columns={enrolledCoursesSchema}
+            fetchStatus={fetchStatus}
+            totalPages={totalPages}
+            pagination={true}
+            searchInput={searchInput}
+            setSearchInput={setSearchInput}
+            handlePagination={handlePagination}
+            paginationOptions={paginationOptions}
+            className="rounded-[12px] border border-[#e2e8f0] bg-white shadow-[0_4px_6px_rgba(0,0,0,0.05)]"
+            headerClassName="bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] text-[#1e293b] font-semibold"
+            rowClassName="hover:bg-gradient-to-r hover:from-[#f8fafc] hover:to-[#f1f5f9] text-[#64748b]"
+            paginationClassName="border-t border-[#e2e8f0] bg-white text-[#64748b]"
+          />
         </Suspense>
       </div>
     </>

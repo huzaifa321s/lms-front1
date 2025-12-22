@@ -127,7 +127,7 @@ export default function DashboardSkeleton() {
   );
 }
 export const Route = createFileRoute('/_authenticated/student/')({
-  loader: ({}) => queryClient.ensureQueryData(dashboardQueryOption()),
+  loader: ({ }) => queryClient.ensureQueryData(dashboardQueryOption()),
   component: () => {
     return (
       <Suspense fallback={<DashboardSkeleton />}>

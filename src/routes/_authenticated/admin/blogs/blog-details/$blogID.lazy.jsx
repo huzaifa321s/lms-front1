@@ -1,13 +1,14 @@
 import { useState } from "react"
 import axios from "axios"
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query"
-import { useParams, useSearch,createLazyFileRoute } from "@tanstack/react-router"
-import {  Layers, Calendar, Edit3, Trash2, ArrowLeft } from "lucide-react"
+import { useParams, useSearch, createLazyFileRoute } from "@tanstack/react-router"
+import { Layers, Calendar, Edit3, Trash2, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { QueryClient } from "@tanstack/react-query"
 import { openModalAdmin } from "../../../../../shared/config/reducers/admin/DialogSlice"
 import { useAppUtils } from "../../../../../hooks/useAppUtils"
 import { Header } from "@/components/layout/header"
+import { getFileUrl } from '@/utils/globalFunctions'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,7 +27,7 @@ const blogQueryOption = (params) =>
     queryKey: ["getBlog", "getCategory", params.params.blogID],
     queryFn: async () => {
       try {
-        console.log('params.deps.category ====>',params.deps.category)
+        console.log('params.deps.category ====>', params.deps.category)
         const [blogDetailsResponse, blogCategoryResponse] = await Promise.all([
           axios.get(`/admin/blog/getBlog/${params.params.blogID}`),
           axios.get(`/admin/blog-category/getCategory/${params.deps.category}`),
@@ -58,128 +59,128 @@ function BlogDetailsPage() {
   const params = { params: { blogID }, deps: { category } }
   const { data } = useSuspenseQuery(blogQueryOption(params))
   const { blogDetails, blogCategory } = data
-const {navigate,dispatch} = useAppUtils();
-  const defaultCover = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/defaults/blog-image.png`
+  const { navigate, dispatch } = useAppUtils();
+  const defaultCover = getFileUrl('blog-image.png', 'defaults')
   const [cover, setCover] = useState(
     blogDetails?.image
-      ? `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses/cover-images/${blogDetails.image}`
+      ? getFileUrl(blogDetails.image, 'public/blog-images')
       : defaultCover,
   )
 
-  console.log('blogDetails ==>',blogDetails)
+  console.log('blogDetails ==>', blogDetails)
 
-   return (
+  return (
     <>
-    
+
       <Header >
 
-          
-        
-          <div className="flex w-full items-center justify-between">
-            <div className="flex items-center gap-4">
-        
 
-              <div>
-                <h1 className="text-2xl font-bold  bg-clip-text">
-                  Blog Details
-                </h1>
-                <p className="text-[#94a3b8]">Manage blog content</p>
-              </div>
-            </div>
 
-            <div className="flex items-center gap-2 text-black">
-              <Button
-                variant="outline"
-                onClick={() => navigate({ to: `/admin/blogs/edit/${blogDetails?._id}` })}
-              >
-                <Edit3 className="h-4 w-4 mr-2" />
-                Edit
-              </Button>
+        <div className="flex w-full items-center justify-between">
+          <div className="flex items-center gap-4">
 
-              <Button
-                variant="destructive"
-                onClick={() => dispatch(openModalAdmin({ type: 'delete-blog', props: { blogID: blogDetails?._id, redirect: '/admin/blogs' } }))}
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete
-              </Button>
-             <Button
-            
-            variant="outline"
-            onClick={() => window.history.back()}
-          >
-            <ArrowLeft className="h-5 w-5 text-[#2563eb] transition-transform duration-200 group-hover:-translate-x-1 group-hover:transform" />
-            <span className="ml-2 hidden sm:inline">Back</span>
-          </Button>
+
+            <div>
+              <h1 className="text-2xl font-bold  bg-clip-text">
+                Blog Details
+              </h1>
+              <p className="text-[#94a3b8]">Manage blog content</p>
             </div>
           </div>
-        
-</Header>
- <div className="min-h-screen bg-[#f8fafc]">
-      <div className="p-6 ">
-       
-        <main className="">
-          <div className="bg-white rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] border border-[#e2e8f0] overflow-hidden hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300">
-            <div className="relative h-64 md:h-80">
-              <img
-                src={cover || "/placeholder.svg"}
-                alt={blogDetails?.title || "Blog Cover Image"}
-                className="w-full h-full object-cover"
-                onError={() => setCover(defaultCover)}
-                loading="lazy"
-              />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+          <div className="flex items-center gap-2 text-black">
+            <Button
+              variant="outline"
+              onClick={() => navigate({ to: `/admin/blogs/edit/${blogDetails?._id}` })}
+            >
+              <Edit3 className="h-4 w-4 mr-2" />
+              Edit
+            </Button>
 
-              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
-                <div className="flex items-center gap-2">
-                  <Layers className="h-4 w-4 text-white drop-shadow-lg" />
-                  <span className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white px-4 py-2 text-sm rounded-full shadow-sm font-medium">
-                    {blogCategory?.name || "Category"}
-                  </span>
-                </div>
-              </div>
-            </div>
+            <Button
+              variant="destructive"
+              onClick={() => dispatch(openModalAdmin({ type: 'delete-blog', props: { blogID: blogDetails?._id, redirect: '/admin/blogs' } }))}
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete
+            </Button>
+            <Button
 
-            <div className="p-8 space-y-8">
-              <div className="space-y-6">
-                <h2 className="text-4xl font-bold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent leading-tight">
-                  {blogDetails?.title || "Loading Title..."}
-                </h2>
+              variant="outline"
+              onClick={() => window.history.back()}
+            >
+              <ArrowLeft className="h-5 w-5 text-[#2563eb] transition-transform duration-200 group-hover:-translate-x-1 group-hover:transform" />
+              <span className="ml-2 hidden sm:inline">Back</span>
+            </Button>
+          </div>
+        </div>
 
-                {blogDetails?.subtitle && (
-                  <p className="text-xl text-[#64748b] leading-relaxed">{blogDetails.subtitle}</p>
-                )}
+      </Header>
+      <div className="min-h-screen bg-[#f8fafc]">
+        <div className="p-6 ">
 
-                <div className="flex items-center gap-3 text-[#94a3b8]">
-                  <div className="p-2 bg-gradient-to-r from-[#2563eb]/10 to-[#1d4ed8]/10 rounded-full">
-                    <Calendar className="h-4 w-4 text-[#2563eb]" />
+          <main className="">
+            <div className="bg-white rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] border border-[#e2e8f0] overflow-hidden hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300">
+              <div className="relative h-64 md:h-80">
+                <img
+                  src={cover || "/placeholder.svg"}
+                  alt={blogDetails?.title || "Blog Cover Image"}
+                  className="w-full h-full object-cover"
+                  onError={() => setCover(defaultCover)}
+                  loading="lazy"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+
+                <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
+                  <div className="flex items-center gap-2">
+                    <Layers className="h-4 w-4 text-white drop-shadow-lg" />
+                    <span className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white px-4 py-2 text-sm rounded-full shadow-sm font-medium">
+                      {blogCategory?.name || "Category"}
+                    </span>
                   </div>
-                  <span className="text-sm font-medium">
-                    Created{" "}
-                    {new Date(blogDetails?.createdAt).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </span>
                 </div>
               </div>
 
-              <div className="h-px bg-gradient-to-r from-transparent via-[#e2e8f0] to-transparent"></div>
+              <div className="p-8 space-y-8">
+                <div className="space-y-6">
+                  <h2 className="text-4xl font-bold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent leading-tight">
+                    {blogDetails?.title || "Loading Title..."}
+                  </h2>
 
-              <div className="pt-2">
-                <div className="prose max-w-none">
-                  <p className="text-[#1e293b] text-lg leading-relaxed font-light">
-                    {blogDetails?.content || "Loading content..."}
-                  </p>
+                  {blogDetails?.subtitle && (
+                    <p className="text-xl text-[#64748b] leading-relaxed">{blogDetails.subtitle}</p>
+                  )}
+
+                  <div className="flex items-center gap-3 text-[#94a3b8]">
+                    <div className="p-2 bg-gradient-to-r from-[#2563eb]/10 to-[#1d4ed8]/10 rounded-full">
+                      <Calendar className="h-4 w-4 text-[#2563eb]" />
+                    </div>
+                    <span className="text-sm font-medium">
+                      Created{" "}
+                      {new Date(blogDetails?.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="h-px bg-gradient-to-r from-transparent via-[#e2e8f0] to-transparent"></div>
+
+                <div className="pt-2">
+                  <div className="prose max-w-none">
+                    <p className="text-[#1e293b] text-lg leading-relaxed font-light">
+                      {blogDetails?.content || "Loading content..."}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
-    </div>
     </>
   )
 }

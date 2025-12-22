@@ -18,7 +18,7 @@ import {
   LayoutDashboard,
   BarChart3,
   Puzzle,
-   Trophy,
+  Trophy,
   SettingsIcon,
 } from 'lucide-react'
 import { shallowEqual, useSelector } from 'react-redux'
@@ -30,8 +30,8 @@ import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { TopNav } from '@/components/layout/top-nav'
 import { dashboardQueryOption } from '../..'
-import { useAppUtils } from '../../../../../hooks/useAppUtils'
-import { openModal } from '../../../../../shared/config/reducers/student/studentDialogSlice'
+import { useAppUtils } from '@/hooks/useAppUtils'
+import { openModal } from '@/shared/config/reducers/student/studentDialogSlice'
 
 // Lazy imports
 const ProfileDropdown = lazy(
@@ -132,7 +132,7 @@ MiniDonutChart.displayName = 'MiniDonutChart'
 
 function WelcomeBanner({ userName, creds }) {
   return (
-     <div className="relative mb-2 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 p-8 text-white shadow-lg">
+    <div className="relative mb-2 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 p-8 text-white shadow-lg">
       {/* Floating Decorative Circles */}
       <div className="absolute -top-16 -left-16 h-56 w-56 animate-[spin_25s_linear_infinite] rounded-full bg-blue-400/20 blur-3xl filter"></div>
       <div className="absolute -right-16 -bottom-16 h-72 w-72 animate-[spin_30s_linear_infinite] rounded-full bg-blue-500/20 blur-3xl filter"></div>
@@ -162,7 +162,7 @@ function WelcomeBanner({ userName, creds }) {
           {/* Profile Button */}
           <Button
             variant="outline"
-           className="text-black"
+            className="text-black"
           >
             <User className="h-5 w-5" />
             My Profile
@@ -584,7 +584,7 @@ export default function Dashboard() {
                     <Button
                       size='sm'
                       variant='outline'
-                      
+
                       onClick={handleViewSpending}
                     >
                       <Lock className='mr-1 h-3 w-3' />
@@ -633,7 +633,7 @@ export default function Dashboard() {
                   <Button
                     size='sm'
                     variant='outline'
-                     className="w-full"
+                    className="w-full"
                     onClick={handleViewPaymentMethods}
                   >
                     {isSubscribed ? (
@@ -686,8 +686,8 @@ export default function Dashboard() {
                           <p className='text-sm font-semibold'>
                             {subscription?.currentPeriodEnd
                               ? new Date(
-                                  subscription.currentPeriodEnd * 1000
-                                ).toLocaleDateString('en-US')
+                                subscription.currentPeriodEnd * 1000
+                              ).toLocaleDateString('en-US')
                               : 'N/A'}
                           </p>
                         </div>
@@ -712,7 +712,7 @@ export default function Dashboard() {
                     <Button
                       size='sm'
                       variant='outline'
-                        className="w-full"
+                      className="w-full"
                       onClick={handleManagePlan}
                     >
                       <Lock className='mr-1 h-3 w-3' />

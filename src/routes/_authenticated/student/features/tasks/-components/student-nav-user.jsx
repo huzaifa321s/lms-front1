@@ -24,12 +24,12 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { openModal } from '../../../../../../shared/config/reducers/student/studentDialogSlice'
+import { openModal } from '@/shared/config/reducers/student/studentDialogSlice'
 
 
 export function NavUser({ user }) {
   const { isMobile } = useSidebar()
-  const credentials = useSelector((state) => state.studentAuth.credentials,shallowEqual)
+  const credentials = useSelector((state) => state.studentAuth.credentials, shallowEqual)
   const dispatch = useDispatch()
 
   return (
@@ -100,14 +100,14 @@ export function NavUser({ user }) {
               </DropdownMenuGroup>
               <DropdownMenuSeparator className="bg-[#e2e8f0] my-2" />
               <DropdownMenuItem
-                 onClick={() =>
-                              dispatch(
-                                openModal({
-                                  type: 'logout-modal',
-                                  props: { userType: 'student' },
-                                })
-                              )
-                            }
+                onClick={() =>
+                  dispatch(
+                    openModal({
+                      type: 'logout-modal',
+                      props: { userType: 'student' },
+                    })
+                  )
+                }
                 className="rounded-[8px] transition-all duration-200 hover:bg-[#ef4444]/10 hover:text-[#dc2626] focus:bg-[#ef4444]/10 focus:text-[#dc2626]"
               >
                 <LogOut size={16} className="mr-2 text-[#dc2626]" />

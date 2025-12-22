@@ -26,10 +26,10 @@ import { TopNav } from '@/components/layout/top-nav'
 import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
 import { useAppUtils } from '../../../../hooks/useAppUtils'
 import {
-  getDebounceInput,
+  useDebounceInput,
   useSearchInput,
   exportToCSV,
-} from '../../../../utils/globalFunctions'
+} from '@/utils/globalFunctions'
 import { studentsSchema } from '../layout/data/-schemas/studentsSchema'
 import StudentsMetrics from './-components/StudentsMetrics'
 import SearchInput from '../../student/-components/SearchInput'
@@ -74,7 +74,8 @@ export const Route = createLazyFileRoute('/_authenticated/admin/students/')({
   loaderDeps: ({ search }) => {
     return { q: search.q, page: search.page }
   },
-  loader: ({ deps }) => queryClient.ensureQueryData(studentsQueryOptions(deps)),
+  loader: ({ deps, context }) =>
+    context.queryClient.ensureQueryData(studentsQueryOptions(deps)),
   component: RouteComponent,
 })
 
@@ -89,7 +90,7 @@ function RouteComponent() {
     select: (search) => search.page,
   })
   const delay = searchInput.length < 3 ? 400 : 800
-  const debouncedSearch = getDebounceInput(searchInput, delay)
+  const debouncedSearch = useDebounceInput(searchInput, delay)
 
   const { data, fetchStatus, isFetching } = useQuery({
     ...studentsQueryOptions({
@@ -150,19 +151,19 @@ function RouteComponent() {
     })
   }
 
-    const handleSearchSubmit = useCallback(
-      (e) => {
-        e.preventDefault()
-        const formData = new FormData(e.target)
-        const input = formData.get('search')?.toString() || ''
-        setSearchInput(input) // Update state
-        navigate({
+  const handleSearchSubmit = useCallback(
+    (e) => {
+      e.preventDefault()
+      const formData = new FormData(e.target)
+      const input = formData.get('search')?.toString() || ''
+      setSearchInput(input) // Update state
+      navigate({
         to: '/admin/students',
-          search: { page: 1, q: debouncedSearch },
-        })
-      },
-      [navigate, setSearchInput]
-    )
+        search: { page: 1, q: debouncedSearch },
+      })
+    },
+    [navigate, setSearchInput]
+  )
 
   return (
     <>
@@ -186,14 +187,14 @@ function RouteComponent() {
           <h2 className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-lg font-bold text-transparent'>
             Students
           </h2>
-            <SearchInput
-                      placeholder={'Search students...'}
-                      value={searchInput}
-                      onSubmit={handleSearchSubmit}
-                      onChange={(e) => setSearchInput(e.target.value)}
-                      isFetching={isFetching}
-                    />
-   
+          <SearchInput
+            placeholder={'Search students...'}
+            value={searchInput}
+            onSubmit={handleSearchSubmit}
+            onChange={(e) => setSearchInput(e.target.value)}
+            isFetching={isFetching}
+          />
+
         </div>
         <Suspense fallback={<DataTableSkeleton />}>
           <DataTable
@@ -206,7 +207,7 @@ function RouteComponent() {
             setSearchInput={setSearchInput}
             handlePagination={handlePagination}
             paginationOptions={paginationOptions}
-            hiddenColumnsOnMobile={['serial', 'bio','plan','phone','profile']}
+            hiddenColumnsOnMobile={['serial', 'bio', 'plan', 'phone', 'profile']}
 
           />
         </Suspense>

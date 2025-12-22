@@ -12,9 +12,9 @@ import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
 import { useAppUtils } from '../../../../hooks/useAppUtils'
 import { Show } from '../../../../shared/utils/Show'
 import {
-  getDebounceInput,
+  useDebounceInput,
   useSearchInput,
-} from '../../../../utils/globalFunctions'
+} from '@/utils/globalFunctions'
 import { queryClient } from '../../../../utils/globalVars'
 import SearchInput from '../../student/-components/SearchInput'
 import { blogsSchema } from '../layout/data/-schemas/blogsSchema'
@@ -59,7 +59,8 @@ export const Route = createLazyFileRoute('/_authenticated/admin/blogs/')({
   loaderDeps: ({ search }) => {
     return { q: search.q, page: search.page }
   },
-  loader: ({ deps }) => queryClient.ensureQueryData(blogsQueryOptions(deps)),
+  loader: ({ deps, context }) =>
+    context.queryClient.ensureQueryData(blogsQueryOptions(deps)),
   component: RouteComponent,
 })
 
@@ -74,7 +75,7 @@ function RouteComponent() {
     select: (search) => search.page,
   })
   const delay = searchInput.length < 3 ? 400 : 800
-  const debouncedSearch = getDebounceInput(searchInput, delay)
+  const debouncedSearch = useDebounceInput(searchInput, delay)
 
   let [paginationOptions, setPagination] = useState({
     pageIndex: 0,

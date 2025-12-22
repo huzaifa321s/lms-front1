@@ -32,10 +32,11 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { useAppUtils } from '../../../../../hooks/useAppUtils'
+import { useAppUtils } from '@/hooks/useAppUtils'
 import { openModalTeacher } from '../../../../../shared/config/reducers/teacher/teacherDialogSlice'
 import { format } from 'date-fns'
 import { Header } from '@/components/layout/header';
+import { getFileUrl } from '@/utils/globalFunctions';
 
 
 const queryClient = new QueryClient()
@@ -68,12 +69,11 @@ export const Route = createLazyFileRoute(
     queryClient.ensureQueryData(courseDetailsQueryOptions(params)),
   component: EnhancedCourseDetails,
 })
-const baseMaterialUrl = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses/material/`;
 
 const MaterialPreview = ({ media }) => {
   if (!media) return null;
 
-  const url = `${baseMaterialUrl}${media}`;
+  const url = getFileUrl(media, 'public/courses/material');
 
   if (media.endsWith(".pdf")) {
     return (
@@ -122,34 +122,33 @@ export default function EnhancedCourseDetails() {
   const params = useParams({
     from: '/_authenticated/teacher/courses/course_details/$courseID',
   })
-        const baseUrl = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses`;
 
   const { data } = useSuspenseQuery(courseDetailsQueryOptions(params))
   console.log('data ===>', data)
 
-    const state = useRouterState({
+  const state = useRouterState({
     select: (s) => s.location.state
   })
   const [courseObj] = useState(data)
   const [enrolledStudents] = useState(data?.studentsEnrolled);
-  console.log('enrolledStudents ====>',enrolledStudents)
+  console.log('enrolledStudents ====>', enrolledStudents)
   const [searchTerm, setSearchTerm] = useState('')
   const [activeTab, setActiveTab] = useState('overview')
   const { navigate, dispatch } = useAppUtils()
 
   const defaultCover =
     'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop'
-  const [cover] = useState(`${baseUrl}/cover-images/${courseObj.coverImage}`)
-console.log('cover',cover)
+  const [cover] = useState(getFileUrl(courseObj.coverImage, 'public/courses/cover-images'))
+  console.log('cover', cover)
   const filteredStudents = enrolledStudents.filter(
     (fs) =>
-      
+
       `${fs.student.firstName} ${fs.student.lastName}`
         .toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
       fs.student.email.toLowerCase().includes(searchTerm.toLowerCase())
   )
-console.log('fitleredStudents ====>',filteredStudents)
+  console.log('fitleredStudents ====>', filteredStudents)
   const handleEditClick = () => {
     navigate({ to: `/teacher/courses/edit_course/${params.courseID}` })
   }
@@ -173,57 +172,57 @@ console.log('fitleredStudents ====>',filteredStudents)
   }
 
   return (
- <div className='h-fit bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#f1f5f9]'>
-     <Header >
+    <div className='h-fit bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#f1f5f9]'>
+      <Header >
 
-          <div className='flex w-full items-center justify-between'>
-            <div className='flex items-center gap-4'>
-              <div className=' bg-clip-text text-3xl font-bold'>
-                Course Details
-              </div>
-              <div className='hidden h-8 w-px bg-gradient-to-b from-[#e2e8f0] to-[#cbd5e1] sm:block'></div>
-              <div className='hidden items-center gap-2  sm:flex'>
-                <BookOpen size={20} />
-                <span className='text-sm font-medium'>
-                  Comprehensive Overview
-                </span>
-              </div>
+        <div className='flex w-full items-center justify-between'>
+          <div className='flex items-center gap-4'>
+            <div className=' bg-clip-text text-3xl font-bold'>
+              Course Details
             </div>
-            <div className='flex items-center gap-3'>
-              <Button
-                size='sm'
-                variant='outline'
-                className="text-green-500"
-                onClick={handleEditClick}
-              >
-                <Edit className='mr-2 h-4 w-4' />
-                Edit
-              </Button>
-              <Button
-                size='sm'
-                variant='destructive'
-                onClick={handleDeleteClick}
-              >
-                <Trash2 className='mr-2 h-4 w-4' />
-                Delete
-              </Button>
-              <Button
-                size='sm'
-                className="text-black"
-                variant='outline'
-                onClick={() => window.history.back()}
-              >
-                <ArrowLeft className='mr-2 h-4 w-4' />
-                Back
-              </Button>
+            <div className='hidden h-8 w-px bg-gradient-to-b from-[#e2e8f0] to-[#cbd5e1] sm:block'></div>
+            <div className='hidden items-center gap-2  sm:flex'>
+              <BookOpen size={20} />
+              <span className='text-sm font-medium'>
+                Comprehensive Overview
+              </span>
             </div>
           </div>
-   
+          <div className='flex items-center gap-3'>
+            <Button
+              size='sm'
+              variant='outline'
+              className="text-green-500"
+              onClick={handleEditClick}
+            >
+              <Edit className='mr-2 h-4 w-4' />
+              Edit
+            </Button>
+            <Button
+              size='sm'
+              variant='destructive'
+              onClick={handleDeleteClick}
+            >
+              <Trash2 className='mr-2 h-4 w-4' />
+              Delete
+            </Button>
+            <Button
+              size='sm'
+              className="text-black"
+              variant='outline'
+              onClick={() => window.history.back()}
+            >
+              <ArrowLeft className='mr-2 h-4 w-4' />
+              Back
+            </Button>
+          </div>
+        </div>
+
       </Header>
 
 
       {/* Header */}
-   
+
 
       <div className='relative z-10  space-y-8 px-4 py-8'>
         {/* Course Hero Card */}
@@ -351,22 +350,20 @@ console.log('fitleredStudents ====>',filteredStudents)
         <div className='flex space-x-1 rounded-[12px] border border-[#e2e8f0] bg-white p-1 shadow-[0_4px_6px_rgba(0,0,0,0.05)]'>
           <button
             onClick={() => setActiveTab('overview')}
-            className={`flex-1 rounded-[8px] px-4 py-2 font-medium transition-all duration-200 ${
-              activeTab === 'overview'
-                ? 'bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white shadow-lg'
-                : 'text-[#64748b] hover:bg-[rgba(37,99,235,0.05)]'
-            }`}
+            className={`flex-1 rounded-[8px] px-4 py-2 font-medium transition-all duration-200 ${activeTab === 'overview'
+              ? 'bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white shadow-lg'
+              : 'text-[#64748b] hover:bg-[rgba(37,99,235,0.05)]'
+              }`}
           >
             <FileText className='mr-2 inline h-4 w-4' />
             Materials
           </button>
           <button
             onClick={() => setActiveTab('students')}
-            className={`flex-1 rounded-[8px] px-4 py-2 font-medium transition-all duration-200 ${
-              activeTab === 'students'
-                ? 'bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white shadow-lg'
-                : 'text-[#64748b] hover:bg-[rgba(37,99,235,0.05)]'
-            }`}
+            className={`flex-1 rounded-[8px] px-4 py-2 font-medium transition-all duration-200 ${activeTab === 'students'
+              ? 'bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white shadow-lg'
+              : 'text-[#64748b] hover:bg-[rgba(37,99,235,0.05)]'
+              }`}
           >
             <Users className='mr-2 inline h-4 w-4' />
             Students {enrolledStudents.length}
@@ -384,69 +381,69 @@ console.log('fitleredStudents ====>',filteredStudents)
                 Course Materials
               </CardTitle>
 
-           <div className="space-y-4">
-     {courseObj?.material?.map((m, k) => (
-        <Accordion
-          type="single"
-          collapsible
-          key={m.id || k}
-          className="rounded-2xl border border-slate-100 bg-white/95 backdrop-blur-sm shadow-xl transition-all duration-300 hover:shadow-[0_0_25px_5px_rgba(59,130,246,0.2)]"
-        >
-          <AccordionItem value={`item-${k}`} className="border-none">
-            <AccordionTrigger className="rounded-t-2xl px-6 py-4 transition-all duration-200 hover:bg-white/80 hover:no-underline">
-              <div className="flex items-center gap-3">
-                <div className="rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 p-2">
-                  <BookOpen className="h-5 w-5 text-white" />
-                </div>
-                <span className="font-semibold text-slate-800 ">
-                  {m.title}
-                </span>
-              </div>
-            </AccordionTrigger>
+              <div className="space-y-4">
+                {courseObj?.material?.map((m, k) => (
+                  <Accordion
+                    type="single"
+                    collapsible
+                    key={m.id || k}
+                    className="rounded-2xl border border-slate-100 bg-white/95 backdrop-blur-sm shadow-xl transition-all duration-300 hover:shadow-[0_0_25px_5px_rgba(59,130,246,0.2)]"
+                  >
+                    <AccordionItem value={`item-${k}`} className="border-none">
+                      <AccordionTrigger className="rounded-t-2xl px-6 py-4 transition-all duration-200 hover:bg-white/80 hover:no-underline">
+                        <div className="flex items-center gap-3">
+                          <div className="rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 p-2">
+                            <BookOpen className="h-5 w-5 text-white" />
+                          </div>
+                          <span className="font-semibold text-slate-800 ">
+                            {m.title}
+                          </span>
+                        </div>
+                      </AccordionTrigger>
 
-            <AccordionContent className="px-6 pb-4">
-              <div className="space-y-3">
-                <div className="rounded-2xl border border-slate-100 bg-white/95 p-4 backdrop-blur-sm">
-                  <span className="mb-2 block font-semibold text-slate-800 ">
-                    Description:
-                  </span>
-                  <p className="text-slate-600 ">
-                    {m.description}
-                  </p>
-                </div>
+                      <AccordionContent className="px-6 pb-4">
+                        <div className="space-y-3">
+                          <div className="rounded-2xl border border-slate-100 bg-white/95 p-4 backdrop-blur-sm">
+                            <span className="mb-2 block font-semibold text-slate-800 ">
+                              Description:
+                            </span>
+                            <p className="text-slate-600 ">
+                              {m.description}
+                            </p>
+                          </div>
 
-                {m.media && (
-                  <>
-                    <div className="flex items-center gap-3">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => console.log("Download", m.media)}
-                      >
-                        <Download className="mr-2 h-4 w-4" />
-                        Download {m.media}
-                      </Button>
-                    </div>
+                          {m.media && (
+                            <>
+                              <div className="flex items-center gap-3">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => console.log("Download", m.media)}
+                                >
+                                  <Download className="mr-2 h-4 w-4" />
+                                  Download {m.media}
+                                </Button>
+                              </div>
 
-                    {/* 🔹 Preview Section */}
-                    <MaterialPreview media={m.media} />
-                  </>
+                              {/* 🔹 Preview Section */}
+                              <MaterialPreview media={m.media} />
+                            </>
+                          )}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                ))}
+
+                {(!courseObj?.material || courseObj?.material.length === 0) && (
+                  <div className="py-8 px-6 text-center bg-white/95 rounded-2xl border border-slate-100 backdrop-blur-sm shadow-xl">
+                    <FileText className="mx-auto mb-3 h-12 w-12 text-slate-400" />
+                    <p className="text-slate-600 text-lg ">
+                      No materials available for this course yet.
+                    </p>
+                  </div>
                 )}
               </div>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      ))}
-
-      {(!courseObj?.material || courseObj?.material.length === 0) && (
-        <div className="py-8 px-6 text-center bg-white/95 rounded-2xl border border-slate-100 backdrop-blur-sm shadow-xl">
-          <FileText className="mx-auto mb-3 h-12 w-12 text-slate-400" />
-          <p className="text-slate-600 text-lg ">
-            No materials available for this course yet.
-          </p>
-        </div>
-      )}
-    </div>
             </CardContent>
           </Card>
         )}

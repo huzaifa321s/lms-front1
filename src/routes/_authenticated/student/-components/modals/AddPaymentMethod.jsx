@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogC
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { closeModal } from "../../../../../shared/config/reducers/student/studentDialogSlice"
+import { closeModal } from "@/shared/config/reducers/student/studentDialogSlice"
 import { CardElement } from "@stripe/react-stripe-js"
 
 export default function AddPaymentMethodDialog({

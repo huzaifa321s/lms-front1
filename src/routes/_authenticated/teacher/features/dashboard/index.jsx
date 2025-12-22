@@ -8,13 +8,13 @@ import {
   Plus,
   Settings,
   User,
-   GraduationCap, 
-   AlignJustify,
-   Accessibility,
-   Newspaper,
-   CircleDollarSign,
-   Wallet,
-   Info
+  GraduationCap,
+  AlignJustify,
+  Accessibility,
+  Newspaper,
+  CircleDollarSign,
+  Wallet,
+  Info
 } from 'lucide-react'
 import { shallowEqual, useSelector } from 'react-redux'
 import { Button } from '@/components/ui/button'
@@ -32,7 +32,7 @@ import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { TopNav } from '@/components/layout/top-nav'
 import { cardQueryOptions } from '../..'
-import { useAppUtils } from '../../../../../hooks/useAppUtils.jsx'
+import { useAppUtils } from '@/hooks/useAppUtils.jsx'
 import './index.css'
 
 const ProfileDropdown = lazy(
@@ -47,7 +47,7 @@ const CountUp = lazy(() => import('react-countup'))
 
 function WelcomeBanner({ userName, creds }) {
   return (
-     <div className="relative mb-4 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 p-8 text-white shadow-lg">
+    <div className="relative mb-4 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 p-8 text-white shadow-lg">
       {/* Floating Decorative Circles */}
       <div className="absolute -top-16 -left-16 h-56 w-56 animate-[spin_25s_linear_infinite] rounded-full bg-blue-400/20 blur-3xl filter"></div>
       <div className="absolute -right-16 -bottom-16 h-72 w-72 animate-[spin_30s_linear_infinite] rounded-full bg-blue-500/20 blur-3xl filter"></div>
@@ -220,7 +220,7 @@ export default function Dashboard() {
                         <div className='h-1 w-8 rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8]'></div>
                       </div>
                       <div className='flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-[#2563eb] to-[#1d4ed8] shadow-lg transition-all duration-300 hover:scale-110 hover:rotate-12'>
-                       <AlignJustify className="w-5 h-5 text-white" />
+                        <AlignJustify className="w-5 h-5 text-white" />
                       </div>
                     </div>
                     <div className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-4xl font-bold text-transparent'>
@@ -252,7 +252,7 @@ export default function Dashboard() {
                         <div className='h-1 w-12 rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8]'></div>
                       </div>
                       <div className='flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-[#2563eb] to-[#1d4ed8] shadow-lg transition-all duration-300 hover:scale-110 hover:rotate-12'>
-                       <User className="w-6 h-6 text-white" />
+                        <User className="w-6 h-6 text-white" />
                       </div>
                     </div>
                     <div className='space-y-2'>
@@ -297,7 +297,7 @@ export default function Dashboard() {
                           </p>
                         </div>
                         <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-[#2563eb]/10'>
-                         <Newspaper className="w-5 h-5 text-[#2563eb]" />
+                          <Newspaper className="w-5 h-5 text-[#2563eb]" />
                         </div>
                       </div>
                       <div className='flex items-center justify-between text-sm'>
@@ -336,7 +336,7 @@ export default function Dashboard() {
                         <div className='h-1 w-12 rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8]'></div>
                       </div>
                       <div className='flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-[#2563eb] to-[#1d4ed8] shadow-lg transition-all duration-300 hover:scale-110 hover:rotate-12'>
-                      <CircleDollarSign className="w-6 h-6 text-white" />
+                        <CircleDollarSign className="w-6 h-6 text-white" />
                       </div>
                     </div>
                     <div className='space-y-2'>
@@ -361,7 +361,7 @@ export default function Dashboard() {
                           </p>
                         </div>
                         <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-[#2563eb]/10'>
-                         <CircleDollarSign className="text-[#2563eb]" />
+                          <CircleDollarSign className="text-[#2563eb]" />
                         </div>
                       </div>
                       <div className='flex items-center justify-between rounded-[8px] border border-[#e2e8f0] bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4'>
@@ -385,7 +385,7 @@ export default function Dashboard() {
                           </p>
                         </div>
                         <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-[#2563eb]/10'>
-                        <Wallet className="w-5 h-5 text-[#2563eb]" />
+                          <Wallet className="w-5 h-5 text-[#2563eb]" />
                         </div>
                       </div>
                       <div className='flex items-center justify-between rounded-[8px] border border-[#e2e8f0] bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4'>
@@ -409,7 +409,7 @@ export default function Dashboard() {
                           </p>
                         </div>
                         <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-[#2563eb]/10'>
-                      <Info className="w-5 h-5 text-[#2563eb]" />
+                          <Info className="w-5 h-5 text-[#2563eb]" />
                         </div>
                       </div>
                     </div>

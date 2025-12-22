@@ -11,8 +11,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { TrainingWheelGameSchema } from '../-schemas/trainingWheelGameSchemas'
-import { openModalAdmin } from '../../../../../../shared/config/reducers/admin/DialogSlice'
-import { openModal } from '../../../../../../shared/config/reducers/student/studentDialogSlice'
+import { openModalAdmin } from '@/shared/config/reducers/admin/DialogSlice'
+import { openModal } from '@/shared/config/reducers/student/studentDialogSlice'
 
 export function DataTableRowActionsAdmin({ row }) {
   const game = TrainingWheelGameSchema.parse(row.original)

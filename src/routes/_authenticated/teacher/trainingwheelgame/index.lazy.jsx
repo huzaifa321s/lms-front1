@@ -23,9 +23,9 @@ import { trainingWheelGamesSchema } from '../-layout/data/schemas/trainingWheelG
 import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
 import { Show } from '../../../../shared/utils/Show'
 import {
-  getDebounceInput,
+  useDebounceInput,
   useSearchInput,
-} from '../../../../utils/globalFunctions'
+} from '@/utils/globalFunctions'
 import SearchInput from '../../student/-components/SearchInput'
 
 const DataTable = lazy(
@@ -73,7 +73,8 @@ export const Route = createLazyFileRoute(
   loaderDeps: ({ search }) => {
     return { q: search.q, page: search.page }
   },
-  loader: ({ params }) => queryClient.ensureQueryData(gameQueryOptions(params)),
+  loader: ({ params, context }) =>
+    context.queryClient.ensureQueryData(gameQueryOptions(params)),
   component: RouteComponent,
 })
 
@@ -88,7 +89,7 @@ function RouteComponent() {
     select: (search) => search.page,
   })
   const delay = searchInput.length < 3 ? 400 : 800
-  const debouncedSearch = getDebounceInput(searchInput, delay)
+  const debouncedSearch = useDebounceInput(searchInput, delay)
   const { data, fetchStatus, isFetching } = useQuery(
     gameQueryOptions({
       q: debouncedSearch,
@@ -203,7 +204,7 @@ function RouteComponent() {
               paginationOptions={paginationOptions}
               setPagination={setPagination}
               handlePagination={handlePagination}
-              hiddenColumnsOnMobile={['serial', 'category.name','difficulties']}
+              hiddenColumnsOnMobile={['serial', 'category.name', 'difficulties']}
 
             />
           </Suspense>

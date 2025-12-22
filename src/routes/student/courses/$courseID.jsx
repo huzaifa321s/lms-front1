@@ -44,6 +44,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { coursesQueryOptions } from '.'
 import { useAppUtils } from '../../../hooks/useAppUtils'
 import { handleCourseEnrollment } from '../../../shared/config/reducers/student/studentAuthSlice'
@@ -52,6 +53,7 @@ import {
   getCookie,
   isActiveSubscription,
 } from '../../../shared/utils/helperFunction'
+import { getFileUrl } from '@/utils/globalFunctions'
 
 export const courseQueryOptions = (deps) =>
   queryOptions({
@@ -84,8 +86,6 @@ export const courseQueryOptions = (deps) =>
       }
     },
   })
-
-const queryClient = new QueryClient()
 
 export const Route = createFileRoute('/student/courses/$courseID')({
   beforeLoad: ({ params }) => {
@@ -125,8 +125,8 @@ export const Route = createFileRoute('/student/courses/$courseID')({
   loaderDeps: ({ search }) => {
     return { courseID: search.courseID, userID: search.userID }
   },
-  loader: ({ params, deps }) =>
-    queryClient.fetchQuery(
+  loader: ({ params, deps, context }) =>
+    context.queryClient.fetchQuery(
       courseQueryOptions({ courseID: params.courseID, userID: deps.userID })
     ),
   component: RouteComponent,
@@ -246,8 +246,7 @@ function RouteComponent() {
     enrollCourseMutation.mutate()
   }
 
-  const defaultCover = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/defaults/course-cover.png`
-  const baseMaterialUrl = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses/material/`
+  const defaultCover = getFileUrl('course-cover.png', 'defaults')
 
   return (
     <div className='page-bg'>
@@ -309,7 +308,7 @@ function RouteComponent() {
               <img
                 src={
                   course?.coverImage
-                    ? `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses/cover-images/${course?.coverImage}`
+                    ? getFileUrl(course?.coverImage, 'public/courses/cover-images')
                     : defaultCover
                 }
                 alt={course.name}
@@ -432,7 +431,7 @@ function RouteComponent() {
                               <Card
                                 className={
                                   ('border-none shadow-none transition-all duration-200',
-                                  !isEnrolled && 'opacity-60 grayscale')
+                                    !isEnrolled && 'opacity-60 grayscale')
                                 }
                               >
                                 <CardHeader className='flex flex-row items-center justify-between pb-2'>
@@ -493,7 +492,7 @@ function RouteComponent() {
                                       <div className='mt-3'>
                                         {material.type === 'application' && (
                                           <iframe
-                                            src={`${baseMaterialUrl}${material.media}`}
+                                            src={getFileUrl(material.media, 'public/courses/material')}
                                             className='h-80 w-full rounded-md border'
                                             title='PDF Viewer'
                                           />
@@ -501,7 +500,7 @@ function RouteComponent() {
 
                                         {material.type === 'video' && (
                                           <video
-                                            src={`${baseMaterialUrl}${material.media}`}
+                                            src={getFileUrl(material.media, 'public/courses/material')}
                                             controls
                                             className='h-80 w-full rounded-lg'
                                           />
@@ -510,12 +509,12 @@ function RouteComponent() {
                                         {material.media.match(
                                           /\.(png|jpg|jpeg|webp)$/i
                                         ) && (
-                                          <img
-                                            src={`${baseMaterialUrl}${material.media}`}
-                                            alt={material.title}
-                                            className='h-80 w-full rounded-lg object-contain'
-                                          />
-                                        )}
+                                            <img
+                                              src={getFileUrl(material.media, 'public/courses/material')}
+                                              alt={material.title}
+                                              className='h-80 w-full rounded-lg object-contain'
+                                            />
+                                          )}
                                       </div>
                                     )}
                                 </CardContent>
@@ -545,7 +544,7 @@ function RouteComponent() {
                   <CardHeader className='border-muted/50 flex items-center gap-4 border-b pb-6'>
                     <Avatar className='border-primary/30 h-20 w-20 border-2 shadow-sm'>
                       <AvatarImage
-                        src={course.instructor.profile || '/placeholder.svg'}
+                        src={getFileUrl(course.instructor.profile, 'public/teacher/profile') || '/placeholder.svg'}
                         alt={course.instructor.firstName}
                       />
                       <AvatarFallback className='bg-primary/10 text-primary text-lg font-semibold'>

@@ -3,66 +3,72 @@ import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useDebounce } from 'use-debounce'
 import { Button } from '@/components/ui/button'
-import { paymentMethodsQueryOptions } from '../routes/_authenticated/student/payment-methods'
 import { useSearch } from '@tanstack/react-router'
 import { useState } from 'react'
 
-export const getCachedData = (key, page, input) => {
-    const queryClient = useQueryClient()
-    const cachedData = queryClient.getQueryData([key, page, input])
-    
-    return cachedData
+export const useCachedData = (key, page, input) => {
+  const queryClient = useQueryClient()
+  const cachedData = queryClient.getQueryData([key, page, input])
+
+  return cachedData
 }
 
-export const getDebounceInput = (searchInput,time) => {
-    const [debouncedSearch] = useDebounce(searchInput, time ? time : 5000)
-    return debouncedSearch
+export const useDebounceInput = (searchInput, time) => {
+  const [debouncedSearch] = useDebounce(searchInput, time ? time : 5000)
+  return debouncedSearch
+}
+
+export const getFileUrl = (path, prefix = '') => {
+  if (!path) return ''
+  if (path.startsWith('http')) return path
+  const baseUrl = import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL || 'http://localhost:5000'
+  return `${baseUrl}/${prefix ? prefix + '/' : ''}${path}`
 }
 
 export const getRenderPaginationButtons = (
-    currentPage,
-    pages,
-    handlePageChange
+  currentPage,
+  pages,
+  handlePageChange
 ) => {
 
-    const buttons = []
-    const maxButtons = 4
-    const startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2))
-    const endPage = Math.min(pages, startPage + maxButtons - 1)
-    
-    if (startPage > 1) {
-        buttons.push(
-            <Button key='first' onClick={() => handlePageChange(1)} size='sm'>
+  const buttons = []
+  const maxButtons = 4
+  const startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2))
+  const endPage = Math.min(pages, startPage + maxButtons - 1)
+
+  if (startPage > 1) {
+    buttons.push(
+      <Button key='first' onClick={() => handlePageChange(1)} size='sm'>
         1
       </Button>
     )
-}
+  }
 
   if (startPage > 2) {
-      buttons.push(
-          <Button variant='outline' size='sm'>
+    buttons.push(
+      <Button variant='outline' size='sm'>
         <span key='ellipsis-1'>...</span>
       </Button>
     )
-}
+  }
 
-for (let i = startPage; i <= endPage; i++) {
+  for (let i = startPage; i <= endPage; i++) {
     buttons.push(
-        <Button
+      <Button
         key={i}
         variant={currentPage === i ? 'outline' : 'default'}
         onClick={() => handlePageChange(i)}
         size='sm'
-        >
+      >
         {i}
       </Button>
     )
-}
+  }
 
-if (endPage < pages) {
+  if (endPage < pages) {
     if (endPage < pages - 1) {
-        buttons.push(
-            <Button variant='outline' size='sm'>
+      buttons.push(
+        <Button variant='outline' size='sm'>
           <span key='ellipssis-2' className='btn'>
             ...
           </span>
@@ -70,24 +76,25 @@ if (endPage < pages) {
       )
     }
     buttons.push(
-        <Button onClick={() => handlePageChange(pages)} size='sm'>
+      <Button onClick={() => handlePageChange(pages)} size='sm'>
         {pages}
       </Button>
     )
-}
-return buttons
+  }
+  return buttons
 }
 
-export const setCardAsDefault = async ({paymentMethodId,queryClient}) => {
-    try {
-        let response = await axios.put(
-            `/student/payment/set-card-as-default/${paymentMethodId}`
-        )
-        response = response.data
-        if (response.success) {
-            await queryClient.invalidateQueries(paymentMethodsQueryOptions())
+export const setCardAsDefault = async ({ paymentMethodId, queryClient, queryOptions }) => {
+  try {
+    let response = await axios.put(
+      `/student/payment/set-card-as-default/${paymentMethodId}`
+    )
+    response = response.data
+    if (response.success) {
+      if (queryOptions) {
+        await queryClient.invalidateQueries({ queryKey: queryOptions().queryKey })
+      }
       toast.success(response.message)
-      console.log('paymentMethodsQueryOptions ===>', paymentMethodsQueryOptions)
     }
   } catch (error) {
     console.log('Error: ', error)
@@ -96,7 +103,7 @@ export const setCardAsDefault = async ({paymentMethodId,queryClient}) => {
 
 
 export function useSearchInput(from, key = 'q') {
-  const value = useSearch({ from, select: s => s[key] ,structuralSharing:true}) || ''
+  const value = useSearch({ from, select: s => s[key], structuralSharing: true }) || ''
   return useState(value)
 }
 
@@ -131,3 +138,4 @@ export function exportToCSV(students) {
   link.click();
   document.body.removeChild(link);
 }
+

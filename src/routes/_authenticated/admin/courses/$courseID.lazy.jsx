@@ -37,6 +37,7 @@ import {
   StatusLabel,
 } from '@/components/ui/shadcn-io/status'
 import { Header } from '@/components/layout/header'
+import { getFileUrl } from '@/utils/globalFunctions'
 
 const queryClient = new QueryClient()
 
@@ -105,13 +106,11 @@ function RouteComponent() {
     enrolledStudentsQueryOption(courseID)
   )
   const [courseObj, setCourseObj] = useState(data)
-  const defaultCover = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/defaults/course-cover.png`
   const [cover, setCover] = useState(
     data && data.coverImage
-      ? `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses/cover-images/${data.coverImage}`
+      ? getFileUrl(data.coverImage, 'public/courses/cover-images')
       : defaultCover
   )
-  const baseMaterialUrl = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses/material`
 
   return (
     <>
@@ -333,7 +332,7 @@ function RouteComponent() {
                                 {/* PDF */}
                                 {material.type === 'application' && (
                                   <iframe
-                                    src={`${baseMaterialUrl}/${material.media}`}
+                                    src={getFileUrl(material.media, 'public/courses/material')}
                                     className='h-[70vh] w-full rounded-lg border bg-slate-50'
                                   />
                                 )}
@@ -342,20 +341,20 @@ function RouteComponent() {
                                 {material.media.match(
                                   /\.(png|jpg|jpeg|gif)$/i
                                 ) && (
-                                  <div className='flex h-[70vh] items-center justify-center rounded-lg border bg-slate-100'>
-                                    <img
-                                      src={`${baseMaterialUrl}/${material.media}`}
-                                      alt='Preview'
-                                      className='max-h-full max-w-full object-contain'
-                                    />
-                                  </div>
-                                )}
+                                    <div className='flex h-[70vh] items-center justify-center rounded-lg border bg-slate-100'>
+                                      <img
+                                        src={getFileUrl(material.media, 'public/courses/material')}
+                                        alt='Preview'
+                                        className='max-h-full max-w-full object-contain'
+                                      />
+                                    </div>
+                                  )}
 
                                 {/* Videos */}
                                 {material.media.match(/\.(mp4|webm)$/i) && (
                                   <video
                                     controls
-                                    src={`${baseMaterialUrl}/${material.media}`}
+                                    src={getFileUrl(material.media, 'public/courses/material')}
                                     className='h-[70vh] w-full rounded-lg border bg-black'
                                   />
                                 )}
@@ -369,11 +368,11 @@ function RouteComponent() {
                     {/* No Material Fallback */}
                     {(!courseObj?.material ||
                       courseObj.material.length === 0) && (
-                      <div className='py-8 text-center text-[#94a3b8]'>
-                        <FileText className='mx-auto mb-3 h-12 w-12 text-[#94a3b8]' />
-                        <p>No materials available for this course yet.</p>
-                      </div>
-                    )}
+                        <div className='py-8 text-center text-[#94a3b8]'>
+                          <FileText className='mx-auto mb-3 h-12 w-12 text-[#94a3b8]' />
+                          <p>No materials available for this course yet.</p>
+                        </div>
+                      )}
                   </Accordion>
                 </CardContent>
               </Card>
@@ -415,11 +414,11 @@ function RouteComponent() {
 
                     {(!courseObj?.enrolledStudents ||
                       courseObj?.enrolledStudents.length === 0) && (
-                      <div className='py-8 text-center text-[#94a3b8]'>
-                        <Users className='mx-auto mb-3 h-12 w-12 text-[#94a3b8]' />
-                        <p>No students enrolled yet.</p>
-                      </div>
-                    )}
+                        <div className='py-8 text-center text-[#94a3b8]'>
+                          <Users className='mx-auto mb-3 h-12 w-12 text-[#94a3b8]' />
+                          <p>No students enrolled yet.</p>
+                        </div>
+                      )}
                   </div>
                 </CardContent>
               </Card>

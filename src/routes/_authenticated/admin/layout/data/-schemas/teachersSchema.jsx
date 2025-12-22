@@ -2,23 +2,24 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../../../../student/features/tasks/-components/data-table-column-header";
 import { TeachersDataTableRowActions } from "../../../../student/features/tasks/-components/teacher-data-table-row-actions";
 import { format } from "date-fns";
+import { getFileUrl } from "@/utils/globalFunctions";
 const columnHelper = createColumnHelper()
 
 export const teachersSchema = [
   columnHelper.display({
-  id: "serial",
-  header: "#",
-  cell: ({ row, table }) => {
-    console.log('table.getState().pagination ===>',table.getState().pagination)
-    const { pageIndex, pageSize } = table.getState().pagination
-    console.log('pageIndex ===>',pageIndex)
-    console.log('pageIndex * pageSize + row.index  + 1',pageIndex * pageSize + row.index + 1)
-    return <p>{ pageIndex * pageSize + row.index + 1}</p>
-  }
-}),
+    id: "serial",
+    header: "#",
+    cell: ({ row, table }) => {
+      console.log('table.getState().pagination ===>', table.getState().pagination)
+      const { pageIndex, pageSize } = table.getState().pagination
+      console.log('pageIndex ===>', pageIndex)
+      console.log('pageIndex * pageSize + row.index  + 1', pageIndex * pageSize + row.index + 1)
+      return <p>{pageIndex * pageSize + row.index + 1}</p>
+    }
+  }),
   columnHelper.accessor('profile', {
-    header:() => <p>Profile</p>,
-    cell: (info) => <img className="rounded-full shadow-md w-10 h-10" loading="lazy" src={`${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/teacher/profile/${info.getValue()}`}/>,
+    header: () => <p>Profile</p>,
+    cell: (info) => <img className="rounded-full shadow-md w-10 h-10" loading="lazy" src={getFileUrl(info.getValue(), 'public/teacher/profile')} />,
   }),
   columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
     id: 'Name',
@@ -42,7 +43,7 @@ export const teachersSchema = [
     cell: (info) => <p>{info.getValue()}</p>,
   }),
   columnHelper.accessor('createdAt', {
-    id:'createdAt',
+    id: 'createdAt',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Joining Date' />
     ),

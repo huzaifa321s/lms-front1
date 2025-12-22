@@ -62,10 +62,9 @@ import {
 } from '@/components/ui/tooltip'
 import { Show } from '../../../shared/utils/Show'
 import {
-  getDebounceInput,
-  getRenderPaginationButtons,
-  useSearchInput,
-} from '../../../utils/globalFunctions'
+  useDebounceInput,
+  getFileUrl,
+} from '@/utils/globalFunctions'
 import Pagination from '../../_authenticated/student/-components/Pagination'
 
 const CoursesPageSkeleton = () => {
@@ -134,7 +133,6 @@ const CoursesPageSkeleton = () => {
 // Constants
 const DEFAULT_COVER_IMAGE =
   'https://images.unsplash.com/photo-1516321310762-479e93c1e69e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
-const BASE_STORAGE_URL = import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL
 const MESSAGES = {
   noCourses: 'No courses found!',
   noCoursesDesc:
@@ -200,22 +198,22 @@ function RouteComponent() {
   const [sortOrder, setSortOrder] = useState(sort)
   const [selectedCategory, setSelectedCategory] = useState(category)
   const delay = searchInput.length < 3 ? 400 : 800
-  const debouncedSearch = getDebounceInput(searchInput, delay)
+  const debouncedSearch = useDebounceInput(searchInput, delay)
 
   const handlePageChange = async (page) => {
     if (searchInput !== '') {
       navigate({
         to: `/student/courses`,
-        search: { page: page, input: searchInput },
+        search: { page: page, q: searchInput },
       })
     } else {
       navigate({
         to: `/student/courses`,
-        search: { page: page, input: `` },
+        search: { page: page, q: `` },
       })
     }
     await queryClient.invalidateQueries(
-      coursesQueryOptions({ input: searchInput, page })
+      coursesQueryOptions({ q: searchInput, page })
     )
   }
 
@@ -445,7 +443,7 @@ function RouteComponent() {
             <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
               {courses.map((course) => {
                 const coverImageUrl = course.coverImage
-                  ? `${BASE_STORAGE_URL}public/courses/cover-images/${course.coverImage}`
+                  ? getFileUrl(course.coverImage, 'public/courses/cover-images')
                   : DEFAULT_COVER_IMAGE
 
                 const isEnrolled =

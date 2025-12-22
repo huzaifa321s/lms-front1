@@ -16,9 +16,9 @@ import { DataTableSkeleton } from '../../../../-components/DataTableSkeleton'
 import { openModalAdmin } from '../../../../../shared/config/reducers/admin/DialogSlice'
 import { Show } from '../../../../../shared/utils/Show'
 import {
-  getDebounceInput,
+  useDebounceInput,
   useSearchInput,
-} from '../../../../../utils/globalFunctions'
+} from '@/utils/globalFunctions'
 import SearchInput from '../../../student/-components/SearchInput'
 import ContentSection from '../../../student/settings/-components/content-section'
 import { gameCategoriesSchema } from '../../layout/data/-schemas/gameCategoriesSchema'
@@ -66,8 +66,8 @@ export const Route = createFileRoute(
   loaderDeps: ({ search }) => {
     return { q: search.q, page: search.page }
   },
-  loader: ({ deps }) =>
-    queryClient.ensureQueryData(gameCategoryQueryOptions(deps)),
+  loader: ({ deps, context }) =>
+    context.queryClient.ensureQueryData(gameCategoryQueryOptions(deps)),
   component: RouteComponent,
 })
 
@@ -80,7 +80,7 @@ function RouteComponent() {
     select: (search) => search.page,
   })
   const delay = searchInput.length < 3 ? 400 : 800
-  const debouncedSearch = getDebounceInput(searchInput, delay)
+  const debouncedSearch = useDebounceInput(searchInput, delay)
   const isFirstRender = useRef(true)
   const { data, isFetching, fetchStatus } = useQuery(
     gameCategoryQueryOptions({

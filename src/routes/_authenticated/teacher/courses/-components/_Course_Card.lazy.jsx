@@ -27,10 +27,9 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from '@/components/ui/tooltip'
-import { useAppUtils } from '../../../../../hooks/useAppUtils'
+import { useAppUtils } from '@/hooks/useAppUtils'
 import { openModalTeacher } from '../../../../../shared/config/reducers/teacher/teacherDialogSlice'
-
-const courseImg = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses/cover-images/`
+import { getFileUrl } from '@/utils/globalFunctions'
 
 export const CardDemo = memo(
   ({
@@ -52,17 +51,16 @@ export const CardDemo = memo(
     return (
       <div className='group relative mx-auto w-full max-w-sm'>
         <Card
-          className={`relative flex h-[460px] w-full flex-col justify-between overflow-hidden rounded-[8px] border-0 bg-white/95 shadow-[0_4px_6px_rgba(0,0,0,0.05)] backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)] ${
-            (fetchStatus === 'fetching' || isFetching) &&
+          className={`relative flex h-[460px] w-full flex-col justify-between overflow-hidden rounded-[8px] border-0 bg-white/95 shadow-[0_4px_6px_rgba(0,0,0,0.05)] backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)] ${(fetchStatus === 'fetching' || isFetching) &&
             'animate-pulse bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9]'
-          }`}
+            }`}
         >
 
 
           {/* Course Image */}
           <div className='relative overflow-hidden rounded-t-[8px]'>
             <img
-              src={`${courseImg}${image}`}
+              src={getFileUrl(image, 'public/courses/cover-images')}
               alt={name}
               className='h-40 w-full object-cover sm:h-48'
               fetchpriority={index === 0 ? 'high' : 'auto'}

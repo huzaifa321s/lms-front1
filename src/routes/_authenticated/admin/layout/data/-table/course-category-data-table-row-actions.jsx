@@ -1,5 +1,5 @@
 import { useSearch } from '@tanstack/react-router'
-import {  EditIcon, Eye, MoreHorizontal, Trash } from 'lucide-react'
+import { EditIcon, Eye, MoreHorizontal, Trash } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { Button } from '@/components/ui/button'
 import {
@@ -10,7 +10,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { openModalAdmin } from '../../../../../../shared/config/reducers/admin/DialogSlice'
+import { openModalAdmin } from '@/shared/config/reducers/admin/DialogSlice'
 import { CourseCategoriesSchema } from '../-schemas/courseCategoriesSchema'
 
 
@@ -23,16 +23,16 @@ export function CourseCategoryDataTableRowActions({ row }) {
 
   return (
     <div className="flex items-center">
-      <Button size="xs" variant="outline"  onClick={() =>
-              dispatch(
-                openModalAdmin({
-                  type: 'course-category-view-modal',
-                  props: { categoryID: category._id,searchInput:searchDeps.q },
-                })
-              )
-            }>
-              <Eye/>
-               View</Button>
+      <Button size="xs" variant="outline" onClick={() =>
+        dispatch(
+          openModalAdmin({
+            type: 'course-category-view-modal',
+            props: { categoryID: category._id, searchInput: searchDeps.q },
+          })
+        )
+      }>
+        <Eye />
+        View</Button>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
@@ -49,11 +49,11 @@ export function CourseCategoryDataTableRowActions({ row }) {
               dispatch(
                 openModalAdmin({
                   type: 'course-category-edit-modal',
-                  props: { category, searchDeps, inputValue: category.name,searchInput:searchDeps.q },
+                  props: { category, searchDeps, inputValue: category.name, searchInput: searchDeps.q },
                 })
               )
             }
-                    className="focus:bg-emerald-100 text-emerald-600 focus:text-emerald-800 cursor-pointer"
+            className="focus:bg-emerald-100 text-emerald-600 focus:text-emerald-800 cursor-pointer"
 
           >
             Edit
@@ -62,18 +62,18 @@ export function CourseCategoryDataTableRowActions({ row }) {
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
- 
- 
+
+
           <DropdownMenuItem
             onClick={() =>
               dispatch(
                 openModalAdmin({
                   type: 'course-category-delete-modal',
-                  props: { category,searchInput:searchDeps.q },
+                  props: { category, searchInput: searchDeps.q },
                 })
               )
             }
-                    className="focus:bg-red-100 text-red-600 focus:text-red-800 cursor-pointer"
+            className="focus:bg-red-100 text-red-600 focus:text-red-800 cursor-pointer"
 
           >
             Delete

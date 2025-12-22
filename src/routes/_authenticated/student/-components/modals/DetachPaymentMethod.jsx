@@ -2,7 +2,7 @@ import React from "react"
 import { useDispatch } from "react-redux"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { closeModal } from "../../../../../shared/config/reducers/student/studentDialogSlice"
+import { closeModal } from "@/shared/config/reducers/student/studentDialogSlice"
 
 export default function DetachPaymentMethodDialog({ confirmDetach, cardDetach }) {
   const dispatch = useDispatch()

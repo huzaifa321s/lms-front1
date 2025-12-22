@@ -23,7 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { openModalAdmin } from '../../../../../../shared/config/reducers/admin/DialogSlice.js'
+import { openModalAdmin } from '@/shared/config/reducers/admin/DialogSlice.js'
 import { DataTablePagination } from './data-table-pagination'
 
 const NoDataSvg = () => (
@@ -76,7 +76,7 @@ function DataTable<TData, TValue>({
   setSearchInput,
   totalPages,
   setPagination,
-  hiddenColumnsOnMobile =[],
+  hiddenColumnsOnMobile = [],
   handlePagination,
   paginationOptions,
 }: DataTableProps<TData, TValue>) {
@@ -124,7 +124,7 @@ function DataTable<TData, TValue>({
       }, {}),
     },
   })
-const width = useWindowWidth()
+  const width = useWindowWidth()
 
   React.useEffect(() => {
     hiddenColumnsOnMobile.forEach((colId) => {
@@ -244,12 +244,12 @@ const width = useWindowWidth()
 
       {/* Pagination */}
       {pagination && (
-          <DataTablePagination
-            table={table}
-            handlePagination={handlePagination}
-            totalPages={totalPages}
-            paginationOptions={paginationOptions}
-          />
+        <DataTablePagination
+          table={table}
+          handlePagination={handlePagination}
+          totalPages={totalPages}
+          paginationOptions={paginationOptions}
+        />
 
       )}
     </div>

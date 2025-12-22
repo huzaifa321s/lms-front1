@@ -31,9 +31,9 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { useAppUtils } from '../../../../../hooks/useAppUtils'
+import { useAppUtils } from '@/hooks/useAppUtils'
 import ErrorText from '../../../../../shared/components/typography/errorText'
-import { createNewSentenceArray } from '../../../../../shared/utils/helperFunction'
+import { createNewSentenceArray } from '@/shared/utils/helperFunction'
 
 const queryClient = new QueryClient()
 
@@ -186,9 +186,9 @@ function RouteComponent() {
   )
 
   return (
-   <>
-   
-        <Header >
+    <>
+
+      <Header >
         <div className='relative z-10  my-4 flex w-full  items-center justify-between px-4'>
           <div className='bg-clip-text text-2xl font-bold '>
             Add Game Question
@@ -203,164 +203,164 @@ function RouteComponent() {
           </Button>
         </div>
       </Header>
-       <div className='relative min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#f1f5f9] font-sans'>
+      <div className='relative min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#f1f5f9] font-sans'>
 
-      <Main className='px-4 py-8'>
-        <Card className='relative overflow-hidden rounded-[12px] border border-[#e2e8f0] bg-white p-6 shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-500 hover:shadow-lg hover:shadow-[#cbd5e1]/20'>
-          <CardContent className='relative z-10 space-y-6'>
-            {/* Question */}
-            <div className='space-y-2'>
-              <Label className='flex items-center gap-2 text-lg font-semibold text-[#1e293b]'>
-                <Tag className='h-5 w-5 text-[#2563eb]' /> Question
-              </Label>
-              <Textarea
-                name='question'
-                value={gameObj.question}
-                onChange={handleChange}
-                placeholder='Enter your training wheel game question here...'
-                className='min-h-[120px] resize-none rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
-              />
-            </div>
-
-            {/* Answer */}
-            <div className='space-y-2'>
-              <Label className='flex items-center gap-2 text-lg font-semibold text-[#1e293b]'>
-                <Tag className='h-5 w-5 text-[#f59e0b]' /> Answer
-              </Label>
-              <p className='mb-1 flex items-center gap-2 text-sm text-[#64748b]'>
-                <AlertTriangle className='h-4 w-4 text-[#f59e0b]' />
-                Answer will be broken into 6 words (minimum 6 words required)
-              </p>
-              <Textarea
-                name='answer'
-                value={gameObj.answer}
-                onChange={handleChange}
-                placeholder='Enter the complete answer (minimum 6 words)...'
-                className='min-h-[120px] resize-none rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
-              />
-            </div>
-
-            {/* Category & Levels */}
-            <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
+        <Main className='px-4 py-8'>
+          <Card className='relative overflow-hidden rounded-[12px] border border-[#e2e8f0] bg-white p-6 shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-500 hover:shadow-lg hover:shadow-[#cbd5e1]/20'>
+            <CardContent className='relative z-10 space-y-6'>
+              {/* Question */}
               <div className='space-y-2'>
                 <Label className='flex items-center gap-2 text-lg font-semibold text-[#1e293b]'>
-                  <Tag className='h-5 w-5 text-[#2563eb]' /> Category
+                  <Tag className='h-5 w-5 text-[#2563eb]' /> Question
                 </Label>
-                <Select
-                  value={gameObj.category}
-                  onValueChange={(value) =>
-                    setGameObj((prev) => ({ ...prev, category: value }))
-                  }
-                >
-                  <SelectTrigger className='h-12 rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'>
-                    <SelectValue placeholder='Select a category' />
-                  </SelectTrigger>
-                  <SelectContent className='border-[#e2e8f0] bg-white text-[#1e293b]'>
-                    <SelectGroup>
-                      {fetchStatus === 'fetching' ? (
-                        <Skeleton className='h-8 w-full bg-[#f1f5f9]' />
-                      ) : (
-                        gameCategories.map((cat) => (
-                          <SelectItem
-                            key={cat._id}
-                            value={cat._id}
-                            className='text-[#1e293b] hover:bg-[#f1f5f9]'
-                          >
-                            {cat.name}
-                          </SelectItem>
-                        ))
-                      )}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <Textarea
+                  name='question'
+                  value={gameObj.question}
+                  onChange={handleChange}
+                  placeholder='Enter your training wheel game question here...'
+                  className='min-h-[120px] resize-none rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
+                />
               </div>
 
+              {/* Answer */}
               <div className='space-y-2'>
                 <Label className='flex items-center gap-2 text-lg font-semibold text-[#1e293b]'>
-                  <Layers className='h-5 w-5 text-[#f59e0b]' /> Difficulty
-                  Levels
+                  <Tag className='h-5 w-5 text-[#f59e0b]' /> Answer
                 </Label>
-                <div className='flex gap-4'>
-                  {[
-                    {
-                      name: 'beginner',
-                      label: 'Beginner',
-                      color: 'from-[#10b981] to-[#059669]',
-                      borderColor: 'border-[#10b981]',
-                      textColor: 'text-[#10b981]',
-                    },
-                    {
-                      name: 'intermediate',
-                      label: 'Intermediate',
-                      color: 'from-[#f59e0b] to-[#d97706]',
-                      borderColor: 'border-[#f59e0b]',
-                      textColor: 'text-[#f59e0b]',
-                    },
-                    {
-                      name: 'expert',
-                      label: 'Expert',
-                      color: 'from-[#ef4444] to-[#dc2626]',
-                      borderColor: 'border-[#ef4444]',
-                      textColor: 'text-[#ef4444]',
-                    },
-                  ].map((lvl) => (
-                    <Label key={lvl.name} className='flex items-center gap-2'>
-                      <Input
-                        type='checkbox'
-                        checked={gameObj.levels.includes(lvl.name)}
-                        name={lvl.name}
-                        onChange={handleCheckboxes}
-                        className='h-4 w-4 rounded focus:ring-2 focus:ring-[#2563eb]'
-                      />
-                      <span className={`font-medium ${lvl.textColor}`}>
-                        {lvl.label}
-                      </span>
-                      {gameObj.levels.includes(lvl.name) && (
-                        <CheckCircle className='h-4 w-4 text-[#10b981]' />
-                      )}
-                    </Label>
-                  ))}
+                <p className='mb-1 flex items-center gap-2 text-sm text-[#64748b]'>
+                  <AlertTriangle className='h-4 w-4 text-[#f59e0b]' />
+                  Answer will be broken into 6 words (minimum 6 words required)
+                </p>
+                <Textarea
+                  name='answer'
+                  value={gameObj.answer}
+                  onChange={handleChange}
+                  placeholder='Enter the complete answer (minimum 6 words)...'
+                  className='min-h-[120px] resize-none rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'
+                />
+              </div>
+
+              {/* Category & Levels */}
+              <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
+                <div className='space-y-2'>
+                  <Label className='flex items-center gap-2 text-lg font-semibold text-[#1e293b]'>
+                    <Tag className='h-5 w-5 text-[#2563eb]' /> Category
+                  </Label>
+                  <Select
+                    value={gameObj.category}
+                    onValueChange={(value) =>
+                      setGameObj((prev) => ({ ...prev, category: value }))
+                    }
+                  >
+                    <SelectTrigger className='h-12 rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2'>
+                      <SelectValue placeholder='Select a category' />
+                    </SelectTrigger>
+                    <SelectContent className='border-[#e2e8f0] bg-white text-[#1e293b]'>
+                      <SelectGroup>
+                        {fetchStatus === 'fetching' ? (
+                          <Skeleton className='h-8 w-full bg-[#f1f5f9]' />
+                        ) : (
+                          gameCategories.map((cat) => (
+                            <SelectItem
+                              key={cat._id}
+                              value={cat._id}
+                              className='text-[#1e293b] hover:bg-[#f1f5f9]'
+                            >
+                              {cat.name}
+                            </SelectItem>
+                          ))
+                        )}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className='space-y-2'>
+                  <Label className='flex items-center gap-2 text-lg font-semibold text-[#1e293b]'>
+                    <Layers className='h-5 w-5 text-[#f59e0b]' /> Difficulty
+                    Levels
+                  </Label>
+                  <div className='flex gap-4'>
+                    {[
+                      {
+                        name: 'beginner',
+                        label: 'Beginner',
+                        color: 'from-[#10b981] to-[#059669]',
+                        borderColor: 'border-[#10b981]',
+                        textColor: 'text-[#10b981]',
+                      },
+                      {
+                        name: 'intermediate',
+                        label: 'Intermediate',
+                        color: 'from-[#f59e0b] to-[#d97706]',
+                        borderColor: 'border-[#f59e0b]',
+                        textColor: 'text-[#f59e0b]',
+                      },
+                      {
+                        name: 'expert',
+                        label: 'Expert',
+                        color: 'from-[#ef4444] to-[#dc2626]',
+                        borderColor: 'border-[#ef4444]',
+                        textColor: 'text-[#ef4444]',
+                      },
+                    ].map((lvl) => (
+                      <Label key={lvl.name} className='flex items-center gap-2'>
+                        <Input
+                          type='checkbox'
+                          checked={gameObj.levels.includes(lvl.name)}
+                          name={lvl.name}
+                          onChange={handleCheckboxes}
+                          className='h-4 w-4 rounded focus:ring-2 focus:ring-[#2563eb]'
+                        />
+                        <span className={`font-medium ${lvl.textColor}`}>
+                          {lvl.label}
+                        </span>
+                        {gameObj.levels.includes(lvl.name) && (
+                          <CheckCircle className='h-4 w-4 text-[#10b981]' />
+                        )}
+                      </Label>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Error */}
-            {errorMessage && (
-              <div className='flex items-center gap-2 rounded-[8px] border border-[#ef4444] bg-gradient-to-r from-[#ef4444]/10 to-[#dc2626]/10 p-3'>
-                <AlertTriangle className='h-5 w-5 text-[#ef4444]' />
-                <ErrorText className='text-[#ef4444]'>{errorMessage}</ErrorText>
-              </div>
-            )}
+              {/* Error */}
+              {errorMessage && (
+                <div className='flex items-center gap-2 rounded-[8px] border border-[#ef4444] bg-gradient-to-r from-[#ef4444]/10 to-[#dc2626]/10 p-3'>
+                  <AlertTriangle className='h-5 w-5 text-[#ef4444]' />
+                  <ErrorText className='text-[#ef4444]'>{errorMessage}</ErrorText>
+                </div>
+              )}
 
-            {/* Actions */}
-            <div className='flex flex-col items-center justify-between gap-4 border-t border-[#e2e8f0] pt-4 sm:flex-row'>
-              <div className='text-sm text-[#64748b]'>
-                Fill all required fields before saving
+              {/* Actions */}
+              <div className='flex flex-col items-center justify-between gap-4 border-t border-[#e2e8f0] pt-4 sm:flex-row'>
+                <div className='text-sm text-[#64748b]'>
+                  Fill all required fields before saving
+                </div>
+                <div className='flex gap-2'>
+                  <Button
+                    size='lg'
+                    onClick={() => addQuestion('add')}
+                    loading={isLoading}
+                    disabled={isAddButtonDisabled() || isLoading}
+                  >
+                    {isLoading ? 'Saving...' : 'Add'}
+                  </Button>
+                  <Button
+                    size='lg'
+                    variant='secondary'
+                    onClick={() => addQuestion('add-and-new')}
+                    loading={isAddNewButtonLoading}
+                    disabled={isAddButtonDisabled() || isAddNewButtonLoading}
+                  >
+                    {isAddNewButtonLoading ? 'Saving...' : 'Add & New'}
+                  </Button>
+                </div>
               </div>
-              <div className='flex gap-2'>
-                <Button
-                  size='lg'
-                  onClick={() => addQuestion('add')}
-                  loading={isLoading}
-                  disabled={isAddButtonDisabled() || isLoading}
-                >
-                  {isLoading ? 'Saving...' : 'Add'}
-                </Button>
-                <Button
-                  size='lg'
-                  variant='secondary'
-                  onClick={() => addQuestion('add-and-new')}
-                  loading={isAddNewButtonLoading}
-                  disabled={isAddButtonDisabled() || isAddNewButtonLoading}
-                >
-                  {isAddNewButtonLoading ? 'Saving...' : 'Add & New'}
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </Main>
-    </div>
+            </CardContent>
+          </Card>
+        </Main>
+      </div>
     </>
   )
 }

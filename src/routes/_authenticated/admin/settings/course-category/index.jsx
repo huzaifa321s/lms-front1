@@ -11,9 +11,9 @@ import { DataTableSkeleton } from '../../../../-components/DataTableSkeleton'
 import { openModalAdmin } from '../../../../../shared/config/reducers/admin/DialogSlice'
 import { Show } from '../../../../../shared/utils/Show'
 import {
-  getDebounceInput,
+  useDebounceInput,
   useSearchInput,
-} from '../../../../../utils/globalFunctions'
+} from '@/utils/globalFunctions'
 import SearchInput from '../../../student/-components/SearchInput'
 import ContentSection from '../../../student/settings/-components/content-section'
 import { courseCategoriesSchema } from '../../layout/data/-schemas/courseCategoriesSchema'
@@ -61,8 +61,8 @@ export const Route = createFileRoute(
   loaderDeps: ({ search }) => {
     return { q: search.q, page: search.page }
   },
-  loader: ({ deps }) =>
-    queryClient.ensureQueryData(courseCategoryQueryOptions(deps)),
+  loader: ({ deps, context }) =>
+    context.queryClient.ensureQueryData(courseCategoryQueryOptions(deps)),
   component: RouteComponent,
 })
 
@@ -72,7 +72,7 @@ function RouteComponent() {
   )
   const isFirstRender = useRef(true)
   const delay = searchInput.length < 3 ? 400 : 800
-  const debouncedSearch = getDebounceInput(searchInput, delay)
+  const debouncedSearch = useDebounceInput(searchInput, delay)
   let currentPage = useSearch({
     from: '/_authenticated/admin/settings/course-category/',
     select: (search) => search.page,

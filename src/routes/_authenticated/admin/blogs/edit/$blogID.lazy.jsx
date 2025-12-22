@@ -19,6 +19,7 @@ import { queryOptions, useQueryClient, useSuspenseQuery } from '@tanstack/react-
 import { useAppUtils } from '../../../../../hooks/useAppUtils';
 import { queryClient } from '../../../../../utils/globalVars';
 import { ChevronLeft, Save, Plus, X } from 'lucide-react';
+import { getFileUrl } from '@/utils/globalFunctions';
 
 const blogQueryOptions = (blogID) =>
   queryOptions({
@@ -47,7 +48,7 @@ export const Route = createLazyFileRoute('/_authenticated/admin/blogs/edit/$blog
   component: BlogEditPage,
 });
 
-const defaultCover = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/defaults/blog-image.png`;
+const defaultCover = getFileUrl('blog-image.png', 'defaults');
 
 function BlogEditPage() {
   const { blogID } = useParams({ from: '/_authenticated/admin/blogs/edit/$blogID' });
@@ -60,7 +61,7 @@ function BlogEditPage() {
   const [blogObj, setBlogObj] = useState(blogDetails);
   const [cover, setCover] = useState(
     blogDetails?.image
-      ? `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/courses/cover-images/${blogDetails.image}`
+      ? getFileUrl(blogDetails.image, 'public/blog-images')
       : defaultCover
   );
 
@@ -124,151 +125,151 @@ function BlogEditPage() {
           </div>
         </div>
       </Header>
-   
+
       <div className="relative min-h-screen bg-[#f8fafc]">
-        
-      {/* Background decoration */}
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#2563eb]/10 via-transparent to-transparent"></div>
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-[#10b981]/10 via-transparent to-transparent"></div>
 
-    
+        {/* Background decoration */}
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#2563eb]/10 via-transparent to-transparent"></div>
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-[#10b981]/10 via-transparent to-transparent"></div>
 
-      <main className="relative z-10  p-6 md:p-10 rounded-[12px] bg-white border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Main content area */}
-          <div className="flex-1 space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="title" className="text-sm font-semibold text-[#1e293b]">Blog Title</Label>
-              <Input
-                id="title"
-                type="text"
-                name="title"
-                value={blogObj?.title || ''}
-                onChange={handleChange}
-                className="w-full rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300"
-              />
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="category" className="text-sm font-semibold text-[#1e293b]">Category</Label>
-              <Select
-                value={blogObj?.category || ''}
-                onValueChange={(value) => setBlogObj((prev) => ({ ...prev, category: value }))}
-              >
-                <SelectTrigger className="w-full md:w-[250px] rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300">
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent className="bg-white border-[#e2e8f0] shadow-sm">
-                  <SelectGroup>
-                    {blogCategories.length > 0 ? (
-                      blogCategories.map((category) => (
-                        <SelectItem
-                          value={category._id}
-                          key={category._id}
-                          className="text-[#1e293b] hover:bg-[#f8fafc] focus:bg-[#f8fafc]"
-                        >
-                          {category.name}
-                        </SelectItem>
-                      ))
-                    ) : (
-                      <SelectItem value="no-categories" disabled className="text-[#94a3b8]">
-                        No categories available
-                      </SelectItem>
-                    )}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
 
-            <div className="space-y-2">
-              <Label className="text-sm font-semibold text-[#1e293b]">Content</Label>
-              <Editor
-                apiKey="93ruijg05gmbhogd98n12gie0bj6jkfkx3v5mcyw50kfpoob"
-                value={blogObj?.content || ''}
-                init={{
-                  height: 500,
-                  menubar: false,
-                  plugins: [
-                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                    'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount',
-                  ],
-                  toolbar:
-                    'undo redo | formatselect | bold italic backcolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist | outdent indent | ' +
-                    'removeformat | help',
-                  content_style:
-                    'body { font-family:Helvetica,Arial,sans-serif; font-size:14px; color: #1e293b; }',
-                }}
-                onEditorChange={handleEditorChange}
-                className="border-[#e2e8f0] rounded-[8px] focus-within:ring-2 focus-within:ring-[#2563eb] transition-all duration-300"
-              />
-            </div>
-          </div>
-
-          {/* Sidebar for image upload */}
-          <div className="w-full lg:w-96 flex-shrink-0 space-y-6">
-            <div className="relative p-6 rounded-[12px] bg-white border border-dashed border-[#e2e8f0] shadow-inner">
-              <div className="absolute inset-0 bg-[#2563eb]/5 rounded-[12px]"></div>
-              <div className="relative z-10 space-y-4 text-center">
-                <div className="flex justify-center items-center">
-                  <div className="w-full h-48 overflow-hidden rounded-[8px] border border-[#e2e8f0] shadow-sm hover:shadow-md transition-all duration-300">
-                    <img
-                      src={cover || defaultCover}
-                      alt="Blog Cover"
-                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-                <Label
-                  htmlFor="imageInput"
-                  className="inline-flex items-center gap-2 cursor-pointer text-sm font-medium text-[#2563eb] hover:text-[#1d4ed8] transition-colors duration-200"
-                >
-                  <Plus className="h-4 w-4" />
-                  {cover && cover !== defaultCover ? 'Change Image' : 'Upload Image'}
-                </Label>
+        <main className="relative z-10  p-6 md:p-10 rounded-[12px] bg-white border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:shadow-lg hover:shadow-[#cbd5e1]/20 transition-all duration-300">
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Main content area */}
+            <div className="flex-1 space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="title" className="text-sm font-semibold text-[#1e293b]">Blog Title</Label>
                 <Input
-                  id="imageInput"
-                  type="file"
-                  className="sr-only"
-                  onChange={handleImageUpload}
-                  accept="image/*"
+                  id="title"
+                  type="text"
+                  name="title"
+                  value={blogObj?.title || ''}
+                  onChange={handleChange}
+                  className="w-full rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300"
                 />
-                {cover && cover !== defaultCover && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      setCover(defaultCover);
-                      setBlogObj((prev) => ({ ...prev, image: null }));
-                    }}
-                    className="text-[#ef4444]"
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="category" className="text-sm font-semibold text-[#1e293b]">Category</Label>
+                <Select
+                  value={blogObj?.category || ''}
+                  onValueChange={(value) => setBlogObj((prev) => ({ ...prev, category: value }))}
+                >
+                  <SelectTrigger className="w-full md:w-[250px] rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 transition-all duration-300">
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border-[#e2e8f0] shadow-sm">
+                    <SelectGroup>
+                      {blogCategories.length > 0 ? (
+                        blogCategories.map((category) => (
+                          <SelectItem
+                            value={category._id}
+                            key={category._id}
+                            className="text-[#1e293b] hover:bg-[#f8fafc] focus:bg-[#f8fafc]"
+                          >
+                            {category.name}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <SelectItem value="no-categories" disabled className="text-[#94a3b8]">
+                          No categories available
+                        </SelectItem>
+                      )}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm font-semibold text-[#1e293b]">Content</Label>
+                <Editor
+                  apiKey="93ruijg05gmbhogd98n12gie0bj6jkfkx3v5mcyw50kfpoob"
+                  value={blogObj?.content || ''}
+                  init={{
+                    height: 500,
+                    menubar: false,
+                    plugins: [
+                      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                      'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                      'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount',
+                    ],
+                    toolbar:
+                      'undo redo | formatselect | bold italic backcolor | alignleft aligncenter ' +
+                      'alignright alignjustify | bullist numlist | outdent indent | ' +
+                      'removeformat | help',
+                    content_style:
+                      'body { font-family:Helvetica,Arial,sans-serif; font-size:14px; color: #1e293b; }',
+                  }}
+                  onEditorChange={handleEditorChange}
+                  className="border-[#e2e8f0] rounded-[8px] focus-within:ring-2 focus-within:ring-[#2563eb] transition-all duration-300"
+                />
+              </div>
+            </div>
+
+            {/* Sidebar for image upload */}
+            <div className="w-full lg:w-96 flex-shrink-0 space-y-6">
+              <div className="relative p-6 rounded-[12px] bg-white border border-dashed border-[#e2e8f0] shadow-inner">
+                <div className="absolute inset-0 bg-[#2563eb]/5 rounded-[12px]"></div>
+                <div className="relative z-10 space-y-4 text-center">
+                  <div className="flex justify-center items-center">
+                    <div className="w-full h-48 overflow-hidden rounded-[8px] border border-[#e2e8f0] shadow-sm hover:shadow-md transition-all duration-300">
+                      <img
+                        src={cover || defaultCover}
+                        alt="Blog Cover"
+                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                  <Label
+                    htmlFor="imageInput"
+                    className="inline-flex items-center gap-2 cursor-pointer text-sm font-medium text-[#2563eb] hover:text-[#1d4ed8] transition-colors duration-200"
                   >
-                    <X className="h-4 w-4 mr-1" />
-                    Remove Image
-                  </Button>
-                )}
+                    <Plus className="h-4 w-4" />
+                    {cover && cover !== defaultCover ? 'Change Image' : 'Upload Image'}
+                  </Label>
+                  <Input
+                    id="imageInput"
+                    type="file"
+                    className="sr-only"
+                    onChange={handleImageUpload}
+                    accept="image/*"
+                  />
+                  {cover && cover !== defaultCover && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setCover(defaultCover);
+                        setBlogObj((prev) => ({ ...prev, image: null }));
+                      }}
+                      className="text-[#ef4444]"
+                    >
+                      <X className="h-4 w-4 mr-1" />
+                      Remove Image
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="mt-8 flex justify-end">
-          <Button
-            onClick={update}
-            disabled={isLoading}
-            loading={isLoading}
-          >
-            
+          <div className="mt-8 flex justify-end">
+            <Button
+              onClick={update}
+              disabled={isLoading}
+              loading={isLoading}
+            >
+
               <Save className="h-5 w-5 mr-2" />
-            
-            Save Changes
-          </Button>
-        </div>
-      </main>
-    </div>
-     </>
+
+              Save Changes
+            </Button>
+          </div>
+        </main>
+      </div>
+    </>
   );
 }
 

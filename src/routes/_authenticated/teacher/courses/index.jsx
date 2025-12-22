@@ -20,10 +20,10 @@ import { TopNav } from '@/components/layout/top-nav'
 import { useAppUtils } from '../../../../hooks/useAppUtils'
 import { Show } from '../../../../shared/utils/Show'
 import {
-  getDebounceInput,
+  useDebounceInput,
   getRenderPaginationButtons,
   useSearchInput,
-} from '../../../../utils/globalFunctions'
+} from '@/utils/globalFunctions'
 import { queryClient } from '../../../../utils/globalVars'
 import Pagination from '../../student/-components/Pagination'
 import { CardDemo } from './-components/_Course_Card.lazy'
@@ -63,7 +63,8 @@ export const Route = createFileRoute('/_authenticated/teacher/courses/')({
   loaderDeps: ({ search }) => {
     return { input: search.input, page: search.page }
   },
-  loader: ({ deps }) => queryClient.ensureQueryData(courseQueryOptions(deps)),
+  loader: ({ deps, context }) =>
+    context.queryClient.ensureQueryData(courseQueryOptions(deps)),
 })
 
 function RouteComponent() {
@@ -73,7 +74,7 @@ function RouteComponent() {
     '/_authenticated/teacher/courses/'
   )
   const delay = searchInput.length < 3 ? 400 : 800
-  const debouncedSearch = getDebounceInput(searchInput, delay)
+  const debouncedSearch = useDebounceInput(searchInput, delay)
   const { data, fetchStatus, isFetching } = useQuery({
     ...courseQueryOptions({
       input: debouncedSearch,
@@ -147,8 +148,8 @@ function RouteComponent() {
             Create Course
           </Button>
           <SearchInput value={searchInput} placeholder={'Search courses...'} onChange={(e) => setSearchInput(e.target.value)} onSubmit={handleSearchSubmit} isFetching={isFetching} />
-           
-       
+
+
         </div>
       </Header>
 

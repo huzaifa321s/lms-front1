@@ -11,14 +11,14 @@ import {
 import { Button } from "@/components/ui/button"
 import { DollarSign } from "lucide-react"
 import { useDispatch } from "react-redux"
-import { closeModal } from "../../../../../shared/config/reducers/student/studentDialogSlice"
+import { closeModal } from "@/shared/config/reducers/student/studentDialogSlice"
 
 function UpdateSubscriptionDialog({
   handleSubmitUpdation,
   planUpdate,
   modalData,
 }) {
-    const dispatch = useDispatch()
+  const dispatch = useDispatch()
   return (
     <Dialog open onOpenChange={() => dispatch(closeModal())}>
       <form onSubmit={handleSubmitUpdation}>
@@ -44,7 +44,7 @@ function UpdateSubscriptionDialog({
                 variant="outline"
                 disabled={planUpdate.status === "pending"}
                 onClick={() => dispatch(closeModal())}
-                
+
               >
                 Cancel
               </Button>
@@ -56,7 +56,7 @@ function UpdateSubscriptionDialog({
               disabled={planUpdate.status === "pending"}
               onClick={handleSubmitUpdation}
             >
-            {planUpdate.status === "pending" ? "Updating..." : "Update"}
+              {planUpdate.status === "pending" ? "Updating..." : "Update"}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -20,10 +20,10 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { openModal } from '../../../../../../shared/config/reducers/student/studentDialogSlice'
+import { openModal } from '@/shared/config/reducers/student/studentDialogSlice'
 
- function ProfileDropdown() {
-  const credentials = useSelector((state) => state.studentAuth?.credentials,shallowEqual)
+function ProfileDropdown() {
+  const credentials = useSelector((state) => state.studentAuth?.credentials, shallowEqual)
   const dispatch = useDispatch()
 
   return (
@@ -32,7 +32,7 @@ import { openModal } from '../../../../../../shared/config/reducers/student/stud
         <DropdownMenuTrigger asChild>
           <Button
             variant='outline'
-            
+
             size='sm'
           >
             <Avatar className='h-8 w-8 rounded-full ring-2 ring-[#e2e8f0]'>

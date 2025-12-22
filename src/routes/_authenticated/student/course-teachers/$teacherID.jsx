@@ -24,9 +24,10 @@ import SearchInput from '../-components/SearchInput'
 import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
 import { useAppUtils } from '../../../../hooks/useAppUtils'
 import {
-  getDebounceInput,
+  useDebounceInput,
   useSearchInput,
-} from '../../../../utils/globalFunctions'
+  getFileUrl,
+} from '@/utils/globalFunctions'
 import { coursesSchemaStudent } from '../features/tasks/-components/columns'
 
 const DataTable = lazy(
@@ -143,7 +144,7 @@ function RouteComponent() {
     '/_authenticated/student/course-teachers/$teacherID'
   )
   const delay = searchInput.length < 3 ? 400 : 800
-  const debouncedSearch = getDebounceInput(searchInput, delay)
+  const debouncedSearch = useDebounceInput(searchInput, delay)
 
   const { data, fetchStatus, isFetching } = useQuery({
     ...courseQueryOption({
@@ -244,7 +245,7 @@ function RouteComponent() {
                   <img
                     src={
                       teacher?.profile
-                        ? `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/teacher/profile/${teacher.profile}`
+                        ? getFileUrl(teacher.profile, 'public/teacher/profile')
                         : defaultProfile
                     }
                     alt='Instructor'

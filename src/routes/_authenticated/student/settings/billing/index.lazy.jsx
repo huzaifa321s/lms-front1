@@ -9,14 +9,14 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import ContentSection from '../-components/content-section'
 import { DataTableSkeleton } from '../../../../-components/DataTableSkeleton'
-import { useAppUtils } from '../../../../../hooks/useAppUtils'
-import { openModal } from '../../../../../shared/config/reducers/student/studentDialogSlice'
-import { Show } from '../../../../../shared/utils/Show'
+import { useAppUtils } from '@/hooks/useAppUtils'
+import { openModal } from '@/shared/config/reducers/student/studentDialogSlice'
+import { Show } from '@/shared/utils/Show'
 import {
   getSubscriptionStatus,
   unixToLocaleStr,
-} from '../../../../../shared/utils/helperFunction'
-import { setCardAsDefault } from '../../../../../utils/globalFunctions'
+} from '@/shared/utils/helperFunction'
+import { setCardAsDefault } from '@/utils/globalFunctions'
 import { queryClient } from '../../../../../utils/globalVars'
 import PaymentMethods from '../../../../student/-components/paymentMethods'
 import { invoicesQueryOption } from '../../../../student/setting/invoices'
@@ -154,28 +154,28 @@ function Billing() {
                     </p>
                     {getSubscriptionStatus(subscription?.status) !==
                       'Expired' && (
-                      <p className='text-sm text-slate-600 sm:text-base'>
-                        <span className='font-bold text-slate-700'>
-                          Next Payment:
-                        </span>{' '}
-                        {unixToLocaleStr(
-                          subscription?.currentPeriodEnd,
-                          'en-US'
-                        )}
-                      </p>
-                    )}
+                        <p className='text-sm text-slate-600 sm:text-base'>
+                          <span className='font-bold text-slate-700'>
+                            Next Payment:
+                          </span>{' '}
+                          {unixToLocaleStr(
+                            subscription?.currentPeriodEnd,
+                            'en-US'
+                          )}
+                        </p>
+                      )}
                     {getSubscriptionStatus(subscription?.status) ===
                       'Expired' && (
-                      <div className='rounded-lg border border-red-200 bg-red-50 p-3'>
-                        <p className='text-sm font-semibold text-red-700 sm:text-base'>
-                          Pay the debts to renew the subscription.
-                        </p>
-                      </div>
-                    )}
+                        <div className='rounded-lg border border-red-200 bg-red-50 p-3'>
+                          <p className='text-sm font-semibold text-red-700 sm:text-base'>
+                            Pay the debts to renew the subscription.
+                          </p>
+                        </div>
+                      )}
                   </div>
                   {subscription?.status === 'active' ? (
                     // ✅ Case 1: Active subscription
-                    <div className='rounded-2xl border border-green-200/50 bg-green-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
+                    (<div className='rounded-2xl border border-green-200/50 bg-green-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
                       <h1 className='text-3xl font-bold text-green-600 md:text-4xl'>
                         Subscription Active
                       </h1>
@@ -195,10 +195,10 @@ function Billing() {
                       >
                         Cancel Subscription
                       </Button>
-                    </div>
+                    </div>)
                   ) : subscription?.status === 'canceled' ? (
                     // ❌ Case 2: Canceled subscription
-                    <div className='rounded-2xl border border-red-200/50 bg-red-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
+                    (<div className='rounded-2xl border border-red-200/50 bg-red-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
                       <h1 className='text-3xl font-bold text-red-600 md:text-4xl'>
                         Subscription Canceled
                       </h1>
@@ -217,10 +217,10 @@ function Billing() {
                       >
                         Resubscribe
                       </Button>
-                    </div>
+                    </div>)
                   ) : subscription?.status === 'pending' ? (
                     // ⏳ Case 3: Pending subscription
-                    <div className='rounded-2xl border border-yellow-200/50 bg-yellow-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
+                    (<div className='rounded-2xl border border-yellow-200/50 bg-yellow-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
                       <h1 className='text-3xl font-bold text-yellow-600 md:text-4xl'>
                         Subscription Pending
                       </h1>
@@ -245,10 +245,10 @@ function Billing() {
                       >
                         Complete Payment
                       </Button>
-                    </div>
+                    </div>)
                   ) : subscription?.status === 'past_due' ? (
                     // ⚠️ Case 4: Past due subscription
-                    <div className='rounded-2xl border border-orange-200/50 bg-orange-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
+                    (<div className='rounded-2xl border border-orange-200/50 bg-orange-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
                       <h1 className='text-3xl font-bold text-orange-600 md:text-4xl'>
                         Payment Past Due
                       </h1>
@@ -263,10 +263,10 @@ function Billing() {
                       >
                         Update Payment Method
                       </Button>
-                    </div>
+                    </div>)
                   ) : (
                     // 🚫 Case 5: Inactive / No subscription
-                    <div className='rounded-2xl border border-slate-200/50 bg-slate-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
+                    (<div className='rounded-2xl border border-slate-200/50 bg-slate-50/80 p-8 text-center shadow-xl backdrop-blur-sm md:p-12'>
                       <h1 className='text-3xl font-bold text-slate-600 md:text-4xl'>
                         No Active Subscription
                       </h1>
@@ -282,7 +282,7 @@ function Billing() {
                       >
                         Subscribe Now
                       </Button>
-                    </div>
+                    </div>)
                   )}
                 </div>
               </div>
@@ -560,7 +560,7 @@ function Billing() {
                           cardDefault={cardDefault}
                           dispatch={dispatch}
                           openModal={openModal}
-                          router={router}
+                          queryOptions={paymentMethodsQueryOptions}
                         />
                       </div>
                     </Show.When>

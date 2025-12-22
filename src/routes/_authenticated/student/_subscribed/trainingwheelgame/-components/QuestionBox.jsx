@@ -3,7 +3,7 @@ import { memo, useEffect, useState } from 'react'
 import 'swiper/css'
 import { Mousewheel, Zoom } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { shuffleArrayPosition } from '../../../../../../shared/utils/helperFunction'
+import { shuffleArrayPosition } from '@/shared/utils/helperFunction'
 import { Card } from '@/components/ui/card'
 import '../css/QuestionBox.css'
 

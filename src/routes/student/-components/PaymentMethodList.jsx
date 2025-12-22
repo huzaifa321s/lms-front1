@@ -9,7 +9,7 @@ import { openModal } from '../../../shared/config/reducers/student/studentDialog
 import { Show } from '../../../shared/utils/Show'
 import PaymentMethods from './paymentMethods'
 import { useAppUtils } from '../../../hooks/useAppUtils'
-import { setCardAsDefault } from '../../../utils/globalFunctions'
+import { setCardAsDefault } from '@/utils/globalFunctions'
 import { getSidebarData, getSubscription } from '../../../components/layout/data/sidebar-data'
 import { CheckCircle } from 'lucide-react'
 
@@ -40,10 +40,10 @@ function PaymentMethodsList({
         const { subscription, remainingEnrollmentCount } = response.data
         dispatch(updateSubscription({ subscription, remainingEnrollmentCount }))
         getSidebarData();
-      
-        if(redirect){
-          navigate({to:redirect,search:{courseTeachers:data?.length > 0 && JSON.stringify(data)}})
-        }else{
+
+        if (redirect) {
+          navigate({ to: redirect, search: { courseTeachers: data?.length > 0 && JSON.stringify(data) } })
+        } else {
           navigate({ to: '/' })
         }
       }
@@ -62,7 +62,7 @@ function PaymentMethodsList({
   })
 
   return (
-      <div className="flex min-h-[80vh] items-center justify-center p-6 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="flex min-h-[80vh] items-center justify-center p-6 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       <Card className="w-full max-w-5xl shadow-2xl border-0 bg-white/90 rounded-2xl backdrop-blur-sm">
         <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 pb-4">
           <CardTitle className="text-xl font-semibold text-slate-800 ">
@@ -87,7 +87,7 @@ function PaymentMethodsList({
               {plan?.features.map((feature, i) => (
                 <li key={i} className="flex items-center gap-3">
                   <span className="text-green-600">
-               <CheckCircle className="h-6 w-6 text-green-600" />
+                    <CheckCircle className="h-6 w-6 text-green-600" />
                   </span>
                   <span>{feature}</span>
                 </li>

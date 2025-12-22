@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { BlogCategoriesSchema } from '../-schemas/blogCategoriesSchema'
-import { openModalAdmin } from '../../../../../../shared/config/reducers/admin/DialogSlice'
+import { openModalAdmin } from '@/shared/config/reducers/admin/DialogSlice'
 
 export function BlogCategoryDataTableRowActions({ row }) {
   const category = BlogCategoriesSchema.parse(row.original)
@@ -57,7 +57,7 @@ export function BlogCategoryDataTableRowActions({ row }) {
                 })
               )
             }
-                    className="focus:bg-emerald-100 text-emerald-600 focus:text-emerald-800 cursor-pointer"
+            className="focus:bg-emerald-100 text-emerald-600 focus:text-emerald-800 cursor-pointer"
 
           >
             Edit
@@ -75,7 +75,7 @@ export function BlogCategoryDataTableRowActions({ row }) {
                 })
               )
             }
-                    className="focus:bg-red-100 text-red-600 focus:text-red-800 cursor-pointer"
+            className="focus:bg-red-100 text-red-600 focus:text-red-800 cursor-pointer"
 
           >
             Delete

@@ -18,11 +18,11 @@ import {
 } from '@/components/ui/sidebar'
 import { getTeacherCreds } from '../../../-utils/helperFunctions'
 import { useQuery } from '@tanstack/react-query'
-import { openModal } from '../../../../../../shared/config/reducers/student/studentDialogSlice'
+import { openModal } from '@/shared/config/reducers/student/studentDialogSlice'
 
 
 export function NavUser() {
-const dispatch = useDispatch()
+  const dispatch = useDispatch()
   const {
     data: credentials,
     isLoading,
@@ -30,10 +30,10 @@ const dispatch = useDispatch()
   } = useQuery({
     queryKey: ['teacher-creds'],
     queryFn: getTeacherCreds,
-    staleTime: 1000 * 60 * 5, 
+    staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
-    retry: 1, 
+    retry: 1,
   })
 
   return (
@@ -132,7 +132,7 @@ const dispatch = useDispatch()
               <DropdownMenuSeparator className='my-2 bg-[#e2e8f0]' />
 
               <DropdownMenuItem
-                onClick={() => {dispatch(openModal({type:'logout-modal',props:{userType:'teacher'}}))}}
+                onClick={() => { dispatch(openModal({ type: 'logout-modal', props: { userType: 'teacher' } })) }}
                 className='rounded-[8px] font-medium text-[#1e293b] transition-all duration-200 hover:bg-[#ef4444]/10 hover:text-[#ef4444]'
               >
                 <LogOut size={16} className='mr-2 text-[#ef4444]' />

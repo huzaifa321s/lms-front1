@@ -16,7 +16,7 @@ export const landingCoursesQuery = queryOptions({
   staleTime: 1000 * 60 * 5,
 })
 
-const defaultCover = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses/cover-images/`
+import { getFileUrl } from '@/utils/globalFunctions'
 
 const CourseGrid = memo(({ grid }) => {
   const { data: courses } = useSuspenseQuery(landingCoursesQuery)
@@ -27,7 +27,7 @@ const CourseGrid = memo(({ grid }) => {
           <div className='relative p-3 pb-0'>
             <div className='course-card-image'>
               <img
-                src={`${defaultCover}${item.coverImage}`}
+                src={getFileUrl(item.coverImage, 'public/courses/cover-images')}
                 alt={item.name}
                 className='course-card-img'
               />

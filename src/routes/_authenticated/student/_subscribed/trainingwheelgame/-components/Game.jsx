@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import QuestionBox from './QuestionBox';
 import Timer from './Timer';
-import { Show } from '../../../../../../shared/utils/Show';
+import { Show } from '@/shared/utils/Show';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { ShieldQuestion, Stars, Trophy, X, Target, Zap, Clock, Award, Sparkles } from 'lucide-react';

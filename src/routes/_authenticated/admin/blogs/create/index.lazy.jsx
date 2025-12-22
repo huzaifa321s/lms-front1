@@ -23,6 +23,7 @@ import {
 import { Header } from '../../../../../components/layout/header'
 import { useAppUtils } from '../../../../../hooks/useAppUtils'
 import { queryClient } from '../../../../../utils/globalVars'
+import { getFileUrl } from '@/utils/globalFunctions'
 
 const categoryQueryOptions = () =>
   queryOptions({
@@ -59,7 +60,7 @@ const INITIAL_BLOG_STATE = {
   category: '',
 }
 
-const defaultCover = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/defaults/blog-image.png`
+const defaultCover = getFileUrl('blog-image.png', 'defaults')
 
 function RouteComponent() {
   const queryClient = useQueryClient()
@@ -227,7 +228,7 @@ function RouteComponent() {
   }, [])
 
 
-  
+
   return (
     <>
       <Header>
@@ -254,7 +255,7 @@ function RouteComponent() {
             <div className='relative mb-8 text-center'>
               <div className='absolute inset-0 -z-10 rounded-[12px] bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5'></div>
               <h1 className='mb-2 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-3xl font-bold text-transparent'>
-                 Create Your Blog Post
+                Create Your Blog Post
               </h1>
               <div className='mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8]'></div>
             </div>
@@ -277,11 +278,10 @@ function RouteComponent() {
                     value={blogObj.title}
                     onChange={handleChange}
                     placeholder='Enter an engaging title...'
-                    className={`h-12 rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] transition-all duration-300 placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 ${
-                      validationErrors.title
-                        ? 'border-[#ef4444] shadow-[#fef2f2] focus:border-[#dc2626]'
-                        : 'shadow-sm hover:border-[#cbd5e1] hover:shadow-md'
-                    }`}
+                    className={`h-12 rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] transition-all duration-300 placeholder:text-[#94a3b8] focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 ${validationErrors.title
+                      ? 'border-[#ef4444] shadow-[#fef2f2] focus:border-[#dc2626]'
+                      : 'shadow-sm hover:border-[#cbd5e1] hover:shadow-md'
+                      }`}
                   />
                   <div className='absolute inset-0 -z-10 rounded-[8px] bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5 transition-all duration-300 group-hover:from-[#2563eb]/10 group-hover:to-[#1d4ed8]/10'></div>
                 </div>
@@ -314,11 +314,10 @@ function RouteComponent() {
                     onValueChange={handleCategoryChange}
                   >
                     <SelectTrigger
-                      className={`h-12 rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 ${
-                        validationErrors.category
-                          ? 'border-[#ef4444] focus:border-[#dc2626]'
-                          : 'shadow-sm hover:border-[#cbd5e1] hover:shadow-md'
-                      }`}
+                      className={`h-12 rounded-[8px] border-[#e2e8f0] bg-white text-[#1e293b] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 ${validationErrors.category
+                        ? 'border-[#ef4444] focus:border-[#dc2626]'
+                        : 'shadow-sm hover:border-[#cbd5e1] hover:shadow-md'
+                        }`}
                     >
                       <SelectValue placeholder='🏷️ Choose a category' />
                     </SelectTrigger>
@@ -383,11 +382,10 @@ function RouteComponent() {
                 Blog Content *
               </Label>
               <div
-                className={`relative overflow-hidden rounded-[8px] border-[#e2e8f0] transition-all duration-300 group-hover:shadow-md ${
-                  validationErrors.content
-                    ? 'border-[#ef4444]'
-                    : 'shadow-sm hover:border-[#cbd5e1]'
-                }`}
+                className={`relative overflow-hidden rounded-[8px] border-[#e2e8f0] transition-all duration-300 group-hover:shadow-md ${validationErrors.content
+                  ? 'border-[#ef4444]'
+                  : 'shadow-sm hover:border-[#cbd5e1]'
+                  }`}
               >
                 <div className='absolute inset-0 -z-10 bg-gradient-to-r from-[#2563eb]/5 to-[#1d4ed8]/5 transition-all duration-300 group-hover:from-[#2563eb]/10 group-hover:to-[#1d4ed8]/10'></div>
                 <Editor
@@ -541,7 +539,7 @@ function RouteComponent() {
                           }}
                           variant="destructive"
                         >
-                          <Delete/>
+                          <Delete />
                         </Button>
                       )}
                     </div>
@@ -576,7 +574,7 @@ function RouteComponent() {
                   onClick={handleSubmit}
                   disabled={isLoading}
                   laoding={isLoading}
-                  
+
                 >
                   {isLoading ? <>✨ Creating...</> : '🚀 Create Blog'}
                 </Button>

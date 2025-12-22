@@ -19,9 +19,10 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { objectToFormData } from '../../../../../shared/utils/helperFunction'
+import { objectToFormData } from '@/shared/utils/helperFunction'
 import { Header } from '@/components/layout/header';
 import { ArrowLeft, BookCopy, BookMarked, BookOpen, Delete, Notebook, PlusCircle, Save } from 'lucide-react'
+import { getFileUrl } from '@/utils/globalFunctions'
 
 // Recreating components from shadcn/ui and icons from lucide-react with Tailwind CSS and inline SVGs.
 
@@ -39,7 +40,7 @@ const editCourseQueryOptions = (params) =>
           `/teacher/course/getCourse/${params.courseId}`,
           {}
         )
-console.log('courseDetails',courseDetails)
+        console.log('courseDetails', courseDetails)
         courseDetails = courseDetails.data
 
         let courseCategories = await axios.get(
@@ -90,19 +91,16 @@ function App() {
   const params = useParams({
     from: '/_authenticated/teacher/courses/edit_course/$courseId',
   })
-  const { data } = useSuspenseQuery({...editCourseQueryOptions(params),retry:1,refetchOnWindowFocus:false})
+  const { data } = useSuspenseQuery({ ...editCourseQueryOptions(params), retry: 1, refetchOnWindowFocus: false })
   const { courseCategories } = data
 
   console.log('data ==>', data)
   // State to manage the course object, initialized with mock data
   const [courseObj, setCourseObj] = useState(data.data)
-      const baseUrl = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses`;
-
-  // State for the cover image preview URL
   const [cover, setCover] = useState(
-    `${baseUrl}/cover-images/${data.data?.coverImage}`
+    getFileUrl(data.data?.coverImage, 'public/courses/cover-images')
   )
-  console.log('cover',cover)
+  console.log('cover', cover)
   // State to track if the data is being saved
   const [isSaving, setIsSaving] = useState(false)
   // State to track materials that are removed
@@ -223,272 +221,272 @@ function App() {
 
   return (
     <>
-        <Header >
-        
-          <div className='flex w-full items-center justify-between gap-2'>
-            <div className='flex items-center gap-6'>
-              <div className=' bg-clip-text text-2xl font-bold'>
-                Edit Course
-              </div>
-              <div className='hidden h-8 w-px bg-gradient-to-b from-[#2563eb]/20 to-[#1d4ed8]/20 sm:block'></div>
-              <div className='hidden items-center gap-2 sm:flex'>
-                <Notebook/>
-                <span className='text-sm font-medium'>
-                  Modify Course Details
-                </span>
-              </div>
+      <Header >
+
+        <div className='flex w-full items-center justify-between gap-2'>
+          <div className='flex items-center gap-6'>
+            <div className=' bg-clip-text text-2xl font-bold'>
+              Edit Course
             </div>
-            <div className='flex items-center gap-3'>
-              <Button
-                variant='outline'
-                 className="text-black"
-                onClick={() => window.history.back()}
-              >
-                <ArrowLeft/>
-                Back
-              </Button>
-              <Button
-                className='rounded-[8px] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] px-4 py-2 font-medium text-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]'
-                onClick={handleSubmit}
-                disabled={isSaving}
-              >
-                {isSaving ? (
-                  'Saving...'
-                ) : (
-                  <>
-                   <Save/>
-                    Save Changes
-                  </>
-                )}
-              </Button>
+            <div className='hidden h-8 w-px bg-gradient-to-b from-[#2563eb]/20 to-[#1d4ed8]/20 sm:block'></div>
+            <div className='hidden items-center gap-2 sm:flex'>
+              <Notebook />
+              <span className='text-sm font-medium'>
+                Modify Course Details
+              </span>
             </div>
           </div>
+          <div className='flex items-center gap-3'>
+            <Button
+              variant='outline'
+              className="text-black"
+              onClick={() => window.history.back()}
+            >
+              <ArrowLeft />
+              Back
+            </Button>
+            <Button
+              className='rounded-[8px] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] px-4 py-2 font-medium text-white shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]'
+              onClick={handleSubmit}
+              disabled={isSaving}
+            >
+              {isSaving ? (
+                'Saving...'
+              ) : (
+                <>
+                  <Save />
+                  Save Changes
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
       </Header>
       <div className='h-fit   bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] font-sans'>
-      {/* Background decorative effects */}
-      <div className='pointer-events-none absolute inset-0 overflow-hidden'>
-        <div className='absolute -top-40 -right-40 h-80 w-80 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-3xl'></div>
-        <div className='absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-3xl'></div>
-      </div>
+        {/* Background decorative effects */}
+        <div className='pointer-events-none absolute inset-0 overflow-hidden'>
+          <div className='absolute -top-40 -right-40 h-80 w-80 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-3xl'></div>
+          <div className='absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-gradient-to-br from-[#2563eb]/10 to-[#1d4ed8]/10 opacity-20 blur-3xl'></div>
+        </div>
 
-      {/* Header */}
-    
+        {/* Header */}
 
-      {/* Main Content */}
-      <div className='relative z-10 space-y-8 px-4 py-8 sm:px-6'>
-        {/* Course Details Card */}
-        <Card className='relative overflow-hidden rounded-[8px] border border-[#e2e8f0] bg-white/95 shadow-[0_4px_6px_rgba(0,0,0,0.05)] backdrop-blur-sm transition-all duration-300 hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]'>
-          <CardHeader>
-            <div className='flex items-center gap-3'>
-             <BookOpen className="h-7 w-7 text-[#2563eb]" />
-              <h2 className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-2xl font-bold text-transparent'>
-                Course Details
-              </h2>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className='space-y-6'>
-              {/* Cover Image and Form Fields */}
-              <div className='grid gap-6 md:grid-cols-2'>
-                <div className='space-y-2'>
-                  <Label
-                    htmlFor='coverImage'
-                    className='text-sm font-medium text-[#64748b]'
-                  >
-                    Course Cover Image
-                  </Label>
-                  <div className='group/image relative flex aspect-video cursor-pointer items-center justify-center overflow-hidden rounded-[8px] border border-dashed border-[#e2e8f0] transition-all duration-300 hover:border-[#2563eb]'>
-                    <img
-                      src={cover || defaultCover}
-                      alt='Course Cover'
-                      className='h-full w-full object-cover transition-transform duration-300 group-hover/image:scale-105'
-                      loading="lazy"
-                    />
-                    <div className='absolute inset-0 flex items-center justify-center bg-[#2563eb]/40 opacity-0 transition-opacity duration-300 group-hover/image:opacity-100'>
-                     <BookOpen className="h-7 w-7 text-[#2563eb]" />
-                    </div>
-                    <input
-                      id='coverImage'
-                      type='file'
-                      accept='image/*'
-                      onChange={handleImageUpload}
-                      className='absolute inset-0 cursor-pointer opacity-0'
-                    />
-                  </div>
-                  <p className='text-xs text-[#64748b]'>
-                    Upload a high-quality image. JPG, PNG, or GIF.
-                  </p>
-                </div>
 
-                {/* Name, Description, Category */}
-                <div className='space-y-4'>
-                  <div>
-                    <Label
-                      htmlFor='name'
-                      className='text-sm font-medium text-[#64748b]'
-                    >
-                      Course Name
-                    </Label>
-                    <Input
-                      id='name'
-                      name='name'
-                      value={courseObj.name}
-                      onChange={handleChange}
-                      placeholder='e.g., Advanced React Patterns'
-                      className='mt-1 h-10 w-full  rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#64748b] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'
-                    />
-                  </div>
-                  <div>
-                    <Label
-                      htmlFor='description'
-                      className='text-sm font-medium text-[#64748b]'
-                    >
-                      Course Description
-                    </Label>
-                    <Textarea
-                      id='description'
-                      name='description'
-                      value={courseObj.description}
-                      onChange={handleChange}
-                      placeholder='e.g., Master modern React development with...'
-                      className='mt-1 min-h-[120px] w-full  resize-y rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#64748b] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'
-                    />
-                  </div>
-                  <div>
-                    <Label
-                      htmlFor='category'
-                      className='text-sm font-medium text-[#64748b]'
-                    >
-                      Category
-                    </Label>
-                    <Select
-                      name='category'
-                      value={courseObj.category}
-                      onValueChange={handleCategoryChange}
-                    >
-                      
-                      <SelectTrigger className='mt-1 h-10 w-full max-w-md rounded-[8px] border-[#e2e8f0] text-[#1e293b] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'>
-                        <SelectValue placeholder='Select a category' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {courseCategories?.map((cat) => (
-                          <SelectItem key={cat._id} value={cat._id}>
-                            {cat.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Materials Card */}
-        <Card className='relative overflow-hidden rounded-[8px] border border-[#e2e8f0] bg-white/95 shadow-[0_4px_6px_rgba(0,0,0,0.05)] backdrop-blur-sm transition-all duration-300 hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]'>
-          <CardHeader>
-            <div className='flex items-center justify-between'>
+        {/* Main Content */}
+        <div className='relative z-10 space-y-8 px-4 py-8 sm:px-6'>
+          {/* Course Details Card */}
+          <Card className='relative overflow-hidden rounded-[8px] border border-[#e2e8f0] bg-white/95 shadow-[0_4px_6px_rgba(0,0,0,0.05)] backdrop-blur-sm transition-all duration-300 hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]'>
+            <CardHeader>
               <div className='flex items-center gap-3'>
-              <BookMarked className="h-7 w-7 text-[#2563eb]" />
+                <BookOpen className="h-7 w-7 text-[#2563eb]" />
                 <h2 className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-2xl font-bold text-transparent'>
-                  Course Materials ({courseObj.material.length})
+                  Course Details
                 </h2>
               </div>
-              <Button
-                variant='outline'
-                onClick={addMaterial}
-              >
-              <PlusCircle/>
-                Add Material
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className='space-y-6'>
-              {courseObj.material.length === 0 && (
-                <div className='py-8 text-center text-[#64748b]'>
-                  <BookCopy className="mx-auto mb-3 h-12 w-12 text-[#64748b]" />
-                  <p>
-                    No materials added yet. Click "Add Material" to get started.
-                  </p>
-                </div>
-              )}
-              {courseObj.material.map((mat, i) => (
-                <Card
-                  key={i}
-                  className='group relative rounded-[8px] border border-[#e2e8f0] bg-[#f8fafc] p-6 shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:bg-[#2563eb]/5'
-                >
-                  {i != 0 && <Button
-                    variant='ghost'
-                    className="ml-auto w-fit"
-                    onClick={() => removeMaterial(i)}
-                  >
-                  <Delete/>
-                  </Button>}
-                  <CardContent className='space-y-4 p-0'>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className='space-y-6'>
+                {/* Cover Image and Form Fields */}
+                <div className='grid gap-6 md:grid-cols-2'>
+                  <div className='space-y-2'>
+                    <Label
+                      htmlFor='coverImage'
+                      className='text-sm font-medium text-[#64748b]'
+                    >
+                      Course Cover Image
+                    </Label>
+                    <div className='group/image relative flex aspect-video cursor-pointer items-center justify-center overflow-hidden rounded-[8px] border border-dashed border-[#e2e8f0] transition-all duration-300 hover:border-[#2563eb]'>
+                      <img
+                        src={cover || defaultCover}
+                        alt='Course Cover'
+                        className='h-full w-full object-cover transition-transform duration-300 group-hover/image:scale-105'
+                        loading="lazy"
+                      />
+                      <div className='absolute inset-0 flex items-center justify-center bg-[#2563eb]/40 opacity-0 transition-opacity duration-300 group-hover/image:opacity-100'>
+                        <BookOpen className="h-7 w-7 text-[#2563eb]" />
+                      </div>
+                      <input
+                        id='coverImage'
+                        type='file'
+                        accept='image/*'
+                        onChange={handleImageUpload}
+                        className='absolute inset-0 cursor-pointer opacity-0'
+                      />
+                    </div>
+                    <p className='text-xs text-[#64748b]'>
+                      Upload a high-quality image. JPG, PNG, or GIF.
+                    </p>
+                  </div>
+
+                  {/* Name, Description, Category */}
+                  <div className='space-y-4'>
                     <div>
                       <Label
-                        htmlFor={`material-title-${i}`}
+                        htmlFor='name'
                         className='text-sm font-medium text-[#64748b]'
                       >
-                        Material Title
+                        Course Name
                       </Label>
                       <Input
-                        id={`material-title-${i}`}
-                        name='title'
-                        value={mat.title}
-                        onChange={(e) => handleMaterialChange(i, e)}
-                        placeholder='e.g., Intro to Hooks'
+                        id='name'
+                        name='name'
+                        value={courseObj.name}
+                        onChange={handleChange}
+                        placeholder='e.g., Advanced React Patterns'
                         className='mt-1 h-10 w-full  rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#64748b] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'
                       />
                     </div>
                     <div>
                       <Label
-                        htmlFor={`material-description-${i}`}
+                        htmlFor='description'
                         className='text-sm font-medium text-[#64748b]'
                       >
-                        Description
+                        Course Description
                       </Label>
                       <Textarea
-                        id={`material-description-${i}`}
+                        id='description'
                         name='description'
-                        value={mat.description}
-                        onChange={(e) => handleMaterialChange(i, e)}
-                        placeholder='A brief description of the material...'
-                        className='mt-1 min-h-[80px] w-full  resize-y rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#64748b] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'
+                        value={courseObj.description}
+                        onChange={handleChange}
+                        placeholder='e.g., Master modern React development with...'
+                        className='mt-1 min-h-[120px] w-full  resize-y rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#64748b] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'
                       />
                     </div>
                     <div>
                       <Label
-                        htmlFor={`material-media-${i}`}
+                        htmlFor='category'
                         className='text-sm font-medium text-[#64748b]'
                       >
-                        File Upload
+                        Category
                       </Label>
-                      <div className='mt-1 flex items-center space-x-2'>
-                        <Input
-                          id={`material-media-${i}`}
-                          name='media'
-                          type='file'
-                          onChange={(e) => handleMaterialFileUpload(i, e)}
-                          className='max-w-md flex-1 rounded-[8px] border-[#e2e8f0] text-[#1e293b] file:border-0 file:bg-transparent file:text-sm file:font-medium focus:border-[#2563eb]'
-                        />
-                        {mat.media && (
-                          <span className='inline-flex items-center rounded-full border border-[#2563eb]/20 bg-[#2563eb]/10 px-2.5 py-0.5 text-xs font-semibold text-[#2563eb]'>
-                            {mat.media.name || mat.media.split('/').pop()}
-                          </span>
-                        )}
-                      </div>
+                      <Select
+                        name='category'
+                        value={courseObj.category}
+                        onValueChange={handleCategoryChange}
+                      >
+
+                        <SelectTrigger className='mt-1 h-10 w-full max-w-md rounded-[8px] border-[#e2e8f0] text-[#1e293b] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'>
+                          <SelectValue placeholder='Select a category' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {courseCategories?.map((cat) => (
+                            <SelectItem key={cat._id} value={cat._id}>
+                              {cat.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+
+          {/* Materials Card */}
+          <Card className='relative overflow-hidden rounded-[8px] border border-[#e2e8f0] bg-white/95 shadow-[0_4px_6px_rgba(0,0,0,0.05)] backdrop-blur-sm transition-all duration-300 hover:shadow-[0_6px_12px_rgba(0,0,0,0.1)]'>
+            <CardHeader>
+              <div className='flex items-center justify-between'>
+                <div className='flex items-center gap-3'>
+                  <BookMarked className="h-7 w-7 text-[#2563eb]" />
+                  <h2 className='bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-2xl font-bold text-transparent'>
+                    Course Materials ({courseObj.material.length})
+                  </h2>
+                </div>
+                <Button
+                  variant='outline'
+                  onClick={addMaterial}
+                >
+                  <PlusCircle />
+                  Add Material
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className='space-y-6'>
+                {courseObj.material.length === 0 && (
+                  <div className='py-8 text-center text-[#64748b]'>
+                    <BookCopy className="mx-auto mb-3 h-12 w-12 text-[#64748b]" />
+                    <p>
+                      No materials added yet. Click "Add Material" to get started.
+                    </p>
+                  </div>
+                )}
+                {courseObj.material.map((mat, i) => (
+                  <Card
+                    key={i}
+                    className='group relative rounded-[8px] border border-[#e2e8f0] bg-[#f8fafc] p-6 shadow-[0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:bg-[#2563eb]/5'
+                  >
+                    {i != 0 && <Button
+                      variant='ghost'
+                      className="ml-auto w-fit"
+                      onClick={() => removeMaterial(i)}
+                    >
+                      <Delete />
+                    </Button>}
+                    <CardContent className='space-y-4 p-0'>
+                      <div>
+                        <Label
+                          htmlFor={`material-title-${i}`}
+                          className='text-sm font-medium text-[#64748b]'
+                        >
+                          Material Title
+                        </Label>
+                        <Input
+                          id={`material-title-${i}`}
+                          name='title'
+                          value={mat.title}
+                          onChange={(e) => handleMaterialChange(i, e)}
+                          placeholder='e.g., Intro to Hooks'
+                          className='mt-1 h-10 w-full  rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#64748b] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'
+                        />
+                      </div>
+                      <div>
+                        <Label
+                          htmlFor={`material-description-${i}`}
+                          className='text-sm font-medium text-[#64748b]'
+                        >
+                          Description
+                        </Label>
+                        <Textarea
+                          id={`material-description-${i}`}
+                          name='description'
+                          value={mat.description}
+                          onChange={(e) => handleMaterialChange(i, e)}
+                          placeholder='A brief description of the material...'
+                          className='mt-1 min-h-[80px] w-full  resize-y rounded-[8px] border-[#e2e8f0] text-[#1e293b] placeholder:text-[#64748b] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20'
+                        />
+                      </div>
+                      <div>
+                        <Label
+                          htmlFor={`material-media-${i}`}
+                          className='text-sm font-medium text-[#64748b]'
+                        >
+                          File Upload
+                        </Label>
+                        <div className='mt-1 flex items-center space-x-2'>
+                          <Input
+                            id={`material-media-${i}`}
+                            name='media'
+                            type='file'
+                            onChange={(e) => handleMaterialFileUpload(i, e)}
+                            className='max-w-md flex-1 rounded-[8px] border-[#e2e8f0] text-[#1e293b] file:border-0 file:bg-transparent file:text-sm file:font-medium focus:border-[#2563eb]'
+                          />
+                          {mat.media && (
+                            <span className='inline-flex items-center rounded-full border border-[#2563eb]/20 bg-[#2563eb]/10 px-2.5 py-0.5 text-xs font-semibold text-[#2563eb]'>
+                              {mat.media.name || mat.media.split('/').pop()}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </div>
     </>
   )
 }

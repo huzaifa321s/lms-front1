@@ -13,6 +13,7 @@ const PaymentMethods = ({
   cardDefault,
   dispatch,
   openModal,
+  queryOptions
 }) => {
   const queryClient = useQueryClient()
 
@@ -68,7 +69,7 @@ const PaymentMethods = ({
                     size="sm"
                     loading={cardDefault.status === "pending"}
                     disabled={cardDefault.status === "pending"}
-                    onClick={() => cardDefault.mutate({ paymentMethodId: pm.paymentMethodId, queryClient })}
+                    onClick={() => cardDefault.mutate({ paymentMethodId: pm.paymentMethodId, queryClient, queryOptions })}
                     className="border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300"
                   >
                     Set Default
@@ -92,7 +93,7 @@ const PaymentMethods = ({
                       )
                     }}
                   >
-                  <Delete/>
+                    <Delete />
                   </Button>
                 )}
               </div>

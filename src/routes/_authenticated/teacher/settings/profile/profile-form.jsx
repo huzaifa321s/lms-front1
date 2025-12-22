@@ -26,6 +26,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { PasswordInput } from '@/components/password-input'
+import { getFileUrl } from '@/utils/globalFunctions'
 
 
 export default function ProfileForm({ teacherCreds }) {
@@ -114,123 +115,155 @@ export default function ProfileForm({ teacherCreds }) {
     [teacherCreds, mutation]
   )
 
- return (
-  <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] font-sans">
-    <div className="container mx-auto px-4 py-12">
-      {/* Header */}
-      <header className="mb-12 text-center">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent mb-3">
-          Profile Settings
-        </h1>
-        <p className="text-[#64748b] text-lg max-w-2xl mx-auto">
-          Manage your personal information and account preferences
-        </p>
-      </header>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] font-sans">
+      <div className="container mx-auto px-4 py-12">
+        {/* Header */}
+        <header className="mb-12 text-center">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent mb-3">
+            Profile Settings
+          </h1>
+          <p className="text-[#64748b] text-lg max-w-2xl mx-auto">
+            Manage your personal information and account preferences
+          </p>
+        </header>
 
-      {/* Layout Grid */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {/* Profile Card */}
-        <aside className="lg:col-span-1">
-          <div className="bg-white rounded-[16px] border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] p-6 sticky top-10">
-            <div className="text-center">
-              {/* Avatar */}
-              <div className="relative inline-block mb-4">
-                <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-[#f1f5f9] shadow-lg bg-gradient-to-br from-[#f8fafc] to-[#e2e8f0]">
-                  <img
-                    src={
-                      dp || teacherCreds?.profile
-                        ? `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}/teacher/profile/${teacherCreds.profile}`
-                        : defaultProfile
-                    }
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
+        {/* Layout Grid */}
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-10">
+          {/* Profile Card */}
+          <aside className="lg:col-span-1">
+            <div className="bg-white rounded-[16px] border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] p-6 sticky top-10">
+              <div className="text-center">
+                {/* Avatar */}
+                <div className="relative inline-block mb-4">
+                  <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-[#f1f5f9] shadow-lg bg-gradient-to-br from-[#f8fafc] to-[#e2e8f0]">
+                    <img
+                      src={
+                        dp || teacherCreds?.profile
+                          ? getFileUrl(teacherCreds.profile, 'public/teacher/profile')
+                          : defaultProfile
+                      }
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] p-2.5 rounded-full shadow-md hover:scale-110 cursor-pointer transition">
+                    <Camera className="w-4 h-4 text-white" />
+                  </div>
                 </div>
-                <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] p-2.5 rounded-full shadow-md hover:scale-110 cursor-pointer transition">
-                  <Camera className="w-4 h-4 text-white" />
-                </div>
-              </div>
 
-              {/* Name & Info */}
-              <h3 className="text-xl font-semibold text-[#1e293b]">
-                {teacherCreds?.firstName} {teacherCreds?.lastName}
-              </h3>
-              <p className="text-[#64748b] text-sm">{teacherCreds?.email}</p>
+                {/* Name & Info */}
+                <h3 className="text-xl font-semibold text-[#1e293b]">
+                  {teacherCreds?.firstName} {teacherCreds?.lastName}
+                </h3>
+                <p className="text-[#64748b] text-sm">{teacherCreds?.email}</p>
 
-              {/* Additional Info */}
-              <div className="space-y-2 mt-5 text-sm">
-                <div className="flex items-center justify-center text-[#475569]">
-                  <GraduationCap className="w-4 h-4 mr-2 text-[#2563eb]" />
-                  {teacherCreds?.qualification || 'Not provided'}
-                </div>
-                <div className="flex items-center justify-center text-[#475569]">
-                  <Home className="w-4 h-4 mr-2 text-[#2563eb]" />
-                  {teacherCreds?.address || 'Not provided'}
+                {/* Additional Info */}
+                <div className="space-y-2 mt-5 text-sm">
+                  <div className="flex items-center justify-center text-[#475569]">
+                    <GraduationCap className="w-4 h-4 mr-2 text-[#2563eb]" />
+                    {teacherCreds?.qualification || 'Not provided'}
+                  </div>
+                  <div className="flex items-center justify-center text-[#475569]">
+                    <Home className="w-4 h-4 mr-2 text-[#2563eb]" />
+                    {teacherCreds?.address || 'Not provided'}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </aside>
+          </aside>
 
-        {/* Main Content */}
-        <main className="lg:col-span-2 space-y-10">
-          {/* Personal Info Section */}
-          <section className="bg-white rounded-[16px] border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] p-8">
-            <div className="flex items-center mb-6">
-              <div className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] rounded-full p-3 mr-4">
-                <User className="w-5 h-5 text-white" />
-              </div>
-              <h2 className="text-2xl font-semibold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
-                Personal Information
-              </h2>
-            </div>
-
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(saveChanges)}
-                className="space-y-6"
-              >
-                {/* Name Fields */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="firstname"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>First Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter first name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="lastname"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Last Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter last name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+          {/* Main Content */}
+          <main className="lg:col-span-2 space-y-10">
+            {/* Personal Info Section */}
+            <section className="bg-white rounded-[16px] border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] p-8">
+              <div className="flex items-center mb-6">
+                <div className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] rounded-full p-3 mr-4">
+                  <User className="w-5 h-5 text-white" />
                 </div>
+                <h2 className="text-2xl font-semibold bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] bg-clip-text text-transparent">
+                  Personal Information
+                </h2>
+              </div>
 
-                {/* Qualification & Address */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(saveChanges)}
+                  className="space-y-6"
+                >
+                  {/* Name Fields */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="firstname"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>First Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Enter first name" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="lastname"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Last Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Enter last name" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Qualification & Address */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="qualification"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Qualification</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Enter highest qualification"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="address"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Address</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Enter address" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Bio */}
                   <FormField
                     control={form.control}
-                    name="qualification"
+                    name="bio"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Qualification</FormLabel>
+                        <FormLabel>Bio</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="Enter highest qualification"
+                          <Textarea
+                            placeholder="Tell us about yourself..."
                             {...field}
                           />
                         </FormControl>
@@ -238,89 +271,57 @@ export default function ProfileForm({ teacherCreds }) {
                       </FormItem>
                     )}
                   />
-                  <FormField
-                    control={form.control}
-                    name="address"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Address</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter address" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+
+                  <Button
+                    type="submit"
+                    className="w-full"
+                  >
+                    {mutation.status === "pending"
+                      ? "Updating..."
+                      : "Update Profile"}
+                  </Button>
+                </form>
+              </Form>
+            </section>
+
+            {/* Password Section */}
+            <section className="bg-white rounded-[16px] border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] p-8">
+              <div className="flex items-center mb-6">
+                <div className="bg-gradient-to-r from-[#ef4444] to-[#dc2626] rounded-full p-3 mr-4">
+                  <Lock className="w-5 h-5 text-white" />
                 </div>
-
-                {/* Bio */}
-                <FormField
-                  control={form.control}
-                  name="bio"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Bio</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Tell us about yourself..."
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <Button
-                  type="submit"
-                  className="w-full"
-                >
-                  {mutation.status === "pending"
-                    ? "Updating..."
-                    : "Update Profile"}
-                </Button>
-              </form>
-            </Form>
-          </section>
-
-          {/* Password Section */}
-          <section className="bg-white rounded-[16px] border border-[#e2e8f0] shadow-[0_4px_6px_rgba(0,0,0,0.05)] p-8">
-            <div className="flex items-center mb-6">
-              <div className="bg-gradient-to-r from-[#ef4444] to-[#dc2626] rounded-full p-3 mr-4">
-                <Lock className="w-5 h-5 text-white" />
+                <h2 className="text-2xl font-semibold bg-gradient-to-r from-[#ef4444] to-[#dc2626] bg-clip-text text-transparent">
+                  Security Settings
+                </h2>
               </div>
-              <h2 className="text-2xl font-semibold bg-gradient-to-r from-[#ef4444] to-[#dc2626] bg-clip-text text-transparent">
-                Security Settings
-              </h2>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <PasswordInput
-                placeholder="Current password"
-                name="password"
-                onChange={handlePasswordChange}
-              />
-              <PasswordInput
-                placeholder="New password"
-                name="newPassword"
-                onChange={handlePasswordChange}
-              />
-            </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <PasswordInput
+                  placeholder="Current password"
+                  name="password"
+                  onChange={handlePasswordChange}
+                />
+                <PasswordInput
+                  placeholder="New password"
+                  name="newPassword"
+                  onChange={handlePasswordChange}
+                />
+              </div>
 
-            <div className="flex justify-end">
-              <Button
-                variant="outline"
-                disabled={disabled1 || disabled2 || passBtnLoading}
-                onClick={() => postData(passwordObj, "updatePassword")}
-              >
-                {passBtnLoading ? "Updating..." : "Update Password"}
-              </Button>
-            </div>
-          </section>
-        </main>
+              <div className="flex justify-end">
+                <Button
+                  variant="outline"
+                  disabled={disabled1 || disabled2 || passBtnLoading}
+                  onClick={() => postData(passwordObj, "updatePassword")}
+                >
+                  {passBtnLoading ? "Updating..." : "Update Password"}
+                </Button>
+              </div>
+            </section>
+          </main>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
 
 }

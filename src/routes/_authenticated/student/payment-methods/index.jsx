@@ -178,7 +178,7 @@ function RouteComponent() {
                           }
                         >
                           {cardDefaultMutation.isPending &&
-                          cardDefaultMutation.variables === pm.paymentMethodId
+                            cardDefaultMutation.variables === pm.paymentMethodId
                             ? 'Setting...'
                             : 'Set Default'}
                         </Button>

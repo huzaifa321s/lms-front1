@@ -12,9 +12,9 @@ import { Main } from '@/components/layout/main'
 import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
 import { useAppUtils } from '../../../../hooks/useAppUtils'
 import {
-  getDebounceInput,
+  useDebounceInput,
   useSearchInput,
-} from '../../../../utils/globalFunctions'
+} from '@/utils/globalFunctions'
 import SearchInput from '../../student/-components/SearchInput'
 import { coursesSchema } from '../layout/data/-schemas/coursesSchema'
 import CoursesSummary from './-components/CoursesSummary'
@@ -59,7 +59,8 @@ export const Route = createLazyFileRoute('/_authenticated/admin/courses/')({
   loaderDeps: ({ search }) => {
     return { q: search.q, page: search.page }
   },
-  loader: ({ deps }) => queryClient.ensureQueryData(postQueryOptions(deps)),
+  loader: ({ deps, context }) =>
+    context.queryClient.ensureQueryData(postQueryOptions(deps)),
   component: RouteComponent,
 })
 
@@ -70,7 +71,7 @@ function RouteComponent() {
     '/_authenticated/admin/courses/'
   )
   const delay = searchInput.length < 3 ? 400 : 800
-  const debouncedSearch = getDebounceInput(searchInput, delay)
+  const debouncedSearch = useDebounceInput(searchInput, delay)
   let currentPage = useSearch({
     from: '/_authenticated/admin/courses/',
     select: (search) => search.page,
@@ -202,7 +203,7 @@ function RouteComponent() {
             handlePagination={handlePagination}
             totalPages={totalPages}
             paginationOptions={paginationOptions}
-            hiddenColumnsOnMobile={['serial','createdAt','description','category.name']}
+            hiddenColumnsOnMobile={['serial', 'createdAt', 'description', 'category.name']}
           />
         </Suspense>
       </Main>

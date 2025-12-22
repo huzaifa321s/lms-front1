@@ -21,9 +21,9 @@ import { TopNav } from '@/components/layout/top-nav'
 import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
 import {
   exportToCSV,
-  getDebounceInput,
+  useDebounceInput,
   useSearchInput,
-} from '../../../../utils/globalFunctions'
+} from '@/utils/globalFunctions'
 import SearchInput from '../../student/-components/SearchInput'
 import { teachersSchema } from '../layout/data/-schemas/teachersSchema'
 import TeachersMetrics from './-components/TeachersMetrics'
@@ -70,7 +70,8 @@ export const Route = createLazyFileRoute('/_authenticated/admin/teachers/')({
   loaderDeps: ({ search }) => {
     return { q: search.q, page: search.page }
   },
-  loader: ({ deps }) => queryClient.ensureQueryData(teachersQueryOptions(deps)),
+  loader: ({ deps, context }) =>
+    context.queryClient.ensureQueryData(teachersQueryOptions(deps)),
   component: RouteComponent,
 })
 
@@ -90,7 +91,7 @@ function RouteComponent() {
     select: (search) => search.page,
   })
   const delay = searchInput.length < 3 ? 400 : 800
-  const debouncedSearch = getDebounceInput(searchInput, delay)
+  const debouncedSearch = useDebounceInput(searchInput, delay)
   const { data, fetchStatus, isFetching } = useQuery(
     teachersQueryOptions({
       q: debouncedSearch,
@@ -199,9 +200,9 @@ function RouteComponent() {
             handlePagination={handlePagination}
             totalPages={totalPages}
             paginationOptions={paginationOptions}
-            hiddenColumnsOnMobile={['serial', 'bio','createdAt','profile']}
+            hiddenColumnsOnMobile={['serial', 'bio', 'createdAt', 'profile']}
 
-            
+
           />
         </Suspense>
       </Main>

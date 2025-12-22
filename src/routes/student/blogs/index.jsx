@@ -8,10 +8,11 @@ import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Show } from '../../../shared/utils/Show'
 import {
-  getDebounceInput,
+  useDebounceInput,
   getRenderPaginationButtons,
   useSearchInput,
-} from '../../../utils/globalFunctions'
+  getFileUrl,
+} from '@/utils/globalFunctions'
 import Pagination from '../../_authenticated/student/-components/Pagination'
 
 const BLOG_PLACEHOLDER_IMAGE =
@@ -63,7 +64,7 @@ function RouteComponent() {
   const { q, page: currentPage } = useSearch({ from: '/student/blogs/' })
   const [searchInput, setSearchInput] = useSearchInput('/student/blogs/')
   const delay = searchInput.length < 3 ? 400 : 800
-  const debouncedSearch = getDebounceInput(searchInput, delay)
+  const debouncedSearch = useDebounceInput(searchInput, delay)
   const queryClient = useQueryClient()
 
   const { data, isLoading } = useQuery({
@@ -87,12 +88,12 @@ function RouteComponent() {
     if (searchInput !== '') {
       navigate({
         to: `/student/blogs`,
-        search: { page: page, input: searchInput },
+        search: { page: page, q: searchInput },
       })
     } else {
       navigate({
         to: `/student/blogs`,
-        search: { page: page, input: `` },
+        search: { page: page, q: `` },
       })
     }
     await queryClient.invalidateQueries(
@@ -108,7 +109,6 @@ function RouteComponent() {
       )
     }
   }, [currentPage, debouncedSearch, data?.totalPages])
-  const defaultCover = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/blog-images/`
   const paginationButtons = useMemo(
     () => getRenderPaginationButtons(currentPage, totalPages, handlePageChange),
     [currentPage, totalPages]
@@ -162,7 +162,7 @@ function RouteComponent() {
                   <div className='relative h-44 overflow-hidden'>
                     <img
                       src={
-                        `${defaultCover}${blog.image}` || BLOG_PLACEHOLDER_IMAGE
+                        blog.image ? getFileUrl(blog.image, 'public/blog-images') : BLOG_PLACEHOLDER_IMAGE
                       }
                       alt={blog.title}
                       className='h-full w-full object-cover transition-transform duration-700 group-hover:scale-110'

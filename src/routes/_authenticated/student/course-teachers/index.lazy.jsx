@@ -12,9 +12,9 @@ import SearchInput from '../-components/SearchInput'
 import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
 import { useAppUtils } from '../../../../hooks/useAppUtils'
 import {
-  getDebounceInput,
+  useDebounceInput,
   useSearchInput,
-} from '../../../../utils/globalFunctions'
+} from '@/utils/globalFunctions'
 import { SmallLoader } from '../../teacher/-layout/data/components/teacher-authenticated-layout'
 import { teachersSchemaStudentPanel } from '../features/tasks/-components/columns'
 
@@ -72,7 +72,8 @@ export const Route = createLazyFileRoute(
       page: search.page,
     }
   },
-  loader: ({ deps }) => queryClient.ensureQueryData(teachersQueryOptions(deps)),
+  loader: ({ deps, context }) =>
+    context.queryClient.ensureQueryData(teachersQueryOptions(deps)),
   component: () => (
     <Suspense fallback={<SmallLoader />}>
       <RouteComponent />
@@ -90,7 +91,7 @@ function RouteComponent() {
     from: '/_authenticated/student/course-teachers/',
   })
   const delay = searchInput.length < 3 ? 400 : 800
-  const debouncedSearch = getDebounceInput(searchInput, delay)
+  const debouncedSearch = useDebounceInput(searchInput, delay)
   let currentPage = useSearch({
     from: '/_authenticated/student/course-teachers/',
     select: (search) => search.page,
@@ -146,13 +147,13 @@ function RouteComponent() {
         <h1 className='w-full bg-clip-text text-xl font-extrabold tracking-tight drop-shadow-lg md:text-2xl'>
           My Teachers
         </h1>
-          <SearchInput
-            placeholder={'Search teachers...'}
-            value={searchInput}
-            onSubmit={handleSearchSubmit}
-            onChange={(e) => setSearchInput(e.target.value)}
-            isFetching={isFetching}
-          />
+        <SearchInput
+          placeholder={'Search teachers...'}
+          value={searchInput}
+          onSubmit={handleSearchSubmit}
+          onChange={(e) => setSearchInput(e.target.value)}
+          isFetching={isFetching}
+        />
       </Header>
       <Main>
         <Suspense fallback={<DataTableSkeleton />}>
@@ -167,7 +168,7 @@ function RouteComponent() {
             handlePagination={handlePagination}
             pagination={true}
             paginationOptions={paginationOptions}
-            hiddenColumnsOnMobile={['serial', 'profile','bio','createdAt','courses']}
+            hiddenColumnsOnMobile={['serial', 'profile', 'bio', 'createdAt', 'courses']}
           />
         </Suspense>
       </Main>

@@ -18,13 +18,14 @@ import { Header } from '@/components/layout/header'
 import { TopNav } from '@/components/layout/top-nav'
 import Pagination from '../../-components/Pagination'
 import SearchInput from '../../-components/SearchInput'
-import { useAppUtils } from '../../../../../hooks/useAppUtils'
-import { Show } from '../../../../../shared/utils/Show'
+import { useAppUtils } from '@/hooks/useAppUtils'
+import { Show } from '@/shared/utils/Show'
 import {
-  getDebounceInput,
+  useDebounceInput,
   getRenderPaginationButtons,
   useSearchInput,
-} from '../../../../../utils/globalFunctions'
+  getFileUrl,
+} from '@/utils/globalFunctions'
 import { SmallLoader } from '../../../teacher/-layout/data/components/teacher-authenticated-layout'
 import { CardDemo } from './-components/_Course_Card'
 
@@ -68,7 +69,8 @@ export const Route = createLazyFileRoute(
   loaderDeps: ({ search }) => {
     return { input: search.input, page: search.page }
   },
-  loader: ({ deps }) => queryClient.ensureQueryData(coursesQueryOptions(deps)),
+  loader: ({ deps, context }) =>
+    context.queryClient.ensureQueryData(coursesQueryOptions(deps)),
 })
 
 function RouteComponent() {
@@ -82,7 +84,7 @@ function RouteComponent() {
     '/_authenticated/student/_subscribed/enrolledcourses/'
   )
   const delay = searchInput.length < 3 ? 400 : 800
-  const debouncedSearch = getDebounceInput(searchInput, delay)
+  const debouncedSearch = useDebounceInput(searchInput, delay)
   const { data, fetchStatus, isFetching } = useQuery({
     ...coursesQueryOptions({ input: debouncedSearch, page: searchParams.page }),
     suspense: isFirstRender.current,
@@ -146,7 +148,6 @@ function RouteComponent() {
     [navigate, setSearchInput]
   )
 
-  const baseUrl = `${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/courses`
 
   return (
     <>
@@ -171,7 +172,7 @@ function RouteComponent() {
             <Show>
               <Show.When isTrue={courses && courses.length > 0}>
                 {courses.map((course, index) => {
-                  console.log('course',course)
+                  console.log('course', course)
                   return (
                     <CardDemo
                       key={course._id || index}
@@ -179,7 +180,7 @@ function RouteComponent() {
                       fetchStatus={fetchStatus}
                       title={course.name}
                       desc={course.description}
-                      image={`${baseUrl}/cover-images/${course.coverImage}`}
+                      image={getFileUrl(course.coverImage, 'public/courses/cover-images')}
                       material={course.material.length}
                       instructor={course.instructor}
                       enrollmentDate={course.updatedAt}

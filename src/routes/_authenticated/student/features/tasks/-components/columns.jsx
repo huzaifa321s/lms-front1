@@ -11,43 +11,44 @@ import axios from 'axios'
 import { CourseTeachersDataTableRowActions } from './course-teachers-data-table-row-actions.jsx'
 import { BookAIcon } from 'lucide-react'
 import { CoursesDataTableRowActionsStudent } from './student-course-data-table-row-actions.jsx'
+import { getFileUrl } from '@/utils/globalFunctions'
 
 const columnHelper = createColumnHelper()
-const payInvoice = 
-    async (id) => {
-      try {
-        let response = await axios.post(`/student/payment/pay-invoice`, {
-          invoiceId: id,
-        })
-        response = response.data
-        console.log('response ===>',response)
-        if (response.success) {
-          if (
-            response?.data?.subscription &&
-            response?.data?.remainingEnrollmentCount
-          ) {
-            dispatch(
-              updateSubscription({
-                subscription: response.data.subscription,
-                remainingEnrollmentCount:
-                  response.data.remainingEnrollmentCount,
-              })
-            )
-          }
+const payInvoice =
+  async (id) => {
+    try {
+      let response = await axios.post(`/student/payment/pay-invoice`, {
+        invoiceId: id,
+      })
+      response = response.data
+      console.log('response ===>', response)
+      if (response.success) {
+        if (
+          response?.data?.subscription &&
+          response?.data?.remainingEnrollmentCount
+        ) {
+          dispatch(
+            updateSubscription({
+              subscription: response.data.subscription,
+              remainingEnrollmentCount:
+                response.data.remainingEnrollmentCount,
+            })
+          )
+        }
 
-          toast.success('Payment successful')
-        }
-      } catch (error) {
-        console.log('error',error)
-        const errorData = error.response?.data
-        if (errorData?.metadata?.errorType === 'StripeCardError') {
-          toast.error(errorData.message)
-        } else {
-          toast.error('An unexpected error occurred')
-        }
+        toast.success('Payment successful')
+      }
+    } catch (error) {
+      console.log('error', error)
+      const errorData = error.response?.data
+      if (errorData?.metadata?.errorType === 'StripeCardError') {
+        toast.error(errorData.message)
+      } else {
+        toast.error('An unexpected error occurred')
       }
     }
-   
+  }
+
 
 export const columns = [
   {
@@ -142,17 +143,17 @@ export const columns = [
 ]
 
 export const invoicesSchema = [
-columnHelper.display({
-  id: "serial",
-  header: "#",
-  cell: ({ row, table }) => {
-    console.log('table.getState().pagination ===>',table.getState().pagination)
-    const { pageIndex, pageSize } = table.getState().pagination
-    console.log('pageIndex ===>',pageIndex)
-    console.log('pageIndex * pageSize + row.index  + 1',pageIndex * pageSize + row.index + 1)
-    return <p>{ pageIndex * pageSize + row.index + 1}</p>
-  }
-}),
+  columnHelper.display({
+    id: "serial",
+    header: "#",
+    cell: ({ row, table }) => {
+      console.log('table.getState().pagination ===>', table.getState().pagination)
+      const { pageIndex, pageSize } = table.getState().pagination
+      console.log('pageIndex ===>', pageIndex)
+      console.log('pageIndex * pageSize + row.index  + 1', pageIndex * pageSize + row.index + 1)
+      return <p>{pageIndex * pageSize + row.index + 1}</p>
+    }
+  }),
   {
     accessorKey: 'invoice_id',
     header: ({ column }) => (
@@ -212,38 +213,38 @@ columnHelper.display({
   {
     accessorKey: 'invoice_status',
     header: ({ column }) => (
-    <DataTableColumnHeader column={column} title='Status' />
+      <DataTableColumnHeader column={column} title='Status' />
     ),
     cell: ({ row }) => {
-      return <p className="flex items-center gap-1"> 
-      <Status status={row.getValue('invoice_status')}>
-      <StatusIndicator />
-      <StatusLabel value={row.getValue('invoice_status')}/>
-      </Status> 
-    </p>
+      return <p className="flex items-center gap-1">
+        <Status status={row.getValue('invoice_status')}>
+          <StatusIndicator />
+          <StatusLabel value={row.getValue('invoice_status')} />
+        </Status>
+      </p>
     },
   },
   {
     id: 'actions',
-    header:() => <p>Actions</p>,
-    cell: ({ row }) => <div className="flex items-center gap-2">{row.original.invoice_status === 'Open' && <Button size="xs" onClick={() => payInvoice(row.original.invoice_id)}>Pay Invoice</Button>}<InvoicesDataTableRowActions row={row}/></div>
+    header: () => <p>Actions</p>,
+    cell: ({ row }) => <div className="flex items-center gap-2">{row.original.invoice_status === 'Open' && <Button size="xs" onClick={() => payInvoice(row.original.invoice_id)}>Pay Invoice</Button>}<InvoicesDataTableRowActions row={row} /></div>
   },
 ]
 
 
 
 export const coursesSchemaStudent = [
-columnHelper.display({
-  id: "serial",
-  header: "#",
-  cell: ({ row, table }) => {
-    console.log('table.getState().pagination ===>',table.getState().pagination)
-    const { pageIndex, pageSize } = table.getState().pagination
-    console.log('pageIndex ===>',pageIndex)
-    console.log('pageIndex * pageSize + row.index  + 1',pageIndex * pageSize + row.index + 1)
-    return <p>{ pageIndex * pageSize + row.index + 1}</p>
-  }
-}),
+  columnHelper.display({
+    id: "serial",
+    header: "#",
+    cell: ({ row, table }) => {
+      console.log('table.getState().pagination ===>', table.getState().pagination)
+      const { pageIndex, pageSize } = table.getState().pagination
+      console.log('pageIndex ===>', pageIndex)
+      console.log('pageIndex * pageSize + row.index  + 1', pageIndex * pageSize + row.index + 1)
+      return <p>{pageIndex * pageSize + row.index + 1}</p>
+    }
+  }),
 
   columnHelper.accessor('name', {
     header: ({ column }) => (
@@ -255,12 +256,12 @@ columnHelper.display({
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Description' />
     ),
-cell: (info) => (
-  <p className="truncate w-40">
-    {info.getValue()}
-  </p>
-)
-,
+    cell: (info) => (
+      <p className="truncate w-40">
+        {info.getValue()}
+      </p>
+    )
+    ,
   }),
   columnHelper.accessor(
     (row) => `${row.instructor.firstName} ${row.instructor.lastName}`,
@@ -291,16 +292,16 @@ cell: (info) => (
 
 export const teachersSchemaStudentPanel = [
   columnHelper.display({
-  id: "serial",
-  header: "#",
-  cell: ({ row, table }) => {
-    const { pageIndex, pageSize } = table.getState().pagination
-    return <p>{ pageIndex * pageSize + row.index + 1}</p>
-  }
-}),
+    id: "serial",
+    header: "#",
+    cell: ({ row, table }) => {
+      const { pageIndex, pageSize } = table.getState().pagination
+      return <p>{pageIndex * pageSize + row.index + 1}</p>
+    }
+  }),
   columnHelper.accessor('profile', {
-    header:() => <p>Profile</p>,
-    cell: (info) => <img className="rounded-full shadow-md w-10 h-10" src={`${import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL}public/teacher/profile/${info.getValue()}`} laoding="lazy"/>,
+    header: () => <p>Profile</p>,
+    cell: (info) => <img className="rounded-full shadow-md w-10 h-10" src={getFileUrl(info.getValue(), 'public/teacher/profile')} loading="lazy" />,
   }),
   columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
     id: 'Name',
@@ -315,8 +316,8 @@ export const teachersSchemaStudentPanel = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Courses' />
     ),
-    cell: (info) => <p className='px-5'>{info.getValue().length > 3 ? info.getValue().length : info.getValue().map((c,i) => {
-      return <div className="flex gap-0.5 "><BookAIcon/> {c.name}{i + 1 != info.getValue().length && ','}</div>
+    cell: (info) => <p className='px-5'>{info.getValue().length > 3 ? info.getValue().length : info.getValue().map((c, i) => {
+      return <div className="flex gap-0.5 "><BookAIcon /> {c.name}{i + 1 != info.getValue().length && ','}</div>
     })}</p>,
   }),
   columnHelper.accessor('email', {
@@ -326,7 +327,7 @@ export const teachersSchemaStudentPanel = [
     cell: (info) => <p>{info.getValue()}</p>,
   }),
   columnHelper.accessor('createdAt', {
-    id:"createdAt",
+    id: "createdAt",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Joining Date' />
     ),

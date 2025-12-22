@@ -10,8 +10,8 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { openModal } from '../../../../../../shared/config/reducers/student/studentDialogSlice'
-import { openModalTeacher } from '../../../../../../shared/config/reducers/teacher/teacherDialogSlice'
+import { openModal } from '@/shared/config/reducers/student/studentDialogSlice'
+import { openModalTeacher } from '@/shared/config/reducers/teacher/teacherDialogSlice'
 import { TrainingWheelGameSchema } from '../../../../admin/layout/data/-schemas/trainingWheelGameSchemas'
 
 export function DataTableRowActions({ row }) {
@@ -36,7 +36,7 @@ export function DataTableRowActions({ row }) {
           )
         }
       >
-      <Eye/>  View
+        <Eye />  View
       </Button>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
@@ -53,7 +53,7 @@ export function DataTableRowActions({ row }) {
             onClick={() =>
               navigate({ to: `/teacher/trainingwheelgame/edit/${game._id}` })
             }
-             className="focus:bg-emerald-100 text-emerald-600 focus:text-emerald-800 cursor-pointer"
+            className="focus:bg-emerald-100 text-emerald-600 focus:text-emerald-800 cursor-pointer"
           >
             Edit
             <DropdownMenuShortcut>
@@ -74,7 +74,7 @@ export function DataTableRowActions({ row }) {
                 })
               )
             }
-                    className="focus:bg-red-100 text-red-600 focus:text-red-800 cursor-pointer"
+            className="focus:bg-red-100 text-red-600 focus:text-red-800 cursor-pointer"
 
           >
             Delete

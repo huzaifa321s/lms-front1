@@ -10,9 +10,9 @@ import { useAppUtils } from '../../../../../hooks/useAppUtils'
 import { openModalAdmin } from '../../../../../shared/config/reducers/admin/DialogSlice'
 import { Show } from '../../../../../shared/utils/Show'
 import {
-  getDebounceInput,
+  useDebounceInput,
   useSearchInput,
-} from '../../../../../utils/globalFunctions'
+} from '@/utils/globalFunctions'
 import SearchInput from '../../../student/-components/SearchInput.jsx'
 import ContentSection from '../../../student/settings/-components/content-section'
 import { blogCategoriesSchema } from '../../layout/data/-schemas/blogCategoriesSchema'
@@ -31,7 +31,7 @@ export function SettingsBlogCategory() {
     select: (search) => search.page,
   })
   const delay = searchInput.length < 3 ? 400 : 800
-  const debouncedSearch = getDebounceInput(searchInput, delay)
+  const debouncedSearch = useDebounceInput(searchInput, delay)
   const isFirstRender = useRef(true)
   const { data, fetchStatus, isFetching } = useQuery(
     blogCategoryQueryOptions({

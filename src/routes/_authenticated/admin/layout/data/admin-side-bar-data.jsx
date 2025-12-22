@@ -1,12 +1,12 @@
-import {  Blocks, BookUser, Bug, CircleOff, CreditCard, Edit2, Edit3, EditIcon, Gamepad, LayoutDashboard, List, Lock, LockKeyholeOpen, ServerOff, Settings, User, UserMinus, Users2Icon, UsersIcon } from 'lucide-react'
-import { getCookie } from '../../../../../shared/utils/helperFunction';
+import { Blocks, BookUser, Bug, CircleOff, CreditCard, Edit2, Edit3, EditIcon, Gamepad, LayoutDashboard, List, Lock, LockKeyholeOpen, ServerOff, Settings, User, UserMinus, Users2Icon, UsersIcon } from 'lucide-react'
+import { getCookie } from '@/shared/utils/helperFunction';
 
 
-const credentials  = getCookie('adminCredentials');
+const credentials = getCookie('adminCredentials');
 
 export const adminSideBarData = {
   user: {
-    name: credentials?.firstName + " " +credentials?.lastName,
+    name: credentials?.firstName + " " + credentials?.lastName,
     email: credentials?.email,
     avatar: '/avatars/shadcn.jpg',
   },
@@ -44,36 +44,36 @@ export const adminSideBarData = {
         {
           title: "Training Wheel Game",
           url: '/admin/trainingwheelgame',
-          icon:Gamepad
+          icon: Gamepad
         },
         {
           title: 'Settings',
           icon: Settings,
           items: [
-           
+
             {
-              title:'Blog Category',
-              url:'/admin/settings',
-              icon:Edit3
+              title: 'Blog Category',
+              url: '/admin/settings',
+              icon: Edit3
             },
             {
               title: 'Course Category',
               url: '/admin/settings/course-category',
-              icon:Edit2
+              icon: Edit2
             },
             {
               title: 'Game Category',
               url: '/admin/settings/game-category',
-              icon:EditIcon
+              icon: EditIcon
             },
-             {
+            {
               title: 'Profile',
               url: '/admin/settings/profile',
-              icon:User
+              icon: User
             },
           ],
         },
-   
+
       ],
     },
     {
@@ -87,13 +87,13 @@ export const adminSideBarData = {
               title: 'Sign In',
               url: '/admin/sample-pages/auth/sign-in',
             },
-            
-     
+
+
             {
               title: 'Sign Up (Student)',
               url: '/admin/sample-pages/auth/student/sign-up',
             },
-            
+
             {
               title: 'Sign Up (Teacher)',
               url: '/admin/sample-pages/auth/teacher/sign-up',
@@ -120,7 +120,7 @@ export const adminSideBarData = {
             {
               title: 'Forbidden',
               url: '/admin/sample-pages/errors/forbidden',
-              icon:UserMinus,
+              icon: UserMinus,
             },
             {
               title: 'Not Found',
@@ -139,14 +139,14 @@ export const adminSideBarData = {
             },
           ],
         },
-         {
-      title: 'Subscriptions',
-      icon: CreditCard,
-      items: [
-        { title: 'Plans', url: '/admin/sample-pages/subscriptions/plans' },
-        
-      ],
-    },
+        {
+          title: 'Subscriptions',
+          icon: CreditCard,
+          items: [
+            { title: 'Plans', url: '/admin/sample-pages/subscriptions/plans' },
+
+          ],
+        },
       ],
     },
     // {

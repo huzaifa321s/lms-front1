@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { createFileRoute} from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import {
   invoicesSchema,
 } from '../../../_authenticated/student/features/tasks/-components/columns'
@@ -13,35 +13,36 @@ import { lazy, Suspense } from 'react'
 import { DataTableSkeleton } from '../../../-components/DataTableSkeleton'
 
 const queryClient = new QueryClient();
-export const invoicesQueryOption = (length) => 
+export const invoicesQueryOption = (length) =>
   queryOptions({
-    queryKey:['get-invoices'],
+    queryKey: ['get-invoices'],
     queryFn: async () => {
-     
-    try {
-      let response = await axios.get(`/student/payment/get-invoices?length=${length}`)
-      response = response.data
-      if (response.success) {
-        return  response.data 
+
+      try {
+        let response = await axios.get(`/student/payment/get-invoices?length=${length}`)
+        response = response.data
+        if (response.success) {
+          return response.data
+        }
+      } catch (error) {
+        console.log('error', error)
+        return []
       }
-    } catch (error) {
-      console.log('error', error)
-      return []
-    }
-  },
+    },
   })
 
 export const Route = createFileRoute(
   '/student/setting/invoices/'
 )({
-  component:RouteComponent,
+  component: RouteComponent,
   loader: () => queryClient.ensureQueryData(invoicesQueryOption())
 })
 
 function RouteComponent() {
-  const { data ,fetchStatus} = useSuspenseQuery(invoicesQueryOption());
-  console.log('data 22 ==>',data)
-  
+  const { data, fetchStatus } = useSuspenseQuery(invoicesQueryOption());
+  const invoices = data?.invoices
+  console.log('data 22 ==>', data)
+
   // Calculate some stats for the header cards
   const totalInvoices = invoices?.length || 0;
   const totalAmount = invoices?.reduce((sum, invoice) => sum + (invoice.amount || 0), 0) || 0;
@@ -62,7 +63,7 @@ function RouteComponent() {
           <p className='text-gray-600 text-lg max-w-2xl mx-auto'>
             Track and manage all your payment invoices in one place
           </p>
-          
+
           {/* Decorative separator */}
           <div className='w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full mx-auto mt-4'></div>
         </div>
@@ -138,9 +139,9 @@ function RouteComponent() {
             <Download className="w-4 h-4 mr-2" />
             Export All
           </Button>
-          <Button 
-            variant="outline" 
-          
+          <Button
+            variant="outline"
+
           >
             <Filter className="w-4 h-4 mr-2" />
             Filter
@@ -157,25 +158,25 @@ function RouteComponent() {
                 </div>
                 All Invoices
               </h2>
-              
+
               <div className='text-sm text-gray-600 bg-white/50 px-4 py-2 rounded-full backdrop-blur-sm'>
                 {totalInvoices} total records
               </div>
             </div>
-            
+
             {/* Decorative separator */}
             <div className='w-full h-px bg-gradient-to-r from-transparent via-indigo-300 to-transparent mb-6'></div>
           </div>
 
           <div className='relative min-h-[500px]'>
             {invoices && invoices.length > 0 ? (
-               <Suspense fallback={<DataTableSkeleton />}>
-              
-              <DataTable 
-                data={invoices} 
-                columns={invoicesSchema} 
-                fetchStatus={fetchStatus} 
-              />
+              <Suspense fallback={<DataTableSkeleton />}>
+
+                <DataTable
+                  data={invoices}
+                  columns={invoicesSchema}
+                  fetchStatus={fetchStatus}
+                />
               </Suspense>
             ) : (
               <div className='flex flex-col items-center justify-center py-20 px-8'>
@@ -201,14 +202,14 @@ function RouteComponent() {
             <div className='text-center md:text-left'>
               <p className='text-gray-600 text-sm mb-1'>Last updated</p>
               <p className='font-semibold text-gray-800'>
-                {new Date().toLocaleDateString('en-US', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
+                {new Date().toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
                 })}
               </p>
             </div>
-            
+
             <div className='flex items-center gap-6'>
               <div className='text-center'>
                 <p className='text-sm text-gray-600 mb-1'>Payment Success Rate</p>
@@ -216,9 +217,9 @@ function RouteComponent() {
                   {totalInvoices > 0 ? Math.round((paidInvoices / totalInvoices) * 100) : 0}%
                 </p>
               </div>
-              
+
               <div className='w-px h-8 bg-gray-300'></div>
-              
+
               <div className='text-center'>
                 <p className='text-sm text-gray-600 mb-1'>Average Amount</p>
                 <p className='text-lg font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
