@@ -5,7 +5,7 @@ import Timer from './Timer';
 import { Show } from '@/shared/utils/Show';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { ShieldQuestion, Stars, Trophy, X, Target, Zap, Clock, Award, Sparkles } from 'lucide-react';
+import { ShieldQuestion, Stars, Trophy, X, Target, Zap, Clock, Award, Sparkles, Users } from 'lucide-react';
 import { Progress } from "@/components/ui/progress";
 
 const Game = ({ handleScoreCard, selectedLevel }) => {
@@ -235,7 +235,7 @@ const Game = ({ handleScoreCard, selectedLevel }) => {
                 <div className='flex flex-col lg:flex-row items-center justify-between gap-6'>
                   <div className="flex items-center gap-4 flex-1">
                     <div className='p-2 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] rounded-[8px] shadow-lg'>
-                      <Progress className="w-5 h-5 text-white" />
+                      <Target className="w-5 h-5 text-white" />
                     </div>
                     <div className='flex-1'>
                       <div className='flex items-center justify-between mb-2'>

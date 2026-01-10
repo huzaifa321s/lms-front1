@@ -6,14 +6,14 @@ import { Badge } from '@/components/ui/badge'
 import { z } from "zod";
 
 export const trainingWheelGamesSchemaAdmin = [
-columnHelper.display({
-  id: "serial",
-  header: "#",
-  cell: ({ row, table }) => {
-    const { pageIndex, pageSize } = table.getState().pagination
-    return <p>{ pageIndex * pageSize + row.index + 1}</p>
-  }
-}),,
+  columnHelper.display({
+    id: "serial",
+    header: "#",
+    cell: ({ row, table }) => {
+      const { pageIndex, pageSize } = table.getState().pagination
+      return <p>{pageIndex * pageSize + row.index + 1}</p>
+    }
+  }),
   columnHelper.accessor('question', {
     header: ({ column }) => (
       <DataTableColumnHeader className="w-fit" column={column} title='Question' />
@@ -27,11 +27,11 @@ columnHelper.display({
     cell: (info) => <p>{info.getValue()}</p>,
   }),
   columnHelper.accessor('difficulties', {
-    id:'difficulties',
+    id: 'difficulties',
     header: ({ column }) => (
       <DataTableColumnHeader className="w-fit" column={column} title='Difficulty Levels' />
     ),
-cell: (info) => (
+    cell: (info) => (
       <>
         <div className='flex w-[20px] flex-wrap'>
           {info.getValue().length > 0 &&
@@ -60,7 +60,7 @@ cell: (info) => (
   {
     id: 'actions',
     header: () => <p>Actions</p>,
-    cell: ({ row }) => <DataTableRowActionsAdmin  row={row} />,
+    cell: ({ row }) => <DataTableRowActionsAdmin row={row} />,
   },
 ]
 

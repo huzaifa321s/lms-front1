@@ -49,12 +49,6 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
   const [defaultCheck, setDefaultCheck] = useState(false)
   const [cardComplete, setCardComplete] = useState(false)
 
-  let stripe = null
-  let elements = null
-  if (dialogType === 'add-payment-method') {
-    stripe = useStripe()
-    elements = useElements()
-  }
   const credentials = useSelector(
     (state) => state.studentAuth.credentials,
     shallowEqual
@@ -63,13 +57,6 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
     (state) => state.studentAuth.subscripiton,
     shallowEqual
   )
-  // Reset modal inputs
-  const resetModal = () => {
-    const cardElement = elements.getElement(CardElement)
-    if (cardElement) cardElement.clear()
-    setCardComplete(false)
-    setDefaultCheck(false)
-  }
 
   const confirmDetach = useCallback(async () => {
     try {
@@ -95,59 +82,6 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
     dispatch,
     closeModal,
   ])
-  // Save card details
-  const saveCardDetails = useCallback(async () => {
-    if (!stripe || !elements) {
-      return
-    }
-
-    const cardElement = elements.getElement(CardElement)
-
-    const { token } = await stripe.createToken(cardElement)
-    const { paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: { token: token.id },
-    })
-
-    const reqBody = {
-      paymentMethodId: paymentMethod.id,
-      setDefaultPaymentMethodFlag: defaultCheck,
-    }
-
-    try {
-      let response = await axios.post(
-        '/student/payment/add-new-payment-method',
-        reqBody
-      )
-      response = response.data
-      if (response.success) {
-        // cardElement.clear();
-        toast.success(response.message)
-        await queryClient.invalidateQueries(paymentMethodsQueryOptions())
-        resetModal()
-        dispatch(closeModal())
-      }
-    } catch (error) {
-      console.log('Registration Error --> ', error)
-      toast.error('Something went wrong')
-    }
-  }, [
-    CardElement,
-    stripe,
-    elements,
-    defaultCheck,
-    axios,
-    toast,
-    queryClient,
-    dispatch,
-    closeModal,
-    paymentMethodsQueryOptions,
-  ])
-
-  const saveCardDetailsMutation = useMutation({
-    mutationFn: saveCardDetails,
-  })
-
   const cardDetach = useMutation({
     mutationFn: confirmDetach,
   })
@@ -222,29 +156,6 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
   useEffect(() => {
     setDialogType(modalType)
   }, [modalType])
-  const handleChange = (event) => {
-    setCardComplete(event.complete)
-  }
-  const cardElementOptions = {
-    style: {
-      base: {
-        fontSize: '16px',
-        marginTop: '5px',
-        marginBottom: '5px',
-        color: '#000',
-        '::placeholder': {
-          color: '#000',
-        },
-      },
-      invalid: {
-        color: '#9e2146',
-      },
-    },
-  }
-  const handleSubmitCard = (e) => {
-    e.preventDefault()
-    saveCardDetailsMutation.mutate()
-  }
   const handleSubmitUpdation = (e) => {
     e.preventDefault()
     planUpdate.mutate()
@@ -388,16 +299,7 @@ const DialogWrapper = ({ isOpen, modalType, modalData }) => {
         }
       >
         {dialogType === 'add-payment-method' && (
-          <AddPaymentMethodDialog
-            handleSubmitCard={handleSubmitCard}
-            cardElementOptions={cardElementOptions}
-            handleChange={handleChange}
-            defaultCheck={defaultCheck}
-            setDefaultCheck={setDefaultCheck}
-            stripe={stripe}
-            cardComplete={cardComplete}
-            saveCardDetailsMutation={saveCardDetailsMutation}
-          />
+          <AddPaymentMethodDialog />
         )}
       </Suspense>
       <Suspense

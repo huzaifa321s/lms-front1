@@ -15,7 +15,6 @@ import { SmallLoader } from '../_authenticated/teacher/-layout/data/components/t
 import PaymentMethodsList from './-components/PaymentMethodList'
 import Plans from './-components/Plans'
 
-const queryClient = new QueryClient()
 export const Route = createFileRoute('/student/resubscription-plans')({
   component: RouteComponent,
 })
@@ -61,7 +60,6 @@ function RouteComponent() {
     </Suspense>
   )
 }
-
 
 function PlanComponent() {
   const [selectedPlan, setSelectedPlan] = useState('')

@@ -45,157 +45,168 @@ export const CardDemo = memo(
     const navigate = useNavigate()
 
     return (
-      <Card className='group relative flex h-[24rem] w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl md:w-72'>
-        {/* Image Section */}
-        <div className='relative h-44 overflow-hidden'>
+      <Card className='group relative flex h-[26rem] w-full flex-col overflow-hidden rounded-3xl border-0 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] md:w-72'>
+        {/* Image Section with Overlay */}
+        <div className='relative h-48 overflow-hidden'>
           <img
-            src={image}
+            src={image || DEFAULT_COURSE_IMAGE}
             alt={title}
-            width={320}
-            height={160}
-            className='h-full w-full rounded-t-2xl object-cover transition-transform duration-700 group-hover:scale-110'
+            className='h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110'
             loading='lazy'
           />
-          <div className='absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent' />
+          <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100' />
+
+          {/* Quick Stats on Hover */}
+          <div className='absolute inset-0 flex items-center justify-center gap-4 opacity-0 transition-all duration-500 translate-y-4 group-hover:translate-y-0 group-hover:opacity-100'>
+            <div className='flex flex-col items-center bg-white/20 backdrop-blur-md rounded-2xl p-3 text-white border border-white/30'>
+              <FileText className='h-5 w-5 mb-1' />
+              <span className='text-xs font-bold'>{material || 0}</span>
+            </div>
+            <div className='flex flex-col items-center bg-white/20 backdrop-blur-md rounded-2xl p-3 text-white border border-white/30'>
+              <CalendarDays className='h-5 w-5 mb-1' />
+              <span className='text-xs font-bold'>{format(enrollmentDate, 'MMM yy')}</span>
+            </div>
+          </div>
 
           {/* Category Badge */}
           {category && (
-            <Badge className='absolute top-2 left-2 flex items-center gap-1 rounded-full border-0 bg-gradient-to-r from-blue-600 to-blue-700 px-2.5 py-0.5 text-[11px] font-medium text-white shadow-md'>
+            <Badge className='absolute top-4 left-4 flex items-center gap-1.5 rounded-xl border-white/20 bg-blue-600/90 py-1 px-3 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-md'>
               <Tag className='h-3 w-3' />
               {category}
             </Badge>
           )}
         </div>
 
-        {/* Title */}
-        <CardHeader className='p-4 pb-1'>
-          <h2 className='line-clamp-2 flex items-center gap-2 font-sans text-base font-bold text-slate-800 transition-colors duration-300 group-hover:text-blue-700'>
-            <BookOpen className='h-4 w-4 text-blue-600' />
+        {/* Content Section */}
+        <div className='flex flex-1 flex-col p-5'>
+          <div className='mb-3 flex items-center gap-2'>
+            <div className='flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-colors duration-300 group-hover:bg-blue-600 group-hover:text-white'>
+              <BookOpen className='h-4 w-4' />
+            </div>
+            <span className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>Course</span>
+          </div>
+
+          <h2 className='mb-2 line-clamp-2 min-h-[3rem] font-sans text-lg font-extrabold leading-tight text-slate-800 transition-colors duration-300 group-hover:text-blue-600'>
             {title}
           </h2>
-        </CardHeader>
 
-        {/* Footer with Actions */}
-        <CardFooter className='mt-auto flex items-center justify-between p-4'>
+          <div className='mt-auto flex items-center gap-3 border-t border-slate-50 pt-4'>
+            <div className='flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 ring-2 ring-white'>
+              <User className='h-4 w-4 text-slate-500' />
+            </div>
+            <div className='flex flex-col'>
+              <span className='text-[11px] font-semibold text-slate-400'>Instructor</span>
+              <span className='text-xs font-bold text-slate-700 truncate max-w-[120px]'>
+                {instructor?.firstName ? `${instructor.firstName} ${instructor.lastName || ''}` : 'Independent'}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Footer */}
+        <CardFooter className='grid grid-cols-2 gap-3 bg-slate-50/50 p-4 backdrop-blur-sm'>
           <Button
             size='sm'
-            onClick={() =>
-              navigate({ to: `/student/enrolledcourses/${courseId}` })
-            }
-            aria-label={`View details for ${title} course`}
-            className='relative w-[48%] overflow-hidden bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md transition-all duration-500 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg'
+            onClick={() => navigate({ to: `/student/enrolledcourses/${courseId}` })}
+            className='h-10 rounded-2xl bg-slate-900 font-bold text-white shadow-lg transition-all duration-300 hover:bg-blue-600 hover:shadow-blue-200 active:scale-95'
           >
-            <Eye className='mr-1 h-4 w-4' />
-            View
+            <Eye className='mr-2 h-4 w-4' />
+            Learn
           </Button>
 
-          {/* Popover for Details */}
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 size='sm'
                 variant='outline'
-                className='w-[48%] border-blue-600 text-blue-600 hover:bg-blue-50'
+                className='h-10 rounded-2xl border-2 border-slate-200 bg-white font-bold text-slate-700 transition-all duration-300 hover:border-blue-600 hover:text-blue-600 active:scale-95'
               >
-                <Info className='mr-1 h-4 w-4' />
+                <Info className='mr-2 h-4 w-4' />
                 Details
               </Button>
             </PopoverTrigger>
             <PopoverContent
               side='top'
               align='center'
-              className='w-80 space-y-4 rounded-2xl border border-slate-200/50 bg-white/95 p-4 text-sm shadow-xl backdrop-blur-md'
+              className='z-50 w-80 overflow-hidden rounded-[2rem] border border-white/20 bg-white/80 p-0 shadow-2xl backdrop-blur-2xl transition-all'
             >
-              {/* Tabs for structured content */}
-              <Tabs defaultValue='overview' className='space-y-3'>
-                <TabsList className='grid w-full grid-cols-3'>
-                  <TabsTrigger value='overview'>Overview</TabsTrigger>
-                  <TabsTrigger value='materials'>Materials</TabsTrigger>
-                  <TabsTrigger value='instructor'>Instructor</TabsTrigger>
+              <Tabs defaultValue='overview' className='flex flex-col'>
+                <TabsList className='grid h-14 w-full grid-cols-3 bg-slate-100/50 p-1'>
+                  <TabsTrigger value='overview' className='rounded-2xl data-[state=active]:bg-white data-[state=active]:shadow-sm'>Overview</TabsTrigger>
+                  <TabsTrigger value='materials' className='rounded-2xl data-[state=active]:bg-white data-[state=active]:shadow-sm'>Curriculum</TabsTrigger>
+                  <TabsTrigger value='instructor' className='rounded-2xl data-[state=active]:bg-white data-[state=active]:shadow-sm'>Expert</TabsTrigger>
                 </TabsList>
 
-                {/* Overview Tab */}
-                <TabsContent
-                  value='overview'
-                  className='scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-transparent max-h-36 space-y-2 overflow-y-auto'
-                >
-                  <p className='text-slate-700'>
-                    {desc || 'No description available.'}
-                  </p>
-                  <div className='space-y-2'>
-                    <div className='flex items-center gap-2 text-slate-700'>
-                      <FileText className='h-4 w-4 text-blue-500' />
-                      <span>
-                        <strong>{material || 0}</strong> materials
-                      </span>
+                <div className='p-6'>
+                  <TabsContent value='overview' className='mt-0 space-y-4'>
+                    <div className='space-y-1'>
+                      <h4 className='text-xs font-bold uppercase tracking-widest text-blue-600'>About this course</h4>
+                      <p className='line-clamp-4 text-sm leading-relaxed text-slate-600'>
+                        {desc || 'Embark on a journey to master this subject with structured lessons and practical materials.'}
+                      </p>
                     </div>
-                    <div className='flex items-center gap-2 text-slate-700'>
-                      <CalendarDays className='h-4 w-4 text-blue-500' />
-                      <span>Enrolled on {format(enrollmentDate, 'PPP')}</span>
+                    <div className='grid grid-cols-2 gap-3 rounded-2xl bg-blue-50/50 p-3'>
+                      <div className='flex items-center gap-2'>
+                        <FileText className='h-4 w-4 text-blue-500' />
+                        <span className='text-xs font-bold text-slate-700'>{material || 0} Files</span>
+                      </div>
+                      <div className='flex items-center gap-2'>
+                        <CalendarDays className='h-4 w-4 text-blue-500' />
+                        <span className='text-xs font-bold text-slate-700'>{format(enrollmentDate, 'PPP')}</span>
+                      </div>
                     </div>
-                  </div>
-                </TabsContent>
+                  </TabsContent>
 
-                {/* Materials Tab */}
-                <TabsContent
-                  value='materials'
-                  className='scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-transparent max-h-36 space-y-2 overflow-y-auto'
-                >
-                  {materials?.length ? (
-                    <Collapsible>
-                      <CollapsibleTrigger className='w-full rounded-lg bg-blue-50 px-3 py-2 text-left font-medium transition hover:bg-blue-100'>
-                        Show Materials
-                      </CollapsibleTrigger>
-                      <CollapsibleContent className='scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-transparent max-h-32 space-y-1 overflow-y-auto px-2 py-2'>
+                  <TabsContent value='materials' className='mt-0'>
+                    <div className='mb-3'>
+                      <h4 className='text-xs font-bold uppercase tracking-widest text-blue-600'>Resources included</h4>
+                    </div>
+                    {materials?.length ? (
+                      <div className='scrollbar-thin scrollbar-thumb-blue-200 max-h-48 space-y-2 overflow-y-auto pr-2'>
                         {materials.map((mat) => (
-                          <p
+                          <div
                             key={mat._id}
-                            className='rounded bg-[whitesmoke] px-2 py-1 text-sm text-slate-700'
+                            className='flex items-center gap-3 rounded-xl border border-slate-100 bg-white p-3 transition-colors hover:border-blue-100 hover:bg-blue-50/50'
                           >
-                            {mat.title}
-                          </p>
+                            <div className='flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 font-mono text-[10px] font-bold text-blue-600'>
+                              {mat.title.charAt(0).toUpperCase()}
+                            </div>
+                            <span className='text-xs font-semibold text-slate-700'>{mat.title}</span>
+                          </div>
                         ))}
-                      </CollapsibleContent>
-                    </Collapsible>
-                  ) : (
-                    <p className='text-slate-500'>No materials available.</p>
-                  )}
-                </TabsContent>
+                      </div>
+                    ) : (
+                      <div className='flex flex-col items-center py-6 text-center'>
+                        <BookOpen className='h-8 w-8 text-slate-200 mb-2' />
+                        <p className='text-xs font-medium text-slate-400'>No digital materials available yet.</p>
+                      </div>
+                    )}
+                  </TabsContent>
 
-                {/* Instructor Tab */}
-                <TabsContent
-                  value='instructor'
-                  className='scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-transparent max-h-36 space-y-2 overflow-y-auto'
-                >
-                  <div className='flex items-center gap-2 text-slate-700'>
-                    <User className='h-4 w-4 text-blue-500' />
-                    <span>
-                      {instructor?.firstName
-                        ? `${instructor.firstName} ${instructor.lastName || ''}`
-                        : 'Unknown Instructor'}
-                    </span>
-                  </div>
-                  {instructor?.bio && (
-                    <p className='text-sm text-slate-600'>{instructor.bio}</p>
-                  )}
-                </TabsContent>
+                  <TabsContent value='instructor' className='mt-0'>
+                    <div className='flex flex-col items-center py-4 text-center'>
+                      <div className='mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-xl shadow-blue-200'>
+                        <User className='h-10 w-10 text-white' />
+                      </div>
+                      <h3 className='text-lg font-bold text-slate-800 focus:outline-none'>
+                        {instructor?.firstName ? `${instructor.firstName} ${instructor.lastName || ''}` : 'Authorized Instructor'}
+                      </h3>
+                      <p className='mt-2 text-xs font-medium leading-relaxed text-slate-500'>
+                        {instructor?.bio || 'An expert dedicated to providing quality education and mentorship in this domain.'}
+                      </p>
+                    </div>
+                  </TabsContent>
+                </div>
+
+                <div className='border-t border-slate-50 p-4'>
+                  <Button
+                    className='h-8 w-full rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-700 font-bold text-white shadow-lg shadow-blue-100 transition-all hover:scale-[1.02] active:scale-95'
+                    onClick={() => navigate({ to: `/student/enrolledcourses/${courseId}` })}
+                  >
+                    View
+                  </Button>
+                </div>
               </Tabs>
-
-              <Separator className='my-2' />
-
-              {/* Quick Actions */}
-              <div className='flex justify-between gap-2'>
-                <Button
-                  size='sm'
-                  className='flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800'
-                  onClick={() =>
-                    navigate({ to: `/student/enrolledcourses/${courseId}` })
-                  }
-                >
-                  <Eye className='mr-1 h-4 w-4' />
-                  View Course
-                </Button>
-              </div>
             </PopoverContent>
           </Popover>
         </CardFooter>

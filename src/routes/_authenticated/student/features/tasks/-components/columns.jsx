@@ -1,4 +1,5 @@
 import { format } from 'date-fns'
+import { useState } from 'react'
 import { createColumnHelper } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge'
 import { labels, priorities, statuses } from '../data/data'
@@ -14,11 +15,18 @@ import { CoursesDataTableRowActionsStudent } from './student-course-data-table-r
 import { getFileUrl } from '@/utils/globalFunctions'
 
 const columnHelper = createColumnHelper()
-const payInvoice =
-  async (id) => {
+import { updateSubscription } from '@/shared/config/reducers/student/studentAuthSlice'
+import { useAppUtils } from '@/hooks/useAppUtils'
+
+const PayInvoiceButton = ({ invoiceId }) => {
+  const { dispatch } = useAppUtils()
+  const [loading, setLoading] = useState(false)
+
+  const handlePay = async () => {
+    setLoading(true)
     try {
       let response = await axios.post(`/student/payment/pay-invoice`, {
-        invoiceId: id,
+        invoiceId: invoiceId,
       })
       response = response.data
       console.log('response ===>', response)
@@ -46,8 +54,17 @@ const payInvoice =
       } else {
         toast.error('An unexpected error occurred')
       }
+    } finally {
+      setLoading(false)
     }
   }
+
+  return (
+    <Button size="xs" onClick={handlePay} loading={loading}>
+      Pay Invoice
+    </Button>
+  )
+}
 
 
 export const columns = [
@@ -227,7 +244,14 @@ export const invoicesSchema = [
   {
     id: 'actions',
     header: () => <p>Actions</p>,
-    cell: ({ row }) => <div className="flex items-center gap-2">{row.original.invoice_status === 'Open' && <Button size="xs" onClick={() => payInvoice(row.original.invoice_id)}>Pay Invoice</Button>}<InvoicesDataTableRowActions row={row} /></div>
+    cell: ({ row }) => (
+      <div className="flex items-center gap-2">
+        {row.original.invoice_status === 'Open' && (
+          <PayInvoiceButton invoiceId={row.original.invoice_id} />
+        )}
+        <InvoicesDataTableRowActions row={row} />
+      </div>
+    )
   },
 ]
 

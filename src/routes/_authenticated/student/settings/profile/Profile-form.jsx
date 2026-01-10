@@ -29,6 +29,7 @@ export default function ProfileForm() {
   const [date, setDate] = useState("")
   const [phone, setPhone] = useState(credentials?.phone)
   const [phoneError, setPhoneError] = useState("")
+  const [selectedFile, setSelectedFile] = useState(null)
   const [passBtnLoading, setPassBtnLoading] = useState(false)
   const [passwordObj, setPasswordObj] = useState({
     password: "",
@@ -64,7 +65,7 @@ export default function ProfileForm() {
       const updatedDate = date.setDate(date.getDate() + 1)
       setDate(updatedDate)
     }),
-    profile: z.string(),
+    profile: z.any().optional(),
     bio: z.string().max(160).min(4),
   })
 
@@ -89,6 +90,7 @@ export default function ProfileForm() {
       endPoint === "updatePassword" && setPassBtnLoading(true)
       try {
         console.log("obj ===>", obj)
+        const isFormData = obj instanceof FormData
         let response = await axios.put(`/student/${endPoint}`, obj)
         response = response.data
         console.log("Registration response -> ", response)
@@ -101,17 +103,17 @@ export default function ProfileForm() {
         }
       } catch (error) {
         console.log("error", error)
-        const errorResponse = error.response.data
+        const errorResponse = error.response?.data
         if (endPoint === "updatePassword") {
-          toast.error(errorResponse.message)
+          toast.error(errorResponse?.message || "Failed to update password")
         } else {
-          toast.error(errorResponse.message)
+          toast.error(errorResponse?.message || "Failed to update profile")
         }
       } finally {
         setPassBtnLoading(false)
       }
     },
-    [axios, toast, document],
+    [axios, toast, dispatch],
   )
 
   const mutation = useMutation({
@@ -121,17 +123,25 @@ export default function ProfileForm() {
   const saveChanges = useCallback(
     (data) => {
       console.log("date ===>", date)
-      const postObj = {
-        profile: credentials?.profile,
-        firstName: data.firstname,
-        lastName: data.lastname,
-        bio: data.bio,
-        dateOfBirth: date,
-        phone: phone,
+      const formData = new FormData()
+      formData.append("firstName", data.firstname)
+      formData.append("lastName", data.lastname)
+
+      if (data.bio) formData.append("bio", data.bio)
+
+      const dob = date || credentials?.dateOfBirth
+      if (dob) formData.append("dateOfBirth", dob)
+
+      if (phone) formData.append("phone", phone)
+
+      if (selectedFile) {
+        formData.append("profile", selectedFile)
       }
-      mutation.mutate(postObj)
+      // Do not append profile string if no file is selected, to avoid messing up backend logic
+
+      mutation.mutate(formData)
     },
-    [phone, date],
+    [phone, date, selectedFile, credentials, mutation],
   )
 
   return (
@@ -155,13 +165,14 @@ export default function ProfileForm() {
                     <img
                       className="w-full h-full object-cover"
                       src={
-                        dp || credentials?.profile
+                        dp || (credentials?.profile
                           ? getFileUrl(credentials.profile, 'public/student/profile')
-                          : defaultProfile
+                          : defaultProfile)
                       }
                       alt="Profile"
                       loading="lazy"
                     />
+                    {console.log("sssss", getFileUrl(credentials.profile, 'public/student/profile'))}
                   </div>
                   <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 cursor-pointer">
                     <Camera className="w-4 h-4 text-white" />
@@ -217,11 +228,11 @@ export default function ProfileForm() {
                           </FormLabel>
                           <div className="flex items-center space-x-4">
                             <img
-                              className="h-16 w-16 rounded-full border-2 border-blue-100 shadow-lg"
+                              className="h-16 w-16 rounded-full border-2 border-blue-100 shadow-lg object-cover"
                               src={
-                                dp || credentials?.profile
+                                dp || (credentials?.profile
                                   ? getFileUrl(credentials.profile, 'public/student/profile')
-                                  : defaultProfile
+                                  : defaultProfile)
                               }
                               alt="Current profile"
                             />
@@ -233,7 +244,20 @@ export default function ProfileForm() {
                               Change Photo
                             </Label>
                             <FormControl>
-                              <Input id="image" type="file" accept="image/*" {...field} className="hidden" />
+                              <Input
+                                id="image"
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0]
+                                  if (file) {
+                                    setSelectedFile(file)
+                                    setDp(URL.createObjectURL(file))
+                                    field.onChange(e.target.files) // Update form state if needed
+                                  }
+                                }}
+                              />
                             </FormControl>
                           </div>
                           <FormMessage />

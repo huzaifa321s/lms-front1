@@ -21,8 +21,8 @@ export const useDebounceInput = (searchInput, time) => {
 export const getFileUrl = (path, prefix = '') => {
   if (!path) return ''
   if (path.startsWith('http')) return path
-  const baseUrl = import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL || 'http://localhost:5000'
-  return `${baseUrl}/${prefix ? prefix + '/' : ''}${path}`
+  const baseUrl = import.meta.env.VITE_REACT_APP_STORAGE_BASE_URL || 'http://localhost:5002'
+  return `${baseUrl}${prefix ? prefix + '/' : ''}${path}`
 }
 
 export const getRenderPaginationButtons = (

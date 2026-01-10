@@ -1,4 +1,4 @@
-import { StrictMode, Suspense } from 'react'
+import React, { StrictMode, Suspense, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import axios, { AxiosError } from 'axios'
 import {
@@ -77,20 +77,21 @@ const router = createRouter({
   defaultStructuralSharing: true,
 })
 
+// ✅ Axios configuration (at top-level to avoid race conditions with loaders)
+axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL
+axios.interceptors.request.use((config) => {
+  const token =
+    getCookie('studentToken') ||
+    getCookie('teacherToken') ||
+    getCookie('adminToken')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
 const App = () => {
   const authentication = UseAuth()
-
-  // ✅ Axios setup
-  axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL
-  console.log('axios.defaults.baseURL --->', axios.defaults.baseURL)
-  const TOKEN = getCookie('studentToken')
-  const credentials = useSelector((state) => state.studentAuth.credentials ,shallowEqual)
-  console.log('Token ====>', TOKEN)
-  console.log('credentials 34 ==>', credentials)
-
-  if (TOKEN && credentials) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${TOKEN}`
-  }
 
   console.log('authentication ===>', authentication)
 

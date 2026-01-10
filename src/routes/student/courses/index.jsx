@@ -64,6 +64,8 @@ import { Show } from '../../../shared/utils/Show'
 import {
   useDebounceInput,
   getFileUrl,
+  useSearchInput,
+  getRenderPaginationButtons,
 } from '@/utils/globalFunctions'
 import Pagination from '../../_authenticated/student/-components/Pagination'
 
@@ -451,226 +453,218 @@ function RouteComponent() {
                 return (
                   <Card
                     key={course._id}
-                    className={`group relative overflow-hidden rounded-3xl border border-slate-200/50 bg-white/90 shadow-lg backdrop-blur-sm transition-all duration-500 focus-within:ring-4 focus-within:ring-blue-500/50 hover:-translate-y-2 hover:bg-white/95 hover:shadow-2xl ${fetchStatus === 'fetching' && 'bg-accent/50 animate-pulse'}`}
+                    className={`group relative flex flex-col overflow-hidden rounded-[2rem] border-0 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_rgba(0,0,0,0.12)] ${fetchStatus === 'fetching' && 'animate-pulse bg-slate-50 opacity-70'}`}
                     role='article'
                     aria-label={`Course: ${course.name}`}
                   >
-                    {/* Image Section */}
-                    <div className='relative h-56 overflow-hidden'>
+                    {/* Image Section with Enhanced Effects */}
+                    <div className='relative h-60 overflow-hidden'>
                       <img
                         src={coverImageUrl}
                         alt={course.name || 'Course cover image'}
-                        className='h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105'
+                        className='h-full w-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110'
                         loading='lazy'
                       />
-                      <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent transition-opacity duration-500 group-hover:from-black/70' />
+                      <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100' />
 
-                      {/* Category Badge */}
-                      <Badge
-                        className='absolute top-4 left-4 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-1.5 text-xs font-semibold text-white shadow-md ring-1 ring-white/20 transition-all duration-300 group-hover:scale-105'
-                        title={`Category: ${course.category?.name || 'General'}`}
-                      >
-                        {course.category?.name || 'General'}
-                      </Badge>
+                      {/* Hover Stats Section */}
+                      <div className='absolute inset-0 flex items-center justify-center gap-4 opacity-0 transition-all duration-500 translate-y-6 group-hover:translate-y-0 group-hover:opacity-100'>
+                        <div className='flex flex-col items-center rounded-2xl border border-white/30 bg-white/10 p-3 text-white backdrop-blur-md'>
+                          <Users className='mb-1 h-5 w-5' />
+                          <span className='text-xs font-bold leading-none'>{course.enrolledCount || 0}</span>
+                        </div>
+                        <div className='flex flex-col items-center rounded-2xl border border-white/30 bg-white/10 p-3 text-white backdrop-blur-md'>
+                          <TableOfContents className='mb-1 h-5 w-5' />
+                          <span className='text-xs font-bold leading-none'>{course.material?.length || 0}</span>
+                        </div>
+                      </div>
 
-                      {/* Enrolled Badge */}
-                      {isEnrolled && (
-                        <Badge className='absolute top-4 right-4 flex items-center gap-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 px-4 py-1.5 text-xs font-semibold text-white shadow-md ring-1 ring-white/20 transition-all duration-300 group-hover:scale-105'>
-                          <Check size={16} />
-                          Enrolled
+                      {/* Status Badges */}
+                      <div className='absolute top-4 left-4 flex flex-col gap-2'>
+                        <Badge className='w-fit rounded-xl border-white/20 bg-blue-600/90 py-1.5 px-3.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-md'>
+                          {course.category?.name || 'General'}
                         </Badge>
-                      )}
+                        {isEnrolled && (
+                          <Badge className='flex w-fit items-center gap-1.5 rounded-xl border-white/20 bg-emerald-500/90 py-1.5 px-3.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-md'>
+                            <Check className='h-3 w-3' />
+                            Enrolled
+                          </Badge>
+                        )}
+                      </div>
                     </div>
 
-                    {/* Body */}
-                    <CardContent className='space-y-4 p-5'>
-                      <h3 className='line-clamp-2 text-xl font-semibold text-slate-800 transition-colors duration-300 group-hover:text-blue-600'>
+                    {/* Content Section */}
+                    <CardContent className='flex flex-1 flex-col p-6'>
+                      <div className='mb-3 flex items-center gap-2'>
+                        <div className='flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-colors duration-300 group-hover:bg-blue-600 group-hover:text-white'>
+                          <BookOpen className='h-4 w-4' />
+                        </div>
+                        <span className='text-[10px] font-extrabold uppercase tracking-[0.2em] text-slate-400'>Elite Course</span>
+                      </div>
+
+                      <h3 className='mb-3 line-clamp-2 text-xl font-extrabold leading-tight text-slate-800 transition-colors duration-300 group-hover:text-blue-600'>
                         {course.name}
                       </h3>
-                      <p className='line-clamp-2 text-sm leading-relaxed text-slate-600'>
+                      <p className='line-clamp-2 text-sm leading-relaxed text-slate-500'>
                         {course.description}
                       </p>
+
+                      <div className='mt-auto flex items-center gap-3 border-t border-slate-50 pt-5'>
+                        <div className='flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 ring-2 ring-white'>
+                          <UserCircle2 className='h-6 w-6 text-slate-400' />
+                        </div>
+                        <div className='flex flex-col'>
+                          <span className='text-[10px] font-bold uppercase tracking-wider text-slate-400'>Curated by</span>
+                          <span className='text-xs font-extrabold text-slate-700'>
+                            {course.instructor?.firstName ? `${course.instructor.firstName} ${course.instructor.lastName || ''}` : 'Academy Expert'}
+                          </span>
+                        </div>
+                      </div>
                     </CardContent>
 
-                    {/* Footer */}
-                    <CardFooter className='flex flex-col gap-3 px-5 pb-5'>
-                      <div className='flex w-full items-center gap-3'>
-                        {/* View Button */}
-                        <Button
-                          onClick={() =>
-                            navigate({
-                              to: `/student/courses/${course._id}`,
-                              search: { userID: credentials?._id },
-                            })
+                    {/* Action Footer with Glass Design */}
+                    <CardFooter className='grid grid-cols-2 gap-4 bg-slate-50/50 p-5 backdrop-blur-sm'>
+                      <Button
+                        onClick={() =>
+                          navigate({
+                            to: `/student/courses/${course._id}`,
+                            search: { userID: credentials?._id },
+                          })
+                        }
+                        className='h-12 rounded-2xl bg-slate-900 font-bold text-white shadow-xl shadow-slate-200 transition-all duration-300 hover:scale-[1.02] hover:bg-blue-600 hover:shadow-blue-200 active:scale-95'
+                      >
+                        <Eye className='mr-2 h-4 w-4' />
+                        View
+                      </Button>
+
+                      <Popover
+                        onOpenChange={(open) => {
+                          if (!open) {
+                            queryClient.removeQueries({ queryKey: ['course-details', courseID] })
+                            setCourseFetch(false)
+                            setCourseID('')
                           }
-                          className='w-1/2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 py-2.5 font-medium text-white shadow-md transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-800 hover:shadow-xl'
-                        >
-                          <Eye className='mr-1.5 h-4 w-4' />
-                          View
-                        </Button>
-
-                        {/* Popover with structured content */}
-                        <Popover
-                          onOpenChange={(open) => {
-                            if (!open) {
-                              queryClient.removeQueries({
-                                queryKey: ['course-details', courseID],
-                              })
-                              setCourseFetch(false)
-                              setCourseID('')
-                            }
-                          }}
-                        >
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <PopoverTrigger asChild>
-                                <Button
-                                  variant='outline'
-                                  onClick={() => {
-                                    setCourseID(course._id)
-                                    setCourseFetch(true)
-                                  }}
-                                  className='w-1/2 rounded-xl border-blue-600 bg-blue-50/30 py-2.5 font-medium text-blue-600 transition-all duration-300 hover:scale-105 hover:bg-blue-50'
-                                >
-                                  <Info className='mr-1.5 h-4 w-4' />
-                                  Details
-                                </Button>
-                              </PopoverTrigger>
-                            </TooltipTrigger>
-                            <TooltipContent className='rounded-lg bg-blue-600 p-2 text-sm text-white'>
-                              Quick course stats and instructor info
-                            </TooltipContent>
-                          </Tooltip>
-
-                          <PopoverContent
-                            side='top'
-                            align='center'
-                            className='w-80 space-y-4 rounded-2xl border border-slate-200/50 bg-white/95 p-5 text-sm shadow-xl backdrop-blur-md transition-all duration-300'
+                        }}
+                      >
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant='outline'
+                            onClick={() => {
+                              setCourseID(course._id)
+                              setCourseFetch(true)
+                            }}
+                            className='h-12 rounded-2xl border-2 border-slate-200 bg-white font-bold text-slate-700 transition-all duration-300 hover:-translate-y-0.5 hover:border-blue-600 hover:text-blue-600 hover:shadow-lg active:scale-95'
                           >
-                            {courseLoading ? (
-                              <div className='h-64 w-full animate-pulse rounded-lg bg-slate-200/50' />
-                            ) : (
-                              <>
-                                {/* Tabs for structured info */}
-                                <Tabs
-                                  defaultValue='overview'
-                                  className='space-y-3'
-                                >
-                                  <TabsList className='grid w-full grid-cols-3'>
-                                    <TabsTrigger value='overview'>
-                                      Overview
-                                    </TabsTrigger>
-                                    <TabsTrigger value='materials'>
-                                      Materials
-                                    </TabsTrigger>
-                                    <TabsTrigger value='instructor'>
-                                      Instructor
-                                    </TabsTrigger>
-                                  </TabsList>
+                            <Info className='mr-2 h-4 w-4' />
+                            Details
+                          </Button>
+                        </PopoverTrigger>
 
-                                  {/* Overview */}
-                                  <TabsContent
-                                    value='overview'
-                                    className='scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-transparent max-h-36 space-y-2 overflow-y-auto'
-                                  >
-                                    <p className='text-slate-700'>
-                                      {courseDetails?.description ||
-                                        'No description available.'}
+                        <PopoverContent
+                          side='top'
+                          align='center'
+                          className='z-50 w-80 overflow-hidden rounded-[2.5rem] border border-white/20 bg-white/80 p-0 shadow-2xl backdrop-blur-2xl transition-all'
+                        >
+                          {courseLoading ? (
+                            <div className='flex h-64 items-center justify-center gap-3 p-10'>
+                              <div className='h-4 w-4 animate-bounce rounded-full bg-blue-600' />
+                              <div className='h-4 w-4 animate-bounce rounded-full bg-blue-600 [animation-delay:0.2s]' />
+                              <div className='h-4 w-4 animate-bounce rounded-full bg-blue-600 [animation-delay:0.4s]' />
+                            </div>
+                          ) : (
+                            <Tabs defaultValue='overview' className='flex flex-col'>
+                              <TabsList className='grid h-16 w-full grid-cols-3 bg-slate-100/50 p-1.5'>
+                                <TabsTrigger value='overview' className='rounded-3xl data-[state=active]:bg-white data-[state=active]:shadow-md'>About</TabsTrigger>
+                                <TabsTrigger value='materials' className='rounded-3xl data-[state=active]:bg-white data-[state=active]:shadow-md'>Modules</TabsTrigger>
+                                <TabsTrigger value='instructor' className='rounded-3xl data-[state=active]:bg-white data-[state=active]:shadow-md'>Expert</TabsTrigger>
+                              </TabsList>
+
+                              <div className='p-8'>
+                                <TabsContent value='overview' className='mt-0 space-y-6'>
+                                  <div className='space-y-2'>
+                                    <span className='text-[10px] font-black uppercase tracking-widest text-blue-600'>Curriculum Description</span>
+                                    <p className='line-clamp-4 text-sm font-medium leading-relaxed text-slate-600 italic'>
+                                      "{courseDetails?.description || 'This course is architected to provide a holistic understanding of the subject matter.'}"
                                     </p>
-                                    <div className='space-y-2 border-t border-slate-200/50 pt-2'>
-                                      <div className='flex items-center gap-2 text-slate-700'>
-                                        <Users className='h-4 w-4 text-blue-500' />
-                                        <span>
-                                          {courseDetails?.enrolledCount || 0}{' '}
-                                          students enrolled
-                                        </span>
-                                      </div>
-                                      {courseDetails?.updatedAt && (
-                                        <div className='flex items-center gap-2 text-slate-700'>
-                                          <Clock className='h-4 w-4 text-blue-500' />
-                                          <span>
-                                            Updated{' '}
-                                            {format(
-                                              courseDetails.updatedAt,
-                                              'PPP'
-                                            )}
-                                          </span>
-                                        </div>
-                                      )}
+                                  </div>
+                                  <div className='grid grid-cols-2 gap-3'>
+                                    <div className='flex flex-col rounded-2xl bg-blue-50/50 p-4'>
+                                      <Users className='mb-2 h-4 w-4 text-blue-600' />
+                                      <span className='text-xs font-black text-slate-400'>Learners</span>
+                                      <span className='text-sm font-bold text-slate-800'>{courseDetails?.enrolledCount || 0}+</span>
                                     </div>
-                                  </TabsContent>
-
-                                  {/* Materials */}
-                                  <TabsContent
-                                    value='materials'
-                                    className='scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-transparent max-h-36 overflow-y-auto'
-                                  >
-                                    {courseDetails?.material?.length ? (
-                                      <Collapsible>
-                                        <CollapsibleTrigger className='w-full rounded-lg bg-blue-50 px-3 py-2 text-left font-medium transition hover:bg-blue-100'>
-                                          Show Materials
-                                        </CollapsibleTrigger>
-                                        <CollapsibleContent className='scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-transparent max-h-32 space-y-1 overflow-y-auto px-2 py-2'>
-                                          {courseDetails.material.map((mat) => (
-                                            <p
-                                              key={mat._id}
-                                              className='rounded bg-[whitesmoke] px-2 py-1 text-sm text-slate-700'
-                                            >
-                                              {mat.title}
-                                            </p>
-                                          ))}
-                                        </CollapsibleContent>
-                                      </Collapsible>
-                                    ) : (
-                                      <p className='text-slate-500'>
-                                        No materials available.
-                                      </p>
-                                    )}
-                                  </TabsContent>
-
-                                  {/* Instructor */}
-                                  <TabsContent
-                                    value='instructor'
-                                    className='scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-transparent max-h-36 space-y-2 overflow-y-auto'
-                                  >
-                                    <div className='flex items-center gap-2 text-slate-700'>
-                                      <User className='h-4 w-4 text-blue-500' />
-                                      <span>
-                                        {courseDetails?.instructor?.firstName
-                                          ? `${courseDetails.instructor.firstName} ${courseDetails?.instructor.lastName || ''}`
-                                          : 'Unknown Instructor'}
+                                    <div className='flex flex-col rounded-2xl bg-purple-50/50 p-4'>
+                                      <Clock11 className='mb-2 h-4 w-4 text-purple-600' />
+                                      <span className='text-xs font-black text-slate-400'>Last Build</span>
+                                      <span className='text-sm font-bold text-slate-800'>
+                                        {courseDetails?.updatedAt ? format(courseDetails.updatedAt, 'MMM yyyy') : 'Recent'}
                                       </span>
                                     </div>
-                                    {courseDetails?.instructor?.bio && (
-                                      <p className='text-sm text-slate-600'>
-                                        {courseDetails.instructor.bio}
-                                      </p>
-                                    )}
-                                  </TabsContent>
-                                </Tabs>
+                                  </div>
+                                </TabsContent>
 
-                                <Separator className='my-2' />
+                                <TabsContent value='materials' className='mt-0'>
+                                  <div className='mb-4'>
+                                    <h4 className='text-[10px] font-black uppercase tracking-widest text-blue-600'>Digital Assets included</h4>
+                                  </div>
+                                  {courseDetails?.material?.length ? (
+                                    <div className='scrollbar-none max-h-56 space-y-3 overflow-y-auto pr-2'>
+                                      {courseDetails.material.map((mat) => (
+                                        <div
+                                          key={mat._id}
+                                          className='flex items-center gap-3 rounded-2xl border border-slate-50 bg-white p-4 transition-all hover:scale-[1.02] hover:border-blue-100 hover:shadow-md'
+                                        >
+                                          <div className='flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50'>
+                                            <File className='h-4 w-4 text-blue-500' />
+                                          </div>
+                                          <div className='flex flex-col'>
+                                            <span className='text-xs font-bold text-slate-800'>{mat.title}</span>
+                                            <span className='text-[9px] font-black uppercase text-slate-400'>Learning Material</span>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  ) : (
+                                    <div className='flex flex-col items-center py-10 text-center'>
+                                      <div className='mb-3 flex h-14 w-14 items-center justify-center rounded-3xl bg-slate-50'>
+                                        <BookOpen className='h-6 w-6 text-slate-200' />
+                                      </div>
+                                      <p className='text-xs font-bold text-slate-400'>Curriculum schedule being finalized.</p>
+                                    </div>
+                                  )}
+                                </TabsContent>
 
-                                {/* Quick Actions */}
-                                <div className='flex gap-2'>
-                                  <Button
-                                    size='sm'
-                                    className='flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800'
-                                    onClick={() =>
-                                      navigate({
-                                        to: `/student/courses/${course._id}`,
-                                      })
-                                    }
-                                  >
-                                    <Eye className='mr-1 h-4 w-4' />
-                                    View Course
-                                  </Button>
-                                </div>
-                              </>
-                            )}
-                          </PopoverContent>
-                        </Popover>
-                      </div>
+                                <TabsContent value='instructor' className='mt-0'>
+                                  <div className='flex flex-col items-center py-2 text-center'>
+                                    <div className='relative mb-6'>
+                                      <div className='h-24 w-24 rounded-[2.5rem] bg-gradient-to-tr from-blue-600 to-indigo-700 shadow-2xl shadow-blue-200' />
+                                      <UserCircle2 className='absolute inset-0 m-auto h-12 w-12 text-white/90' />
+                                      <div className='absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-2xl bg-emerald-500 shadow-lg ring-4 ring-white'>
+                                        <Check className='h-4 w-4 text-white' />
+                                      </div>
+                                    </div>
+                                    <h3 className='text-xl font-black text-slate-800'>
+                                      {courseDetails?.instructor?.firstName ? `${courseDetails.instructor.firstName} ${courseDetails?.instructor.lastName || ''}` : 'Verified Faculty'}
+                                    </h3>
+                                    <p className='mt-2 text-sm font-medium leading-relaxed text-slate-400'>
+                                      {courseDetails?.instructor?.bio || 'Distinguished industry professional with extensive field experience and academic contributions.'}
+                                    </p>
+                                  </div>
+                                </TabsContent>
+                              </div>
+
+                              <div className='border-t border-slate-50 bg-slate-50/50 p-6'>
+                                <Button
+                                  className='h-14 w-full rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-700 font-black uppercase tracking-widest text-white shadow-2xl shadow-blue-100 transition-all hover:scale-[1.02] active:scale-95'
+                                  onClick={() => navigate({ to: `/student/courses/${course._id}` })}
+                                >
+                                  Enter Classroom
+                                </Button>
+                              </div>
+                            </Tabs>
+                          )}
+                        </PopoverContent>
+                      </Popover>
                     </CardFooter>
                   </Card>
                 )

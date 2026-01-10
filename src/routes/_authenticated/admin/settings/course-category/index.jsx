@@ -135,8 +135,8 @@ function RouteComponent() {
       const input = formData.get('search')?.toString() || ''
       setSearchInput(input) // Update state
       navigate({
-        to: `/student/enrolledcourses`,
-        search: { page: 1, input: debouncedSearch },
+        to: '/admin/settings/course-category',
+        search: { page: 1, q: input },
       })
     },
     [navigate, setSearchInput]

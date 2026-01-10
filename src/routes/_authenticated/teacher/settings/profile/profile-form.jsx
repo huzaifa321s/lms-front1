@@ -31,7 +31,8 @@ import { getFileUrl } from '@/utils/globalFunctions'
 
 export default function ProfileForm({ teacherCreds }) {
   const dispatch = useDispatch()
-  const [dp] = useState('')
+  const [dp, setDp] = useState('')
+  const [selectedFile, setSelectedFile] = useState(null)
   const [passBtnLoading, setPassBtnLoading] = useState(false)
   const [passwordObj, setPasswordObj] = useState({
     password: '',
@@ -102,17 +103,21 @@ export default function ProfileForm({ teacherCreds }) {
 
   const saveChanges = useCallback(
     (data) => {
-      const postObj = {
-        profile: teacherCreds?.profile,
-        firstName: data.firstname,
-        lastName: data.lastname,
-        bio: data.bio,
-        qualification: data.qualification,
-        address: data.address,
+      const formData = new FormData()
+      formData.append('firstName', data.firstname)
+      formData.append('lastName', data.lastname)
+      formData.append('bio', data.bio)
+
+      if (data.qualification) formData.append('qualification', data.qualification)
+      if (data.address) formData.append('address', data.address)
+
+      if (selectedFile) {
+        formData.append('profile', selectedFile)
       }
-      mutation.mutate(postObj)
+
+      mutation.mutate(formData)
     },
-    [teacherCreds, mutation]
+    [teacherCreds, mutation, selectedFile]
   )
 
   return (
@@ -139,17 +144,34 @@ export default function ProfileForm({ teacherCreds }) {
                   <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-[#f1f5f9] shadow-lg bg-gradient-to-br from-[#f8fafc] to-[#e2e8f0]">
                     <img
                       src={
-                        dp || teacherCreds?.profile
+                        dp ||
+                        (teacherCreds?.profile
                           ? getFileUrl(teacherCreds.profile, 'public/teacher/profile')
-                          : defaultProfile
+                          : defaultProfile)
                       }
                       alt="Profile"
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] p-2.5 rounded-full shadow-md hover:scale-110 cursor-pointer transition">
+                  <label
+                    htmlFor="profile-upload"
+                    className="absolute -bottom-2 -right-2 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] p-2.5 rounded-full shadow-md hover:scale-110 cursor-pointer transition"
+                  >
                     <Camera className="w-4 h-4 text-white" />
-                  </div>
+                  </label>
+                  <Input
+                    id="profile-upload"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) {
+                        setSelectedFile(file)
+                        setDp(URL.createObjectURL(file))
+                      }
+                    }}
+                  />
                 </div>
 
                 {/* Name & Info */}

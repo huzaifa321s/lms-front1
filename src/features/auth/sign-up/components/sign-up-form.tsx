@@ -88,8 +88,14 @@ export default function SignUpForm({ className, ...props }: SignUpFormProps) {
     if (props.disabled) return
     setIsLoading(true)
     const RegisterationForm = new FormData()
-    for (const key in data) {
-      RegisterationForm.append(key, data[key])
+    // Explicitly append fields to avoid issues with FileList vs File
+    RegisterationForm.append('firstName', data.firstName);
+    RegisterationForm.append('lastName', data.lastName);
+    RegisterationForm.append('email', data.email);
+    RegisterationForm.append('password', data.password);
+
+    if (data.profile && data.profile.length > 0) {
+      RegisterationForm.append('profile', data.profile[0]);
     }
     console.log('RegsiterationForm ===>', RegisterationForm)
     try {

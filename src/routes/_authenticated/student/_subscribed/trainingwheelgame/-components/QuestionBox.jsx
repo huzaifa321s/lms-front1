@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useEffect, useState, useCallback } from 'react'
 // Import Swiper styles
 import 'swiper/css'
 import { Mousewheel, Zoom } from 'swiper/modules'
@@ -10,25 +10,25 @@ import '../css/QuestionBox.css'
 const QuestionBox = ({ words, handleSelection }) => {
   const [swiperInstance, setSwiperInstance] = useState(null)
 
-  const handleSlideChange = () => {
+  const handleSlideChange = useCallback(() => {
     if (swiperInstance) {
       const index =
         (swiperInstance.activeIndex + 1) % swiperInstance.slides.length
       const slide = swiperInstance.slides[index].innerText
       handleSelection(slide)
     }
-  }
+  }, [swiperInstance, handleSelection])
 
-  const setInitialSlide = () => {
+  const setInitialSlide = useCallback(() => {
     if (swiperInstance) {
       const initialSlide = swiperInstance.slides[1]?.innerText
       if (initialSlide) handleSelection(initialSlide)
     }
-  }
+  }, [swiperInstance, handleSelection])
 
   useEffect(() => {
     setInitialSlide()
-  }, [swiperInstance, handleSelection, words, setInitialSlide])
+  }, [swiperInstance, setInitialSlide])
 
   return (
     <>
