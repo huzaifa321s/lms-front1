@@ -1,0 +1,14 @@
+
+.option {
+  @apply px-5 py-3 
+  border text-sm border-gray-800 rounded
+  w-full my-2 cursor-pointer
+}
+@reference "../../../../index.css";
+
+
+.correct { @apply bg-green-100 }
+
+.wrong { @apply bg-red-100 }
+
+
